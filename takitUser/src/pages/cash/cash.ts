@@ -150,7 +150,6 @@ export class CashPage {
       var depositBranch= this.storageProvider.depositBranch=='codeInput'? this.storageProvider.depositBranchInput:this.storageProvider.depositBranch;
       let body = JSON.stringify({depositDate:transferDate.toISOString(),
                                  depositAmount: this.depositAmount,
-                                 depositBank: depositBank,
                                  depositBranch: depositBranch,
                                  depositMemo:this.depositMemo
                                  });
@@ -336,11 +335,14 @@ export class CashPage {
                     break;
                 }
           }
+          this.storageProvider.depositBranch=undefined;
+          this.storageProvider.depositBranchInput=undefined;
           this.app.getRootNav().push(BankBranchPage,{bankName:this.storageProvider.banklist[i].name,
                                                      bankCode:this.storageProvider.banklist[i].value});
       }else{
           console.log("depositBranch is codeInput");
           this.storageProvider.depositBranch='codeInput';
+          this.storageProvider.depositBranchInput=undefined;
       }
   }
 

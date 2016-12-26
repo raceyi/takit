@@ -35,13 +35,13 @@ export class BankBranchPage {
 
         if(this.depositBranch.trim().length==1){     
             console.log("request branchNameAutoComplete with "+ this.depositBranch.trim());
-            let body = JSON.stringify({bank:this.bankCode, branchName:this.depositBranch.trim()});
+            let body = JSON.stringify({bankName:this.bank, branchName:this.depositBranch.trim()});
             this.serverProvider.post(this.storageProvider.serverAddress+"/branchNameAutoComplete",body).then((res:any)=>{    
                 console.log("res:"+JSON.stringify(res));
                 if(res.result=="success"){
                         this.branchShown=res.bankInfo;
                 }else{
-
+                        
                 }
             },(err)=>{
                     if(err=="NetworkFailure"){
@@ -71,6 +71,7 @@ export class BankBranchPage {
         }else{
             this.storageProvider.depositBranch=item;
             this.storageProvider.depositBranchInput=item.branchName;
+            console.log("branchName:"+this.storageProvider.depositBranchInput);
         }
         this.app.getRootNav().pop();
     }

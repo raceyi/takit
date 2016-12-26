@@ -11,9 +11,9 @@
             코드직접입력
         </ion-item>    
         <ion-item *ngFor="let item of branchShown">
-        <button ion-button full class="branchButton" (click)="selectBranch(item)">
-        {{ item.branchName }}
-        </button>
+            <ion-row (click)="selectBranch(item)">
+                {{ item.branchName }}
+            </ion-row>
         </ion-item>
     </ion-list>
 </ion-content>

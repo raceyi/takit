@@ -109,18 +109,23 @@
                     은행코드(3자리)를 숫자로 입력해주시기 바랍니다.
                 </p>
             </ion-row>
-
             <ion-row>
               <ion-col width-50>
                 <ion-item >
                     <ion-label>거래지점</ion-label>
                 </ion-item>
               </ion-col>
-              <ion-col width-40>
+              <ion-col width-40 [hidden]="storageProvider.depositBranch=='codeInput'">
                 <ion-item>
-                    <ion-input class="cashIn-check-inputBox" [disabled]="storageProvider.depositBranch!='codeInput'" [placeholder]="" [(ngModel)]="storageProvider.depositBranchInput" type="number" ></ion-input>
+                    <ion-input class="cashIn-check-inputBox" disabled [placeholder]="" [(ngModel)]="storageProvider.depositBranchInput"  ></ion-input>
                 </ion-item>
               </ion-col>    
+              <ion-col width-40 [hidden]="storageProvider.depositBranch!='codeInput'">
+                <ion-item>
+                    <ion-input class="cashIn-check-inputBox" [placeholder]="" [(ngModel)]="storageProvider.depositBranchInput" type="number" ></ion-input>
+                </ion-item>
+              </ion-col>    
+
               <ion-col width-10 [hidden]="storageProvider.depositBank=='0'">
                 <ion-item class="selectButton">
                     <button ion-button full class="selectButton" (click)="toggleSelectInput('depositBranchTypeSelect')">선택</button>

@@ -38,18 +38,18 @@ export class StorageProvider{
 
      /////////////////////////////////////
     // 캐쉬정보 수동입력 
-    depositBank;
-    depositBranch;
-    depositBranchInput;
+    public depositBank;
+    public depositBranch;
+    public depositBranchInput;
 
     /* 농협 계좌 이체가능 은행 */
     banklist=[  {name:"국민",value:"004"},
                 {name:"기업",value:"003"},
                 {name:"농협",value:"010"},
-                {name:"신한(조흥)",value:"088"},
+                {name:"신한",value:"088"},
                 {name:"우리",value:"020"},
-                {name:"KEB하나",value:"081"},
-                {name:"SC(제일)",value:"023"},
+                {name:"KEB하나",value:"081"},  
+                {name:"SC제일",value:"023"},
                 {name:"경남",value:"039"},
                 {name:"광주",value:"034"},
                 {name:"대구",value:"031"},
@@ -62,12 +62,12 @@ export class StorageProvider{
                 {name:"우체국",value:"071"},
                 {name:"전북",value:"037"},
                 {name:"제주",value:"035"},
-                {name:"한국씨티(한미)",value:"027"},
+                {name:"한국씨티",value:"027"},
                 {name:"산림조합",value:"064"},
                 {name:"BOA",value:"060"},
                 {name:"도이치",value:"055"},
                 {name:"HSBC",value:"054"},
-                {name:"제이피모간체이스",value:"057"},
+                {name:"JP모간체이스",value:"057"},
                 {name:"중국공상",value:"062"},
                 {name:"비엔피파리바",value:"061"}];
 

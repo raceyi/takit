@@ -66,6 +66,8 @@ License: GPL
 
  $ionic g directive focuser
 
+ $git checkout platforms/ios/타킷/Classes/AppDelegate.m
+ 
  $ionic build ios
 
  $git checkout platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
@@ -89,7 +91,9 @@ License: GPL
  $git checkout takitUser
 
  takitUser/src/providers/storageProvider.ts파일에 아래 변수 추가
-    export class StorageProvider{
+
+
+     export class StorageProvider{
 
      public serverAddress:string="xxxx";
      public awsS3OCR:string="xxxx";
