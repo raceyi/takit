@@ -75,9 +75,10 @@ page-cash{
 
     .explain{
     text-align: justify;
-    white-space: pre-line;
+    white-space: normal;
     color:#7F7F7F;
     font-size: 1.3rem; 
+
     }
 
     .button-block{
@@ -313,6 +314,9 @@ page-cash{
         .item-md .item-button {
              padding: 0 !important; 
              margin:0px !important;
+        }
+        .label-ios {
+            margin: 0px !important;
         }
         padding: 0px !important;
         margin:0px !important;

@@ -8,9 +8,7 @@
     <ion-title>타킷</ion-title>
     </ion-col>
     <ion-col width-20>
-    <button ion-button class="buttonsInHeader" [hidden]="storageProvider.order_in_progress_24hours==false" (click)="configureBackgrondMode()">
-      <ion-icon [color]="getColorBackgroundMode()" name="notifications"></ion-icon>
-    </button>
+      <ion-icon [color]="getColorBackgroundMode()"  [hidden]="storageProvider.order_in_progress_24hours==false" (click)="configureBackgrondMode()" name="notifications"></ion-icon>
     </ion-col>
     </ion-row>
   </ion-navbar>

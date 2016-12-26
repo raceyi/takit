@@ -67,9 +67,11 @@ export class OrderPage {
           this.options.forEach((option)=>{
               if(option.hasOwnProperty("choice") && Array.isArray(option.choice)){
                   option.flags=[];
+                  option.disabled=[];
                   var i;
                   for(i=0;i<option.choice.length;i++){
                       option.flags.push(false);
+                      option.disabled.push(false);
                   }
               }
           });
@@ -359,25 +361,30 @@ export class OrderPage {
             if(Array.isArray(option.flags)){     
                 var i;
                 for(i=0;i<option.flags.length;i++){
-                        console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
-                        option.flags[i]=false;
-                        console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
+                        //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
+                        option.disabled[i]=false;
                 }
+               // for(i=0;i<option.flags.length;i++){
+               //         option.flags[i]=false;
+               //         //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
+               // }
             }
       }else{
           this.price=this.price-option.price*this.quantity;
           console.log("option.select:"+option.select);
           if(option.hasOwnProperty("choice")){
               option.select=undefined;
-              console.log("set false to choice flags");
-              /*
+              console.log("set false to choice flags");              
                 var i;
                 for(i=0;i<option.flags.length;i++){
-                        console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
+                        //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
                         option.flags[i]=false;
-                        console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
                 }
-                */
+                for(i=0;i<option.flags.length;i++){        
+                        //option.disabled[i]=true;
+                        //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
+                }
+                
           }
       }
       this.discount=this.price*this.storageProvider.shopInfo.discountRate;
@@ -401,10 +408,20 @@ export class OrderPage {
             for(i=0;i<option.flags.length;i++){
                 if(i!=idx){
                     option.flags[i]=false;
+                }else{
+                    option.flags[i]=true;
                 }
             }
         }else{
-            option.select=undefined;            
+            option.select=undefined;
+            var i;
+            for(i=0;i<option.flags.length;i++){
+                if(option.flags[i]==true)
+                    break;
+            }
+            if(i==option.flags.length){
+                option.flag=false;
+            }            
         }
     }
 

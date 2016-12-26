@@ -12,7 +12,7 @@ License: GPL
 
  $cd takitUser
   => config.xml의 id,name 수정ex)biz.takitApp.user,타킷
-     splash관련 사항 추가
+     splash,white list 관련 사항 추가
 
     <widget id="biz.takitApp.user" ...>
     <name>타킷</name>

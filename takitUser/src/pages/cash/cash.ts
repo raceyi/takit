@@ -195,6 +195,7 @@ export class CashPage {
   
   configureCashId(){
    // this.app.getRootNav().push(CashIdPage);
+   console.log("configureCashId");
    if(this.storageProvider.isAndroid){
         let confirm = this.alertController.create({
         title: '회원정보와 휴대폰 본인인증 정보가 동일해야만 합니다.',
@@ -211,8 +212,8 @@ export class CashPage {
             text: '네',
             handler: () => {
                 console.log('Agree clicked');
-                this.app.getRootNav().push(CashIdPage);
-                /*
+                //this.app.getRootNav().push(CashIdPage);
+               
                 this.mobileAuth().then(()=>{ // success
                     this.app.getRootNav().push(CashIdPage);
                 },(err)=>{ //failure
@@ -226,15 +227,15 @@ export class CashPage {
                             alert.present();
                     }
                 });
-                */
+                
             }
             }
         ]
         });
         confirm.present();    
     }else{
-          this.app.getRootNav().push(CashIdPage);
-        /*
+          //this.app.getRootNav().push(CashIdPage);
+          console.log("ios....call mobileAuth");
                 this.mobileAuth().then(()=>{ // success
                     this.app.getRootNav().push(CashIdPage);
                 },(err)=>{ //failure
@@ -248,16 +249,18 @@ export class CashPage {
                             alert.present();
                     }
                 });
-         */       
+
     }
   }
 
   mobileAuth(){
+      console.log("mobileAuth");
     return new Promise((resolve,reject)=>{
       // move into CertPage and then 
       if(this.storageProvider.isAndroid){
             this.browserRef=new InAppBrowser("https://takit.biz:8443/NHPintech/kcpcert_start.jsp","_blank" ,'toolbar=no');
       }else{ // ios
+            console.log("ios");
             this.browserRef=new InAppBrowser("https://takit.biz:8443/NHPintech/kcpcert_start.jsp","_blank" ,'location=no,closebuttoncaption=종료');
       }
               this.browserRef.on("exit").subscribe((event)=>{

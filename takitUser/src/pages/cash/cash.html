@@ -43,17 +43,23 @@
                 <p class="explain">
                 - 계좌이체시 <span style="color:red"> 받는통장 표시내용</span>에 반드시 <span style="color:red">캐쉬아이디를 입력</span>해주시기 바랍니다. 
                 </p>
+             </ion-item> 
+             <ion-item>  
                 <p class="explain">
                 - 한번에 <span style="color:red">5만원 이하</span>의 금액만 <span style="color:red">충전 가능</span>합니다. 
-                </p> 
+                </p>
+             </ion-item>
+             <ion-item>    
                 <p class="explain">
                 - 입금확인에 최대 5분이 소요될 수 있습니다. 바로 확인하실려면 아래 <span style="color:blue">입금 바로 확인하기</span> 버튼을 클릭해주세요. 
                 </p>
+             </ion-item>
+             <ion-item>   
                 <p class="explain">
                 - 받는통장 표시내용에 캐쉬아이디를 입력하지 않았을 시에는 아래 <span style="color:blue">입금 수동 확인하기</span>를 수행해주시기 바랍니다. 
                 </p>
-            </ion-item>
-                <button ion-button full (click)="cashInCheck(input)"> 입금 바로 확인하기 </button>
+             </ion-item>
+                <button ion-button full (click)="cashInCheck(input)" [disabled]="storageProvider.cashId.length==0"> 입금 바로 확인하기 </button>
 
             <div class="cashIn-check">   
                 <ion-grid class="cashIn-check-table">
@@ -128,7 +134,7 @@
 
               <ion-col width-10 [hidden]="storageProvider.depositBank=='0'">
                 <ion-item class="selectButton">
-                    <button ion-button full class="selectButton" (click)="toggleSelectInput('depositBranchTypeSelect')">선택</button>
+                    <button ion-button full class="selectButton" [disabled]="storageProvider.cashId.length==0" (click)="toggleSelectInput('depositBranchTypeSelect')">선택</button>
                 </ion-item>
               </ion-col>    
 
@@ -151,7 +157,7 @@
             </ion-col>
             </ion-row>
             <ion-item>
-            <button ion-button block (click)="cashInComplete(event)">입금 수동 확인하기</button>
+            <button ion-button block (click)="cashInComplete(event)" [disabled]="storageProvider.cashId.length==0">입금 수동 확인하기</button>
             </ion-item>
             </ion-grid>   
             </div>
@@ -238,9 +244,9 @@
                 </button>
             </ion-item>
             <ion-item>
-                <ion-label class="explain">
+                <p class="explain">
                     - 캐쉬를 고객님의 계좌로 이체합니다. 이체 수수료는 월 4회 이하 무료이나 4회를 초과하는 경우 농협계좌 150원, 타행 400원의 수수료가 차감되어 이체됩니다.
-                </ion-label>
+                </p>
             </ion-item>
             <ion-row>
             <ion-item ion-col class="cashId">
