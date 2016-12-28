@@ -13,6 +13,7 @@ import {StorageProvider} from '../providers/storageProvider';
 import {Storage} from '@ionic/storage';
 import {ServerProvider} from '../providers/serverProvider';
 
+import {ConfigProvider} from '../providers/configProvider';
 import {SignupPage} from '../pages/signup/signup';
 import {SignupSubmitPage} from '../pages/signup_submit/signup_submit';
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
@@ -86,6 +87,7 @@ import{Focuser} from '../components/focuser/focuser';
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
               Storage,
+              ConfigProvider,
               StorageProvider,
               FbProvider,
               EmailProvider,

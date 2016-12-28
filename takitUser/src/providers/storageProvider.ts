@@ -2,6 +2,7 @@ import {Injectable,EventEmitter} from '@angular/core';
 import {Platform,Tabs,NavController} from 'ionic-angular';
 import {SQLite} from 'ionic-native';
 import {Http,Headers} from '@angular/http';
+import {ConfigProvider} from './configProvider';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
@@ -71,28 +72,29 @@ export class StorageProvider{
                 {name:"중국공상",value:"062"},
                 {name:"비엔피파리바",value:"061"}];
 
-    public serverAddress:string="https://takit.biz:443";
 
-    public awsS3OCR:string="https://s3.ap-northeast-2.amazonaws.com/seerid.html/";
-    public awsS3:string="https://s3.ap-northeast-2.amazonaws.com/seerid.cafe.image/";
-    public homeJpegQuality=100;
-    public menusInRow=3;
-    public OrdersInPage:number=10; // The number of orders shown in a page 
+    public serverAddress:string= this.configProvider.getServerAddress();
 
-    public userSenderID="836964428266"; //fcm senderID
+    public awsS3OCR:string=this.configProvider.getAwsS3OCR();
+    public awsS3:string=this.configProvider.getAwsS3();
+    public homeJpegQuality=this.configProvider.getHomeJpegQuality();
+    public menusInRow=this.configProvider.getMenusInRow();
+    public OrdersInPage:number=this.configProvider.getOrdersInPage(); // The number of orders shown in a page 
 
-    public version="0.0.1";
-    public kakaoTakitUser="04457a1cc7e876475f8ab431f63a2060";////Rest API key
-    public kakaoOauthUrl="https://takit.biz/oauth"; 
+    public userSenderID=this.configProvider.getUserSenderID(); //fcm senderID
 
-    public tourEmail="help-ios@takit.biz";
-    public tourPassword="i2p4h5o&ne";
-    public timeout=5000; // 5 seconds
+    public version=this.configProvider.getVersion();
+    public kakaoTakitUser=this.configProvider.getKakaoTakitUser();////Rest API key
+    public kakaoOauthUrl=this.configProvider.getKakaoOauthUrl(); 
+
+    public tourEmail=this.configProvider.getTourEmail();
+    public tourPassword=this.configProvider.getTourPassword();
+    public timeout=this.configProvider.getTimeout(); // 5 seconds
 
 //"이외 금융기관 => 직접 입력(숫자)"  
 //"지점 코드=>직접 입력(숫자)" http://www.kftc.or.kr/kftc/data/EgovBankList.do 금융회사명으로 조회하기 
 
-    constructor(private platform:Platform,private http:Http){
+    constructor(private platform:Platform,private http:Http,private configProvider:ConfigProvider){
         console.log("StorageProvider constructor"); 
         this.isAndroid = this.platform.is('android'); 
     }

@@ -1,0 +1,140 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-row  *ngIf="!isAndroid">
+       <ion-col width-20 class="title">
+        타킷
+       </ion-col>
+       <ion-col width-20>
+            <ion-icon [color]="storeColor" name="bulb" (click)="configureStore()"></ion-icon>
+       </ion-col>
+       <ion-col width-20>
+            <ion-icon [color]="notiColor" name="person" (click)="configureGotNoti()"></ion-icon>
+       </ion-col>
+      <ion-col width-20>
+            <ion-icon name="print" [color]="printColor" (click)="testPrint()"></ion-icon>
+      </ion-col>
+      <ion-col width-20>
+            <ion-icon name="refresh" (click)="update()"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="isAndroid">
+    <ion-title> 타킷 </ion-title>
+    <button ion-button class="buttonsInHeader"  (click)="configureStore()">
+      <ion-icon [color]="storeColor" name="bulb"></ion-icon>
+    </button>
+    <button ion-button class="buttonsInHeader" (click)="configureGotNoti()">
+      <ion-icon [color]="notiColor" name="person"></ion-icon>
+    </button>
+    <button ion-button class="buttonsInHeader" (click)="testPrint()">
+      <ion-icon name="print" [color]="printColor"></ion-icon>
+    </button>
+    <button ion-button class="buttonsInHeader" (click)="update()">
+      <ion-icon name="refresh"></ion-icon>
+    </button>
+    </ion-row>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="segmentButton">
+  <!--
+    <ion-row>
+    <ion-col width-75>
+    </ion-col>
+    <ion-col width-25>
+      <button ion-button  class="updateButton" color='gray' (click)="update()"><span class="updateButtonText">업데이트</span></button>
+    </ion-col>    
+  </ion-row>
+-->
+    <div>
+    <ion-segment [(ngModel)]="Option" (ionChange)="changeValue(Option)">
+      <ion-segment-button  value="today">
+      오늘
+      </ion-segment-button>
+      <ion-segment-button  value="week">
+      일주일
+      </ion-segment-button>
+      <ion-segment-button  value="month">
+      한달
+      </ion-segment-button>
+      <ion-segment-button  value="period">
+       기간설정
+      </ion-segment-button>
+    </ion-segment>
+    </div>
+<div [hidden]="Option!='period'"> 
+  <ion-row >
+  <ion-item ion-col width-50>
+  <ion-label>시작일</ion-label>
+  <ion-datetime displayFormat="YYYY M DD" min="2016" (ionChange)="startPicker(startDate)" [(ngModel)]="startDate"></ion-datetime>
+  </ion-item>
+  <ion-item ion-col width-50> 
+  <ion-label>종료일</ion-label>
+  <ion-datetime displayFormat="YYYY M DD" min="2016" (ionChange)="endPicker(endDate)" [(ngModel)]="endDate"></ion-datetime>
+  </ion-item>
+  </ion-row>
+    <button ion-button full (click)="searchPeriod()">검색</button>
+ </div> 
+</ion-content>
+
+<ion-content padding class="infiniteScroll">
+  <ion-list>
+  <ion-item class="orderManagement" *ngFor="let order of orders">
+                <ion-row (click)="toggleOrder(order)">  
+                    <ion-col width-10 class="verticalAlign">[{{order.orderNO}}]</ion-col>
+                    <ion-col width-50 class="orderName"><span class="orderName">{{order.orderName}}</span></ion-col>
+                    <ion-col width-20 class="verticalAlign" >
+                      <button ion-button class="statusButton" *ngIf="order.statusString!='종료' && order.statusString!='취소'" (click)="updateOrder(order)" ><span class="statusButtonText">{{order.statusString}}</span></button>
+                      <p  *ngIf="order.statusString=='종료' || order.statusString=='취소'"> {{order.statusString}}<p>
+                    </ion-col>
+                    <ion-col width-20><button ion-button class="statusButton" [color]="getOrderColor(order)" (click)="cancel(order)" [hidden]="order.orderStatus=='cancelled' || AfterOnedayComplete(order)"><span class="statusButtonText">취소</span></button></ion-col>
+                </ion-row>
+                <div [hidden]="order.hidden">
+                <ion-row [hidden]="order.takeout=='0'"> 
+                  <ion-col width-10></ion-col>
+                  <ion-col width-90>Takeout</ion-col>
+                </ion-row>
+                <div *ngFor="let menu of order.orderListObj.menus">
+                <ion-row>
+                          <ion-col width-10></ion-col>
+                          <ion-col width-90><span class="orderInfo">{{menu.menuName}}({{menu.quantity}})</span></ion-col>
+                </ion-row>
+                <ion-row>
+                          <ion-col width-30></ion-col>
+                          <ion-col width-70> 
+                            <p class="option" *ngFor="let option of menu.options">{{option.name}} &nbsp;<span *ngIf="option.select!=undefined">{{option.select}}</span> </p>
+                          </ion-col>
+                </ion-row>
+                </div>
+                <ion-row [hidden]="order.orderStatus!='cancelled' || order.cancelReasonString==undefined">
+                  <ion-col width-10></ion-col>
+                  <ion-col width-20>취소사유</ion-col>
+                  <ion-col width-70>{{order.cancelReasonString}}</ion-col>
+                </ion-row>
+                 <ion-row >
+                    <ion-col width-10></ion-col>
+                    <ion-col width-70 class="detail">주문시간 &nbsp;{{order.localOrderedTime}}</ion-col>
+                    <ion-col width-20 class="detail"> 
+                    <a [href]="order.userPhoneHref" [hidden]="AfterOnedayCompleteCancel(order)" class="button button-positive">고객연락</a>
+                    </ion-col>
+                </ion-row>
+                 <ion-row>
+                    <ion-col width-10></ion-col>
+                    <ion-col width-80 class="detail">결제금액 &nbsp;{{order.amount}}원</ion-col>
+                    <!--
+                    <ion-col width-10 class="detail"  [hidden]="printerProvider.printerStatus!='connected' || order.orderStatus!='paid'"><ion-icon name="print" (click)="printOrder(order)"></ion-icon></ion-col>
+                    -->
+                    <ion-col width-10 class="detail" [hidden]="order.orderStatus!='paid'" ><ion-icon name="print" (click)="printOrder(order)"></ion-icon></ion-col>                    
+                </ion-row>
+                
+                </div>
+</ion-item>
+</ion-list>
+ <ion-infinite-scroll (ionInfinite)="doInfinite($event)" [hidden]="orders.length==0">
+   <ion-infinite-scroll-content></ion-infinite-scroll-content>
+ </ion-infinite-scroll>
+ <div class="dummy">
+ </div>
+</ion-content>
