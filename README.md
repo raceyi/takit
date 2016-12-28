@@ -242,20 +242,20 @@ $git checkout takitShop/platforms/android/src/com/htj/plugin/kakao/KakaoTalk.jav
 
 $ionic build android
 
-takitShop/platforms/ios/타킷운영자/타킷운영자-Info.plist
+ takitShop/platforms/ios/타킷운영자/타킷운영자-Info.plist
 
- <key>LSApplicationQueriesSchemes</key>
- <array>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
     <string>kakaotalk</string>
- </array>
+    </array>
 
-  xcode에서 옵션 수정및 코드 수정(참조 kakao plugin git) 
+    xcode에서 옵션 수정및 코드 수정(참조 kakao plugin git) 
 
-  open platforms/ios/타킷운영자.xcodeproj
+    open platforms/ios/타킷운영자.xcodeproj
 
-  Build Settings > Linking > Other Linker Flags > add '-all_load' 
+    Build Settings > Linking > Other Linker Flags > add '-all_load' 
 
-  Capabilities->Push Notifications -> ON
+    Capabilities->Push Notifications -> ON
 
 $git checkout takitShop
 
