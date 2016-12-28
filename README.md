@@ -249,7 +249,7 @@ $ionic build android
     <string>kakaotalk</string>
     </array>
 
-    xcode에서 옵션 수정및 코드 수정(참조 kakao plugin git) 
+ xcode에서 옵션 수정및 코드 수정(참조 kakao plugin git) 
 
     open platforms/ios/타킷운영자.xcodeproj
 
