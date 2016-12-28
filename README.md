@@ -82,8 +82,11 @@ License: GPL
      </array>
 
  xcode에서 옵션 수정
+
     open platforms/ios/타킷.xcodeproj
+
     Build Settings > Linking > Other Linker Flags > add '-all_load' (kakao plugin git)
+
     Capabilities->Push Notifications -> ON
 
  $cd ..
@@ -252,7 +255,7 @@ takitShop/platforms/ios/타킷운영자/타킷�
 
   Build Settings > Linking > Other Linker Flags > add '-all_load' 
 
-                   Capabilities->Push Notifications -> ON
+  Capabilities->Push Notifications -> ON
 
 $git checkout takitShop
 
