@@ -24,6 +24,7 @@ export class ShopCartPage{
     cart:any={};
     takeoutAvailable:boolean=false;
     takeout:boolean=false;
+    cashPassword="";
 
      constructor(private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,
@@ -34,7 +35,7 @@ export class ShopCartPage{
         if(this.cart!=undefined){
             this.price=this.cart.total;
             this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
-            this.amount=Math.round(this.price*(1-this.storageProvider.shopInfo.discountRate));
+            this.amount=this.price-this.amount;
         }
      }
 
@@ -62,7 +63,7 @@ export class ShopCartPage{
         this.cart=this.storageProvider.cart;        
         this.price=this.cart.total;
         this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
-        this.amount=Math.round(this.price*(1-this.storageProvider.shopInfo.discountRate));
+        this.amount=this.price-this.discount;
         this.checkTakeoutAvailable();
         //console.log("takeoutAvailable:"+this.takeoutAvailable);
         if(this.takeoutAvailable==false){
@@ -85,6 +86,31 @@ export class ShopCartPage{
      }
 
      order(){
+        if(this.storageProvider.cashId==undefined ||
+                    this.storageProvider.cashId.length<5){
+            let alert = this.alertController.create({
+                subTitle: '캐쉬아이디를 설정해 주시기 바랍니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+            return;               
+        }
+        if(this.cashPassword.length<6){
+            let alert = this.alertController.create({
+                subTitle: '캐쉬비밀번호(6자리)를 입력해 주시기 바랍니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+            return;               
+        }         
+         if(this.storageProvider.cashAmount<this.amount){
+             let alert = this.alertController.create({
+                subTitle: '캐쉬잔액이 부족합니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+            return;
+         }
        if(this.storageProvider.tourMode==false){  
             console.log("order ");
              ////////////////////////////////////////////////////
@@ -97,15 +123,17 @@ export class ShopCartPage{
                                         takitId:this.storageProvider.takitId,
                                         orderList:JSON.stringify(this.cart), 
                                         orderName:this.cart.menus[0].menuName+"이외"+ this.cart.menus.length+"종",
-                                        amount:Math.round(this.amount),
+                                        amount:this.amount,
                                         takeout: takeout,
-                                        orderedTime:new Date().toISOString()});
+                                        orderedTime:new Date().toISOString(),
+                                        cashId:this.storageProvider.cashId,
+                                        cashPassword:this.cashPassword});
               console.log("order:"+JSON.stringify(body));
 
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress);
-
+              this.cashPassword="";  
                  this.serverProvider.saveOrder(body).then((res:any)=>{
                  console.log(res); 
                  var result:string=res.result;
@@ -206,7 +234,7 @@ export class ShopCartPage{
           this.cart=this.storageProvider.cart;
           this.price=this.cart.total;
           this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
-          this.amount=Math.round(this.price*(1-this.storageProvider.shopInfo.discountRate));
+          this.amount=this.price-this.discount;
       });
     }
 
@@ -216,7 +244,7 @@ export class ShopCartPage{
           this.cart=this.storageProvider.cart;
           this.price=this.cart.total;
           this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
-          this.amount=Math.round(this.price*(1-this.storageProvider.shopInfo.discountRate));
+          this.amount=this.price-this.discount;
       });
     }
 

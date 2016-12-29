@@ -33,6 +33,7 @@ export class StorageProvider{
     public tourMode=false;
     public isAndroid;
     public cashId;
+    public cashAmount:number;
 
     public refundBank:string="";
     public refundAccount:string="";

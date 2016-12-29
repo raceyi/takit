@@ -17,7 +17,6 @@ import {BankBranchPage} from '../bankbranch/bankbranch';
 })
 export class CashPage {
   public cashMenu: string = "cashIn";
-  public available: string ="15000";
   public transactions=[];
   public browserRef:InAppBrowser;
   public infiniteScroll=false;
@@ -87,35 +86,43 @@ export class CashPage {
 
   cashInCheck(confirm){
       console.log("cashInCheck comes(confirm)");
-      this.createTimeout(15000)
-                .then(() => {
-                    console.log(`done after 300ms delay`);
-                    let body = JSON.stringify({});
-                    //let headers = new Headers();
-                    //headers.append('Content-Type', 'application/json');
-                    console.log("server:"+ this.storageProvider.serverAddress);
-                    this.serverProvider.post(this.storageProvider.serverAddress+"/triggerCashCheck",body).then((res:any)=>{    
-                        var result:string=res.result;
-                        if(result=="success"){
-                            console.log("triggerCashCheck sent successfully");
-                        }
-                    },(err)=>{
-                            console.log("triggerCashCheck err "+err);
-                            if(err=="NetworkFailure"){
-                                let alert = this.alertController.create({
-                                    title: '서버와 통신에 문제가 있습니다',
-                                    subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                                    buttons: ['OK']
-                                });
-                                alert.present();
-                            }
+      let body = JSON.stringify({});
+      this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashInstantly",body).then((res:any)=>{
+          if(res.result=="success"){
+                    console.log("success in checkCashInstantly");
+                    let alert = this.alertController.create({
+                        title: '입금 확인을 요청했습니다.',
+                        subTitle: '잠시 기다려 주시기 바랍니다.',
+                        buttons: ['OK']
                     });
+                    alert.present();
+          }else{
+                let alert = this.alertController.create({
+                    title: '요청에 실패했습니다. 잠시후 다시 요청바랍니다.',
+                    buttons: ['OK']
                 });
+                alert.present();
+          }
+      },(err)=>{
+          if(err=="NetworkFailure"){
+                let alert = this.alertController.create({
+                    title: '서버와 통신에 문제가 있습니다',
+                    subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                    buttons: ['OK']
+                });
+                alert.present();
+          }else{
+                let alert = this.alertController.create({
+                    title: '요청에 실패했습니다. 잠시후 다시 요청바랍니다.',
+                    buttons: ['OK']
+                });
+                alert.present();
+          }
+      });
   }
 
   cashInComplete(){
       console.log("cashInComplete");
-       /*
       if(this.depositAmount==undefined){
             let alert = this.alertController.create({
                 title: '입금액을 입력해주시기바랍니다.',
@@ -149,14 +156,14 @@ export class CashPage {
       var depositBank= this.storageProvider.depositBank=='0'?this.depositBankInput:this.storageProvider.depositBank;
       var depositBranch= this.storageProvider.depositBranch=='codeInput'? this.storageProvider.depositBranchInput:this.storageProvider.depositBranch;
       let body = JSON.stringify({depositDate:transferDate.toISOString(),
-                                 depositAmount: this.depositAmount,
-                                 depositBranch: depositBranch,
+                                 amount: this.depositAmount,
+                                 branchCode: depositBranch,
                                  depositMemo:this.depositMemo
                                  });
                                  
      console.log("body:"+JSON.stringify(body));                           
 
-      this.serverProvider.post(this.storageProvider.serverAddress+" ",body).then((res:any)=>{
+      this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashUserself",body).then((res:any)=>{
           console.log("res:"+JSON.stringify(res));
           if(res.result=="success"){
                     let alert = this.alertController.create({
@@ -189,8 +196,7 @@ export class CashPage {
                     });
                     alert.present();
                 }
-      })
-*/      
+      });     
   }
   
   configureCashId(){

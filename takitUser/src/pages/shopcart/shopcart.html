@@ -77,20 +77,20 @@
 
     <ion-row class="textrow">
       <ion-col width-33 class="right">{{cart.total}}원</ion-col>
-      <ion-col width-33 class="right">{{this.amount}}원</ion-col>
-      <ion-col width-33 class="right"><span style="color:#387ef5">{{this.discount}}</span>원</ion-col>
+      <ion-col width-33 class="right">{{discount}}원</ion-col>
+      <ion-col width-33 class="right"><span style="color:#387ef5"></span>{{amount}}원</ion-col>
     </ion-row>
 
       <ion-row>
         <ion-col class="cash">사용가능한 캐쉬</ion-col>
-        <ion-col class="cash">15,000원</ion-col>
+        <ion-col class="cash">{{storageProvider.cashAmount}}</ion-col>
       </ion-row>
 
       <ion-row class="textrow">
         <ion-col class="password">캐쉬 비밀번호</ion-col>
         <ion-col class="password0">
           <ion-item class="cashPassword">
-          <ion-input type="password" class="passwordinput"></ion-input>
+          <ion-input type="password" class="passwordinput" [(ngModel)]="cashPassword"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>

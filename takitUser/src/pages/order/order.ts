@@ -33,6 +33,8 @@ export class OrderPage {
   discount:number;
   amount:number;
   price:number;
+  
+  cashPassword:string="";
 
   focusQunatityNum= new EventEmitter();
 
@@ -53,7 +55,7 @@ export class OrderPage {
 
       this.price=this.menu.price*1;
       this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
-      this.amount=Math.round(this.price*(1-this.storageProvider.shopInfo.discountRate));
+      this.amount=this.price-this.discount;
       console.log(" ["+this.menu.hasOwnProperty("takeout")+"][ "+(this.menu.takeout!=null) +"] ["+ (this.menu.takeout!=false)+"]");
       if(this.menu.hasOwnProperty("takeout") && (this.menu.takeout!=null) && (this.menu.takeout!=false)){ // humm... please add takeout field into all menus...
          this.takeoutAvailable=true;
@@ -66,6 +68,7 @@ export class OrderPage {
           this.options=JSON.parse(this.menu.options);
           this.options.forEach((option)=>{
               if(option.hasOwnProperty("choice") && Array.isArray(option.choice)){
+                  option.flag=false;
                   option.flags=[];
                   option.disabled=[];
                   var i;
@@ -83,9 +86,7 @@ export class OrderPage {
   sendSaveOrder(cart,menuName){
       if(this.storageProvider.tourMode==false){
        return new Promise((resolve, reject)=>{
-             //check if cash and cashpassword exist
-             //....
-
+             //check if cash and cashpassword exist             
              var takeout;
              if(this.takeout==true){
                  takeout=1;
@@ -96,12 +97,12 @@ export class OrderPage {
                                         takitId:this.takitId,
                                         orderList:JSON.stringify(cart), 
                                         orderName:menuName+"("+this.quantity+")",
-                                        amount:Math.round(this.amount),
+                                        amount:this.amount,
                                         takeout: takeout,
-                                        orderedTime:new Date().toISOString()});
-                                       // cashId: this.storageProvider. ,
-                                       // cashPassword:);
-
+                                        orderedTime:new Date().toISOString(),
+                                        cashId: this.storageProvider.cashId,
+                                        cashPassword:this.cashPassword
+                                        });
               console.log("sendOrder:"+JSON.stringify(body));                          
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
@@ -138,8 +139,9 @@ export class OrderPage {
                             menuName:menuName,
                             quantity:this.quantity,
                             options: options,
-                            price: Math.round(this.amount)});
-           cart.total=Math.round(this.amount);
+                            price: this.amount});
+           cart.total=this.amount;
+           this.cashPassword="";
            this.sendSaveOrder(cart,menuName).then((res:any)=>{
                  console.log(JSON.stringify(res)); 
                  var result:string=res.result;
@@ -225,6 +227,24 @@ export class OrderPage {
 
   order(){
     console.log("order comes... "); 
+    if(this.storageProvider.cashId==undefined ||
+                this.storageProvider.cashId.length<5){
+        let alert = this.alertController.create({
+            subTitle: '캐쉬아이디를 설정해 주시기 바랍니다.',
+            buttons: ['OK']
+        });
+        alert.present();
+        return;               
+    }
+    if(this.cashPassword.length<6){
+        let alert = this.alertController.create({
+            subTitle: '캐쉬비밀번호(6자리)를 입력해 주시기 바랍니다.',
+            buttons: ['OK']
+        });
+        alert.present();
+        return;               
+    }
+
     if(this.quantity==undefined){
         let alert = this.alertController.create({
             subTitle: '수량을 입력해주시기 바랍니다',
@@ -238,18 +258,24 @@ export class OrderPage {
     }
     // check options
     this.checkOptionValidity().then(()=>{
-        this.sendOrder();
+        if(this.storageProvider.cashAmount >= this.amount){
+            this.sendOrder();
+        }else{
+            let alert = this.alertController.create({
+                subTitle: '캐쉬잔액이 부족합니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+            return;
+        }
     },(name)=>{
         console.log("option.select is undefined");
         let alert = this.alertController.create({
             subTitle: name+'을 선택해주십시오',
             buttons: ['OK']
         });
-        console.log("hum...");
-        alert.present().then(()=>{
-            console.log("alert done");
-            return;
-        });
+        alert.present();
+        return;
     });
   }
 
@@ -281,6 +307,7 @@ export class OrderPage {
   }
 
   saveShopcart(){    
+    this.cashPassword="";  
     this.storageProvider.getCartInfo(this.takitId).then((result:any)=>{
         var cart;
         if(Array.isArray(result) && result.length==1){
@@ -310,6 +337,7 @@ export class OrderPage {
                     options: options,
                     price: this.menu.price,
                     amount: this.price,
+                    discountAmount:this.price-Math.round(this.price*this.storageProvider.shopInfo.discountRate),
                     takeout:this.takeoutAvailable});
         cart.total=cart.total+this.price;
         console.log("cart:"+JSON.stringify(cart));
@@ -348,27 +376,14 @@ export class OrderPage {
           this.quantityInputType="select";
           this.price=this.menu.price*quantity;
           this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
-          this.amount=Math.round(this.price*(1-this.storageProvider.shopInfo.discountRate));
+          this.amount=this.price-this.discount;
       }
   }
 
-  optionChange(option){
-      console.log("flag:"+option.flag);
+  computeAmount(option){
+      console.log("[computeAmount]flag:"+option.flag);
       if(option.flag==true){
           this.price=this.price+option.price*this.quantity;    
-          // workaround solution as option.flags[i] is not updated when it is disabled.
-          // Please move below codes into option.flag==false... 
-            if(Array.isArray(option.flags)){     
-                var i;
-                for(i=0;i<option.flags.length;i++){
-                        //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
-                        option.disabled[i]=false;
-                }
-               // for(i=0;i<option.flags.length;i++){
-               //         option.flags[i]=false;
-               //         //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
-               // }
-            }
       }else{
           this.price=this.price-option.price*this.quantity;
           console.log("option.select:"+option.select);
@@ -380,49 +395,49 @@ export class OrderPage {
                         //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
                         option.flags[i]=false;
                 }
-                for(i=0;i<option.flags.length;i++){        
-                        //option.disabled[i]=true;
-                        //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
-                }
-                
           }
       }
       this.discount=this.price*this.storageProvider.shopInfo.discountRate;
-      this.amount=Math.round(this.price*(1-this.storageProvider.shopInfo.discountRate));
+      this.amount=this.price-this.discount;
   }
 
     choiceChange(option,idx,flag){
-        /*
-        ////////debug-begin
-        console.log("[choiceChange]flag:"+flag);
-        for(i=0;i<option.flags.length;i++){
-            console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
-        }
-        ////////debug-end
-        */
-        if(flag==true && Array.isArray(option.flags)){
-            option.select=option.choice[idx];
-            option.flag=true;
-            // other flags become false
-            var i;
-            for(i=0;i<option.flags.length;i++){
-                if(i!=idx){
-                    option.flags[i]=false;
-                }else{
-                    option.flags[i]=true;
+        var prevOptionFlag=option.flag;
+        console.log("prevOptionFlag:"+prevOptionFlag);
+        this.ngZone.run(()=>{
+            if(flag==true && Array.isArray(option.flags)){
+                option.select=option.choice[idx];
+                option.flag=true;
+                if(prevOptionFlag==false){
+                    console.log("compute amount again(add)");
+                    this.computeAmount(option);
                 }
+                // other flags become false
+                var i;
+                for(i=0;i<option.flags.length;i++){
+                    if(i!=idx){
+                        option.flags[i]=false;
+                    }else{
+                        option.flags[i]=true;
+                    }
+                }
+            }else{
+                option.select=undefined;
+                var i;
+                for(i=0;i<option.flags.length;i++){
+                    if(option.flags[i]==true)
+                        break;
+                }
+                if(i==option.flags.length){
+                    option.flag=false;
+                    if(prevOptionFlag==true){
+                        this.computeAmount(option);            
+                        console.log("compute amount again(remove)");
+                    }
+                }
+
             }
-        }else{
-            option.select=undefined;
-            var i;
-            for(i=0;i<option.flags.length;i++){
-                if(option.flags[i]==true)
-                    break;
-            }
-            if(i==option.flags.length){
-                option.flag=false;
-            }            
-        }
+        });
     }
 
   quantityInput(flag){
@@ -465,7 +480,7 @@ export class OrderPage {
         console.log("unitPrice:"+unitPrice);
           this.price=unitPrice*this.quantity;
           this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
-          this.amount=Math.round(this.price*(1-this.storageProvider.shopInfo.discountRate));
+          this.amount=this.price-this.discount;
     }      
   }
 
