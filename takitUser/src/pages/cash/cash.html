@@ -94,7 +94,7 @@
                 <ion-item class="bankSelect" >
                     <ion-label></ion-label>
                     <ion-select class="depositBankSelect" [(ngModel)]="storageProvider.depositBank"  (ionChange)="depositBankType(storageProvider.depositBank)">
-                      <ion-option *ngFor="let bank of storageProvider.banklist" value="{{bank.value}}">{{bank.name}}</ion-option>
+                      <ion-option *ngFor="let bank of storageProvider.banklist" value="{{bank.name}}">{{bank.name}}</ion-option>
                       <ion-option value="0">직접입력</ion-option>
                     </ion-select>
                 </ion-item>
@@ -115,6 +115,7 @@
                     은행코드(3자리)를 숫자로 입력해주시기 바랍니다.
                 </p>
             </ion-row>
+    <!--        
             <ion-row>
               <ion-col width-50>
                 <ion-item >
@@ -144,6 +145,7 @@
                     지점코드(7자리)를 숫자로 입력해주시기 바랍니다. 
                 </p>
             </ion-row>
+         -->   
             <ion-row center>
             <ion-col>
                 <ion-item>
@@ -179,13 +181,13 @@
                 <ion-row class="transaction">
                     <ion-col>{{tr.date}}</ion-col>
                     <ion-col>{{tr.amount}}</ion-col>
-                    <ion-col *ngIf="tr.type!='확인'">{{tr.type}}</ion-col>
-                    <ion-col *ngIf="tr.type=='확인'"> <button ion-button >{{tr.type}}</button></ion-col>
-                    <ion-col>{{tr.balance}}</ion-col>
+                    <ion-col *ngIf="tr.transactionType!='deposit' || tr.confirm==1">{{tr.type}}</ion-col>
+                    <ion-col *ngIf="tr.transactionType=='deposit' && tr.confirm==0"> <button ion-button >확인</button></ion-col>
+                    <ion-col *ngIf="tr.nowBalance!=0">{{tr.nowBalance}}</ion-col>
                 </ion-row>
               </ion-item>
       </ion-list>        
-          <ion-infinite-scroll (ionInfinite)="doInfinite($event)" [enabled]="infiniteScroll" [hidden]="transactions.length==0 && cashMenu!='cashHistory'">
+          <ion-infinite-scroll #infiniteScroll (ionInfinite)="doInfinite($event)" [enabled]="infiniteScroll" [hidden]="transactions.length==0 && cashMenu!='cashHistory'">
             <ion-infinite-scroll-content></ion-infinite-scroll-content>
           </ion-infinite-scroll>
 

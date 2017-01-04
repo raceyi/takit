@@ -385,6 +385,8 @@ export class TabsPage {
             });
                         
             this.pushNotification.on('registration',(response)=>{
+
+                
               console.log("registration:"+JSON.stringify(response));
               console.log("registration..."+response.registrationId);
               var platform;
@@ -421,10 +423,17 @@ export class TabsPage {
             });
 
             this.pushNotification.on('notification',(data)=>{
+/*                
+                  let custom = {"cashTuno":"20170103075617278","cashId":"TAKIT02","transactionType":"deposit","amount":1,"transactionTime":"20170103","confirm":0,"bankName":"농협은행"}
+                  let cashConfirmModal = this.modalCtrl.create(CashConfirmPage, { custom: custom });
+                  cashConfirmModal.present();
+*/                  
+
                 console.log("[home.ts]pushNotification.on-data:"+JSON.stringify(data));
                 console.log("[home.ts]pushNotification.on-data.title:"+JSON.stringify(data.title));
                 
                 var additionalData:any=data.additionalData;
+                //Please check if type of custom is object or string. I have no idea why this happens.
                 if(additionalData.GCMType==="order"){
                     this.storageProvider.messageEmitter.emit(additionalData.custom);//  만약 shoptab에 있다면 주문목록을 업데이트 한다. 만약 tab이라면 메시지를 보여준다. 
                     console.log("show alert");
@@ -456,25 +465,31 @@ export class TabsPage {
                         alert.present();
                     });
                 }else if(additionalData.GCMType==="cash"){
-                /*
-                  let cashConfirmModal = this.modalCtrl.create(CashConfirmPage, { userId: 8675309 });
-                  cashConfirmModal.present();
-                */
-                }
-                this.confirmMsgDelivery(additionalData.notId).then(()=>{
-                      console.log("confirmMsgDelivery success");
-                },(err)=>{
-                    if(err=="NetworkFailure"){
-                        let alert = this.alertController.create({
-                            title: "서버와 통신에 문제가 있습니다.",
-                            buttons: ['OK']
-                        });
-                        alert.present();
-                    }else{
-                        console.log("hum...successGCM-HttpFailure");
-                    }
-                });
+                  console.log("additionalData.custom:"+additionalData.custom);
 
+                  let cashConfirmModal;
+                  if(typeof additionalData.custom === 'string'){ 
+                      cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: JSON.parse(additionalData.custom) });
+                  }else{ // object 
+                      cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: additionalData.custom });
+                  }
+                  cashConfirmModal.present();
+                }
+                if(additionalData.GCMType!=="cash"){
+                        this.confirmMsgDelivery(additionalData.notId).then(()=>{
+                            console.log("confirmMsgDelivery success");
+                        },(err)=>{
+                            if(err=="NetworkFailure"){
+                                let alert = this.alertController.create({
+                                    title: "서버와 통신에 문제가 있습니다.",
+                                    buttons: ['OK']
+                                });
+                                alert.present();
+                            }else{
+                                console.log("hum...successGCM-HttpFailure");
+                            }
+                        });
+                }             
                 /*
                 console.log(data.message);
                 console.log(data.title);
@@ -483,6 +498,7 @@ export class TabsPage {
                 console.log(data.image);
                 console.log(data.additionalData);
                 */
+
             });
 
             this.pushNotification.on('error', (e)=>{

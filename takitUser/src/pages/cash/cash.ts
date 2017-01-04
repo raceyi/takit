@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {App,NavController,NavParams,Tabs,AlertController,TextInput} from 'ionic-angular';
-import {Platform,Content} from 'ionic-angular';
+import {Platform,Content,ModalController,InfiniteScroll} from 'ionic-angular';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ViewChild} from '@angular/core';
@@ -11,11 +11,15 @@ import {ServerProvider} from '../../providers/serverProvider';
 import {Storage} from '@ionic/storage';
 import {BankBranchPage} from '../bankbranch/bankbranch';
 
+import {CashConfirmPage} from '../cashconfirm/cashconfirm';
+
 @Component({
   selector: 'page-cash',
   templateUrl: 'cash.html'
 })
 export class CashPage {
+ //@ViewChild('infiniteScroll') infiniteScrollRef: InfiniteScroll;
+  public infiniteScrollRef:any;
   public cashMenu: string = "cashIn";
   public transactions=[];
   public browserRef:InAppBrowser;
@@ -36,10 +40,12 @@ export class CashPage {
 
   public refundAmount:number=undefined;
 
+  public lastTuno:number=-1;
+
   constructor(private app:App,private platform:Platform, private navController: NavController
         ,private navParams: NavParams,public http:Http ,private alertController:AlertController
         ,public storageProvider:StorageProvider,private serverProvider:ServerProvider
-        ,public storage:Storage) {
+        ,public storage:Storage,public modalCtrl: ModalController) {
 
     var d = new Date();
     var mm = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1); // getMonth() is zero-based
@@ -48,13 +54,13 @@ export class CashPage {
     this.transferDate=dString;
 
     //console.log(" param: "+this.navParams.get('param'));
-    
+    /*
     this.transactions.push({date:"2016-01-03" ,type:"입금", amount:"20,000",balance:"20,000"});
     this.transactions.push({date:"2016-01-03" ,type:"사용", amount:"-5,000",balance:"15,000"});
     this.transactions.push({date:"2016-01-15" ,type:"사용", amount:"-2,000",balance:"13,000"});
     this.transactions.push({date:"2016-01-29" ,type:"이자", amount:"+2",balance:"13,002"});
     this.transactions.push({date:"2016-01-29" ,type:"확인", amount:"+5,000",balance:"13,002"});
-    
+    */
     //read cash info from local storage
     // bank name and account saved in encrypted format.
     console.log("read refundBank");
@@ -85,9 +91,15 @@ export class CashPage {
     }
 
   cashInCheck(confirm){
+/*      
+      let custom=      {"cashTuno":"20170103075617278","cashId":"TAKIT02","transactionType":"deposit","amount":1,"transactionTime":"20170103","confirm":0,"bankName":"농협은행"}
+                  let cashConfirmModal = this.modalCtrl.create(CashConfirmPage, { custom: custom });
+                  cashConfirmModal.present();
+*/                                             
       console.log("cashInCheck comes(confirm)");
       let body = JSON.stringify({});
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashInstantly",body).then((res:any)=>{
+          console.log("checkCashInstantly res:"+JSON.stringify(res));
           if(res.result=="success"){
                     console.log("success in checkCashInstantly");
                     let alert = this.alertController.create({
@@ -118,7 +130,7 @@ export class CashPage {
                 });
                 alert.present();
           }
-      });
+      }); 
   }
 
   cashInComplete(){
@@ -140,6 +152,7 @@ export class CashPage {
             alert.present();
             return;
       }
+      /*
       if(this.storageProvider.depositBranch=="codeInput" && 
         (this.storageProvider.depositBranchInput==undefined || this.storageProvider.depositBranchInput.trim().length!=7)){
             let alert = this.alertController.create({
@@ -149,17 +162,30 @@ export class CashPage {
             alert.present();
             return;
       }
+      */
       if(this.depositMemo==undefined || this.depositMemo.length==0){
           this.depositMemo=this.storageProvider.name;
       }
       var transferDate=new Date(this.transferDate);
-      var depositBank= this.storageProvider.depositBank=='0'?this.depositBankInput:this.storageProvider.depositBank;
-      var depositBranch= this.storageProvider.depositBranch=='codeInput'? this.storageProvider.depositBranchInput:this.storageProvider.depositBranch;
-      let body = JSON.stringify({depositDate:transferDate.toISOString(),
-                                 amount: this.depositAmount,
-                                 branchCode: depositBranch,
-                                 depositMemo:this.depositMemo
+
+      //var depositBank= this.storageProvider.depositBank=='0'?this.depositBankInput:this.storageProvider.depositBank;
+      //var depositBranch= this.storageProvider.depositBranch=='codeInput'? this.storageProvider.depositBranchInput:this.storageProvider.depositBranch;
+
+      let body;
+      if(this.storageProvider.depositBank=='0'){
+            body = JSON.stringify({depositDate:transferDate.toISOString(),
+                                        amount: this.depositAmount,
+                                        bankCode: this.depositBankInput,
+                                        depositMemo:this.depositMemo
                                  });
+      }else{
+            body = JSON.stringify({depositDate:transferDate.toISOString(),
+                                        amount: this.depositAmount,
+                                        bankName: this.storageProvider.depositBank,
+                                        depositMemo:this.depositMemo
+                                 });
+          
+      }
                                  
      console.log("body:"+JSON.stringify(body));                           
 
@@ -240,7 +266,8 @@ export class CashPage {
         });
         confirm.present();    
     }else{
-          //this.app.getRootNav().push(CashIdPage);
+          this.app.getRootNav().push(CashIdPage);
+/*
           console.log("ios....call mobileAuth");
                 this.mobileAuth().then(()=>{ // success
                     this.app.getRootNav().push(CashIdPage);
@@ -255,7 +282,7 @@ export class CashPage {
                             alert.present();
                     }
                 });
-
+*/
     }
   }
 
@@ -319,10 +346,48 @@ export class CashPage {
     });
   }
 
+  convertType(type){
+      if(type=='deposit'){
+          return '입금';
+      }else if(type=='payment'){
+          return '구매';
+      }else if(type=='refund'){
+          return '환불';
+      }else if(type=='interest'){
+          return '이자';
+      }else{
+          console.log("convertType invalid type:"+type);
+          return '알수 없음';
+      }
+  }
+
+  updateTransaction(cashList){
+            cashList.forEach((transaction)=>{
+                var tr:any={};
+                tr=transaction;
+                tr.type=this.convertType(tr.transactionType);
+                tr.date=tr.transactionTime.substr(0,10);
+                console.log("tr:"+JSON.stringify(tr));
+                this.transactions.push(tr);
+            });
+      
+  }
   doInfinite(infiniteScroll){
     console.log("doInfinite");
-    this.transactions.push({date:"2016-01-29" ,type:"확인", amount:"+5,000",balance:"13,002"});
-    infiniteScroll.complete();
+    let lastTuno=this.transactions[this.transactions.length-1].cashTuno
+    this.getTransactions(lastTuno).then((res:any)=>{
+        console.log("res:"+JSON.stringify(res));
+        if(res.cashList=="0"){
+            infiniteScroll.enable(false);
+            this.infiniteScroll=false;
+        }else{
+            this.updateTransaction(res.cashList);
+            infiniteScroll.complete();
+            this.infiniteScrollRef=infiniteScroll;
+        }
+    });
+    //this.transactions.push({date:"2016-01-29" ,type:"확인", amount:"+5,000",balance:"13,002"});
+    //infiniteScroll.complete();
   }
 
    disableInfiniteScroll(){
@@ -330,9 +395,53 @@ export class CashPage {
     this.infiniteScroll=false;
   }
 
+    getTransactions(lastTuno){
+        return new Promise((resolve, reject)=>{
+            let body = JSON.stringify({cashId:this.storageProvider.cashId,
+                                lastTuno: lastTuno,
+                                limit: this.storageProvider.TransactionsInPage});
+
+            this.serverProvider.post( this.storageProvider.serverAddress+"/getCashList",body).then((res:any)=>{
+                if(res.result=="success"){
+                     resolve(res);
+                }else{
+                     reject("serverFailure");
+                }
+            },(err)=>{
+                    reject(err);
+            });
+        });
+    }
+
   enableInfiniteScroll(){
     console.log("enableInfiniteScroll");
     this.infiniteScroll=true;
+    
+    this.getTransactions(-1).then((res:any)=>{
+                console.log("res:"+JSON.stringify(res));
+                if(res.cashList=="0"){
+                    this.infiniteScroll=false;
+                }else{
+                    this.updateTransaction(res.cashList);
+                    if(this.infiniteScrollRef!=undefined)
+                        this.infiniteScrollRef.complete();
+                }
+            },(err)=>{
+                if(err=="NetworkFailure"){
+                    let alert = this.alertController.create({
+                        title: '서버와 통신에 문제가 있습니다',
+                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                }else{
+                    let alert = this.alertController.create({
+                        title: '캐쉬 내역을 가져오지 못했습니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                }
+            });
   }
 
   depositBankType(depositBank){

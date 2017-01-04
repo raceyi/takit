@@ -47,7 +47,7 @@ export class StorageProvider{
     /* 농협 계좌 이체가능 은행 */
     banklist=[  {name:"국민",value:"004"},
                 {name:"기업",value:"003"},
-                {name:"농협",value:"010"},
+                {name:"농협",value:"011"},
                 {name:"신한",value:"088"},
                 {name:"우리",value:"020"},
                 {name:"KEB하나",value:"081"},  
@@ -59,8 +59,8 @@ export class StorageProvider{
                 {name:"산업",value:"002"},
                 {name:"상호저축",value:"050"},
                 {name:"새마을금고",value:"045"},
-                {name:"수협",value:"007"},
-                {name:"신협",value:"048"},
+                {name:"수협",value:"007"}, 
+                {name:"신협",value:"048"}, 
                 {name:"우체국",value:"071"},
                 {name:"전북",value:"037"},
                 {name:"제주",value:"035"},
@@ -69,7 +69,7 @@ export class StorageProvider{
                 {name:"BOA",value:"060"},
                 {name:"도이치",value:"055"},
                 {name:"HSBC",value:"054"},
-                {name:"JP모간체이스",value:"057"},
+                {name:"제이피모간체이스",value:"057"},
                 {name:"중국공상",value:"062"},
                 {name:"비엔피파리바",value:"061"}];
 
@@ -81,6 +81,7 @@ export class StorageProvider{
     public homeJpegQuality=this.configProvider.getHomeJpegQuality();
     public menusInRow=this.configProvider.getMenusInRow();
     public OrdersInPage:number=this.configProvider.getOrdersInPage(); // The number of orders shown in a page 
+    public TransactionsInPage:number=10; // The number of orders shown in a page 
 
     public userSenderID=this.configProvider.getUserSenderID(); //fcm senderID
 
