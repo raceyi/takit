@@ -22,6 +22,15 @@ page-cash{
 
     .textSet{
         font-size: 1.4rem;
+        margin-right:0px;
+    }
+
+    .clipBoard.item-md {
+        padding-left: 0px;
+    }
+
+    .clipBoard.item-ios {
+        padding-left: 0px;
     }
 
     .item {
@@ -305,6 +314,11 @@ page-cash{
               color:#000000 !important;
               text-align: left !important;
         }
+    }
+
+    .copyClipboardButton{
+        vertical-align: inherit !important;
+        border-radius: 0px !important;
     }
 
     .selectButton{

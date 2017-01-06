@@ -166,6 +166,23 @@ export class ShopMyPage{
             console.log("cancelOrder-res:"+JSON.stringify(res));
             var result:string=res.result;
             if(result==="success"){
+                      this.serverProvider.updateCashAvailable().then((res)=>{
+                        //do nothing;
+                      },(err)=>{
+                            if(err=="NetworkFailure"){
+                                          let alert = this.alertController.create({
+                                              title: "서버와 통신에 문제가 있습니다.",
+                                              buttons: ['OK']
+                                          });
+                                          alert.present();
+                              }else{
+                                let alert = this.alertController.create({
+                                      title: "캐쉬정보를 가져오지 못했습니다.",
+                                      buttons: ['OK']
+                                  });
+                                      alert.present();
+                              }
+                      });
               let alert = this.alertController.create({
                     title: '주문 취소가 정상 처리 되었습니다.',
                     buttons: ['OK']

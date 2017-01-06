@@ -60,6 +60,8 @@ License: GPL
 
  $ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git
 
+ $ionic plugin add https://github.com/VersoSolutions/CordovaClipboard 
+
  $npm install crypto-js
 
  $npm install @types/crypto-js --save

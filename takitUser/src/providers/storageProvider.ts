@@ -21,6 +21,7 @@ export class StorageProvider{
     public id:string;
     public messageEmitter= new EventEmitter();
     public tabMessageEmitter = new EventEmitter();
+    public cashListUpdateEmitter= new EventEmitter();
     public shopTabRef:Tabs;
     public login:boolean=false;
     public navController:NavController;

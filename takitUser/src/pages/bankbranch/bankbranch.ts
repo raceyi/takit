@@ -69,7 +69,7 @@ export class BankBranchPage {
             console.log("codeInput");
             this.storageProvider.depositBranch='codeInput';
         }else{
-            this.storageProvider.depositBranch=item;
+            this.storageProvider.depositBranch=item.branchCode;
             this.storageProvider.depositBranchInput=item.branchName;
             console.log("branchName:"+this.storageProvider.depositBranchInput);
         }

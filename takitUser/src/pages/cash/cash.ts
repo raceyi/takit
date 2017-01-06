@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component,NgZone} from '@angular/core';
 import {App,NavController,NavParams,Tabs,AlertController,TextInput} from 'ionic-angular';
 import {Platform,Content,ModalController,InfiniteScroll} from 'ionic-angular';
 import {Http,Headers} from '@angular/http';
@@ -10,8 +10,10 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {Storage} from '@ionic/storage';
 import {BankBranchPage} from '../bankbranch/bankbranch';
-
 import {CashConfirmPage} from '../cashconfirm/cashconfirm';
+
+declare var cordova:any;
+declare var moment:any;
 
 @Component({
   selector: 'page-cash',
@@ -42,10 +44,12 @@ export class CashPage {
 
   public lastTuno:number=-1;
 
+  messageEmitterSubscription;
+
   constructor(private app:App,private platform:Platform, private navController: NavController
         ,private navParams: NavParams,public http:Http ,private alertController:AlertController
         ,public storageProvider:StorageProvider,private serverProvider:ServerProvider
-        ,public storage:Storage,public modalCtrl: ModalController) {
+        ,public storage:Storage,public modalCtrl: ModalController,private ngZone:NgZone) {
 
     var d = new Date();
     var mm = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1); // getMonth() is zero-based
@@ -53,6 +57,7 @@ export class CashPage {
     var dString=d.getFullYear()+'-'+(mm)+'-'+dd;
     this.transferDate=dString;
 
+    this.depositMemo=this.storageProvider.name;
     //console.log(" param: "+this.navParams.get('param'));
     /*
     this.transactions.push({date:"2016-01-03" ,type:"입금", amount:"20,000",balance:"20,000"});
@@ -82,25 +87,58 @@ export class CashPage {
      },(err)=>{
         console.log("refundBank doesn't exist");
      });
+
+        this.messageEmitterSubscription= this.storageProvider.cashListUpdateEmitter.subscribe(()=> {
+            console.log("!!!update cashlist comes!!!-"+this.cashMenu);
+            if(this.cashMenu=='cashHistory'){ //update cashList
+                console.log("!!!update cashlist!!!");
+                    this.getTransactions(-1).then((res:any)=>{
+                        this.ngZone.run(()=>{
+                                console.log("res:"+JSON.stringify(res));
+                                if(res.cashList=="0"){
+                                    this.infiniteScroll=false;
+                                }else{
+                                    this.transactions=[];
+                                    this.updateTransaction(res.cashList);
+                                    if(this.infiniteScrollRef!=undefined)
+                                        this.infiniteScrollRef.complete();
+                                }
+                        });
+                    },(err)=>{
+                        if(err=="NetworkFailure"){
+                            let alert = this.alertController.create({
+                                title: '서버와 통신에 문제가 있습니다',
+                                subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }else{
+                            let alert = this.alertController.create({
+                                title: '캐쉬 내역을 가져오지 못했습니다.',
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    });
+            }
+        });
   }
 
-    createTimeout(timeout) {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => resolve(null),timeout)
-        })
-    }
-
   cashInCheck(confirm){
-/*      
-      let custom=      {"cashTuno":"20170103075617278","cashId":"TAKIT02","transactionType":"deposit","amount":1,"transactionTime":"20170103","confirm":0,"bankName":"농협은행"}
-                  let cashConfirmModal = this.modalCtrl.create(CashConfirmPage, { custom: custom });
-                  cashConfirmModal.present();
-*/                                             
+  /*
+      let custom:any={"depositMemo":"이경주","amount":"2","depositDate":"2017-01-06","branchCode":"0110013","cashTuno":"20170106093158510","bankName":"농협"};
+    
+     // let custom=      {"cashTuno":"20170103075617278","cashId":"TAKIT02","transactionType":"deposit","amount":1,"transactionTime":"20170103","confirm":0,"bankName":"농협은행"}
+
+        let cashConfirmModal = this.modalCtrl.create(CashConfirmPage, { custom: custom });
+        cashConfirmModal.present();
+   */    
       console.log("cashInCheck comes(confirm)");
       let body = JSON.stringify({});
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashInstantly",body).then((res:any)=>{
           console.log("checkCashInstantly res:"+JSON.stringify(res));
           if(res.result=="success"){
+              if(this.storageProvider.isAndroid){
                     console.log("success in checkCashInstantly");
                     let alert = this.alertController.create({
                         title: '입금 확인을 요청했습니다.',
@@ -108,6 +146,7 @@ export class CashPage {
                         buttons: ['OK']
                     });
                     alert.present();
+              }
           }else{
                 let alert = this.alertController.create({
                     title: '요청에 실패했습니다. 잠시후 다시 요청바랍니다.',
@@ -130,7 +169,7 @@ export class CashPage {
                 });
                 alert.present();
           }
-      }); 
+      });
   }
 
   cashInComplete(){
@@ -152,7 +191,7 @@ export class CashPage {
             alert.present();
             return;
       }
-      /*
+      
       if(this.storageProvider.depositBranch=="codeInput" && 
         (this.storageProvider.depositBranchInput==undefined || this.storageProvider.depositBranchInput.trim().length!=7)){
             let alert = this.alertController.create({
@@ -162,29 +201,40 @@ export class CashPage {
             alert.present();
             return;
       }
-      */
+      
       if(this.depositMemo==undefined || this.depositMemo.length==0){
           this.depositMemo=this.storageProvider.name;
       }
       var transferDate=new Date(this.transferDate);
 
-      //var depositBank= this.storageProvider.depositBank=='0'?this.depositBankInput:this.storageProvider.depositBank;
-      //var depositBranch= this.storageProvider.depositBranch=='codeInput'? this.storageProvider.depositBranchInput:this.storageProvider.depositBranch;
+//      var depositBank= this.storageProvider.depositBank=='0'?this.depositBankInput:this.storageProvider.depositBank;
+      var depositBranch= this.storageProvider.depositBranch=='codeInput'? this.storageProvider.depositBranchInput:this.storageProvider.depositBranch;
 
       let body;
       if(this.storageProvider.depositBank=='0'){
             body = JSON.stringify({depositDate:transferDate.toISOString(),
                                         amount: this.depositAmount,
                                         bankCode: this.depositBankInput,
-                                        depositMemo:this.depositMemo
+                                        branchCode:depositBranch,
+                                        depositMemo:this.depositMemo,
+                                        cashId:this.storageProvider.cashId
                                  });
       }else{
+           // look for name of depositBank
+          var i;
+          for(i=0;i<this.storageProvider.banklist.length;i++){
+                if(this.storageProvider.banklist[i].value==this.storageProvider.depositBank){
+                    break;
+                }
+          }
+          console.log("bank name:"+this.storageProvider.banklist[i].name);
             body = JSON.stringify({depositDate:transferDate.toISOString(),
                                         amount: this.depositAmount,
-                                        bankName: this.storageProvider.depositBank,
-                                        depositMemo:this.depositMemo
+                                        bankName: this.storageProvider.banklist[i].name,
+                                        branchCode:depositBranch,
+                                        depositMemo:this.depositMemo,
+                                        cashId:this.storageProvider.cashId
                                  });
-          
       }
                                  
      console.log("body:"+JSON.stringify(body));                           
@@ -192,19 +242,31 @@ export class CashPage {
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashUserself",body).then((res:any)=>{
           console.log("res:"+JSON.stringify(res));
           if(res.result=="success"){
+              if(this.storageProvider.isAndroid){
                     let alert = this.alertController.create({
                         title: '입금 확인을 요청했습니다.',
                         subTitle: '잠시 기다려 주시기 바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present();
+              }
           }else{
-                    let alert = this.alertController.create({
+              let alert;
+
+              if(res.error=="count excess"){
+                    alert = this.alertController.create({
+                        title: '3회 연속 오류로 수동확인이 불가능합니다.',
+                        subTitle: '고객센터(help@takit.biz,0505-170-3636)에 연락하여 주시기바랍니다.',
+                        buttons: ['OK']
+                    });
+              }else{
+                    alert = this.alertController.create({
                         title: '입금 확인 요청에 실패했습니다.',
                         subTitle: '잠시후 다시 요청해주시기 바랍니다.',
                         buttons: ['OK']
                     });
-                    alert.present();
+              }
+              alert.present();
           }
       },(err)=>{
                 if(err=="NetworkFailure"){
@@ -360,13 +422,31 @@ export class CashPage {
           return '알수 없음';
       }
   }
+  
+  addCash(transaction){
+      let custom:any={};
+
+      custom.amount=transaction.amount.toString();
+      custom.cashId=transaction.cashId;
+      custom.transactionTime=transaction.transactionTime;
+      custom.cashTuno=transaction.cashTuno;
+      custom.bankName=transaction.bankName;
+
+        let cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: custom });
+        cashConfirmModal.present();
+  }
 
   updateTransaction(cashList){
             cashList.forEach((transaction)=>{
                 var tr:any={};
                 tr=transaction;
                 tr.type=this.convertType(tr.transactionType);
-                tr.date=tr.transactionTime.substr(0,10);
+                // convert GMT time into local time
+                var trTime:Date=moment.utc(tr.transactionTime).toDate();
+                var mm = trTime.getMonth() < 9 ? "0" + (trTime.getMonth() + 1) : (trTime.getMonth() + 1); // getMonth() is zero-based
+                var dd  = trTime.getDate() < 10 ? "0" + trTime.getDate() : trTime.getDate();
+                var dString=trTime.getFullYear()+'-'+(mm)+'-'+dd;
+                tr.date=dString;
                 console.log("tr:"+JSON.stringify(tr));
                 this.transactions.push(tr);
             });
@@ -418,14 +498,17 @@ export class CashPage {
     this.infiniteScroll=true;
     
     this.getTransactions(-1).then((res:any)=>{
-                console.log("res:"+JSON.stringify(res));
-                if(res.cashList=="0"){
-                    this.infiniteScroll=false;
-                }else{
-                    this.updateTransaction(res.cashList);
-                    if(this.infiniteScrollRef!=undefined)
-                        this.infiniteScrollRef.complete();
-                }
+                this.ngZone.run(()=>{
+                        console.log("res:"+JSON.stringify(res));
+                        if(res.cashList=="0"){
+                            this.infiniteScroll=false;
+                        }else{
+                            this.transactions=[];
+                            this.updateTransaction(res.cashList);
+                            if(this.infiniteScrollRef!=undefined)
+                                this.infiniteScrollRef.complete();
+                        }
+                });
             },(err)=>{
                 if(err=="NetworkFailure"){
                     let alert = this.alertController.create({
@@ -453,6 +536,7 @@ export class CashPage {
                     break;
                 }
           }
+          console.log("bank name:"+this.storageProvider.banklist[i].name);
           this.storageProvider.depositBranch=undefined;
           this.storageProvider.depositBranchInput=undefined;
           this.app.getRootNav().push(BankBranchPage,{bankName:this.storageProvider.banklist[i].name,
@@ -590,6 +674,23 @@ export class CashPage {
           console.log("refundCash res:"+JSON.stringify(res));
           if(res.result=="success"){
               console.log("cashAmount:"+res.cashAmount);
+              this.serverProvider.updateCashAvailable().then((res)=>{
+                  //do nothing;
+                },(err)=>{
+                    if(err=="NetworkFailure"){
+                                    let alert = this.alertController.create({
+                                        title: "서버와 통신에 문제가 있습니다.",
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                        }else{
+                        let alert = this.alertController.create({
+                                title: "캐쉬정보를 가져오지 못했습니다.",
+                                buttons: ['OK']
+                            });
+                                alert.present();
+                        }
+                });
               return;
           }
           if(res.result=="failure" && res.error=='check your balance'){
@@ -619,5 +720,15 @@ export class CashPage {
                  } 
 
       });
+  }
+
+  copyAccountInfo(){
+    var account = "3012424363621";
+    cordova.plugins.clipboard.copy(account);
+    let alert = this.alertController.create({
+        title: "클립보드로 계좌번호가 복사되었습니다.",
+        buttons: ['OK']
+    });
+    alert.present();
   }
 }

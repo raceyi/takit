@@ -119,7 +119,7 @@ export class ServerProvider{
                     //resolve(res.orders);
                     resolve(res);
                   }else{
-                    reject("HttpFailure");
+                    reject(res.error);
                   }
             },(err)=>{
                 reject(err);  
@@ -169,6 +169,23 @@ export class ServerProvider{
         });   
     }
 
+    updateCashAvailable(){
+        return new Promise((resolve,reject)=>{
+                        let body = JSON.stringify({cashId:this.storageProvider.cashId});
+                        console.log("getBalanceCash "+body);
+                        this.post(this.storageProvider.serverAddress+"/getBalanceCash",body).then((res:any)=>{
+                            console.log("getBalanceCash res:"+JSON.stringify(res));
+                            if(res.result=="success"){
+                                this.storageProvider.cashAmount=res.balance;
+                                resolve();
+                            }else{
+                                reject(res.error);
+                            }
+                        },(err)=>{
+                                 reject(err);                                  
+                        });
+        });
+    }
 }
 
 

@@ -86,14 +86,27 @@
         <ion-col class="cash">{{storageProvider.cashAmount}}</ion-col>
       </ion-row>
 
-      <ion-row class="textrow">
+      <ion-row class="textrow" *ngIf="storageProvider.isAndroid">
         <ion-col class="password">캐쉬 비밀번호</ion-col>
         <ion-col class="password0">
           <ion-item class="cashPassword">
-          <ion-input type="password" class="passwordinput" [(ngModel)]="cashPassword"></ion-input>
+          <ion-input (focus)="onFocusPassword($event)" pattern="[0-9]{6}" maxlength="6" type="password" class="passwordinput" [(ngModel)]="cashPassword"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
+
+      <ion-row class="textrow" *ngIf="!storageProvider.isAndroid">
+      <ion-col width-40 class="password">캐쉬 비밀번호(6자리)</ion-col>
+      <ion-col width-40 class="password0">
+        <ion-item class="cashPassword">
+        <ion-input maxlength="6" type="password" pattern="[0-9]{6}" [(ngModel)]="cashPassword" class="passwordinput"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col width-20 [hidden]="iOSOrderButtonHide">
+        <button ion-button class="selectButton" [disabled]="storageProvider.tourMode==true" (click)="order()" >주문결제</button>
+      </ion-col>
+      </ion-row>
+
     </div>    
     <div>
       <div class="orderInfo cancelNoti">

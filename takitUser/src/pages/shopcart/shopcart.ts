@@ -4,6 +4,7 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ServerProvider} from '../../providers/serverProvider';
+import {Keyboard} from 'ionic-native';
 
 declare var cordova:any;
 
@@ -17,7 +18,7 @@ export class ShopCartPage{
     @ViewChild('takeoutDiv') takeoutDivElementRef:ElementRef;
 
     shopname:string;
-    userNotiHidden:boolean =true;
+    userNotiHidden:boolean =false;
     price:number=0;    //total price
     discount:number=0; //total discount
     amount:number=0;   //total amount. acutual price with discount
@@ -25,6 +26,8 @@ export class ShopCartPage{
     takeoutAvailable:boolean=false;
     takeout:boolean=false;
     cashPassword="";
+
+    iOSOrderButtonHide=true;
 
      constructor(private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,
@@ -37,6 +40,15 @@ export class ShopCartPage{
             this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
             this.amount=this.price-this.amount;
         }
+
+        Keyboard.onKeyboardShow().subscribe((e)=>{
+            console.log("keyboard show");
+            this.iOSOrderButtonHide=false;
+        });
+        Keyboard.onKeyboardHide().subscribe((e)=>{
+            console.log("keyboard hide");
+            this.iOSOrderButtonHide=true;
+        });
      }
 
     checkTakeoutAvailable(){
@@ -246,6 +258,15 @@ export class ShopCartPage{
           this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
           this.amount=this.price-this.discount;
       });
+    }
+
+     onFocusPassword(event){
+         if(!this.storageProvider.isAndroid){
+            console.log("onFocusPassword");
+            let dimensions = this.orderPageRef.getContentDimensions();
+            console.log("dimensions:"+JSON.stringify(dimensions));
+            this.orderPageRef.scrollTo(0, dimensions.contentHeight);
+         }
     }
 
 }

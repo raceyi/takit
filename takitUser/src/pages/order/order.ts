@@ -5,6 +5,7 @@ import {Platform,App,AlertController} from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
+import {Keyboard} from 'ionic-native';
 
 declare var cordova:any;
 
@@ -37,6 +38,8 @@ export class OrderPage {
   cashPassword:string="";
 
   focusQunatityNum= new EventEmitter();
+
+  iOSOrderButtonHide=true;
 
   @ViewChild('quantityNum') inputNumRef: TextInput;
 
@@ -80,7 +83,21 @@ export class OrderPage {
           });
       }
       
-      this.quantityInputType="select";  
+      this.quantityInputType="select";
+
+      /* It doesn't work in ios 
+      if(!this.storageProvider.isAndroid){
+          Keyboard.disableScroll(true);
+      }
+      */
+      Keyboard.onKeyboardShow().subscribe((e)=>{
+          console.log("keyboard show");
+          this.iOSOrderButtonHide=false;
+      });
+      Keyboard.onKeyboardHide().subscribe((e)=>{
+          console.log("keyboard hide");
+          this.iOSOrderButtonHide=true;
+      });
  }
 
   sendSaveOrder(cart,menuName){
@@ -149,7 +166,25 @@ export class OrderPage {
                     this.storageProvider.order_in_progress_24hours=true;
                     this.storageProvider.messageEmitter.emit(res.order);
                     console.log("storageProvider.run_in_background: "+this.storageProvider.run_in_background);
+                      this.serverProvider.updateCashAvailable().then((res)=>{
+                        //do nothing;
+                      },(err)=>{
+                            if(err=="NetworkFailure"){
+                                          let alert = this.alertController.create({
+                                              title: "서버와 통신에 문제가 있습니다.",
+                                              buttons: ['OK']
+                                          });
+                                          alert.present();
+                              }else{
+                                let alert = this.alertController.create({
+                                      title: "캐쉬정보를 가져오지 못했습니다.",
+                                      buttons: ['OK']
+                                  });
+                                      alert.present();
+                              }
+                      });
                     if(this.storageProvider.run_in_background==false){
+                        //refresh cashAmount
                         let confirm = this.alertController.create({
                             title: '주문완료['+res.order.orderNO+']'+' 앱을 계속 실행하여 주문알림을 받으시겠습니까?',
                             message: '앱이 중지되면 주문알림을 못받을수 있습니다.',
@@ -199,6 +234,12 @@ export class OrderPage {
                     let alert = this.alertController.create({
                             title: '서버와 통신에 문제가 있습니다',
                             subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                 }else if(error=="shop's off"){
+                    let alert = this.alertController.create({
+                            title: '상점이 문을 열지 않았습니다.',
                             buttons: ['OK']
                         });
                         alert.present();
@@ -369,7 +410,8 @@ export class OrderPage {
 
       if(quantity==6){ // show text input box 
           this.quantityInputType="input";
-          this.quantity=undefined; 
+          //this.quantity=undefined;
+          this.quantity=1; //keypad doesn't work for password if quantity is undefined.
           if(this.platform.is('android') || this.platform.is('ios'))
             this.focusQunatityNum.emit(true);           
       }else{
@@ -439,6 +481,18 @@ export class OrderPage {
             }
         });
     }
+
+  optionChange(option){
+      console.log("flag:"+option.flag);
+      if(option.flag==true){
+          this.price=this.price+option.price*this.quantity;    
+      }else{
+          this.price=this.price-option.price*this.quantity;
+          console.log("option.select:"+option.select);
+      }
+      this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
+      this.amount=this.price-this.discount;
+  }
 
   quantityInput(flag){
     // console.log("flag:"+flag+" quantityInputType:"+this.quantityInputType);
@@ -513,5 +567,15 @@ collapse($event){
         if(option.select!=undefined)
             option.flag=true;    
     }
+/*
+     onFocusPassword(event){
+         if(!this.storageProvider.isAndroid){
+            console.log("onFocusPassword");
+            let dimensions = this.orderPageRef.getContentDimensions();
+            console.log("dimensions:"+JSON.stringify(dimensions));
+            this.orderPageRef.scrollTo(0, dimensions.contentHeight);
+         }
+    }
+*/
 }
 

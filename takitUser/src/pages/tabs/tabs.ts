@@ -16,6 +16,7 @@ import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/map';
 
 declare var cordova:any;
+declare var window:any;
 
 @Component({
   templateUrl: 'tabs.html',
@@ -424,11 +425,12 @@ export class TabsPage {
 
             this.pushNotification.on('notification',(data)=>{
 /*                
-                  let custom = {"cashTuno":"20170103075617278","cashId":"TAKIT02","transactionType":"deposit","amount":1,"transactionTime":"20170103","confirm":0,"bankName":"농협은행"}
+//                  let custom = {"cashTuno":"20170103075617278","cashId":"TAKIT02","transactionType":"deposit","amount":1,"transactionTime":"20170103","confirm":0,"bankName":"농협은행"}
+                  let custom ={"depositMemo":"이경주","amount":"2","depositDate":"2017-01-06","branchCode":"0110013","cashTuno":"20170106093158510","bankName":"농협"}
                   let cashConfirmModal = this.modalCtrl.create(CashConfirmPage, { custom: custom });
                   cashConfirmModal.present();
-*/                  
-
+ */                 
+                 
                 console.log("[home.ts]pushNotification.on-data:"+JSON.stringify(data));
                 console.log("[home.ts]pushNotification.on-data.title:"+JSON.stringify(data.title));
                 
@@ -489,7 +491,7 @@ export class TabsPage {
                                 console.log("hum...successGCM-HttpFailure");
                             }
                         });
-                }             
+                }
                 /*
                 console.log(data.message);
                 console.log(data.title);

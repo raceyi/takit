@@ -16,28 +16,53 @@ export class CashConfirmPage{
   depositDate;
   tuno;
   userAgree=false;
-  //enableCheckBox=true;
   
   constructor(params: NavParams,private viewCtrl: ViewController
       ,private alertController:AlertController,public storageProvider:StorageProvider,
       private serverProvider:ServerProvider,private ngZone:NgZone) {
-      console.log('CashConfirmPage -constructor custom:'+ params.get('custom'));
+      console.log('CashConfirmPage -constructor custom:'+ JSON.stringify(params.get('custom')));
       let custom=params.get('custom');
+      
+      //let custom=JSON.parse("{\"depositMemo\":\"이경주\",\"amount\":\"2\",\"depositDate\":\"2017-01-06\",\"branchCode\":\"0110013\",\"cashTuno\":\"20170106093158510\",\"bankName\":\"농협\"}");
+      //let custom:any={"depositMemo":"이경주","amount":"2","depositDate":"2017-01-06","branchCode":"0110013","cashTuno":"20170106093158510","bankName":"농협"};
+
       this.depositAmount=parseInt(custom.amount);
+      console.log("depositAmount:"+this.depositAmount);
+
       this.depositBank=custom.bankName;
-      this.depositMemo=custom.cashId;
-      var date:string=custom.transactionTime;
-      console.log("date:"+date);
-      this.depositDate=date.substr(0,4)+"."+date.substring(4,2)+"."+date.substr(6,2);     
+      console.log("depositBank:"+this.depositBank);
+
+      if(custom.hasOwnProperty("depositMemo")){
+            this.depositMemo=custom.depositMemo;
+      }else{
+            this.depositMemo=custom.cashId;
+      }
+
+      console.log("depositBank:"+this.depositMemo);
+
+      if(custom.hasOwnProperty("depositDate")){
+          this.depositDate=custom.depositDate;     
+      }else{
+        var date:string=custom.transactionTime;
+        console.log("date:"+date);
+        this.depositDate=date.substr(0,4)+"."+date.substr(5,2)+"."+date.substr(8,2);     
+      }
+
+      console.log("depositDate:"+this.depositDate);
+
       this.tuno=custom.cashTuno;
+      
+      console.log("tuno:"+this.tuno);
   }
 
+/*
   ionViewDidEnter(){
       console.log("ionicViewDidEnter");
       this.ngZone.run(()=>{
-        //  this.enableCheckBox=false;
       });
   }
+ */
+
   dismiss() {
     this.viewCtrl.dismiss();
   }
@@ -51,37 +76,31 @@ export class CashConfirmPage{
 
   cashInComplete(){
       if(this.userAgree){
-          let body = JSON.stringify({cashId:this.depositMemo, amount:this.depositAmount, cashTuno:this.tuno});
+          //let body = JSON.stringify({cashId:this.depositMemo, amount:this.depositAmount, cashTuno:this.tuno});
+          let body = JSON.stringify({cashId:this.storageProvider.cashId, amount:this.depositAmount, cashTuno:this.tuno});
+          
           console.log("cashInComplete:"+body);
           this.serverProvider.post(this.storageProvider.serverAddress+"/addCash",body).then((res:any)=>{
                     console.log("addCash:"+JSON.stringify(res));
                     if(res.result=="success"){
-                              let body = JSON.stringify({cashId:this.storageProvider.cashId});
-                              console.log("getBalanceCash "+body);
-                              this.serverProvider.post(this.storageProvider.serverAddress+"/getBalanceCash",body).then((res:any)=>{
-                                  console.log("getBalanceCash res:"+JSON.stringify(res));
-                                  if(res.result=="success"){
-                                      this.storageProvider.cashAmount=res.balance;
-                                  }else{
-                                      let alert = this.alertController.create({
-                                          title: "캐쉬정보를 가져오지 못했습니다.",
-                                          buttons: ['OK']
-                                      });
+                      this.storageProvider.cashListUpdateEmitter.emit();
+                      this.serverProvider.updateCashAvailable().then((res)=>{
+                      },(err)=>{
+                            if(err=="NetworkFailure"){
+                                          let alert = this.alertController.create({
+                                              title: "서버와 통신에 문제가 있습니다.",
+                                              buttons: ['OK']
+                                          });
+                                          alert.present();
+                              }else{
+                                let alert = this.alertController.create({
+                                      title: "캐쉬정보를 가져오지 못했습니다.",
+                                      buttons: ['OK']
+                                  });
                                       alert.present();
-                                  }
-                              },(err)=>{
-                                          if(err=="NetworkFailure"){
-                                                      let alert = this.alertController.create({
-                                                          title: "서버와 통신에 문제가 있습니다.",
-                                                          buttons: ['OK']
-                                                      });
-                                                      alert.present();
-                                          }else{
-                                              console.log("Hum...getBalanceCash-HttpError");
-                                          } 
-                              });
-
-                         this.viewCtrl.dismiss();
+                              }
+                      });
+                      this.viewCtrl.dismiss();
                     }else{ 
                           if(res.error=="already checked cash"){
                               let alert = this.alertController.create({

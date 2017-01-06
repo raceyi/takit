@@ -36,9 +36,20 @@
                     <span>설정</span>
                 </button>
             </ion-row>
+            <ion-row>
+                <ion-col width-90>
             <ion-item>
-                <ion-label class="textSet">입금계좌 : 농협 301-2424-3636-21 (타킷주식회사)</ion-label>
+                <ion-label class="textSet" style="text-align:right;padding:0px;">입금계좌: 농협 301-2424-3636-21 (타킷주식회사)</ion-label>
             </ion-item>
+            </ion-col>
+            <ion-col width-10>
+            <ion-item class="selectButton">
+                <button ion-button class="selectButton copyClipboardButton" color="darkgray" (click)="copyAccountInfo()">
+                복사 
+                </button>
+            </ion-item>
+            </ion-col>
+            </ion-row>
             <ion-item>
                 <p class="explain">
                 - 계좌이체시 <span style="color:red"> 받는통장 표시내용</span>에 반드시 <span style="color:red">캐쉬아이디를 입력</span>해주시기 바랍니다. 
@@ -94,14 +105,14 @@
                 <ion-item class="bankSelect" >
                     <ion-label></ion-label>
                     <ion-select class="depositBankSelect" [(ngModel)]="storageProvider.depositBank"  (ionChange)="depositBankType(storageProvider.depositBank)">
-                      <ion-option *ngFor="let bank of storageProvider.banklist" value="{{bank.name}}">{{bank.name}}</ion-option>
+                      <ion-option *ngFor="let bank of storageProvider.banklist" value="{{bank.value}}">{{bank.name}}</ion-option>
                       <ion-option value="0">직접입력</ion-option>
                     </ion-select>
                 </ion-item>
               </ion-col>
               <ion-col width-40 [hidden]="storageProvider.depositBank!='0'">  
                 <ion-item>
-                    <ion-input class="cashIn-check-inputBox"  [(ngModel)]="depositBankInput" type="number" ></ion-input>
+                    <ion-input class="cashIn-check-inputBox" [(ngModel)]="depositBankInput" type="number" ></ion-input>
                 </ion-item>
               </ion-col>
               <ion-col width-10 [hidden]="storageProvider.depositBank!='0'">
@@ -115,7 +126,6 @@
                     은행코드(3자리)를 숫자로 입력해주시기 바랍니다.
                 </p>
             </ion-row>
-    <!--        
             <ion-row>
               <ion-col width-50>
                 <ion-item >
@@ -138,18 +148,21 @@
                     <button ion-button full class="selectButton" [disabled]="storageProvider.cashId.length==0" (click)="toggleSelectInput('depositBranchTypeSelect')">선택</button>
                 </ion-item>
               </ion-col>    
-
+            </ion-row>
+            <ion-row>
+                <p class="explain" [hidden]="storageProvider.depositBranch=='codeInput'">
+                    입금 계좌의 관리(지)점입니다. 
+                </p>
             </ion-row>
             <ion-row [hidden]="storageProvider.depositBranch!='codeInput'">
                 <p class="explain">
-                    지점코드(7자리)를 숫자로 입력해주시기 바랍니다. 
+                    입금 계좌의 관리(지)점입니다. 지점코드(7자리)를 숫자로 입력해주시기 바랍니다. 
                 </p>
             </ion-row>
-         -->   
             <ion-row center>
             <ion-col>
                 <ion-item>
-                받는통장 표시내용
+                통장표시내용
                 </ion-item>
             </ion-col>
             <ion-col>
@@ -182,8 +195,9 @@
                     <ion-col>{{tr.date}}</ion-col>
                     <ion-col>{{tr.amount}}</ion-col>
                     <ion-col *ngIf="tr.transactionType!='deposit' || tr.confirm==1">{{tr.type}}</ion-col>
-                    <ion-col *ngIf="tr.transactionType=='deposit' && tr.confirm==0"> <button ion-button >확인</button></ion-col>
+                    <ion-col *ngIf="tr.transactionType=='deposit' && tr.confirm==0"> <button ion-button (click)="addCash(tr)">확인</button></ion-col>
                     <ion-col *ngIf="tr.nowBalance!=0">{{tr.nowBalance}}</ion-col>
+                    <ion-col *ngIf="tr.nowBalance==0"> &nbsp; &nbsp;</ion-col>
                 </ion-row>
               </ion-item>
       </ion-list>        
