@@ -107,13 +107,13 @@ export class ShopMyPage{
                                         limit:this.storageProvider.OrdersInPage});
         console.log("getOrders:"+body);
         this.serverProvider.post(this.storageProvider.serverAddress+"/getOrders",body).then((res:any)=>{
-            console.log("getOrders-res:"+JSON.stringify(res));
+            //console.log("getOrders-res:"+JSON.stringify(res));
             var result:string=res.result;
             if(result=="success" && Array.isArray(res.orders)){
                 res.orders.forEach(order=>{
                     console.log("order.ordrId:"+order.orderId);
                     this.orders.push(this.convertOrderInfo(order));
-                    console.log("orders:"+JSON.stringify(this.orders));
+                    //console.log("orders:"+JSON.stringify(this.orders));
                 });
                 resolve(true);
             }else if(res.orders=="0"){ //Please check if it works or not
@@ -138,9 +138,11 @@ export class ShopMyPage{
         console.log('Begin async operation');
         var lastOrderId=this.orders[this.orders.length-1].orderId;
         this.getOrders(lastOrderId).then((more)=>{
-          if(more)
+          if(more){
+              console.log("more is true");
               infiniteScroll.complete();
-          else{
+          }else{
+              console.log("more is false");
               infiniteScroll.enable(false); //stop infinite scroll
               this.infiniteScroll=infiniteScroll;
           }
@@ -160,30 +162,16 @@ export class ShopMyPage{
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         console.log("server:"+ this.storageProvider.serverAddress);
-        let body  = JSON.stringify({ orderId:order.orderId,cancelReason:""});
+        let body  = JSON.stringify({ orderId:order.orderId,
+                                     cancelReason:"",
+                                     cashId:this.storageProvider.cashId});
          
          this.serverProvider.post(this.storageProvider.serverAddress+"/cancelOrder",body).then((res:any)=>{
             console.log("cancelOrder-res:"+JSON.stringify(res));
             var result:string=res.result;
             if(result==="success"){
-                      this.serverProvider.updateCashAvailable().then((res)=>{
-                        //do nothing;
-                      },(err)=>{
-                            if(err=="NetworkFailure"){
-                                          let alert = this.alertController.create({
-                                              title: "서버와 통신에 문제가 있습니다.",
-                                              buttons: ['OK']
-                                          });
-                                          alert.present();
-                              }else{
-                                let alert = this.alertController.create({
-                                      title: "캐쉬정보를 가져오지 못했습니다.",
-                                      buttons: ['OK']
-                                  });
-                                      alert.present();
-                              }
-                      });
-              let alert = this.alertController.create({
+                this.storageProvider.cashInfoUpdateEmitter.emit("all");
+                let alert = this.alertController.create({
                     title: '주문 취소가 정상 처리 되었습니다.',
                     buttons: ['OK']
                 });

@@ -166,23 +166,7 @@ export class OrderPage {
                     this.storageProvider.order_in_progress_24hours=true;
                     this.storageProvider.messageEmitter.emit(res.order);
                     console.log("storageProvider.run_in_background: "+this.storageProvider.run_in_background);
-                      this.serverProvider.updateCashAvailable().then((res)=>{
-                        //do nothing;
-                      },(err)=>{
-                            if(err=="NetworkFailure"){
-                                          let alert = this.alertController.create({
-                                              title: "서버와 통신에 문제가 있습니다.",
-                                              buttons: ['OK']
-                                          });
-                                          alert.present();
-                              }else{
-                                let alert = this.alertController.create({
-                                      title: "캐쉬정보를 가져오지 못했습니다.",
-                                      buttons: ['OK']
-                                  });
-                                      alert.present();
-                              }
-                      });
+                    this.storageProvider.cashInfoUpdateEmitter.emit("all");
                     if(this.storageProvider.run_in_background==false){
                         //refresh cashAmount
                         let confirm = this.alertController.create({
@@ -211,6 +195,7 @@ export class OrderPage {
                         });
                         confirm.present();
                     }else{
+                        console.log("give alert on order success");
                         let alert = this.alertController.create({
                                 title: '주문에 성공하였습니다.'+'주문번호['+res.order.orderNO+']',
                                 subTitle: '[주의]앱을 종료하시면 주문알림을 못받을수 있습니다.' ,
@@ -243,6 +228,12 @@ export class OrderPage {
                             buttons: ['OK']
                         });
                         alert.present();
+                 }else{
+                    let alert = this.alertController.create({
+                            title: '주문에 실패했습니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();                     
                  }
            })        
   }  

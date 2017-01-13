@@ -8,6 +8,11 @@
         <span color="primary">취소</span>
       </button>
     </ion-buttons>
+    <ion-buttons end>
+      <button ion-button (click)="deleteDeposit()">
+        <span color="primary">삭제</span>
+      </button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -39,16 +44,14 @@
                     </ion-item>
                     </ion-col>
                 </ion-row>
-             <!--   
                 <ion-row center>
                     <ion-col>거래지점</ion-col> 
                     <ion-col>
                     <ion-item>
-                    <ion-input class="cashIn-check-inputBox" type="text" placeholder="과천" ></ion-input>
+                    <ion-input class="cashIn-check-inputBox" type="text" [(ngModel)]="depositBranch" disabled ></ion-input>
                     </ion-item>
                     </ion-col>
                 </ion-row>
-               --> 
                 <ion-row center>
                     <ion-col>캐쉬아이디</ion-col>
                     <ion-col>
@@ -82,6 +85,11 @@
             <ion-row>
                 <ion-item>
                   <p class="explain">타인 입금에 대해 입금 확인을 수행할 경우 <span style="color:red"> 사기죄</span>로 형사고발이 가능합니다</p>
+                </ion-item>
+            </ion-row>    
+            <ion-row>
+                <ion-item>
+                  <p class="explain">본인 입금이 아닐 경우 상단의 삭제 버튼을 눌러 주시기바랍니다.</p>
                 </ion-item>
             </ion-row>    
             <ion-item>

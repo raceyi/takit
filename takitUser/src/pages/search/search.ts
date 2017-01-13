@@ -227,6 +227,7 @@ export class SearchPage {
                 }else{ // this.brandQuery is ""
                     this.brandsShown = this.brands;
                 }
+                /*
                 if(this.brands.length>0){
                     this.brandsShown = this.brands.filter((v) => {
                         if (v.toUpperCase().startsWith(this.brandQuery.toUpperCase())) {
@@ -237,6 +238,7 @@ export class SearchPage {
                 }else{
                     this.brandsShown = [];
                 }
+                */
       }
 
       getBrands(event) {
@@ -266,7 +268,7 @@ export class SearchPage {
                     },err=>{
                         console.log("getTakitIds error");
                     });
-            } else if(this.takitIds.length==0 && (this.brandQuery.trim().length==1)){
+            } else if(this.takitIds.length==0 && (this.brandQuery.trim().length>0)){
                 this.getTakitIds().then(
                     ()=>{
                         console.log("TakitIds:"+JSON.stringify(this.takitIds));
@@ -302,6 +304,7 @@ export class SearchPage {
                 }else{ // this.brandQuery is ""
                     this.servicesShown = this.services;
                 }
+                /*
                 if(this.services.length>0){
                     this.servicesShown = this.services.filter((v) => {
                         console.log(v+"start with "+this.serviceQuery);
@@ -313,6 +316,7 @@ export class SearchPage {
                 }else{
                     this.servicesShown=[];                    
                 }
+                */
                 console.log("serviceShown:"+JSON.stringify(this.servicesShown));
       }
 
@@ -342,7 +346,7 @@ export class SearchPage {
                     },err=>{
                         console.log("getTakitIds error");
                     });
-            }else if(this.takitIds.length==0 && (this.serviceQuery.trim().length==1 )){
+            }else if(this.takitIds.length==0 && (this.serviceQuery.trim().length>0 )){ // autocomplete has problem due to the characteristics of Korean.
                 this.getTakitIds().then(
                     ()=>{
                         console.log("TakitIds:"+JSON.stringify(this.takitIds));

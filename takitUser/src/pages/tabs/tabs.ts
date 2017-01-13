@@ -1,11 +1,11 @@
-import {Component,EventEmitter,NgZone} from '@angular/core'
+import {Component,EventEmitter,NgZone,ViewChild} from '@angular/core'
 
 import {HomePage} from '../home/home';
 import {CashPage} from '../cash/cash';
 import {SearchPage} from '../search/search';
 import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {ErrorPage} from '../error/error';
-import {Platform,IonicApp,MenuController} from 'ionic-angular';
+import {Platform,IonicApp,MenuController,Tabs} from 'ionic-angular';
 import {ViewController,App,NavController,AlertController,ModalController} from 'ionic-angular';
 import {Push,PushNotification} from 'ionic-native';
 import {Http,Headers} from '@angular/http';
@@ -23,6 +23,7 @@ declare var window:any;
   selector:'page-tabs'  
 })
 export class TabsPage {
+  @ViewChild('myTabs') tabRef: Tabs;
 
   public tabCash: any;
   public tabHome: any;
@@ -69,6 +70,51 @@ export class TabsPage {
                         console.log("Hum...getBalanceCash-HttpError");
                     } 
         });
+        //check if the lastest deposit without confirmation exists or not.
+
+         body = JSON.stringify({cashId:this.storageProvider.cashId,
+                                lastTuno: -1,
+                                limit: this.storageProvider.TransactionsInPage});
+            console.log("getCashList:"+body);                    
+            this.serverProvider.post( this.storageProvider.serverAddress+"/getCashList",body).then((res:any)=>{
+                if(res.result=="success"){
+                    if(res.cashList!="0"){
+                        for(var i=0;i<res.cashList.length;i++){
+                            //console.log("cash item:"+JSON.stringify(cashList[i]));
+                            if(res.cashList[i].transactionType=="deposit"){
+                                break;
+                            }
+                        }
+                        //console.log("checkDepositInLatestCashlist i:"+i +"length:"+cashList.length);
+                        if(i==res.cashList.length){
+                            this.storageProvider.deposit_in_latest_cashlist=false;
+                        }else{    
+                            this.storageProvider.deposit_in_latest_cashlist=true;
+                        }
+                    }
+                }else{
+                    let alert = this.alertController.create({
+                        title: '캐쉬 내역을 가져오지 못했습니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                }
+            },(err)=>{
+                if(err=="NetworkFailure"){
+                    let alert = this.alertController.create({
+                        title: '서버와 통신에 문제가 있습니다',
+                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                }else{
+                    let alert = this.alertController.create({
+                        title: '캐쉬 내역을 가져오지 못했습니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                }
+            });
     }
   }
 
@@ -639,6 +685,13 @@ export class TabsPage {
                 reject(err);  
             });
       });    
+  }
+
+  moveToCashListPage(){
+      console.log("moveToCashListPage");
+      this.storageProvider.cashMenu='cashHistory';
+      this.storageProvider.cashInfoUpdateEmitter.emit("listOnly");
+      this.tabRef.select(2);
   }
 
 }

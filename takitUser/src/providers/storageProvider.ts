@@ -21,7 +21,7 @@ export class StorageProvider{
     public id:string;
     public messageEmitter= new EventEmitter();
     public tabMessageEmitter = new EventEmitter();
-    public cashListUpdateEmitter= new EventEmitter();
+    public cashInfoUpdateEmitter= new EventEmitter();
     public shopTabRef:Tabs;
     public login:boolean=false;
     public navController:NavController;
@@ -31,6 +31,7 @@ export class StorageProvider{
     public shopResponse:any;
     public run_in_background=false;
     public order_in_progress_24hours=false;
+    public deposit_in_latest_cashlist=false;
     public tourMode=false;
     public isAndroid;
     public cashId;
@@ -38,7 +39,8 @@ export class StorageProvider{
 
     public refundBank:string="";
     public refundAccount:string="";
-
+    
+    public cashMenu: string = "cashIn"; 
      /////////////////////////////////////
     // 캐쉬정보 수동입력 
     public depositBank;
@@ -93,6 +95,9 @@ export class StorageProvider{
     public tourEmail=this.configProvider.getTourEmail();
     public tourPassword=this.configProvider.getTourPassword();
     public timeout=this.configProvider.getTimeout(); // 5 seconds
+
+    public accountMaskExceptFront=this.configProvider.getAccountMaskExceptFront();
+    public accountMaskExceptEnd=this.configProvider.getAccountMaskExceptEnd();
 
 //"이외 금융기관 => 직접 입력(숫자)"  
 //"지점 코드=>직접 입력(숫자)" http://www.kftc.or.kr/kftc/data/EgovBankList.do 금융회사명으로 조회하기 

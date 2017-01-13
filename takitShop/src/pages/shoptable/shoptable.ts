@@ -269,7 +269,7 @@ export class ShopTablePage {
           order.orderListObj=JSON.parse(order.orderList);
           order.userPhoneHref="tel:"+order.userPhone; 
           //console.log("order.orderListObj:"+JSON.stringify(order.orderListObj));
-
+          console.log("cancelReason:"+order.cancelReason);
           if(order.cancelReason!=undefined &&
                 order.cancelReason!=null &&
                 order.cancelReason!="")

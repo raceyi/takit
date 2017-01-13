@@ -10,7 +10,7 @@
     </ion-item>
 
     <div>
-    <ion-segment [(ngModel)]="cashMenu">
+    <ion-segment [(ngModel)]="storageProvider.cashMenu">
       <ion-segment-button  value="cashIn" (click)="disableInfiniteScroll()">
       입금하기
       </ion-segment-button>
@@ -23,7 +23,7 @@
     </ion-segment>
     </div>
 
-    <div [ngSwitch]="cashMenu">
+    <div [ngSwitch]="storageProvider.cashMenu">
         <ion-list *ngSwitchCase="'cashIn'">
             <ion-item>
                 <ion-label class="textSet"><strong>캐쉬아이디(받는통장 표시내용)</strong></ion-label>
@@ -36,9 +36,10 @@
                     <span>설정</span>
                 </button>
             </ion-row>
-            <ion-row>
+
+            <ion-row *ngIf="!iphone5" >
                 <ion-col width-90>
-            <ion-item>
+            <ion-item >
                 <ion-label class="textSet" style="text-align:right;padding:0px;">입금계좌: 농협 301-2424-3636-21 (타킷주식회사)</ion-label>
             </ion-item>
             </ion-col>
@@ -50,8 +51,24 @@
             </ion-item>
             </ion-col>
             </ion-row>
+
+            <ion-row *ngIf="iphone5" >
+                <ion-col width-90>
+                    <ion-item >
+                        <ion-label class="textSet" style="text-align:right;padding:0px;">입금계좌: 농협 301-2424-3636-21 (타킷주식회사)</ion-label>
+                    </ion-item>
+            </ion-col>
+            <ion-col width-10>
+            <ion-item class="selectButton">
+                <button ion-button class="selectButton copyClipboardButton" color="darkgray" (click)="copyAccountInfo()">
+                복사 
+                </button>
+            </ion-item>
+            </ion-col>
+            </ion-row>    
+
             <ion-item>
-                <p class="explain">
+                <p class="explain" >
                 - 계좌이체시 <span style="color:red"> 받는통장 표시내용</span>에 반드시 <span style="color:red">캐쉬아이디를 입력</span>해주시기 바랍니다. 
                 </p>
              </ion-item> 
@@ -190,8 +207,8 @@
                     <ion-col>잔액</ion-col>
                 </ion-row>
               </ion-item>
-              <ion-item class="transaction" *ngFor="let tr of transactions">
-                <ion-row class="transaction">
+              <ion-item  *ngFor="let tr of transactions">
+                <ion-row class="transaction" (click)="toggleTransaction(tr)">
                     <ion-col>{{tr.date}}</ion-col>
                     <ion-col>{{tr.amount}}</ion-col>
                     <ion-col *ngIf="tr.transactionType!='deposit' || tr.confirm==1">{{tr.type}}</ion-col>
@@ -199,9 +216,20 @@
                     <ion-col *ngIf="tr.nowBalance!=0">{{tr.nowBalance}}</ion-col>
                     <ion-col *ngIf="tr.nowBalance==0"> &nbsp; &nbsp;</ion-col>
                 </ion-row>
+                <ion-row class="transaction" [hidden]="tr.transactionType!='deposit' || tr.hide">
+                    <ion-col *ngIf="tr.bankName!=undefined">{{tr.bankName}}</ion-col>
+                    <ion-col *ngIf="tr.bankName==undefined">{{tr.bankCode}}</ion-col>
+                    <ion-col *ngIf="tr.branchName!=undefined">{{tr.branchName}}</ion-col>
+                    <ion-col *ngIf="tr.branchName==undefined">{{tr.branchCode}}</ion-col>
+                </ion-row>
+                <ion-row class="transaction" [hidden]="tr.transactionType!='refund' || tr.hide">
+                    <ion-col *ngIf="tr.bankName!=undefined">{{tr.bankName}}</ion-col>
+                    <ion-col *ngIf="tr.account!=undefined">{{tr.account}}</ion-col>
+                    <ion-col *ngIf="tr.fee!=undefined">수수료:{{tr.fee}}</ion-col>
+                </ion-row>
               </ion-item>
       </ion-list>        
-          <ion-infinite-scroll #infiniteScroll (ionInfinite)="doInfinite($event)" [enabled]="infiniteScroll" [hidden]="transactions.length==0 && cashMenu!='cashHistory'">
+          <ion-infinite-scroll #infiniteScroll (ionInfinite)="doInfinite($event)" [enabled]="infiniteScroll" [hidden]="transactions.length==0 && storageProvider.cashMenu!='cashHistory'">
             <ion-infinite-scroll-content></ion-infinite-scroll-content>
           </ion-infinite-scroll>
 
@@ -233,9 +261,14 @@
             <ion-item ion-col class="cashOut-text">
                 <ion-label>계좌번호</ion-label>
             </ion-item>
-            <ion-item ion-col class="input" >
-                <ion-input class="inputBox"  (click)="focusInput('inputRefundAccount')" [disabled]="!refundEditable" [(ngModel)]="refundAccount" type="number"></ion-input>
+
+            <ion-item ion-col class="input" *ngIf="!refundEditable" >
+                <ion-input class="inputBox"  (click)="focusInput('inputRefundAccount')" disabled [(ngModel)]="refundAccountMask" ></ion-input>
             </ion-item>
+            <ion-item ion-col class="input"  *ngIf="refundEditable">
+                <ion-input class="inputBox"  (click)="focusInput('inputRefundAccount')"  [(ngModel)]="refundAccount" type="number"></ion-input>
+            </ion-item>
+
             </ion-row>
             <p class="explain">
             &nbsp;&nbsp;"-"를 제외한 숫자만 입력해주시기 바랍니다. 

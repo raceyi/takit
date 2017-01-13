@@ -151,6 +151,7 @@ export class ShopCartPage{
                  var result:string=res.result;
                   if(result=="success"){
                     this.storageProvider.messageEmitter.emit(res.order);
+                    this.storageProvider.cashInfoUpdateEmitter.emit("all");
                     var cart={menus:[],total:0};
                     this.storageProvider.saveCartInfo(this.storageProvider.takitId,JSON.stringify(cart)).then(()=>{
                         

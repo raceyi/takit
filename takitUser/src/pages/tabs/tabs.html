@@ -4,16 +4,19 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-row>
-      <ion-col width-80 class="title">
-    <ion-title>타킷</ion-title>
-    </ion-col>
-    <ion-col width-20>
-      <ion-icon [color]="getColorBackgroundMode()"  [hidden]="storageProvider.order_in_progress_24hours==false" (click)="configureBackgrondMode()" name="notifications"></ion-icon>
-    </ion-col>
+      <ion-col width-60 class="title">
+          <ion-title>타킷</ion-title>
+      </ion-col>
+      <ion-col width-20 style="text-align:right;">
+          <ion-icon color="primary"  [hidden]="storageProvider.deposit_in_latest_cashlist==false" (click)="moveToCashListPage()" name="cash"></ion-icon>
+      </ion-col>
+      <ion-col width-20 style="text-align:center;">
+          <ion-icon [color]="getColorBackgroundMode()" [hidden]="storageProvider.order_in_progress_24hours==false" (click)="configureBackgrondMode()" name="notifications"></ion-icon>
+      </ion-col>
     </ion-row>
   </ion-navbar>
 </ion-header>
-<ion-tabs>
+<ion-tabs  #myTabs>
   <ion-tab [root]="tabHome" tabTitle="홈" (ionSelect)="home($event)" tabIcon="home"></ion-tab>
   <ion-tab [root]="tabSearch" tabTitle="상점인식" (ionSelect)="search($event)" tabIcon="search"></ion-tab>
   <ion-tab [root]="tabCash" tabTitle="캐쉬" (ionSelect)="cash($event)" tabIcon="cash"></ion-tab>

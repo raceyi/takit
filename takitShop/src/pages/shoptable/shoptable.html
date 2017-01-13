@@ -108,7 +108,7 @@
                           </ion-col>
                 </ion-row>
                 </div>
-                <ion-row [hidden]="order.orderStatus!='cancelled' || order.cancelReasonString==undefined">
+                <ion-row [hidden]="order.orderStatus!='cancelled' || order.cancelReasonString==undefined || order.cancelReasonString.length==0">
                   <ion-col width-10></ion-col>
                   <ion-col width-20>취소사유</ion-col>
                   <ion-col width-70>{{order.cancelReasonString}}</ion-col>

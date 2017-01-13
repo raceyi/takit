@@ -1,7 +1,8 @@
 import {Component,NgZone} from "@angular/core";
-import {ViewController,NavParams,AlertController} from 'ionic-angular';
+import {ViewController,NavParams,NavController,AlertController,App} from 'ionic-angular';
 import {ServerProvider} from '../../providers/serverProvider';
 import {StorageProvider} from '../../providers/storageProvider';
+import {CashDepositDeletePage} from '../cash-deposit-delete/cash-deposit-delete';
 
 @Component({
   selector: 'page-cashconfirm',
@@ -14,12 +15,14 @@ export class CashConfirmPage{
   depositBank;
   depositMemo;
   depositDate;
+  depositBranch;
   tuno;
   userAgree=false;
   
-  constructor(params: NavParams,private viewCtrl: ViewController
+  constructor(params: NavParams,public viewCtrl: ViewController
       ,private alertController:AlertController,public storageProvider:StorageProvider,
-      private serverProvider:ServerProvider,private ngZone:NgZone) {
+      private serverProvider:ServerProvider,private ngZone:NgZone,
+      private navController: NavController,public app:App) {
       console.log('CashConfirmPage -constructor custom:'+ JSON.stringify(params.get('custom')));
       let custom=params.get('custom');
       
@@ -31,6 +34,12 @@ export class CashConfirmPage{
 
       this.depositBank=custom.bankName;
       console.log("depositBank:"+this.depositBank);
+
+      if(custom.hasOwnProperty("branchName")){
+          this.depositBranch=custom.branchName;
+      }else{
+          this.depositBranch=custom.branchCode;
+      }
 
       if(custom.hasOwnProperty("depositMemo")){
             this.depositMemo=custom.depositMemo;
@@ -44,8 +53,13 @@ export class CashConfirmPage{
           this.depositDate=custom.depositDate;     
       }else{
         var date:string=custom.transactionTime;
+        if(date.includes("-")){
         console.log("date:"+date);
         this.depositDate=date.substr(0,4)+"."+date.substr(5,2)+"."+date.substr(8,2);     
+        }else{
+        console.log("date:"+date);
+        this.depositDate=date.substr(0,4)+"."+date.substr(4,2)+"."+date.substr(6,2);     
+        }
       }
 
       console.log("depositDate:"+this.depositDate);
@@ -65,6 +79,7 @@ export class CashConfirmPage{
 
   dismiss() {
     this.viewCtrl.dismiss();
+    this.storageProvider.cashInfoUpdateEmitter.emit("listOnly");
   }
 
   agreeChange(flag){
@@ -83,23 +98,7 @@ export class CashConfirmPage{
           this.serverProvider.post(this.storageProvider.serverAddress+"/addCash",body).then((res:any)=>{
                     console.log("addCash:"+JSON.stringify(res));
                     if(res.result=="success"){
-                      this.storageProvider.cashListUpdateEmitter.emit();
-                      this.serverProvider.updateCashAvailable().then((res)=>{
-                      },(err)=>{
-                            if(err=="NetworkFailure"){
-                                          let alert = this.alertController.create({
-                                              title: "서버와 통신에 문제가 있습니다.",
-                                              buttons: ['OK']
-                                          });
-                                          alert.present();
-                              }else{
-                                let alert = this.alertController.create({
-                                      title: "캐쉬정보를 가져오지 못했습니다.",
-                                      buttons: ['OK']
-                                  });
-                                      alert.present();
-                              }
-                      });
+                      this.storageProvider.cashInfoUpdateEmitter.emit("all");
                       this.viewCtrl.dismiss();
                     }else{ 
                           if(res.error=="already checked cash"){
@@ -138,6 +137,12 @@ export class CashConfirmPage{
             });
             alert.present();
       }
+  }
+
+  deleteDeposit(){
+       var param:any={tuno:this.tuno};
+       this.viewCtrl.dismiss();
+       this.app.getRootNav().push(CashDepositDeletePage,param);
   }
 }
 

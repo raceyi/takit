@@ -30,7 +30,9 @@ import { PasswordPage } from '../pages/password/password';
 import {CashConfirmPage} from '../pages/cashconfirm/cashconfirm';
 import {CashIdPage} from '../pages/cashid/cashid';
 import {BankBranchPage} from '../pages/bankbranch/bankbranch';
-import{Focuser} from '../components/focuser/focuser';
+import {IOSAlertPage} from '../pages/ios-alert/ios-alert';
+import {CashDepositDeletePage} from '../pages/cash-deposit-delete/cash-deposit-delete';
+import {Focuser} from '../components/focuser/focuser';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import{Focuser} from '../components/focuser/focuser';
     Focuser,
     CashConfirmPage,
     CashIdPage,
-    BankBranchPage
+    BankBranchPage,
+    IOSAlertPage,
+    CashDepositDeletePage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -82,7 +86,9 @@ import{Focuser} from '../components/focuser/focuser';
     PasswordPage,
     CashConfirmPage,
     CashIdPage,
-    BankBranchPage  
+    BankBranchPage,
+    IOSAlertPage,
+    CashDepositDeletePage  
   ],
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
