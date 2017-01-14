@@ -38,7 +38,7 @@ export class MyApp {
 
         console.log("platform ready comes");
         if(Network.connection=="none"){
-            this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
+            //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
             //Please check current page and then move into ErrorPage!
             //console.log("rootPage:"+JSON.stringify(this.rootPage));
             if(!this.rootPage==undefined){
@@ -104,12 +104,12 @@ export class MyApp {
                                     this.rootPage=LoginPage;   
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
+                                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                                     this.rootPage=ErrorPage;   
                                 }
                             },login_err =>{
                                 console.log("move into ErrorPage-"+JSON.stringify(login_err));
-                                this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                                 this.rootPage=ErrorPage;
                     });
                 }else if(id=="kakao"){ //kakao login
@@ -130,12 +130,12 @@ export class MyApp {
                                     this.rootPage=LoginPage;
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
+                                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                                     this.rootPage=ErrorPage;   
                                 }
                             },login_err =>{
                                 console.log(JSON.stringify(login_err));
-                                this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                                 this.rootPage=ErrorPage;
                             });
                 }else{ // email login 
@@ -156,7 +156,7 @@ export class MyApp {
                                 }
                             },login_err =>{
                                 console.log(JSON.stringify(login_err));
-                                this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                                 this.rootPage=ErrorPage;
                         });
                         },(error)=>{
@@ -187,6 +187,7 @@ export class MyApp {
         this.storage.remove("id"); //So far, clear() doesn't work. Please remove this line later
         this.storage.remove("refundBank");
         this.storage.remove("refundAccount");
+        this.storageProvider.reset();
         this.storageProvider.dropCartInfo().then(()=>{
             console.log("move into LoginPage"); //Please exit App and then restart it.
             if(this.storageProvider.login==true){

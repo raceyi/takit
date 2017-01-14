@@ -7,10 +7,16 @@
       <ion-col width-60 class="title">
           <ion-title>타킷</ion-title>
       </ion-col>
-      <ion-col width-20 style="text-align:right;">
+      <ion-col width-20 *ngIf="!storageProvider.isAndroid" style="text-align:right;font-size:1.5em;">
           <ion-icon color="primary"  [hidden]="storageProvider.deposit_in_latest_cashlist==false" (click)="moveToCashListPage()" name="cash"></ion-icon>
       </ion-col>
-      <ion-col width-20 style="text-align:center;">
+      <ion-col width-20 *ngIf="!storageProvider.isAndroid" style="text-align:center;font-size:1.5em;">
+          <ion-icon [color]="getColorBackgroundMode()" [hidden]="storageProvider.order_in_progress_24hours==false" (click)="configureBackgrondMode()" name="notifications"></ion-icon>
+      </ion-col>
+      <ion-col width-20 *ngIf="storageProvider.isAndroid">
+          <ion-icon color="primary"  [hidden]="storageProvider.deposit_in_latest_cashlist==false" (click)="moveToCashListPage()" name="cash"></ion-icon>
+      </ion-col>
+      <ion-col width-20  *ngIf="storageProvider.isAndroid">
           <ion-icon [color]="getColorBackgroundMode()" [hidden]="storageProvider.order_in_progress_24hours==false" (click)="configureBackgrondMode()" name="notifications"></ion-icon>
       </ion-col>
     </ion-row>

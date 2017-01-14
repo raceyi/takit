@@ -32,7 +32,7 @@
             <ion-item ion-col class="cashId">
                 <ion-input class="cashIdValue" type="text" [(ngModel)]="storageProvider.cashId" disabled placeholder="설정버튼을 눌러주세요"></ion-input>
             </ion-item>
-                <button ion-button class="config" (click)="configureCashId()">
+                <button ion-button class="config" [disabled]="storageProvider.tourMode" (click)="configureCashId()">
                     <span>설정</span>
                 </button>
             </ion-row>
@@ -87,7 +87,7 @@
                 - 받는통장 표시내용에 캐쉬아이디를 입력하지 않았을 시에는 아래 <span style="color:blue">입금 수동 확인하기</span>를 수행해주시기 바랍니다. 
                 </p>
              </ion-item>
-                <button ion-button full (click)="cashInCheck(input)" [disabled]="storageProvider.cashId.length==0"> 입금 바로 확인하기 </button>
+                <button ion-button full (click)="cashInCheck(input)" [disabled]="storageProvider.cashId.length==0 || storageProvider.tourMode"> 입금 바로 확인하기 </button>
 
             <div class="cashIn-check">   
                 <ion-grid class="cashIn-check-table">
@@ -189,7 +189,7 @@
             </ion-col>
             </ion-row>
             <ion-item>
-            <button ion-button block (click)="cashInComplete(event)" [disabled]="storageProvider.cashId.length==0">입금 수동 확인하기</button>
+            <button ion-button block (click)="cashInComplete(event)" [disabled]="storageProvider.cashId.length==0 || storageProvider.tourMode">입금 수동 확인하기</button>
             </ion-item>
             </ion-grid>   
             </div>
@@ -212,7 +212,7 @@
                     <ion-col>{{tr.date}}</ion-col>
                     <ion-col>{{tr.amount}}</ion-col>
                     <ion-col *ngIf="tr.transactionType!='deposit' || tr.confirm==1">{{tr.type}}</ion-col>
-                    <ion-col *ngIf="tr.transactionType=='deposit' && tr.confirm==0"> <button ion-button (click)="addCash(tr)">확인</button></ion-col>
+                    <ion-col *ngIf="tr.transactionType=='deposit' && tr.confirm==0"> <button ion-button [disabled]="storageProvider.tourMode" (click)="addCash(tr)">확인</button></ion-col>
                     <ion-col *ngIf="tr.nowBalance!=0">{{tr.nowBalance}}</ion-col>
                     <ion-col *ngIf="tr.nowBalance==0"> &nbsp; &nbsp;</ion-col>
                 </ion-row>
@@ -224,7 +224,7 @@
                 </ion-row>
                 <ion-row class="transaction" [hidden]="tr.transactionType!='refund' || tr.hide">
                     <ion-col *ngIf="tr.bankName!=undefined">{{tr.bankName}}</ion-col>
-                    <ion-col *ngIf="tr.account!=undefined">{{tr.account}}</ion-col>
+                    <ion-col *ngIf="tr.account!=undefined">{{tr.accountMask}}</ion-col>
                     <ion-col *ngIf="tr.fee!=undefined">수수료:{{tr.fee}}</ion-col>
                 </ion-row>
               </ion-item>
@@ -288,7 +288,7 @@
                 </ion-row>
             </ion-item>
             <ion-item *ngIf="!refundEditable">
-                <button ion-button (click)="enableRefundEditable()" full>
+                <button ion-button [disabled]="storageProvider.tourMode" (click)="enableRefundEditable()" full>
                     <span>환불계좌 수정</span>
                 </button>
             </ion-item>
@@ -301,7 +301,7 @@
             <ion-item ion-col class="cashId">
                 <ion-input class="cashIdValue" [(ngModel)]="refundAmount" [disabled]="verifiedAccount.length==0 || refundEditable" type="number" placeholder="환불금액"></ion-input>
             </ion-item>
-                <button ion-button (click)="refundCash()" [disabled]="verifiedAccount.length==0 || refundEditable" class="cashOut">
+                <button ion-button (click)="refundCash()" [disabled]="verifiedAccount.length==0 || refundEditable || storageProvider.tourMode" class="cashOut">
                     <span>환불신청</span>
                 </button>
             </ion-row>

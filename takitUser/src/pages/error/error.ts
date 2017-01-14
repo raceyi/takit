@@ -17,7 +17,7 @@ import {LoginPage} from '../login/login';
 })
 
 export class ErrorPage{
-     public reason:string="";
+     //public reason:string="";
      //android_platform:boolean;
 
      constructor(private navController: NavController, private _navParams: NavParams,
@@ -27,7 +27,7 @@ export class ErrorPage{
 
          console.log("ErrorPage constructor");
          //this.android_platform=this.platform.is('android');
-         this.reason=this.storageProvider.errorReason;
+         //this.reason=this.storageProvider.errorReason;
      }
 
      ionViewDidEnter(){
@@ -59,7 +59,7 @@ export class ErrorPage{
                                     this.app.getRootNav().setRoot(LoginPage);   
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
+                                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                                     this.app.getRootNav().setRoot(ErrorPage);   
                                 }
                             },login_err =>{

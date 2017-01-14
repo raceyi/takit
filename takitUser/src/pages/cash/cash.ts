@@ -75,6 +75,9 @@ export class CashPage {
     this.depositMemo=this.storageProvider.name;
     //read cash info from local storage
     // bank name and account saved in encrypted format.
+    if(this.storageProvider.tourMode)
+        return;
+        
     console.log("read refundBank");
      this.storage.get("refundBank").then((value:string)=>{
          console.log("refundBank is "+value);
@@ -499,6 +502,9 @@ export class CashPage {
                 var tr:any={};
                 tr=transaction;
                 tr.type=this.convertType(tr.transactionType);
+                if(tr.transactionType=='refund'){
+                    tr.accountMask=this.maskAccount(tr.account);
+                }
                 if(tr.confirm==1){
                     // convert GMT time into local time
                     var trTime:Date=moment.utc(tr.transactionTime).toDate();
@@ -515,7 +521,7 @@ export class CashPage {
             });
             
             // sort last transactions with transactionTime
-            /*
+            
             var len,startIdx;
             if(this.storageProvider.TransactionsInPage*2<this.transactions.length){
                 len=this.transactions.length*2 ;
@@ -532,7 +538,6 @@ export class CashPage {
             else
                 this.transactions=[];
             this.transactions=this.transactions.concat(subtransactions);
-            */
   }
 
    sortByKey(array) {
@@ -609,7 +614,7 @@ export class CashPage {
 checkDepositInLatestCashlist(cashList){
     for(var i=0;i<cashList.length;i++){
         //console.log("cash item:"+JSON.stringify(cashList[i]));
-        if(cashList[i].transactionType=="deposit"){
+        if(cashList[i].transactionType=="deposit" && cashList[i].confirm==0){
             break;
         }
     }
@@ -955,12 +960,14 @@ checkDepositInLatestCashlist(cashList){
 
   copyAccountInfo(){
     var account = "3012424363621";
+
     cordova.plugins.clipboard.copy(account);
     let alert = this.alertController.create({
         title: "클립보드로 계좌번호가 복사되었습니다.",
         buttons: ['OK']
     });
     alert.present();
+
   }
 
   toggleTransaction(tr){

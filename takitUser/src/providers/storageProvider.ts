@@ -16,12 +16,13 @@ export class StorageProvider{
     public takitId:string; //current selected takitId;
     public shopInfo:any;   // current shopInfo. shopname:shopInfo.shopName
     public shoplistCandidate=[];
-    public errorReason:string;
+    //public errorReason:string;
     public cart:any;
     public id:string;
     public messageEmitter= new EventEmitter();
     public tabMessageEmitter = new EventEmitter();
     public cashInfoUpdateEmitter= new EventEmitter();
+    public GCMCashUpdateEmitter= new EventEmitter();
     public shopTabRef:Tabs;
     public login:boolean=false;
     public navController:NavController;
@@ -34,7 +35,7 @@ export class StorageProvider{
     public deposit_in_latest_cashlist=false;
     public tourMode=false;
     public isAndroid;
-    public cashId;
+    public cashId="";
     public cashAmount:number;
 
     public refundBank:string="";
@@ -50,7 +51,8 @@ export class StorageProvider{
     /* 농협 계좌 이체가능 은행 */
     banklist=[  {name:"국민",value:"004"},
                 {name:"기업",value:"003"},
-                {name:"농협",value:"011"},
+               // {name:"농협",value:"011"},
+                {name:"농협",value:"010"},
                 {name:"신한",value:"088"},
                 {name:"우리",value:"020"},
                 {name:"KEB하나",value:"081"},  
@@ -128,6 +130,35 @@ export class StorageProvider{
                 reject();
             });
         });
+    }
+
+    reset(){
+        this.db=undefined;
+        this.shoplist=[];
+        this.takitId=undefined; 
+        this.shopInfo=undefined;   
+        this.shoplistCandidate=[];
+        this.cart=undefined;
+        this.id=undefined;
+        this.email="";
+        this.name="";
+        this.phone="";
+        this.shopResponse=undefined;
+        this.run_in_background=false;
+        this.order_in_progress_24hours=false;
+        this.deposit_in_latest_cashlist=false;
+        this.tourMode=false;
+        this.cashId="";
+        this.cashAmount=undefined;
+
+        this.refundBank="";
+        this.refundAccount="";
+        this.cashMenu= "cashIn"; 
+        /////////////////////////////////////
+        // 캐쉬정보 수동입력 
+        this.depositBank=undefined;
+        this.depositBranch=undefined;
+        this.depositBranchInput=undefined;
     }
 
     //delete an existing db and then open new one. Please check if it works or not. Hum.. it doesn't work 
@@ -292,9 +323,9 @@ export class StorageProvider{
         console.log("after shoplist update:"+JSON.stringify(this.shoplistCandidate));        
     }
 
-    errorReasonSet(reason:string){
-        this.errorReason=reason;
-    }
+   // errorReasonSet(reason:string){
+   //     this.errorReason=reason;
+   // }
 
     shopInfoSet(shopInfo:any){
         console.log("shopInfoSet:"+JSON.stringify(shopInfo));

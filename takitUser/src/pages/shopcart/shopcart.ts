@@ -1,4 +1,4 @@
-import {Component,ViewChild,ElementRef} from "@angular/core";
+import {Component,NgZone,ViewChild,ElementRef} from "@angular/core";
 import {NavController,NavParams,Content,AlertController,Tabs} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
@@ -31,7 +31,8 @@ export class ShopCartPage{
 
      constructor(private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,
-            private alertController:AlertController,private serverProvider:ServerProvider){
+            private alertController:AlertController,private serverProvider:ServerProvider,
+            private ngZone:NgZone,){
 	      console.log("ShopCartPage constructor");
         this.shopname=this.storageProvider.currentShopname();
         this.cart=this.storageProvider.cart;
@@ -40,15 +41,22 @@ export class ShopCartPage{
             this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
             this.amount=this.price-this.amount;
         }
-
-        Keyboard.onKeyboardShow().subscribe((e)=>{
-            console.log("keyboard show");
-            this.iOSOrderButtonHide=false;
-        });
-        Keyboard.onKeyboardHide().subscribe((e)=>{
-            console.log("keyboard hide");
-            this.iOSOrderButtonHide=true;
-        });
+        if(!this.storageProvider.isAndroid){ //ios
+            Keyboard.onKeyboardShow().subscribe((e)=>{
+                console.log("keyboard show");
+                this.ngZone.run(()=>{
+                    this.iOSOrderButtonHide=false;
+                });
+            });
+            Keyboard.onKeyboardHide().subscribe((e)=>{
+                console.log("keyboard hide");
+                 setTimeout(() => {
+                    this.ngZone.run(()=>{
+                        this.iOSOrderButtonHide=true;
+                    });
+                  }, 1000); 
+            });
+        }
      }
 
     checkTakeoutAvailable(){
@@ -98,6 +106,16 @@ export class ShopCartPage{
      }
 
      order(){
+         if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                title: '둘러보기 모드에서는 주문이 불가능합니다.',
+                subTitle: '로그인후 사용해주시기 바랍니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+             return;
+         }
+
         if(this.storageProvider.cashId==undefined ||
                     this.storageProvider.cashId.length<5){
             let alert = this.alertController.create({

@@ -81,7 +81,7 @@ export class TabsPage {
                     if(res.cashList!="0"){
                         for(var i=0;i<res.cashList.length;i++){
                             //console.log("cash item:"+JSON.stringify(cashList[i]));
-                            if(res.cashList[i].transactionType=="deposit"){
+                            if(res.cashList[i].transactionType=="deposit" && res.cashList[i].confirm==0){
                                 break;
                             }
                         }
@@ -460,7 +460,7 @@ export class TabsPage {
              },(err)=>{
                  if(err=="NetworkFailure"){
                         console.log("registrationId sent failure");
-                        this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
+                        //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
                         //Please move into ErrorPage!
                         this.app.getRootNav().setRoot(ErrorPage);
                  }else{
@@ -521,6 +521,8 @@ export class TabsPage {
                   }else{ // object 
                       cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: additionalData.custom });
                   }
+                  console.log("GCMCashUpdateEmitter");
+                  this.storageProvider.GCMCashUpdateEmitter.emit();
                   cashConfirmModal.present();
                 }
                 if(additionalData.GCMType!=="cash"){

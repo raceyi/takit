@@ -426,6 +426,14 @@ export class SearchPage {
           console.log("getFocusBrandss");
       }
 
+      serviceBlur(){
+          console.log("serviceBlur");
+      }
+
+      brandBlur(){
+          console.log("brandBlur");
+      }
+
       swipeSearch(event){
         //DIRECTION_LEFT = 2
         //DIRECTION_RIGHT = 4

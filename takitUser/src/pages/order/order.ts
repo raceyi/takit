@@ -90,14 +90,22 @@ export class OrderPage {
           Keyboard.disableScroll(true);
       }
       */
-      Keyboard.onKeyboardShow().subscribe((e)=>{
-          console.log("keyboard show");
-          this.iOSOrderButtonHide=false;
-      });
-      Keyboard.onKeyboardHide().subscribe((e)=>{
-          console.log("keyboard hide");
-          this.iOSOrderButtonHide=true;
-      });
+       if(!this.storageProvider.isAndroid){ //ios
+            Keyboard.onKeyboardShow().subscribe((e)=>{
+                console.log("keyboard show");
+                this.ngZone.run(()=>{
+                    this.iOSOrderButtonHide=false;
+                });
+            });
+            Keyboard.onKeyboardHide().subscribe((e)=>{
+                console.log("keyboard hide");
+                setTimeout(() => {
+                    this.ngZone.run(()=>{
+                        this.iOSOrderButtonHide=true;
+                    });
+                  }, 1000); 
+            });
+       }
  }
 
   sendSaveOrder(cart,menuName){
@@ -258,6 +266,16 @@ export class OrderPage {
  }
 
   order(){
+    if(this.storageProvider.tourMode){
+        let alert = this.alertController.create({
+            title: '둘러보기 모드에서는 주문이 불가능합니다.',
+            subTitle: '로그인후 사용해주시기 바랍니다.',
+            buttons: ['OK']
+        });
+        alert.present();
+            return;
+        }
+
     console.log("order comes... "); 
     if(this.storageProvider.cashId==undefined ||
                 this.storageProvider.cashId.length<5){

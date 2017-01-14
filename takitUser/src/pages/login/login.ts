@@ -265,7 +265,8 @@ export class LoginPage {
                         console.log("shoplist:"+res.userInfo.shopList);
                         this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
                     }
-                    this.storageProvider.tourMode=true;
+                    // show user cashId
+                    this.storageProvider.cashId=res.userInfo.cashId;
                     this.navController.push(TabsPage);//hum... !!! Please check how backbutton works !!!                    
                 }else{
                     console.log("hum... tour id doesn't work.");

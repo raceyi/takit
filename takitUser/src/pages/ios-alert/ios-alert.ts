@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams,ViewController } from 'ionic-angular';
+import {StorageProvider} from '../../providers/storageProvider';
 
 /*
   Generated class for the IOSAlert page.
@@ -15,12 +16,13 @@ export class IOSAlertPage {
 
   messageEmitterSubscription;
 
-  constructor(public navCtrl: NavController,private viewCtrl: ViewController, public navParams: NavParams) {
-    /*
+  constructor(public navCtrl: NavController,private viewCtrl: ViewController, public navParams: NavParams,
+      private storageProvider:StorageProvider) {
+    
      this.messageEmitterSubscription= this.storageProvider.GCMCashUpdateEmitter.subscribe(()=> {
-       this.viewCtrl.dismiss();; // Does it work?
+        console.log("GCMCashUpdateEmitter comes - dismiss ios-alert");
+        this.viewCtrl.dismiss();; // Does it work?
      });
-     */
   }
 
   ionViewDidLoad() {
@@ -31,4 +33,5 @@ export class IOSAlertPage {
     this.viewCtrl.dismiss();
   }
 
+   
 }

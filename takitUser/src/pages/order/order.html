@@ -125,18 +125,18 @@
     </ion-row>
 
     <ion-row class="textrow" *ngIf="!storageProvider.isAndroid">
-      <ion-col width-40 class="password">캐쉬 비밀번호(6자리)</ion-col>
-      <ion-col width-40 class="password0">
+      <ion-col class="password">캐쉬 비밀번호(6자리)</ion-col>
+      <ion-col class="password0">
         <ion-item class="cashPassword">
         <ion-input maxlength="6" type="password" pattern="[0-9]{6}" [(ngModel)]="cashPassword" class="passwordinput"></ion-input>
         </ion-item>
       </ion-col>
-      <ion-col width-20 [hidden]="iOSOrderButtonHide">
-        <button ion-button class="selectButton" [disabled]="storageProvider.tourMode==true" (click)="order()" >주문결제</button>
-      </ion-col>
     </ion-row>
-
   </div>    
+    <ion-segment [hidden]="iOSOrderButtonHide">
+    <ion-segment-button value="shopcart" (click)="shopcart()">장바구니 담기</ion-segment-button>
+    <ion-segment-button value="order" [disabled]="storageProvider.tourMode==true" (click)="order()">주문결제하기</ion-segment-button>
+    </ion-segment>
     <div class="orderInfo cancelNoti">
       주문접수전에는 MyPage에서 주문 취소가 가능합니다. <br>
     </div>
@@ -173,7 +173,7 @@
 </div>
 </ion-content>
 <ion-footer class="orderPage">
-    <ion-segment>
+    <ion-segment [hidden]="!iOSOrderButtonHide">
     <ion-segment-button value="shopcart" (click)="shopcart()">장바구니 담기</ion-segment-button>
     <ion-segment-button value="order" [disabled]="storageProvider.tourMode==true" (click)="order()">주문결제하기</ion-segment-button>
     </ion-segment>

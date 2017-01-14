@@ -48,12 +48,14 @@ export class HomePage{
      ionViewWillEnter(){
          console.log("homePage-ionViewWillEnter");
          console.log("home-shoplist:"+JSON.stringify(this.storageProvider.shoplist));
+         /*
          if(this.storageProvider.shoplist==null || this.storageProvider.shoplist.length==0){
              //move into search page
              console.log("move into search page");
              var t: Tabs = this.navController.parent;
              t.select(1);
          }
+         */
      }
 
      loadShopInfo(takitId){
