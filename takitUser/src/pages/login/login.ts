@@ -1,6 +1,6 @@
 import {Component,EventEmitter,ViewChild} from "@angular/core";
 import {Content,Platform,AlertController,IonicApp,MenuController} from 'ionic-angular';
-import {NavController,NavParams} from 'ionic-angular';
+import {NavController,NavParams,ViewController} from 'ionic-angular';
 import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 
@@ -14,6 +14,7 @@ import {PasswordPage} from '../password/password';
 
 import {StorageProvider} from '../../providers/storageProvider';
 import {Storage} from "@ionic/storage";
+import {Device} from 'ionic-native';
 
 import {Http,Headers} from '@angular/http';
 
@@ -29,14 +30,25 @@ export class LoginPage {
     @ViewChild('loginPage') loginPageRef: Content;
     focusEmail = new EventEmitter();;
     focusPassword =new EventEmitter();
+    iphone5=false;
 
   constructor(private navController: NavController, private navParams: NavParams,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
                 private kakaoProvider:KakaoProvider, public storage:Storage,
                 private storageProvider:StorageProvider,private platform:Platform,
                 private alertController:AlertController,private ionicApp: IonicApp,
-                private menuCtrl: MenuController,private http:Http){
+                private menuCtrl: MenuController,private http:Http,public viewCtrl: ViewController){
       console.log("LoginPage construtor");
+        if(!this.storageProvider.isAndroid){
+            console.log("device.model:"+Device.model);
+            if(Device.model.includes('6') || Device.model.includes('5')){ //iphone 5,4
+                console.log("reduce font size"); // how to apply this?
+                this.iphone5=true;
+            }else{
+                console.log("iphone 6 or more than 6");
+            }
+        }
+
   }
  
   //ionViewDidEnter() {
@@ -48,6 +60,7 @@ export class LoginPage {
         this.storageProvider.navController=this.navController;
        
         let ready = true;
+        this.storageProvider.loginViewCtrl=this.viewCtrl;
 
     this.platform.registerBackButtonAction(()=>{
                console.log("[loginPage]Back button action called");

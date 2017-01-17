@@ -41,7 +41,7 @@ export class UserSecretPage {
           }
       }else{
           console.log("[UserSecretPage]move into error Page");
-          this.storageProvider.errorReasonSet('앱(페이스북 또는 카카오)으로부터 아이디를 가져올수 없습니다.');
+          //this.storageProvider.errorReasonSet('앱(페이스북 또는 카카오)으로부터 아이디를 가져올수 없습니다.');
           this.navController.setRoot(ErrorPage);
       }
       
@@ -53,7 +53,7 @@ export class UserSecretPage {
     shoplistHandler(userinfo){
       console.log("myshoplist:"+userinfo.myShopList);
         if(!userinfo.hasOwnProperty("myShopList")|| userinfo.myShopList==null){
-            this.storageProvider.errorReasonSet('등록된 상점이 없습니다.');
+            //this.storageProvider.errorReasonSet('등록된 상점이 없습니다.');
             this.navController.setRoot(ErrorPage);
         }else{
             this.storageProvider.myshoplist=JSON.parse(userinfo.myShopList);
@@ -86,15 +86,15 @@ export class UserSecretPage {
                                     this.shoplistHandler(res.shopUserInfo);
                                 }else if(res.result=='invalidId'){
                                     console.log("You have no right to access this app");
-                                    this.storageProvider.errorReasonSet('접근권한이 없습니다.');
+                                    //this.storageProvider.errorReasonSet('접근권한이 없습니다.');
                                     this.navController.setRoot(ErrorPage);
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('서버로 부터 알수 없는 응답을 받았습니다.');
+                                    //this.storageProvider.errorReasonSet('서버로 부터 알수 없는 응답을 받았습니다.');
                                     this.navController.setRoot(ErrorPage);
                                 }
       },(err)=>{
-           this.storageProvider.errorReasonSet('서버로 응답이 없습니다. 네트웍상태를 확인해주시기 바랍니다.');
+           //this.storageProvider.errorReasonSet('서버로 응답이 없습니다. 네트웍상태를 확인해주시기 바랍니다.');
            this.navController.setRoot(ErrorPage);
       });
   }

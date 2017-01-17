@@ -48,23 +48,11 @@ export class CashPage {
 
   messageEmitterSubscription;
 
-  public iphone5=false;
-  
   constructor(private app:App,private platform:Platform, private navController: NavController
         ,private navParams: NavParams,public http:Http ,private alertController:AlertController
         ,public storageProvider:StorageProvider,private serverProvider:ServerProvider
         ,public storage:Storage,public modalCtrl: ModalController,private ngZone:NgZone
         ,public alertCtrl:AlertController) {
-
-    if(!this.storageProvider.isAndroid){
-        console.log("device.model:"+Device.model);
-        if(Device.model.includes('6') || Device.model.includes('5')){ //iphone 5,4
-            console.log("reduce font size"); // how to apply this?
-            this.iphone5=true;
-        }else{
-            console.log("iphone 6 or more than 6");
-        }
-    }
 
     var d = new Date();
     var mm = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1); // getMonth() is zero-based
@@ -75,8 +63,12 @@ export class CashPage {
     this.depositMemo=this.storageProvider.name;
     //read cash info from local storage
     // bank name and account saved in encrypted format.
-    if(this.storageProvider.tourMode)
+    if(this.storageProvider.tourMode){
+        this.storageProvider.name="타킷 주식회사";
+        this.refundBank="011";
+        this.refundAccount="301*****63621";
         return;
+    }
         
     console.log("read refundBank");
      this.storage.get("refundBank").then((value:string)=>{

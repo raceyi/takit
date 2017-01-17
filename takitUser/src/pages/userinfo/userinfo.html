@@ -5,18 +5,6 @@
 </ion-header>
 
 <ion-content padding >
-<!--
-<ion-row>
-  <ion-col width-70>
-    <ion-input type="tel" [disabled]="!phoneChange" [(ngModel)]="phone"></ion-input> 
-  </ion-col>
-  <ion-col width-30>
-    <button ion-button full [hidden]="phoneChange" (click)="changePhone()">수정</button>
-    <button ion-button full [hidden]="!phoneChange" (click)="smsRequest()" >인증문자 요청 보내기</button>
-  </ion-col>
-</ion-row>
--->
-
 
  <ion-row>
     <ion-col width-30>
@@ -73,7 +61,7 @@
 </ion-row>
 
    <ion-item>
-     <ion-label fixed> 이메일 </ion-label>
+     <ion-label> 이메일 </ion-label>
      <ion-input [(ngModel)]="email" type="email"></ion-input> 
    </ion-item>
 
@@ -106,7 +94,7 @@
 </ion-item>
 <p [hidden]="paswordGuideHide">{{paswordGuide}}</p>
 <ion-item>
-    <ion-input [focuser]="focusPasswordCheck" type="password"  placeholder="비밀번호확인" [(ngModel)]="passwordCheck"></ion-input>
+    <ion-input [focuser]="focusPasswordCheck" type="password"  (focus)="restPasswordMatch()" placeholder="비밀번호확인" [(ngModel)]="passwordCheck"></ion-input>
 </ion-item>
 <p [hidden]="passwordMatch">비밀번호가 일치하지 않습니다.</p> 
 </div>

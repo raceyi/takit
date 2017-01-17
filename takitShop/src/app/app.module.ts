@@ -19,7 +19,7 @@ import {UserSecretPage} from '../pages/usersecret/usersecret';
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {CashPage} from '../pages/cash/cash';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
-
+import {SalesPage} from '../pages/sales-page/sales-page';
 import{Focuser} from '../components/focuser/focuser';
 
 @NgModule({
@@ -34,6 +34,7 @@ import{Focuser} from '../components/focuser/focuser';
     ServiceInfoPage,
     CashPage,
     UserInfoPage,
+    SalesPage,
     Focuser
   ],
   imports: [
@@ -50,7 +51,8 @@ import{Focuser} from '../components/focuser/focuser';
     PrinterPage,
     ServiceInfoPage,
     CashPage,
-    UserInfoPage
+    UserInfoPage,
+    SalesPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
     Storage,

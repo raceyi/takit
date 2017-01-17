@@ -544,7 +544,7 @@ export class ShopTablePage {
              },(err)=>{
                   console.log("registrationId sent failure");
                   if(err=="NetworkFailure"){
-                      this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
+                      //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
                       //Please move into ErrorPage!
                       this.app.getRootNav().setRoot(ErrorPage);
                   }else if(err=="HttpFailure"){

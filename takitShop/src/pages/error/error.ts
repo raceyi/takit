@@ -20,7 +20,7 @@ import {SelectorPage} from '../selector/selector';
 })
 
 export class ErrorPage{
-     public reason:string="";
+     //public reason:string="";
      android_platform:boolean;
      hasNoMyShop:boolean=false;
 
@@ -32,7 +32,7 @@ export class ErrorPage{
 
          console.log("ErrorPage constructor");
          this.android_platform=this.platform.is('android');
-         this.reason=this.storageProvider.errorReason;
+         //this.reason=this.storageProvider.errorReason;
          if(this.storageProvider.myshoplist.length==0){
              this.hasNoMyShop=true; 
          }
@@ -82,11 +82,11 @@ export class ErrorPage{
                                     this.app.getRootNav().setRoot(LoginPage);
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
+                                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                                 }
                             },login_err =>{
                                 console.log(JSON.stringify(login_err));
-                                this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                     });
                 }else if(id=="kakao"){ //kakao login
                         console.log("kakao login is not implemented yet");
@@ -100,11 +100,11 @@ export class ErrorPage{
                                     this.app.getRootNav().setRoot(LoginPage);
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
+                                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                                 }
                             },login_err =>{
                                 //console.log(JSON.stringify(login_err));
-                                this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                     });
                 }else{ // email login 
                     this.storage.get("password").then((value:string)=>{
@@ -119,7 +119,7 @@ export class ErrorPage{
                                     this.app.getRootNav().setRoot(LoginPage);
                                 }else{
                                     //console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                                 }
                             },login_err =>{
                                 console.log(JSON.stringify(login_err));
@@ -133,7 +133,7 @@ export class ErrorPage{
     shoplistHandler(userinfo){
         console.log("myshoplist:"+userinfo.myShopList);
         if(!userinfo.hasOwnProperty("myShopList")|| userinfo.myShopList==null){
-            this.storageProvider.errorReasonSet('등록된 상점이 없습니다.');
+            //this.storageProvider.errorReasonSet('등록된 상점이 없습니다.');
         }else{
              this.storageProvider.myshoplist=JSON.parse(userinfo.myShopList);
              this.storageProvider.userInfoSetFromServer(userinfo);

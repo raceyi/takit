@@ -7,7 +7,7 @@ import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {ErrorPage} from '../error/error';
 import {Platform,IonicApp,MenuController,Tabs} from 'ionic-angular';
 import {ViewController,App,NavController,AlertController,ModalController} from 'ionic-angular';
-import {Push,PushNotification} from 'ionic-native';
+import {Push,PushNotification,Device} from 'ionic-native';
 import {Http,Headers} from '@angular/http';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
@@ -40,6 +40,17 @@ export class TabsPage {
     this.tabHome = HomePage;
     this.tabSearch = SearchPage;
     this.tabCash = CashPage;
+
+    if(!this.storageProvider.isAndroid){
+        console.log("device.model:"+Device.model);
+        if(Device.model.includes('6') || Device.model.includes('5')){ //iphone 5,4
+            console.log("reduce font size"); // how to apply this?
+            this.storageProvider.iphone5=true;
+        }else{
+            console.log("iphone 6 or more than 6");
+        }
+    }
+
     //Please login and then do registration for gcm msg
     // and then move into home page
     if(this.storageProvider.tourMode==false){
@@ -227,64 +238,66 @@ export class TabsPage {
                 let page = view ? this.navController.getActive().instance : null;
 
                 if (this.app.getRootNav().getActive()==this.viewCtrl){
-                console.log("Handling back button on  tabs page");
-                if(this.storageProvider.order_in_progress_24hours){
-                        this.alertController.create({
-                            title: '앱을 종료하시겠습니까?',
-                            message: '진행중인 주문에 대해 주문알림을 받지 못할수 있습니다.',
-                            buttons: [
-                                {
-                                    text: '아니오',
-                                    handler: () => {
+                    console.log("Handling back button on  tabs page");
+                    if(this.storageProvider.order_in_progress_24hours){
+                            this.alertController.create({
+                                title: '앱을 종료하시겠습니까?',
+                                message: '진행중인 주문에 대해 주문알림을 받지 못할수 있습니다.',
+                                buttons: [
+                                    {
+                                        text: '아니오',
+                                        handler: () => {
+                                        }
+                                    },
+                                    {
+                                        text: '네',
+                                        handler: () => {
+                                        console.log("call stopEnsureNoti");
+                                        console.log("cordova.plugins.backgroundMode.disable");
+                                        cordova.plugins.backgroundMode.disable();
+                                        this.ngZone.run(()=>{
+                                            this.storageProvider.run_in_background=false;
+                                            //change color of notification button
+                                        });
+                                        this.stopEnsureNoti().then(()=>{
+                                                console.log("success stopEnsureNoti()");
+                                                this.storageProvider.db.close(()=>{
+                                                    this.platform.exitApp();
+                                                },(err)=>{
+                                                    console.log("!!!fail to close db!!!");
+                                                    this.platform.exitApp();
+                                                });
+                                                //this.platform.exitApp();
+                                        },(err)=>{
+                                                console.log("fail in stopEnsureNoti() - Whan can I do here? nothing");
+                                                this.storageProvider.db.close(()=>{
+                                                    this.platform.exitApp();
+                                                },(err)=>{
+                                                    console.log("!!!fail to close db!!!");
+                                                    this.platform.exitApp();
+                                                });
+                                                //this.platform.exitApp();
+                                        });
+                                        }
                                     }
-                                },
-                                {
-                                    text: '네',
-                                    handler: () => {
-                                    console.log("call stopEnsureNoti");
-                                    console.log("cordova.plugins.backgroundMode.disable");
-                                    cordova.plugins.backgroundMode.disable();
-                                    this.ngZone.run(()=>{
-                                        this.storageProvider.run_in_background=false;
-                                        //change color of notification button
-                                    });
-                                    this.stopEnsureNoti().then(()=>{
-                                            console.log("success stopEnsureNoti()");
-                                            this.storageProvider.db.close(()=>{
-                                                this.platform.exitApp();
-                                            },(err)=>{
-                                                console.log("!!!fail to close db!!!");
-                                                this.platform.exitApp();
-                                            });
-                                            //this.platform.exitApp();
-                                    },(err)=>{
-                                            console.log("fail in stopEnsureNoti() - Whan can I do here? nothing");
-                                            this.storageProvider.db.close(()=>{
-                                                this.platform.exitApp();
-                                            },(err)=>{
-                                                console.log("!!!fail to close db!!!");
-                                                this.platform.exitApp();
-                                            });
-                                            //this.platform.exitApp();
-                                    });
-                                    }
-                                }
-                            ]
-                        }).present();
-                }else{
-                        cordova.plugins.backgroundMode.disable();
-                        this.storageProvider.db.close(()=>{
-                            this.platform.exitApp();
-                        },(err)=>{
-                            console.log("!!!fail to close db!!!");
-                            this.platform.exitApp();
-                        });
-                        //this.platform.exitApp();
-                }
-                }
-                else if (this.navController.canGoBack() || view && view.isOverlay) {
-                console.log("popping back");
-                this.navController.pop();
+                                ]
+                            }).present();
+                    }else{
+                            cordova.plugins.backgroundMode.disable();
+                            this.storageProvider.db.close(()=>{
+                                this.platform.exitApp();
+                            },(err)=>{
+                                console.log("!!!fail to close db!!!");
+                                this.platform.exitApp();
+                            });
+                            //this.platform.exitApp();
+                    }
+                }else if(this.app.getRootNav().getActive()==this.storageProvider.loginViewCtrl){
+                    console.log("exit App at loginPage in Android");
+                    this.platform.exitApp();
+                }else if (this.navController.canGoBack() || view && view.isOverlay) {
+                    console.log("popping back");
+                    this.navController.pop();
                 }else{
                     console.log("What can I do here? which page is shown now? Error or LoginPage");
                     this.storageProvider.db.close(()=>{

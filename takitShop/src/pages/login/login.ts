@@ -48,7 +48,7 @@ export class LoginPage {
   shoplistHandler(userinfo){
       console.log("myshoplist:"+userinfo.myShopList);
         if(!userinfo.hasOwnProperty("myShopList")|| userinfo.myShopList==null){
-            this.storageProvider.errorReasonSet('등록된 상점이 없습니다.');
+            //this.storageProvider.errorReasonSet('등록된 상점이 없습니다.');
             this.navController.setRoot(ErrorPage);
         }else{
             this.storageProvider.myshoplist=JSON.parse(userinfo.myShopList);
@@ -164,7 +164,7 @@ export class LoginPage {
                     });  
                 }else{
                     console.log("invalid result comes from server-"+JSON.stringify(res));
-                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
+                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                     let alert = this.alertController.create({
                                     title: '로그인 에러가 발생했습니다',
                                     subTitle: '다시 시도해 주시기 바랍니다.',

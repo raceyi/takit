@@ -3,6 +3,7 @@ import {Platform,Tabs,NavController} from 'ionic-angular';
 import {SQLite} from 'ionic-native';
 import {Http,Headers} from '@angular/http';
 import {ConfigProvider} from './configProvider';
+import {Device} from 'ionic-native';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
@@ -48,11 +49,14 @@ export class StorageProvider{
     public depositBranch;
     public depositBranchInput;
 
+    public iphone5=false;
+
+    public loginViewCtrl;
+
     /* 농협 계좌 이체가능 은행 */
     banklist=[  {name:"국민",value:"004"},
                 {name:"기업",value:"003"},
-               // {name:"농협",value:"011"},
-                {name:"농협",value:"010"},
+                {name:"농협",value:"011"},
                 {name:"신한",value:"088"},
                 {name:"우리",value:"020"},
                 {name:"KEB하나",value:"081"},  

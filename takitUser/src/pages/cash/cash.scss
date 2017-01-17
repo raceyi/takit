@@ -325,6 +325,11 @@ page-cash{
     .selectButton{
         padding-right: 0px;
         padding-left: 0px;
+        
+        div.item-inner{  // Is it necessary for iphone5?
+            padding: 0px !important;
+        }
+        
         .item-md .item-button {
              padding: 0 !important; 
              margin:0px !important;
@@ -335,6 +340,12 @@ page-cash{
         padding: 0px !important;
         margin:0px !important;
         box-shadow: none !important; 
+    }
+
+    .selectButton.item-ios .item-button {
+        padding-right: 0px;
+        padding-left: 0px;        
+        font-size: 1.0rem !important;
     }
 
     ion-datetime{

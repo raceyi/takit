@@ -90,6 +90,25 @@ export class ServerProvider{
         });
   }
 
+  updateCashAvailable(){
+      return new Promise((resolve,reject)=>{
+           let body = JSON.stringify({takitId:this.storageProvider.myshop.takitId});
+           console.log("/shop/getBalance "+body);
+           this.post("/shop/getBalance",body).then((res:any)=>{
+                console.log("res:"+JSON.stringify(res));
+                if(res.result=="success"){
+                    this.storageProvider.cashAvailable=res.balance;
+                    this.storageProvider.totalSales=res.sales;
+                    resolve(res);
+                }else{
+                    reject("캐쉬정보를 가져오는데 실패했습니다.");
+                }
+           },(err)=>{
+                    reject(err);
+           });
+      });
+  }
+
 }
 
 

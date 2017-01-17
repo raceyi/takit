@@ -37,35 +37,36 @@
                 </button>
             </ion-row>
 
-            <ion-row *ngIf="!iphone5" >
+            <ion-row *ngIf="!storageProvider.iphone5">
                 <ion-col width-90>
             <ion-item >
                 <ion-label class="textSet" style="text-align:right;padding:0px;">입금계좌: 농협 301-2424-3636-21 (타킷주식회사)</ion-label>
             </ion-item>
             </ion-col>
-            <ion-col width-10>
+            <ion-col width-10 style="padding-right: 5px;">
             <ion-item class="selectButton">
-                <button ion-button class="selectButton copyClipboardButton" color="darkgray" (click)="copyAccountInfo()">
+                <button ion-button full class="selectButton copyClipboardButton" color="darkgray" (click)="copyAccountInfo()">
                 복사 
                 </button>
             </ion-item>
             </ion-col>
             </ion-row>
 
-            <ion-row *ngIf="iphone5" >
-                <ion-col width-90>
-                    <ion-item >
-                        <ion-label class="textSet" style="text-align:right;padding:0px;">입금계좌: 농협 301-2424-3636-21 (타킷주식회사)</ion-label>
-                    </ion-item>
+            <ion-row *ngIf="storageProvider.iphone5">
+                <ion-col width-80>
+            <ion-item>
+                <ion-row class="textSet">&nbsp;&nbsp;&nbsp;&nbsp;입금계좌: 농협 301-2424-3636-21</ion-row>
+                <ion-row class="textSet">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 타킷주식회사</ion-row>
+            </ion-item>
             </ion-col>
             <ion-col width-10>
             <ion-item class="selectButton">
-                <button ion-button class="selectButton copyClipboardButton" color="darkgray" (click)="copyAccountInfo()">
+                <button full ion-button class="selectButton copyClipboardButton" color="darkgray">
                 복사 
                 </button>
             </ion-item>
             </ion-col>
-            </ion-row>    
+            </ion-row>
 
             <ion-item>
                 <p class="explain" >
@@ -281,7 +282,7 @@
                         </button>
                     </ion-col>
                     <ion-col class="refundAccountRegButton">
-                        <button ion-button [disabled]="storageProvider.cashId.length==0" (click)="checkWithrawAccount()" full>
+                        <button ion-button [disabled]="storageProvider.cashId.length==0 ||storageProvider.tourMode" (click)="checkWithrawAccount()" full>
                             <span>환불계좌 등록</span>
                         </button>
                     </ion-col>

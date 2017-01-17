@@ -26,6 +26,14 @@ export class StorageProvider{
     public name;
     public phone;
 
+    public cashAvailable;
+    public totalSales;
+    public maskAccount;
+    public account;
+    public bankName;
+    public bankCode;
+    public depositor;
+
     public serverAddress:string=this.configProvider.getServerAddress();
 
     public awsS3OCR:string=this.configProvider.getAwsS3OCR();
@@ -41,9 +49,36 @@ export class StorageProvider{
 
     public version=this.configProvider.getVersion();
 
+    public accountMaskExceptFront=this.configProvider.getAccountMaskExceptFront();
+    public accountMaskExceptEnd=this.configProvider.getAccountMaskExceptEnd();
+
     constructor(private platform:Platform,private configProvider:ConfigProvider){
         console.log("StorageProvider constructor");         
     }
+
+    reset(){
+        this.myshoplist=[];
+        this.myshop={}; 
+        this.shopInfo=undefined;   
+        this.id=undefined;
+
+        this.printOn=false;
+        this.amIGotNoti=false;
+        this.storeOpen=false;
+
+        this.email=undefined;
+        this.name=undefined;
+        this.phone=undefined;
+
+        this.cashAvailable=undefined;
+        this.totalSales=undefined;
+        this.maskAccount=undefined;
+        this.account=undefined;
+        this.bankName=undefined;
+        this.bankCode=undefined;
+        this.depositor=undefined;
+    }
+
 
     open(){
         return new Promise((resolve,reject)=>{
@@ -88,9 +123,9 @@ export class StorageProvider{
         return (buffer+encrypted);    
     }
 
-    errorReasonSet(reason:string){
-        this.errorReason=reason;
-    }
+//    errorReasonSet(reason:string){
+//        this.errorReason=reason;
+//    }
 
     shopInfoSet(shopInfo:any){
         console.log("shopInfoSet:"+JSON.stringify(shopInfo));

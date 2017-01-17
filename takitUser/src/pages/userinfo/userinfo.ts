@@ -51,6 +51,7 @@ export class UserInfoPage{
 	      console.log("UserInfoPage constructor");
           this.getPassword().then((password:string)=>{
               this.existingPassword=password;
+               console.log("existing password:"+this.existingPassword);
           }); 
      }
 
@@ -302,8 +303,13 @@ export class UserInfoPage{
       });
   }
 
+  restPasswordMatch(){
+      this.passwordMatch=true;
+  }
+
   modify(){
          console.log("modify");
+         /*
          if((this.loginMethod!="이메일" && 
                 this.email==this.storageProvider.email &&
                 this.phone==this.storageProvider.phone &&
@@ -315,7 +321,7 @@ export class UserInfoPage{
                 this.existingPassword==this.password)){
                     console.log("no modification");
                 return;
-         }
+         }*/
 
          console.log("modify-1");
          if(this.phoneChange && this.phone!=this.storageProvider.phone){
@@ -357,6 +363,7 @@ export class UserInfoPage{
 
        console.log("modify-4"); 
       if(this.loginMethod=="이메일" && this.password!=this.passwordCheck){
+          console.log("password:"+this.password+ "passwordCheck:"+this.passwordCheck);
           this.passwordMatch=false;
           if(this.storageProvider.isAndroid)
             this.focusPasswordCheck.emit(true);
@@ -364,8 +371,8 @@ export class UserInfoPage{
       }else
           this.passwordMatch=true;
 
-      console.log("modify-5"); 
-      if(this.loginMethod=="이메일" && this.oldPassword.trim.length==0){
+      console.log("modify-5 "); 
+      if(this.loginMethod=="이메일" && this.oldPassword.length==0){
           if(this.storageProvider.isAndroid){
             this.focusOldPassword.emit(true);    
           }else{ //ios
@@ -394,8 +401,11 @@ export class UserInfoPage{
                                     phone:this.userPhone.trim(), 
                                     name:this.name.trim()});
 
-         console.log("call modifyUserInfo");
+         console.log("call modifyUserInfo "+JSON.stringify(body));
+         console.log("existing password:"+this.existingPassword);
+
          this.serverProvider.post(this.storageProvider.serverAddress+"/modifyUserInfo",body).then((res:any)=>{
+             console.log("res:"+JSON.stringify(res));
              if(res.result=="success"){
                 let alert = this.alertController.create({
                             title: "회원 정보가 수정되었습니다",

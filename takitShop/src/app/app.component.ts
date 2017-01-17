@@ -16,6 +16,7 @@ import{PrinterPage} from '../pages/printer/printer';
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {CashPage} from '../pages/cash/cash';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
+import {SalesPage} from '../pages/sales-page/sales-page';
 
 declare var cordova:any;
 
@@ -47,7 +48,7 @@ export class MyApp {
         //this.storageProvider.open(); So far, DB is not necessary.
 
         if(Network.connection=="none"){
-            this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
+            //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
             //Please check current page and then move into ErrorPage!
             console.log("rootPage:"+JSON.stringify(this.rootPage));
             if(!this.rootPage){
@@ -60,7 +61,7 @@ export class MyApp {
             console.log('network connected!');
             this.disconnectSubscription = Network.onDisconnect().subscribe(() => { // Why it doesn't work?
                 console.log('network was disconnected :-(');
-                this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
+                //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
                 //Please check current page and then move into ErrorPage!
                 console.log("rootPage:"+JSON.stringify(this.rootPage));
                 if(this.rootPage==undefined){
@@ -91,12 +92,12 @@ export class MyApp {
                                     this.rootPage=LoginPage; 
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
+                                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                                     this.rootPage=ErrorPage;   
                                 }
                             },login_err =>{
                                 console.log(JSON.stringify(login_err));
-                                this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                                 this.rootPage=ErrorPage;
                     });
                 }else if(id=="kakao"){ //kakao login
@@ -111,12 +112,12 @@ export class MyApp {
                                     this.rootPage=LoginPage; 
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
+                                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                                     this.rootPage=ErrorPage;   
                                 }
                             },login_err =>{
                                 //console.log(JSON.stringify(login_err));
-                                this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                                 this.rootPage=ErrorPage;
                     });
                 }else{ // email login 
@@ -133,12 +134,12 @@ export class MyApp {
                                     this.rootPage=LoginPage; 
                                 }else{
                                     //console.log("invalid result comes from server-"+JSON.stringify(res));
-                                    this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                                     this.rootPage=ErrorPage;   
                                 }
                             },login_err =>{
                                 //console.log(JSON.stringify(login_err));
-                                this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
+                                //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                                 this.rootPage=ErrorPage;
                         });
                     });
@@ -162,7 +163,7 @@ export class MyApp {
     shoplistHandler(userinfo:any){
         console.log("myshoplist:"+userinfo.myShopList);
         if(!userinfo.hasOwnProperty("myShopList")|| userinfo.myShopList==null){
-            this.storageProvider.errorReasonSet('등록된 상점이 없습니다.');
+            //this.storageProvider.errorReasonSet('등록된 상점이 없습니다.');
             this.rootPage=ErrorPage;
         }else{
              this.storageProvider.myshoplist=JSON.parse(userinfo.myShopList);
@@ -206,6 +207,9 @@ export class MyApp {
         this.app.getRootNav().push(UserInfoPage);
     }
 
+    openSales(){
+        this.app.getRootNav().push(SalesPage);
+    }
    openLogout(){
       let confirm = this.alertCtrl.create({
       title: '로그아웃하시겠습니까?',
@@ -256,6 +260,7 @@ export class MyApp {
         this.storage.remove("id"); //So far, clear() doesn't work. Please remove this line later
         this.storage.remove("printer");
         this.storage.remove("printOn");
+        this.storageProvider.reset();
         console.log("move into LoginPage"); //Please exit App and then restart it.
         if(this.storageProvider.login==true){
             console.log("call setRoot with LoginPage");
