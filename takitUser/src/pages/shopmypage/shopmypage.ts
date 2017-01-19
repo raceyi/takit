@@ -55,6 +55,19 @@ export class ShopMyPage{
         
      }
 
+    ionViewDidEnter(){
+        console.log("ionViewDidEnter");
+        //check the orders and reset it if necessary.
+        this.orders=[];
+        this.getOrders(-1).then(res=>{
+            //
+
+        },err=>{
+            //
+
+        });
+    }
+
       getStatusString(orderStatus){
         console.log("orderStatus:"+orderStatus);
         if(orderStatus=="paid"){

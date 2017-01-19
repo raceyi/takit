@@ -126,7 +126,7 @@ export class OrderPage {
                                         takeout: takeout,
                                         orderedTime:new Date().toISOString(),
                                         cashId: this.storageProvider.cashId,
-                                        cashPassword:this.cashPassword
+                                        password:this.cashPassword
                                         });
               console.log("sendOrder:"+JSON.stringify(body));                          
               let headers = new Headers();
@@ -166,8 +166,8 @@ export class OrderPage {
                             options: options,
                             price: this.amount});
            cart.total=this.amount;
-           this.cashPassword="";
            this.sendSaveOrder(cart,menuName).then((res:any)=>{
+                 this.cashPassword="";
                  console.log(JSON.stringify(res)); 
                  var result:string=res.result;
                  if(result=="success"){
@@ -222,6 +222,7 @@ export class OrderPage {
                     alert.present();
                  }
            },(error)=>{
+                 this.cashPassword="";
                  console.log("saveOrder err "+error);
                  if(error=="NetworkFailure"){
                     let alert = this.alertController.create({
@@ -233,6 +234,12 @@ export class OrderPage {
                  }else if(error=="shop's off"){
                     let alert = this.alertController.create({
                             title: '상점이 문을 열지 않았습니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                 }else if(error=="invalid cash password"){
+                    let alert = this.alertController.create({
+                            title: '비밀번호가 일치하지 않습니다.',
                             buttons: ['OK']
                         });
                         alert.present();

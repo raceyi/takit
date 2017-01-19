@@ -157,15 +157,15 @@ export class ShopCartPage{
                                         takeout: takeout,
                                         orderedTime:new Date().toISOString(),
                                         cashId:this.storageProvider.cashId,
-                                        cashPassword:this.cashPassword});
+                                        password:this.cashPassword});
               console.log("order:"+JSON.stringify(body));
 
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress);
-              this.cashPassword="";  
                  this.serverProvider.saveOrder(body).then((res:any)=>{
                  console.log(res); 
+                 this.cashPassword="";  
                  var result:string=res.result;
                   if(result=="success"){
                     this.storageProvider.messageEmitter.emit(res.order);
@@ -229,16 +229,35 @@ export class ShopCartPage{
                     });
                     alert.present();
                  }
-             },(err)=>{
-                 console.log("saveOrder err "+err);
-                 if(err=="NetworkFailure"){
+             },(error)=>{
+                  console.log("saveOrder err "+error);
+                  this.cashPassword="";                  
+                 if(error=="NetworkFailure"){
                     let alert = this.alertController.create({
                             title: '서버와 통신에 문제가 있습니다',
                             subTitle: '네트웍상태를 확인해 주시기바랍니다',
                             buttons: ['OK']
                         });
                         alert.present();
-                    }
+                 }else if(error=="shop's off"){
+                    let alert = this.alertController.create({
+                            title: '상점이 문을 열지 않았습니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                 }else if(error=="invalid cash password"){
+                    let alert = this.alertController.create({
+                            title: '비밀번호가 일치하지 않습니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                 }else{
+                    let alert = this.alertController.create({
+                            title: '주문에 실패했습니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();                     
+                 }
              });
        }
      }

@@ -54,6 +54,7 @@ export class TabsPage {
     //Please login and then do registration for gcm msg
     // and then move into home page
     if(this.storageProvider.tourMode==false){
+        console.log("call registerPushService");
         this.registerPushService(); 
     }
     if(this.storageProvider.cashId!=undefined && this.storageProvider.cashId.length>=5){

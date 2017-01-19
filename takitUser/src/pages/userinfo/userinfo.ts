@@ -407,6 +407,13 @@ export class UserInfoPage{
          this.serverProvider.post(this.storageProvider.serverAddress+"/modifyUserInfo",body).then((res:any)=>{
              console.log("res:"+JSON.stringify(res));
              if(res.result=="success"){
+                 this.storageProvider.email=this.email.trim();
+                 this.storageProvider.phone=this.userPhone.trim();
+                 this.storageProvider.name=this.name.trim();
+                 var encrypted=this.storageProvider.encryptValue('password',this.password);// save email id 
+                 this.storage.set('password',encodeURI(encrypted));
+                 this.existingPassword=this.password;
+                 
                 let alert = this.alertController.create({
                             title: "회원 정보가 수정되었습니다",
                             buttons: ['OK']

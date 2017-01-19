@@ -66,7 +66,8 @@ export class CashPage {
     if(this.storageProvider.tourMode){
         this.storageProvider.name="타킷 주식회사";
         this.refundBank="011";
-        this.refundAccount="301*****63621";
+        this.refundAccountMask="301*****63621";
+        this.refundEditable=false;
         return;
     }
         
@@ -195,7 +196,14 @@ export class CashPage {
                   let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
                   iOSAlertPage.present();
               }
+          }else if(res.result=="failure" && res.error=="gcm:400"){
+                let alert = this.alertController.create({
+                    title: '전체내역에서 확인버튼을 눌러 입금을 확인해주세요.',
+                    buttons: ['OK']
+                });
+                alert.present();
           }else{
+              
                 let alert = this.alertController.create({
                     title: '요청에 실패했습니다. 잠시후 다시 요청바랍니다.',
                     buttons: ['OK']
@@ -297,6 +305,12 @@ export class CashPage {
                         buttons: ['OK']
                     });
                     alert.present();
+              }else if(res.result=="failure" && res.error=="gcm:400"){
+                let alert = this.alertController.create({
+                    title: '전체내역에서 확인버튼을 눌러 입금을 확인해주세요.',
+                    buttons: ['OK']
+                });
+                alert.present();
               }else{
                   let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
                   iOSAlertPage.present();
@@ -356,9 +370,7 @@ export class CashPage {
             {
             text: '네',
             handler: () => {
-                console.log('Agree clicked');
-                //this.app.getRootNav().push(CashIdPage);
-               
+                console.log('Agree clicked');               
                 this.mobileAuth().then(()=>{ // success
                     this.app.getRootNav().push(CashIdPage);
                 },(err)=>{ //failure
@@ -379,8 +391,9 @@ export class CashPage {
         });
         confirm.present();    
     }else{
+ /*        
           this.app.getRootNav().push(CashIdPage);
-/*
+ */         
           console.log("ios....call mobileAuth");
                 this.mobileAuth().then(()=>{ // success
                     this.app.getRootNav().push(CashIdPage);
@@ -395,7 +408,6 @@ export class CashPage {
                             alert.present();
                     }
                 });
-*/
     }
   }
 
@@ -404,10 +416,10 @@ export class CashPage {
     return new Promise((resolve,reject)=>{
       // move into CertPage and then 
       if(this.storageProvider.isAndroid){
-            this.browserRef=new InAppBrowser("https://takit.biz:8443/NHPintech/kcpcert_start.jsp","_blank" ,'toolbar=no');
+            this.browserRef=new InAppBrowser("https://takit.biz:8443/kcpcert/kcpcert_start.jsp","_blank" ,'toolbar=no');
       }else{ // ios
             console.log("ios");
-            this.browserRef=new InAppBrowser("https://takit.biz:8443/NHPintech/kcpcert_start.jsp","_blank" ,'location=no,closebuttoncaption=종료');
+            this.browserRef=new InAppBrowser("https://takit.biz:8443/kcpcert/kcpcert_start.jsp","_blank" ,'location=no,closebuttoncaption=종료');
       }
               this.browserRef.on("exit").subscribe((event)=>{
                   console.log("InAppBrowserEvent(exit):"+JSON.stringify(event)); 
@@ -888,7 +900,7 @@ checkDepositInLatestCashlist(cashList){
                                 cashId:this.storageProvider.cashId,
                                 withdrawalAmount:this.refundAmount,
                                 fee:this.refundFee});
-
+      console.log("refundCash:"+body);                          
       this.serverProvider.post(this.storageProvider.serverAddress+"/refundCash",body).then((res:any)=>{
           console.log("refundCash res:"+JSON.stringify(res));
           if(res.result=="success"){

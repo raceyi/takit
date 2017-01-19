@@ -112,6 +112,7 @@ export class ServerProvider{
       return new Promise((resolve,reject)=>{
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
+            console.log("saveOrder:"+body);
             this.post(encodeURI(this.storageProvider.serverAddress+"/saveOrder"),body).then((res:any)=>{
                   console.log("res:"+JSON.stringify(res));
                   console.log("saveOrder-res.result:"+res.result);

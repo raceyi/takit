@@ -214,8 +214,8 @@
                     <ion-col>{{tr.amount}}</ion-col>
                     <ion-col *ngIf="tr.transactionType!='deposit' || tr.confirm==1">{{tr.type}}</ion-col>
                     <ion-col *ngIf="tr.transactionType=='deposit' && tr.confirm==0"> <button ion-button [disabled]="storageProvider.tourMode" (click)="addCash(tr)">확인</button></ion-col>
-                    <ion-col *ngIf="tr.nowBalance!=0">{{tr.nowBalance}}</ion-col>
-                    <ion-col *ngIf="tr.nowBalance==0"> &nbsp; &nbsp;</ion-col>
+                    <ion-col *ngIf="tr.nowBalance!=undefined && tr.nowBalance!=null">{{tr.nowBalance}}</ion-col>
+                    <ion-col *ngIf="tr.nowBalance==undefined || tr.nowBalance==null"> &nbsp; &nbsp;</ion-col>
                 </ion-row>
                 <ion-row class="transaction" [hidden]="tr.transactionType!='deposit' || tr.hide">
                     <ion-col *ngIf="tr.bankName!=undefined">{{tr.bankName}}</ion-col>
@@ -230,10 +230,11 @@
                 </ion-row>
               </ion-item>
       </ion-list>        
-          <ion-infinite-scroll #infiniteScroll (ionInfinite)="doInfinite($event)" [enabled]="infiniteScroll" [hidden]="transactions.length==0 && storageProvider.cashMenu!='cashHistory'">
+          <ion-infinite-scroll #infiniteScroll (ionInfinite)="doInfinite($event)" [enabled]="infiniteScroll" [hidden]="transactions.length==0 || storageProvider.cashMenu!='cashHistory'">
             <ion-infinite-scroll-content></ion-infinite-scroll-content>
           </ion-infinite-scroll>
-
+        <div class="cashHistoryDummy" *ngIf="storageProvider.cashMenu=='cashHistory'">
+        </div>
         <ion-list *ngSwitchCase="'cashOut'">
             <ion-item>
               <ion-label class="textSet"><strong>등록 환불 계좌 </strong></ion-label>

@@ -351,7 +351,7 @@ Ionic2 무료 강의
 
 kalen.lee@takit.biz
 
-Ionic2 주말 유료 강의(4주, 매회 4시간)
+Ionic2 주말 유료 강의(6주, 매회 3시간)
 
 Takit open source기반 실제 앱/서비스 개발 교육
 
@@ -363,9 +363,10 @@ javascript 구조(promise, async call)
 
   ionic2 기본 코드(앵귤러 기본 문법포함),디렉토리 구조 설명
 
-  ionic UI 컴포넌트 및 theme설정 (ionic serve)
+2.  ionic UI 컴포넌트 및 theme설정 
 
-2.주차(plugin사용)
+
+3.주차(plugin사용)
 
   ionic2에서 주요 plugin사용하기.  plugin 만들기.
 
@@ -373,9 +374,8 @@ javascript 구조(promise, async call)
 
   카메라, 파일 upload plugin등
 
-  ionic UI컴포넌트
 
-3.주차(서버와 통신)
+4.주차(서버와 통신)
 
  node server만들기(aws EC2 사용,기초 aws사용법)
 
@@ -383,15 +383,16 @@ javascript 구조(promise, async call)
 
  file전송하기(upload,download, 서버&클라이언트)
 
- gcm구현하기(앱, server) 및 notification 특성(background,forground, 앱종료시)
 
- gcm설정하기(apple developer, google firebase)
+5. push 메시지 구현하기(앱, server) 및 notification 특성(background,forground, 앱종료시)
+
+ push 메시지 설정하기(apple developer, google firebase)
 
  휴대폰 본인 인증 연동 예시(inAppBrowser 사용)
 
  ionic UI컴포넌트(infinite scroll)
 
-4.주차(그외 사항들)
+6.주차(그외 사항들)
 
  directive 정의
 
