@@ -156,6 +156,7 @@ export class FbProvider {
          });
   }
 
+/*
   logout(){
       return new Promise((resolve,reject)=>{
             Facebook.logout().then((result)=>{
@@ -175,6 +176,26 @@ export class FbProvider {
                 console.log("facebook logout failure");
                 reject("facebook logout failure");
             });
+      });
+  }
+*/
+
+  logout(){
+      return new Promise((resolve,reject)=>{
+                    let headers = new Headers();
+                    headers.append('Content-Type', 'application/json');
+                    console.log("server: "+ this.storageProvider.serverAddress);
+
+                    this.http.post(this.storageProvider.serverAddress+"/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+                        Facebook.logout().then((result)=>{
+                             resolve(res); 
+                        },(err)=>{
+                              resolve(res);
+                        });
+                    },(err)=>{
+                        //console.log("logout no response "+JSON.stringify(err));
+                        reject(err);
+                    });
       });
   }
 

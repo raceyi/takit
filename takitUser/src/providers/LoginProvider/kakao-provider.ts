@@ -193,6 +193,7 @@ export class KakaoProvider {
          });
   }
   
+  /*
   logout(){
     return new Promise((resolve,reject)=>{ 
       console.log("kakao-provider.logout");    
@@ -231,6 +232,43 @@ export class KakaoProvider {
               console.log("KakaoTalk doesn't exist");
               reject("KakaoTalk doesn't exist");
           });
+    });
+  }
+*/
+
+  logout(){
+    return new Promise((resolve,reject)=>{ 
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        console.log("server: "+ this.storageProvider.serverAddress);
+
+        this.http.post(this.storageProvider.serverAddress+"/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+            console.log("logout response"+JSON.stringify(res));
+            if(res.result=="success"){
+                console.log("kakao-provider.logout");    
+                var scheme;
+                if(this.platform.is('android')){
+                    scheme='com.kakao.talk';         
+                }else if(this.platform.is('ios')){
+                    scheme='kakaotalk://';
+                }else{
+                    console.log("unknown platform");
+                    resolve();
+                }
+                AppAvailability.check(scheme).then(()=> {  // Success callback
+                        console.log("call KakaoTalk.logout");
+                        KakaoTalk.logout(()=>{
+                            resolve();
+                        },(err)=>{ // KakaoTalk.logout failure
+                            resolve();
+                        });
+                });
+            }else{
+                reject(res.error);
+            }
+        },(err)=>{
+            reject(err);
+        });
     });
   }
 

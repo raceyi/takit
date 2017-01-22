@@ -11,6 +11,7 @@ import {Splashscreen} from 'ionic-native';
 import {SignupPage} from '../signup/signup';
 import {SignupSubmitPage} from '../signup_submit/signup_submit';
 import {PasswordPage} from '../password/password';
+import {MultiloginPage} from '../multilogin/multilogin';
 
 import {StorageProvider} from '../../providers/storageProvider';
 import {Storage} from "@ionic/storage";
@@ -117,7 +118,7 @@ export class LoginPage {
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("move into TabsPage");
                                     this.navController.setRoot(TabsPage);
-                                }else if(res.result=='invalidId'){
+                                }else if(res.result=='failure' && res.result=='invalidId'){
                                     console.log("move into SignupPage....");
                                     var param:any={id:res.id};
                                     if(res.hasOwnProperty("email")){
@@ -128,6 +129,10 @@ export class LoginPage {
                                     }
                                     console.log("param:"+JSON.stringify(param));
                                     this.navController.push(SignupSubmitPage,param);
+                                }else if(res.result=='failure'&& res.error=='multiLogin'){
+                                        // How to show user a message here? move into error page?
+                                        // Is it possible to show alert here?
+                                    this.navController.setRoot(MultiloginPage);
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
                                     let alert = this.alertController.create({
@@ -167,9 +172,13 @@ export class LoginPage {
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("move into TabsPage");
                                     this.navController.setRoot(TabsPage);
-                                }else if(res.result=='invalidId'){
-                                    console.log("move into SignupPage!! SignupPage is not implmented yet");
+                                }else if(res.result=='failure' && res.result=='invalidId'){
+                                    //console.log("move into SignupPage!! SignupPage is not implmented yet");
                                     this.navController.push(SignupSubmitPage ,{id:res.id/* kakaoid*/});
+                                }else if(res.result=='failure'&& res.error=='multiLogin'){
+                                        // How to show user a message here? move into error page?
+                                        // Is it possible to show alert here?
+                                    this.navController.setRoot(MultiloginPage);
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
                                     let alert = this.alertController.create({
@@ -236,6 +245,10 @@ export class LoginPage {
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("move into TabsPage");
                                     this.navController.setRoot(TabsPage);
+                                }else if(res.result=='failure'&& res.error=='multiLogin'){
+                                        // How to show user a message here? move into error page?
+                                        // Is it possible to show alert here?
+                                    this.navController.setRoot(MultiloginPage);
                                 }else{
                                     let alert = this.alertController.create({
                                                 title: '회원 정보가 일치하지 않습니다.',

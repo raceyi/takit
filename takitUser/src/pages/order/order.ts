@@ -455,7 +455,7 @@ export class OrderPage {
                 }
           }
       }
-      this.discount=this.price*this.storageProvider.shopInfo.discountRate;
+      this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
       this.amount=this.price-this.discount;
   }
 

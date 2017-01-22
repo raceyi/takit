@@ -32,6 +32,8 @@ import {CashIdPage} from '../pages/cashid/cashid';
 import {BankBranchPage} from '../pages/bankbranch/bankbranch';
 import {IOSAlertPage} from '../pages/ios-alert/ios-alert';
 import {CashDepositDeletePage} from '../pages/cash-deposit-delete/cash-deposit-delete';
+import {MultiloginPage} from '../pages/multilogin/multilogin';
+
 import {Focuser} from '../components/focuser/focuser';
 
 @NgModule({
@@ -59,7 +61,8 @@ import {Focuser} from '../components/focuser/focuser';
     CashIdPage,
     BankBranchPage,
     IOSAlertPage,
-    CashDepositDeletePage
+    CashDepositDeletePage,
+    MultiloginPage,
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -88,7 +91,8 @@ import {Focuser} from '../components/focuser/focuser';
     CashIdPage,
     BankBranchPage,
     IOSAlertPage,
-    CashDepositDeletePage  
+    CashDepositDeletePage,
+    MultiloginPage  
   ],
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},

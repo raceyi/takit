@@ -73,7 +73,9 @@
                       </ion-row>
                       <ion-row  [hidden]="order.hidden">
                           <ion-col width-10></ion-col>
-                          <ion-col width-90><span class="detail">주문시간 {{order.orderedTimeString}}</span> </ion-col>
+                          <ion-col width-90 *ngIf="order.takeout=='0'"><span class="detail">주문시간 {{order.orderedTimeString}}</span> </ion-col>
+                          <ion-col width-45 *ngIf="order.takeout!='0'"><span class="detail">주문시간 {{order.orderedTimeString}}</span> </ion-col>
+                          <ion-col width-45 *ngIf="order.takeout!='0'"><span class="detail">테이크아웃</span></ion-col>
                       </ion-row>
                       <div *ngFor="let menu of order.orderListObj.menus" [hidden]="order.hidden">
                       <ion-row>
@@ -87,7 +89,7 @@
                                   <span class="status" *ngIf="option.select!=undefined">{{option.select}}</span> 
                           </ion-col>        
                       </ion-row>      
-                      </div>
+                      </div>             
         </ion-item>
   </ion-list>
 

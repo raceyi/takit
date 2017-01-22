@@ -148,6 +148,13 @@ export class SignupPage {
           this.paswordGuideHide=false;
           if(this.platform.is('android'))
                 this.focusPassword.emit(true);
+          else if(this.platform.is('ios')){
+              let alert = this.alertController.create({
+                        title: '비밀번호가 규칙에 맞지 않습니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+          }      
           return;
       }else{
           this.paswordGuideHide =true; 

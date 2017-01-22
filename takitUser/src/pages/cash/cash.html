@@ -119,15 +119,16 @@
                     <ion-label>입금은행</ion-label>
                 </ion-item>
               </ion-col>
-              <ion-col width-50 [hidden]="storageProvider.depositBank=='0'">
+              <ion-col width-50>
                 <ion-item class="bankSelect" >
                     <ion-label></ion-label>
                     <ion-select class="depositBankSelect" [(ngModel)]="storageProvider.depositBank"  (ionChange)="depositBankType(storageProvider.depositBank)">
                       <ion-option *ngFor="let bank of storageProvider.banklist" value="{{bank.value}}">{{bank.name}}</ion-option>
-                      <ion-option value="0">직접입력</ion-option>
+                      <ion-option value="0">지점코드입력</ion-option>
                     </ion-select>
                 </ion-item>
               </ion-col>
+             <!-- 
               <ion-col width-40 [hidden]="storageProvider.depositBank!='0'">  
                 <ion-item>
                     <ion-input class="cashIn-check-inputBox" [(ngModel)]="depositBankInput" type="number" ></ion-input>
@@ -138,12 +139,15 @@
                     <button ion-button full class="selectButton" (click)="toggleSelectInput('depositBankTypeSelect')">선택</button>
                 </ion-item>    
               </ion-col>
+              -->
             </ion-row>
+            <!--
             <ion-row [hidden]="storageProvider.depositBank!='0'">
                 <p class="explain">
                     은행코드(3자리)를 숫자로 입력해주시기 바랍니다.
                 </p>
             </ion-row>
+              -->
             <ion-row>
               <ion-col width-50>
                 <ion-item >

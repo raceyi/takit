@@ -97,42 +97,32 @@ export class CashPage {
      });
 
         this.messageEmitterSubscription= this.storageProvider.cashInfoUpdateEmitter.subscribe((option)=> {
-            
             console.log("!!!update cashInfo comes!!!-"+this.storageProvider.cashMenu);
-            if(this.storageProvider.cashMenu=='cashHistory'){ //update cashList
-                console.log("!!!update cashlist!!!");
-                    this.getTransactions(-1).then((res:any)=>{
-                        this.ngZone.run(()=>{
-                                //console.log("res:"+JSON.stringify(res));
-                                if(res.cashList=="0"){
-                                    console.log("res:"+JSON.stringify(res));
-                                    this.infiniteScroll=false;
-                                }else{
-                                    this.transactions=[];
-                                    this.updateTransaction(res.cashList);
-                                    this.checkDepositInLatestCashlist(res.cashList);
-                                    if(this.infiniteScrollRef!=undefined)
-                                        this.infiniteScrollRef.complete();
+            if(this.storageProvider.cashMenu=='cashHistory'){
+                this.getTransactions(-1,true).then((res:any)=>{
+                    this.ngZone.run(()=>{
+                            //console.log("res:"+JSON.stringify(res));
+                            if(res.cashList=="0"){
+                                console.log("res:"+JSON.stringify(res));
+                                this.infiniteScroll=false;
+                                if(this.infiniteScrollRef!=undefined){
+                                    this.infiniteScrollRef.enable(false);
                                 }
-                        });
-                    },(err)=>{
-                      /*  alert may block whole UI in ios 
-                        if(err=="NetworkFailure"){
-                            let alert = this.alertController.create({
-                                title: '서버와 통신에 문제가 있습니다',
-                                subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                                buttons: ['OK']
-                            });
-                            alert.present();
-                        }else{
-                            let alert = this.alertController.create({
-                                title: '캐쉬 내역을 가져오지 못했습니다.',
-                                buttons: ['OK']
-                            });
-                            alert.present();
-                        }
-                        */
+                            }else{
+                                console.log("update cashlist");
+                                this.transactions=[];
+                                this.updateTransaction(res.cashList);
+                                this.checkDepositInLatestCashlist(res.cashList);
+                                if(this.infiniteScrollRef!=undefined){
+                                    console.log("call complete");
+                                    this.infiniteScrollRef.enable(true);
+                                    this.infiniteScrollRef.complete();
+                                }
+                            }
                     });
+                },(err)=>{
+                    
+                });
             }
             if(option!="listOnly"){
                     this.serverProvider.updateCashAvailable().then((res)=>{
@@ -172,30 +162,13 @@ export class CashPage {
   }
 
   cashInCheck(confirm){
-/*
-      let custom:any={"depositMemo":"이경주","amount":"2","depositDate":"2017-01-06","branchCode":"0110013","cashTuno":"20170106093158510","bankName":"농협"};
-    
-     // let custom=      {"cashTuno":"20170103075617278","cashId":"TAKIT02","transactionType":"deposit","amount":1,"transactionTime":"20170103","confirm":0,"bankName":"농협은행"}
-        let cashConfirmModal = this.modalCtrl.create(CashConfirmPage, { custom: custom });
-        cashConfirmModal.present();
-*/        
       console.log("cashInCheck comes(confirm)");
       let body = JSON.stringify({});
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashInstantly",body).then((res:any)=>{
           console.log("checkCashInstantly res:"+JSON.stringify(res));
           if(res.result=="success"){
-              if(this.storageProvider.isAndroid){
-                    console.log("success in checkCashInstantly");
-                    let alert = this.alertController.create({
-                        title: '입금 확인을 요청했습니다.',
-                        subTitle: '잠시 기다려 주시기 바랍니다.',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-              }else{
                   let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
                   iOSAlertPage.present();
-              }
           }else if(res.result=="failure" && res.error=="gcm:400"){
                 let alert = this.alertController.create({
                     title: '전체내역에서 확인버튼을 눌러 입금을 확인해주세요.',
@@ -238,6 +211,26 @@ export class CashPage {
             alert.present();
           return;
       }
+
+      if(this.storageProvider.depositBank==undefined){
+           let alert = this.alertController.create({
+                title: '입금 은행을 입력해주시기바랍니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+            return;
+      }
+
+      if(this.storageProvider.depositBank!="0" && this.storageProvider.depositBranch!="codeInput" && this.storageProvider.depositBank==undefined){
+            let alert = this.alertController.create({
+                title: '거래 지점을 선택해주시기바랍니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+            return;
+      }
+
+      /*
       if(this.storageProvider.depositBank=="0" && 
             (this.depositBankInput==undefined ||  this.depositBankInput.trim().length!=3)){
             let alert = this.alertController.create({
@@ -247,8 +240,9 @@ export class CashPage {
             alert.present();
             return;
       }
-      
-      if(this.storageProvider.depositBranch=="codeInput" && 
+      */
+
+      if((this.storageProvider.depositBank=="0"|| this.storageProvider.depositBranch=="codeInput" ) && 
         (this.storageProvider.depositBranchInput==undefined || this.storageProvider.depositBranchInput.trim().length!=7)){
             let alert = this.alertController.create({
                 title: '입금 지점을 코드를 정확히 입력해주시기바랍니다.',
@@ -267,7 +261,7 @@ export class CashPage {
       var depositBranch= this.storageProvider.depositBranch=='codeInput'? this.storageProvider.depositBranchInput:this.storageProvider.depositBranch;
 
       let body;
-      if(this.storageProvider.depositBank=='0'){
+      if(this.storageProvider.depositBank=='0' || this.storageProvider.depositBranch=="codeInput"){
             body = JSON.stringify({depositDate:transferDate.toISOString(),
                                         amount: this.depositAmount,
                                         bankCode: this.depositBankInput,
@@ -298,23 +292,14 @@ export class CashPage {
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashUserself",body).then((res:any)=>{
           console.log("res:"+JSON.stringify(res));
           if(res.result=="success"){
-              if(this.storageProvider.isAndroid){
-                    let alert = this.alertController.create({
-                        title: '입금 확인을 요청했습니다.',
-                        subTitle: '잠시 기다려 주시기 바랍니다.',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-              }else if(res.result=="failure" && res.error=="gcm:400"){
+                  let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
+                  iOSAlertPage.present();
+          }else if(res.result=="failure" && res.error=="gcm:400"){
                 let alert = this.alertController.create({
                     title: '전체내역에서 확인버튼을 눌러 입금을 확인해주세요.',
                     buttons: ['OK']
                 });
                 alert.present();
-              }else{
-                  let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
-                  iOSAlertPage.present();
-              }
           }else{
               let alert;
 
@@ -416,10 +401,10 @@ export class CashPage {
     return new Promise((resolve,reject)=>{
       // move into CertPage and then 
       if(this.storageProvider.isAndroid){
-            this.browserRef=new InAppBrowser("https://takit.biz:8443/kcpcert/kcpcert_start.jsp","_blank" ,'toolbar=no');
+            this.browserRef=new InAppBrowser(this.storageProvider.certUrl,"_blank" ,'toolbar=no');
       }else{ // ios
             console.log("ios");
-            this.browserRef=new InAppBrowser("https://takit.biz:8443/kcpcert/kcpcert_start.jsp","_blank" ,'location=no,closebuttoncaption=종료');
+            this.browserRef=new InAppBrowser(this.storageProvider.certUrl,"_blank" ,'location=no,closebuttoncaption=종료');
       }
               this.browserRef.on("exit").subscribe((event)=>{
                   console.log("InAppBrowserEvent(exit):"+JSON.stringify(event)); 
@@ -496,7 +481,11 @@ export class CashPage {
       custom.transactionTime=transaction.transactionTime;
       custom.cashTuno=transaction.cashTuno;
       custom.bankName=transaction.bankName;
-
+      if(transaction.branchName!=undefined)
+          custom.branchName=transaction.branchName;
+      else
+          custom.branchCode=transaction.branchCode;
+      console.log("addCash:"+JSON.stringify(transaction));
         let cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: custom });
         cashConfirmModal.present();
   }
@@ -554,7 +543,7 @@ export class CashPage {
 
   doInfinite(infiniteScroll){
     console.log("doInfinite");
-    this.getTransactions(this.lastTuno).then((res:any)=>{
+    this.getTransactions(this.lastTuno,true).then((res:any)=>{
         //console.log("res:"+JSON.stringify(res));
         if(res.cashList=="0"){
             console.log("res:"+JSON.stringify(res));
@@ -594,22 +583,22 @@ export class CashPage {
     }
   }
 
-    getTransactions(lastTuno){
+    getTransactions(lastTuno,lastTunoUpdate){
         return new Promise((resolve, reject)=>{
             let body = JSON.stringify({cashId:this.storageProvider.cashId,
                                 lastTuno: lastTuno,
                                 limit: this.storageProvider.TransactionsInPage});
-            console.log("getCashList:"+body);                    
+            console.log("getCashList:"+body+"lastTunoUpdate:"+lastTunoUpdate);                    
             this.serverProvider.post( this.storageProvider.serverAddress+"/getCashList",body).then((res:any)=>{
                 if(res.result=="success"){
-                     this.lastTuno=res.cashList[res.cashList.length-1].cashTuno;
+                    console.log("res:"+JSON.stringify(res));
+                    if(lastTunoUpdate==true)
+                        this.lastTuno=res.cashList[res.cashList.length-1].cashTuno;
                      resolve(res);
                 }else{
-                     //this.lastTuno=-1;
                      reject("serverFailure");
                 }
             },(err)=>{
-                    //this.lastTuno=-1;
                     reject(err);
             });
         });
@@ -634,8 +623,121 @@ checkDepositInLatestCashlist(cashList){
     console.log("enableInfiniteScroll");
     this.infiniteScroll=true;
     if(this.infiniteScrollRef!=undefined){
+        console.log("infiniteScrollRef.enable(true)");
         this.infiniteScrollRef.enable(true);
     }
+          if(this.transactions.length==0){ 
+            this.getTransactions(-1,true).then((res:any)=>{
+                this.ngZone.run(()=>{
+                        //console.log("res:"+JSON.stringify(res));
+                        if(res.cashList=="0"){
+                            console.log("res:"+JSON.stringify(res));
+                            this.infiniteScroll=false;
+                            if(this.infiniteScrollRef!=undefined){
+                                this.infiniteScrollRef.enable(false);
+                            }
+                        }else{
+                            this.transactions=[];
+                            this.updateTransaction(res.cashList);
+                            this.checkDepositInLatestCashlist(res.cashList);
+                            if(this.infiniteScrollRef!=undefined){
+                                console.log("call complete()");
+                                this.infiniteScrollRef.complete();
+                            }else{
+                                console.log("What can I do here... humm?");
+                            } 
+                        }
+                });
+            },(err)=>{
+                if(err=="NetworkFailure"){
+                    let alert = this.alertController.create({
+                        title: '서버와 통신에 문제가 있습니다',
+                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                }else{
+                    let alert = this.alertController.create({
+                        title: '캐쉬 내역을 가져오지 못했습니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                }
+            });
+      }else{
+       this.getTransactions(-1,false).then((res:any)=>{
+                this.ngZone.run(()=>{
+                        //console.log("res:"+JSON.stringify(res));
+                        if(res.cashList=="0"){
+                            console.log("res:"+JSON.stringify(res));
+                            this.infiniteScroll=false;
+                            if(this.infiniteScrollRef!=undefined){
+                                this.infiniteScrollRef.enable(false);
+                            }
+                        }else{
+                              //check if transactions is updated or not
+                                var transactions=this.sortByKey(res.cashList); 
+                                console.log("res-transactions:"+ JSON.stringify(transactions));
+                                console.log("this.transactions:"+JSON.stringify(this.transactions));
+
+                                for(var i=0;i<transactions.length && i<this.transactions.length ;i++){
+                                    if(transactions[i].cashTuno!=this.transactions[i].cashTuno){
+                                        console.log("update whole transactions");
+                                        this.transactions=[];
+                                        this.lastTuno=res.cashList[res.cashList.length-1].cashTuno;
+                                        this.updateTransaction(res.cashList);
+                                        this.checkDepositInLatestCashlist(res.cashList);
+                                        if(this.infiniteScroll ==true && this.infiniteScrollRef!=undefined){
+                                            console.log("call complete()");
+                                            //this.infiniteScrollRef.enable(true);
+                                            this.infiniteScrollRef.complete();
+                                        }else{
+                                            console.log("What can I do here... humm?");
+                                        } 
+                                        return;
+                                    }else{ //update information if necessary
+                                            //console.log("update transactions status");
+                                            var tr:any={};
+                                            tr=transactions[i];
+                                            tr.type=this.convertType(tr.transactionType);
+                                            if(tr.transactionType=='refund'){
+                                                tr.accountMask=this.maskAccount(tr.account);
+                                            }
+                                            if(tr.confirm==1){
+                                                // convert GMT time into local time
+                                                var trTime:Date=moment.utc(tr.transactionTime).toDate();
+                                                var mm = trTime.getMonth() < 9 ? "0" + (trTime.getMonth() + 1) : (trTime.getMonth() + 1); // getMonth() is zero-based
+                                                var dd  = trTime.getDate() < 10 ? "0" + trTime.getDate() : trTime.getDate();
+                                                var dString=trTime.getFullYear()+'-'+(mm)+'-'+dd;
+                                                tr.date=dString;
+                                            }else{
+                                                tr.date=tr.transactionTime.substr(0,10);
+                                            }
+                                            tr.hide=true; //default value 
+                                            //console.log("tr:"+JSON.stringify(tr));
+                                            this.transactions[i]=tr;
+                                    }
+                                }
+                        }
+                });
+            },(err)=>{
+                if(err=="NetworkFailure"){
+                    let alert = this.alertController.create({
+                        title: '서버와 통신에 문제가 있습니다',
+                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                }else{
+                    let alert = this.alertController.create({
+                        title: '캐쉬 내역을 가져오지 못했습니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                }
+            });
+       }
+    /*
     this.getTransactions(-1).then((res:any)=>{
                 this.ngZone.run(()=>{
                         //console.log("res:"+JSON.stringify(res));
@@ -673,6 +775,7 @@ checkDepositInLatestCashlist(cashList){
                     alert.present();
                 }
             });
+  */          
   }
 
   depositBankType(depositBank){

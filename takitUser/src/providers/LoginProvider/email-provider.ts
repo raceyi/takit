@@ -22,10 +22,10 @@ export class EmailProvider{
               headers.append('Content-Type', 'application/json');
 
             this.http.post(this.storageProvider.serverAddress+"/emailLogin",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
-                console.log("res:"+JSON.stringify(res));
-                let result={result:res.result,userInfo:res.userInfo};
-                console.log("result:"+JSON.stringify(result));
-                resolve(result); // 'success'(move into home page) or 'invalidId'(move into signup page)
+                //console.log("res:"+JSON.stringify(res));
+                //let result={result:res.result,userInfo:res.userInfo};
+                console.log("result:"+JSON.stringify(res));
+                resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)
             },(err)=>{
                  console.log("emailLogin no response");
                  reject("emailLogin no response");
@@ -51,6 +51,7 @@ export class EmailProvider{
          });
   }
 
+/*
   logout(){
           return new Promise((resolve, reject)=>{
               console.log("logout");
@@ -71,7 +72,28 @@ export class EmailProvider{
              });
          });
   }
+  */
 
+  logout(){
+          return new Promise((resolve, reject)=>{
+              console.log("logout");
+              let headers = new Headers();
+              headers.append('Content-Type', 'application/json');
+              console.log("server: "+ this.storageProvider.serverAddress);
+
+             this.http.post(this.storageProvider.serverAddress+"/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+                 var result:string=res.result;
+                 if(result==="success"){
+                    resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)
+                 }else{
+                     reject(res.error);
+                 }
+             },(err)=>{
+                 reject(err);
+             });
+         });
+  }
+  
   unregister(){
           return new Promise((resolve, reject)=>{
               console.log("unregister");

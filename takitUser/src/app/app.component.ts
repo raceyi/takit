@@ -6,6 +6,7 @@ import {TabsPage} from '../pages/tabs/tabs';
 
 import {LoginPage} from '../pages/login/login';
 import {ErrorPage} from '../pages/error/error';
+import {MultiloginPage} from '../pages/multilogin/multilogin';
 
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
@@ -99,9 +100,13 @@ export class MyApp {
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("shoplist...:"+JSON.stringify(this.storageProvider.shoplist));
                                     this.rootPage=TabsPage;
-                                }else if(res.result=='invalidId'){
+                                }else if(res.result=='failure'&& res.error=='invalidId'){
                                     console.log("사용자 정보에 문제가 발생했습니다. 로그인 페이지로 이동합니다.");
                                     this.rootPage=LoginPage;   
+                                }else if(res.result=='failure'&& res.error=='multiLogin'){
+                                        // How to show user a message here? move into error page?
+                                        // Is it possible to show alert here?
+                                    this.rootPage=MultiloginPage;
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
                                     //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
@@ -125,9 +130,13 @@ export class MyApp {
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("move into TabsPage");
                                     this.rootPage=TabsPage;
-                                }else if(res.result=='invalidId'){
+                                }else if(res.result=='failure' && res.result=='invalidId'){
                                     console.log("사용자 정보에 문제가 발생했습니다. 로그인 페이지로 이동합니다.");
                                     this.rootPage=LoginPage;
+                                }else if(res.result=='failure'&& res.error=='multiLogin'){
+                                        // How to show user a message here? move into error page?
+                                        // Is it possible to show alert here?
+                                    this.rootPage=MultiloginPage;
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
                                     //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
@@ -150,6 +159,10 @@ export class MyApp {
                                     }
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     this.rootPage=TabsPage;
+                                }else if(res.result=='failure'&& res.error=='multiLogin'){
+                                        // How to show user a message here? move into error page?
+                                        // Is it possible to show alert here?
+                                    this.rootPage=MultiloginPage;
                                 }else{ 
                                     console.log("사용자 정보에 문제가 발생했습니다. 로그인 페이지로 이동합니다.");
                                     this.rootPage=LoginPage;
@@ -217,7 +230,7 @@ export class MyApp {
     console.log("logout");
     let confirm = this.alertCtrl.create({
       title: '로그아웃하시겠습니까?',
-      message: '타킷 사용을 위해 로그인이 필요합니다. 장바구니 정보는 삭제됩니다.',
+      message: '타킷 사용을 위해 로그인이 필요합니다. 장바구니 정보는 삭제되며 주문,캐쉬 입금 알림도 중지됩니다.',
       buttons: [
         {
           text: '아니오',
@@ -239,9 +252,24 @@ export class MyApp {
                     this.removeStoredInfo();
                 },(err)=>{
                     console.log("facebook-logout failure");
-                    console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
-                    this.removeStoredInfo();
+                    console.log("logout err:"+err);
+                    if(err=="NetworkFailure"){
+                        let alert = this.alertCtrl.create({
+                            title: '서버와 통신에 문제가 있습니다',
+                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                    }else{
+                        let alert = this.alertCtrl.create({
+                            title: '로그아웃에 실패했습니다.',
+                            subTitle: '잠시후 다시 실도해 주시기 바랍니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                    }
+                    //cordova.plugins.backgroundMode.disable();
+                    //this.removeStoredInfo();
                 });
             }else if(this.storageProvider.id=="kakao"){
                 console.log("call kakaoProvider.logout");
@@ -252,9 +280,24 @@ export class MyApp {
                     this.removeStoredInfo();
                 },(err)=>{
                     console.log("kakao-logout failure");
-                    console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
-                    this.removeStoredInfo();
+                    console.log("logout err:"+err);
+                    if(err=="NetworkFailure"){
+                        let alert = this.alertCtrl.create({
+                            title: '서버와 통신에 문제가 있습니다',
+                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                    }else{
+                        let alert = this.alertCtrl.create({
+                            title: '로그아웃에 실패했습니다.',
+                            subTitle: '잠시후 다시 실도해 주시기 바랍니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                    }
+                    //cordova.plugins.backgroundMode.disable();
+                    //this.removeStoredInfo();
                 });
             }else{
                 this.emailProvider.logout().then(()=>{
@@ -262,9 +305,24 @@ export class MyApp {
                     cordova.plugins.backgroundMode.disable();
                     this.removeStoredInfo();
                 },(err)=>{
-                    console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
-                    this.removeStoredInfo();
+                    console.log("logout err:"+err);
+                    if(err=="NetworkFailure"){
+                        let alert = this.alertCtrl.create({
+                            title: '서버와 통신에 문제가 있습니다',
+                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                    }else{
+                        let alert = this.alertCtrl.create({
+                            title: '로그아웃에 실패했습니다.',
+                            subTitle: '잠시후 다시 실도해 주시기 바랍니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                    }
+                    //cordova.plugins.backgroundMode.disable();
+                    //this.removeStoredInfo();
                 });
             }   
           }

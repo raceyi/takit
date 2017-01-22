@@ -105,6 +105,8 @@ export class StorageProvider{
     public accountMaskExceptFront=this.configProvider.getAccountMaskExceptFront();
     public accountMaskExceptEnd=this.configProvider.getAccountMaskExceptEnd();
 
+    public certUrl=this.configProvider.getCertUrl();
+    
 //"이외 금융기관 => 직접 입력(숫자)"  
 //"지점 코드=>직접 입력(숫자)" http://www.kftc.or.kr/kftc/data/EgovBankList.do 금융회사명으로 조회하기 
 

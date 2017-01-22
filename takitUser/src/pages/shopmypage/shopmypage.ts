@@ -29,7 +29,7 @@ export class ShopMyPage{
 	      console.log("ShopMyPage constructor");
         this.myPageMenu="orderHistory";
         this.shopname=this.storageProvider.currentShopname();
-        this.getOrders(-1);
+        
         
         this.messageEmitterSubscription= this.storageProvider.messageEmitter.subscribe((order)=> {
                 console.log("[ShopMyPage]message comes "+JSON.stringify(order)); 
@@ -57,15 +57,27 @@ export class ShopMyPage{
 
     ionViewDidEnter(){
         console.log("ionViewDidEnter");
-        //check the orders and reset it if necessary.
-        this.orders=[];
-        this.getOrders(-1).then(res=>{
-            //
+        if(this.orders.length==0){
+            this.getOrders(-1,false);
+        }else{
+            //check the orders and reset it if necessary.
+            this.getOrders(-1,true).then((res:any)=>{
+                if( typeof res ==='object'){
+                    this.orders=[];
+                        res.orders.forEach(order=>{
+                        console.log("order.ordrId:"+order.orderId);
+                        this.orders.push(this.convertOrderInfo(order));
+                        //console.log("orders:"+JSON.stringify(this.orders));
+                    });
+                    if(this.infiniteScroll!=undefined){
+                        this.infiniteScroll.enable(true);
+                        this.infiniteScroll.complete();      
+                    }
+                }
+            },err=>{
 
-        },err=>{
-            //
-
-        });
+            });
+        }
     }
 
       getStatusString(orderStatus){
@@ -110,7 +122,7 @@ export class ShopMyPage{
             return order;
       }
 
-     getOrders(lastOrderId){
+     getOrders(lastOrderId,compare){
       return new Promise((resolve,reject)=>{
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -123,6 +135,18 @@ export class ShopMyPage{
             //console.log("getOrders-res:"+JSON.stringify(res));
             var result:string=res.result;
             if(result=="success" && Array.isArray(res.orders)){
+                if(compare==true){
+                    for(var i=0;i<this.orders.length && i< this.storageProvider.OrdersInPage;i++){
+                        if(this.orders[i].orderId!=res.orders[i].orderId){
+                            //reset order list and return;
+                            resolve(res); // please reset order list 
+                        }else{ //update order 
+                            this.orders[i]=this.convertOrderInfo(res.orders[i]);
+                            resolve(false); // just update order list
+                        }
+                    }
+                    return;
+                }
                 res.orders.forEach(order=>{
                     console.log("order.ordrId:"+order.orderId);
                     this.orders.push(this.convertOrderInfo(order));
@@ -150,7 +174,7 @@ export class ShopMyPage{
      doInfinite(infiniteScroll) {
         console.log('Begin async operation');
         var lastOrderId=this.orders[this.orders.length-1].orderId;
-        this.getOrders(lastOrderId).then((more)=>{
+        this.getOrders(lastOrderId,false).then((more)=>{
           if(more){
               console.log("more is true");
               infiniteScroll.complete();
@@ -253,7 +277,7 @@ export class ShopMyPage{
             // refresh status of orders at front 
             console.log("refresh orders");
      }
-
+/*
     update(){
         console.log("update");
         this.orders=[];
@@ -261,4 +285,5 @@ export class ShopMyPage{
             this.infiniteScroll.enable(true);
         this.getOrders(-1);
     }
+*/    
 }
