@@ -486,10 +486,10 @@ export class TabsPage {
             this.pushNotification.on('notification',(data)=>{
 /*                
 //                  let custom = {"cashTuno":"20170103075617278","cashId":"TAKIT02","transactionType":"deposit","amount":1,"transactionTime":"20170103","confirm":0,"bankName":"농협은행"}
-                  let custom ={"depositMemo":"이경주","amount":"2","depositDate":"2017-01-06","branchCode":"0110013","cashTuno":"20170106093158510","bankName":"농협"}
+                  let custom ={"depositMemo":"타킷 주식회사","amount":"100003","depositDate":"2017-01-06","branchName":"본점영업부","cashTuno":"20170106093158510","bankName":"농협"}
                   let cashConfirmModal = this.modalCtrl.create(CashConfirmPage, { custom: custom });
                   cashConfirmModal.present();
- */                 
+*/
                  
                 console.log("[home.ts]pushNotification.on-data:"+JSON.stringify(data));
                 console.log("[home.ts]pushNotification.on-data.title:"+JSON.stringify(data.title));
@@ -497,7 +497,11 @@ export class TabsPage {
                 var additionalData:any=data.additionalData;
                 //Please check if type of custom is object or string. I have no idea why this happens.
                 if(additionalData.GCMType==="order"){
-                    this.storageProvider.messageEmitter.emit(additionalData.custom);//  만약 shoptab에 있다면 주문목록을 업데이트 한다. 만약 tab이라면 메시지를 보여준다. 
+                    if(typeof additionalData.custom === 'string'){ 
+                        this.storageProvider.messageEmitter.emit(JSON.parse(additionalData.custom));//  만약 shoptab에 있다면 주문목록을 업데이트 한다. 만약 tab이라면 메시지를 보여준다. 
+                    }else{ //object
+                        this.storageProvider.messageEmitter.emit(additionalData.custom);
+                    }
                     console.log("show alert");
                     let alert = this.alertController.create({
                         title: data.title,
@@ -553,16 +557,7 @@ export class TabsPage {
                                 console.log("hum...successGCM-HttpFailure");
                             }
                         });
-                }
-                /*
-                console.log(data.message);
-                console.log(data.title);
-                console.log(data.count);
-                console.log(data.sound);
-                console.log(data.image);
-                console.log(data.additionalData);
-                */
-
+                }                
             });
 
             this.pushNotification.on('error', (e)=>{

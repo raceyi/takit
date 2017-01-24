@@ -148,6 +148,28 @@ export class CashPage {
         });
   }
 
+ionViewDidEnter() {
+    if(this.storageProvider.cashId!=undefined && this.storageProvider.cashId.length>0){
+      this.serverProvider.updateCashAvailable().then((res)=>{
+
+        },(err)=>{
+            if(err=="NetworkFailure"){
+                            let alert = this.alertController.create({
+                                title: "서버와 통신에 문제가 있습니다.",
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                }else{
+                let alert = this.alertController.create({
+                        title: "캐쉬정보를 가져오지 못했습니다.",
+                        buttons: ['OK']
+                    });
+                        alert.present();
+                }
+        });
+    }
+}
+
   maskAccount(account:string){
       if(account==undefined || account.length<9){
           return undefined;
@@ -175,6 +197,13 @@ export class CashPage {
                     buttons: ['OK']
                 });
                 alert.present();
+          }else if(res.result=="failure" && res.error=="no service time"){
+                let  alert = this.alertController.create({
+                        title: '이용 제한시간입니다.',
+                        subTitle: '제한시간 이후 다시 시도 바랍니다.',
+                        buttons: ['OK']
+                });
+              alert.present();
           }else{
               
                 let alert = this.alertController.create({
@@ -300,6 +329,20 @@ export class CashPage {
                     buttons: ['OK']
                 });
                 alert.present();
+          }else if(res.result=="failure" && res.error=="incorrect depositor"){
+                let  alert = this.alertController.create({
+                        title: '입력 내용을 확인하신후 다시 요청해주시기 바랍니다.',
+                        subTitle: '3회 연속오류시 수동확인이 불가능합니다.',
+                        buttons: ['OK']
+                });
+              alert.present();
+          }else if(res.result=="failure" && res.error=="no service time"){
+                let  alert = this.alertController.create({
+                        title: '이용 제한시간입니다.',
+                        subTitle: '제한시간 이후 다시 시도 바랍니다.',
+                        buttons: ['OK']
+                });
+              alert.present();
           }else{
               let alert;
 
@@ -342,8 +385,8 @@ export class CashPage {
    console.log("configureCashId");
    if(this.storageProvider.isAndroid){
         let confirm = this.alertController.create({
-        title: '회원정보와 휴대폰 본인인증 정보가 동일해야만 합니다.',
-        message: '다를 경우 회원정보 수정후 진행해주시기바랍니다.',
+        title: '캐쉬아이디 설정을 진행하시겠습니까?',
+        message: '회원정보와 휴대폰 본인인증 정보가 다를 경우 회원정보 수정후 진행해주시기바랍니다.',
         buttons: [
             {
             text: '아니오',

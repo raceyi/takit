@@ -43,6 +43,9 @@ export class ShopMyPage{
                               this.orders[i].orderStatus=order.orderStatus;
                               this.orders[i].statusString=this.getStatusString(order.orderStatus);
                               console.log("orderId are same");
+                              if(order.orderStatus=="cancelled"){
+                                  this.storageProvider.cashInfoUpdateEmitter.emit("all");
+                              }
                               break;
                         }
                     }

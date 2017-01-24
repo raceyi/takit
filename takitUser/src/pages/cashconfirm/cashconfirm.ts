@@ -82,6 +82,10 @@ export class CashConfirmPage{
     this.storageProvider.cashInfoUpdateEmitter.emit("listOnly");
   }
 
+  confirmDismiss(){
+     this.viewCtrl.dismiss();
+  }
+
   agreeChange(flag){
     console.log("[agreeChange] userAgree:"+flag);
     this.ngZone.run(()=>{
