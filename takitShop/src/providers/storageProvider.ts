@@ -33,6 +33,7 @@ export class StorageProvider{
     public bankName;
     public bankCode;
     public depositor;
+    public isTestServer;
 
     public serverAddress:string=this.configProvider.getServerAddress();
 
@@ -53,7 +54,10 @@ export class StorageProvider{
     public accountMaskExceptEnd=this.configProvider.getAccountMaskExceptEnd();
 
     constructor(private platform:Platform,private configProvider:ConfigProvider){
-        console.log("StorageProvider constructor");         
+        console.log("StorageProvider constructor");  
+        if(this.serverAddress.endsWith('8000')){
+            this.isTestServer = true;     
+        }
     }
 
     reset(){

@@ -43,6 +43,9 @@ export class UserInfoPage{
     verifiedPhone="";
     userPhone;
 
+    receiptIssue=false;
+    receiptIdNumber;
+
      constructor(public storageProvider:StorageProvider,private alertController:AlertController
         ,private app: App,private navController: NavController, private navParams: NavParams
         ,private serverProvider:ServerProvider,public ngZone:NgZone,private http:Http

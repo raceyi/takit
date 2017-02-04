@@ -37,6 +37,12 @@ export class OrderPage {
   
   cashPassword:string="";
 
+  //reciptIssue=false;
+  //receiptIdNumber:string;
+
+  reciptIssue=true;
+  receiptIdNumber:string="0104****226";
+
   focusQunatityNum= new EventEmitter();
 
   iOSOrderButtonHide=true;
@@ -57,7 +63,8 @@ export class OrderPage {
       console.log("takitId:"+this.takitId);
 
       this.price=this.menu.price*1;
-      this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
+      this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
+
       this.amount=this.price-this.discount;
       console.log(" ["+this.menu.hasOwnProperty("takeout")+"][ "+(this.menu.takeout!=null) +"] ["+ (this.menu.takeout!=false)+"]");
       if(this.menu.hasOwnProperty("takeout") && (this.menu.takeout!=null) && (this.menu.takeout!=false)){ // humm... please add takeout field into all menus...
@@ -394,7 +401,7 @@ export class OrderPage {
                     options: options,
                     price: this.menu.price,
                     amount: this.price,
-                    discountAmount:this.price-Math.round(this.price*this.storageProvider.shopInfo.discountRate),
+                    discountAmount:this.price-Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0)),
                     takeout:this.takeoutAvailable});
         cart.total=cart.total+this.price;
         console.log("cart:"+JSON.stringify(cart));
@@ -433,7 +440,7 @@ export class OrderPage {
       }else{
           this.quantityInputType="select";
           this.price=this.menu.price*quantity;
-          this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
+          this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
           this.amount=this.price-this.discount;
       }
   }
@@ -455,7 +462,7 @@ export class OrderPage {
                 }
           }
       }
-      this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
+      this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
       this.amount=this.price-this.discount;
   }
 
@@ -506,7 +513,7 @@ export class OrderPage {
           this.price=this.price-option.price*this.quantity;
           console.log("option.select:"+option.select);
       }
-      this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
+      this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
       this.amount=this.price-this.discount;
   }
 
@@ -549,7 +556,7 @@ export class OrderPage {
         });
         console.log("unitPrice:"+unitPrice);
           this.price=unitPrice*this.quantity;
-          this.discount=Math.round(this.price*this.storageProvider.shopInfo.discountRate);
+          this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
           this.amount=this.price-this.discount;
     }      
   }

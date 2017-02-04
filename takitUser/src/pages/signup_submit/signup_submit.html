@@ -31,6 +31,30 @@
 <!--
 <p>결제 정보로 사용됩니다. 정확한 성명을 입력해주시기 바랍니다.</p>
 -->
+
+
+<ion-item>
+  <ion-label class="orderOption">결제시 현금 영수증을 발급합니다. </ion-label>
+  <ion-checkbox color="primary" [(ngModel)]="receiptIssue"></ion-checkbox>
+</ion-item>
+
+<ion-row [hidden]="!receiptIssue">
+<ion-col width-30>
+  <ion-item class="orderOption">
+    현금&nbsp;영수증  
+  </ion-item>
+</ion-col>
+<ion-col width-70>
+  <ion-item class="orderOption">
+  <ion-input  [(ngModel)]="receiptIdNumber" placeholder="발급번호" type="tel"></ion-input> 
+  </ion-item> 
+</ion-col>
+</ion-row>
+<ion-item>
+  <p class="explain"> 현금영수증발행을 원하실 경우 발급번호를 설정해 주시기 바랍니다. 가입후 회원정보 화면에서도 설정가능합니다.</p>
+</ion-item>
+
+
   <ion-row>
         <ion-col width-10 class="icon-parent">
           <ion-icon class="icon-child" name="add-circle" [hidden]="!userAgreementHidden" (click)="expand(1)"></ion-icon>

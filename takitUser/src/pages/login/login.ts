@@ -32,6 +32,7 @@ export class LoginPage {
     focusEmail = new EventEmitter();;
     focusPassword =new EventEmitter();
     iphone5=false;
+    isTestServer=false;
 
   constructor(private navController: NavController, private navParams: NavParams,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
@@ -39,6 +40,10 @@ export class LoginPage {
                 private storageProvider:StorageProvider,private platform:Platform,
                 private alertController:AlertController,private ionicApp: IonicApp,
                 private menuCtrl: MenuController,private http:Http,public viewCtrl: ViewController){
+                    
+        if(this.storageProvider.serverAddress.endsWith('8000')){
+            this.isTestServer=true;
+        }    
       console.log("LoginPage construtor");
         if(!this.storageProvider.isAndroid){
             console.log("device.model:"+Device.model);

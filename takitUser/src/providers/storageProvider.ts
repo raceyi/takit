@@ -139,6 +139,8 @@ export class StorageProvider{
     }
 
     reset(){
+        console.log("storageProvider.reset");
+        
         this.db=undefined;
         this.shoplist=[];
         this.takitId=undefined; 
@@ -300,6 +302,7 @@ export class StorageProvider{
             this.shoplist=[];
         else
             this.shoplist=shoplistValue;
+        console.log("shoplistSet:"+JSON.stringify(shoplistValue));    
     }
 
     shoplistUpdate(shop){
@@ -336,7 +339,6 @@ export class StorageProvider{
     shopInfoSet(shopInfo:any){
         console.log("shopInfoSet:"+JSON.stringify(shopInfo));
         this.shopInfo=shopInfo;
-        this.shopInfo.discountRate=parseFloat(shopInfo.discountRate) / 100.0;
         console.log("discountRate:"+this.shopInfo.discountRate);
     } 
 

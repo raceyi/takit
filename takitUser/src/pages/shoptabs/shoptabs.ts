@@ -22,6 +22,8 @@ export class ShopTabsPage {
   public tabShopCart: any;
   public tabMyPage: any;
 
+  public exitTitle="상점나가기";
+
   constructor(private platform:Platform, private navController: NavController
   ,private navParams: NavParams,private storageProvider:StorageProvider, private app: App) {
 
@@ -34,6 +36,14 @@ export class ShopTabsPage {
     console.log("param(takitId):"+navParams.get("takitId"));
     //Any other way to pass takitId into ShopHome page?
     this.storageProvider.takitId=navParams.get("takitId");
+
+    //let shop=this.storageProvider.shopResponse;
+    //this.storageProvider.shopInfoSet(shop.shopInfo);
+
+    if(this.storageProvider.serverAddress.endsWith('8000')){
+        this.exitTitle="검증나가기";
+    }    
+
   }
 
   ionViewDidEnter	(){

@@ -21,6 +21,8 @@ export class ShopHomePage {
   @ViewChild('categorySegment') categorySegmentRef: Segment;
 
   shopname:string;
+  shopPhoneHref:string;
+
   categorySelected:number=1;
   categories=[];
 
@@ -28,7 +30,7 @@ export class ShopHomePage {
   takitId:string;
 
   shop;
-
+  
   menuRows=[];
   categoryMenuRows=[];
   dummyMenuRows:number=0; // Just for android version less than 5.0
@@ -57,6 +59,7 @@ export class ShopHomePage {
   configureShopInfo(){
     this.shop.categories.forEach(category => {
         var menus=[];
+        console.log("[configureShopInfo]this.shop:"+this.shop);
         this.shop.menus.forEach(menu=>{
                 //console.log("menu.no:"+menu.menuNO+" index:"+menu.menuNO.indexOf(';'));
                 var no:string=menu.menuNO.substr(menu.menuNO.indexOf(';')+1);
@@ -149,7 +152,10 @@ export class ShopHomePage {
         this.categoryMenuRows=[];
         this.recommendMenu=[];
 
-        var shop=this.storageProvider.shopResponse;
+        //var shop=this.storageProvider.shopResponse;
+
+        console.log("[loadShopInfo]this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
+
         /*
         console.log("shop.menus:"+JSON.stringify(shop.menus));
         console.log("shop.categories:"+JSON.stringify(shop.categories));
@@ -158,13 +164,17 @@ export class ShopHomePage {
         */
         //console.log("shop.categories.length:"+shop.categories.length);
         //console.log("shop.shopInfo:"+JSON.stringify(shop.shopInfo));
-        this.shop=shop;
-        this.shopname=shop.shopInfo.shopName;
-        this.storageProvider.shopInfoSet(shop.shopInfo);
+        this.shop=this.storageProvider.shopResponse;
+        this.shopname=this.shop.shopInfo.shopName;
+        
+        if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
+            this.shopPhoneHref="tel:"+this.shop.shopInfo.shopPhone;
+
+        this.storageProvider.shopInfoSet(this.shop.shopInfo);
         this.configureShopInfo();
 
         // update shoplist at Serve (takitId,s3key)
-        var thisShop:any={takitId:this.takitId ,s3key: this.shop.shopInfo.imagePath, discountRate:(this.shop.shopInfo.discountRate*100).toString()+"%"};
+        var thisShop:any={takitId:this.takitId ,s3key: this.shop.shopInfo.imagePath, discountRate:this.shop.shopInfo.discountRate};
         if(this.shop.shopInfo.imagePath.startsWith("takitId/")){
 
         }else{

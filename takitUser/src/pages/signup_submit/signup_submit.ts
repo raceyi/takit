@@ -46,6 +46,10 @@ export class SignupSubmitPage {
       focusName = new EventEmitter();
       smsInboxPlugin;
 
+      /////////////////////////////////////////
+      receiptIssue=false;
+      receiptIdNumber:string;
+      /////////////////////////////////////////
       @ViewChild('signupPage') signupPageRef: Content;
 
   constructor(private navController: NavController, private navParams: NavParams, 

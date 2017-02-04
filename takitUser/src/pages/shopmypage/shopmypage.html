@@ -1,9 +1,13 @@
 <ion-header class="shopMyPage">
   <ion-navbar>
-    <ion-title>
-      {{shopname}}
-    </ion-title>
-  </ion-navbar>
+    <ion-row>
+      <ion-col width-80>
+    <ion-title>{{shopname}}</ion-title>
+      </ion-col>
+      <ion-col *ngIf="storageProvider.shopResponse.shopInfo.shopPhone">
+        <a [href]="shopPhoneHref"><ion-icon width-20 color="black" name="call"></ion-icon></a>
+      </ion-col>
+    </ion-row>  </ion-navbar>
 </ion-header>
 
 <!--

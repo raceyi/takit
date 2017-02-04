@@ -1,8 +1,13 @@
 <ion-header>
   <ion-navbar >
-    <ion-title>
-       {{shopname}}
-    </ion-title>
+    <ion-row>
+      <ion-col width-80>
+    <ion-title>{{shopname}}</ion-title>
+      </ion-col>
+      <ion-col *ngIf="storageProvider.shopResponse.shopInfo.shopPhone">
+        <a [href]="shopPhoneHref"><ion-icon width-20 color="black" name="call"></ion-icon></a>
+      </ion-col>
+    </ion-row>
   </ion-navbar>
 </ion-header>
 
@@ -71,7 +76,7 @@
    <div id ="grayDiv">
     <ion-row class="textrow">
       <ion-col width-33 class="center">주문금액</ion-col>
-      <ion-col width-33 class="center">할인금액{{storageProvider.shopInfo.discountRate*100}}%</ion-col>
+      <ion-col width-33 class="center">할인금액{{storageProvider.shopInfo.discountRate}}</ion-col>
       <ion-col width-33 class="center">최종결제금액</ion-col>
     </ion-row>
 
@@ -103,8 +108,16 @@
         </ion-item>
       </ion-col>
       </ion-row>
-    </div>   
-    
+       
+      <ion-row class="textrow"[hidden]="!reciptIssue">
+          <ion-col class="cash">현금영수증 발행 </ion-col>
+          <ion-col class="cash">{{receiptIdNumber}}</ion-col>
+        </ion-row>
+        <ion-row class="textrow"[hidden]="reciptIssue">
+          <ion-col>*현금 영수증 발행을 원하시면 회원정보에서 설정해주시기 바랍니다.</ion-col>
+        </ion-row>
+      </div>   
+          
     <ion-segment *ngIf="!iOSOrderButtonHide">
     <ion-segment-button (click)="deleteAll()">전체삭제</ion-segment-button>
     <ion-segment-button (click)="order()" [disabled]="storageProvider.tourMode==true">주문결제하기</ion-segment-button>

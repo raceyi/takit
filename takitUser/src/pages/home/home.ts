@@ -180,6 +180,7 @@ export class HomePage{
          console.log("getSelected:"+takitId);
          this.serverProvider.getShopInfo(takitId).then((res)=>{
               this.storageProvider.shopResponse=res;
+              console.log("this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
               this.app.getRootNav().push(ShopTabsPage,{takitId:takitId}); 
          },(err)=>{
 

@@ -180,6 +180,10 @@ page-order{
     .cashPassword{
         background-color: #eeeeee;
         padding:0;
+      //  border-bottom:0px;
+        .item-inner {
+            border-bottom: 0px;
+        }
     }
 
     .cashPassword>.item-inner{
@@ -215,6 +219,7 @@ page-order{
     .password0{
         padding-top:0;
         padding-bottom:0;
+        border-bottom:0px;
     }
 
     .orderInfo{

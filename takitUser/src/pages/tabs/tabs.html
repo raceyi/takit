@@ -4,7 +4,10 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-row>
-      <ion-col width-60 class="title">
+      <ion-col *ngIf="this.isTestServer==true" width-60 class="title">
+          <ion-title>검증</ion-title>
+      </ion-col>
+      <ion-col *ngIf="this.isTestServer==false" width-60 class="title">
           <ion-title>타킷</ion-title>
       </ion-col>
       <ion-col width-20 *ngIf="!storageProvider.isAndroid" style="text-align:right;font-size:1.5em;">

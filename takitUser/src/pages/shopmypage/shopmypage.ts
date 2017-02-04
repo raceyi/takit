@@ -22,6 +22,8 @@ export class ShopMyPage{
      messageEmitterSubscription;
      infiniteScroll:any;
 
+     shopPhoneHref:string;
+
      constructor(private http:Http, private navController: NavController, 
           private navParams: NavParams,public storageProvider:StorageProvider,
           private alertController:AlertController, private ngZone:NgZone,
@@ -30,6 +32,8 @@ export class ShopMyPage{
         this.myPageMenu="orderHistory";
         this.shopname=this.storageProvider.currentShopname();
         
+        if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
+            this.shopPhoneHref="tel:"+this.storageProvider.shopResponse.shopInfo.shopPhone;
         
         this.messageEmitterSubscription= this.storageProvider.messageEmitter.subscribe((order)=> {
                 console.log("[ShopMyPage]message comes "+JSON.stringify(order)); 

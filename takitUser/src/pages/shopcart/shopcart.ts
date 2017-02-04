@@ -29,6 +29,14 @@ export class ShopCartPage{
 
     iOSOrderButtonHide=true;
 
+    shopPhoneHref:string;
+
+    //reciptIssue=false;
+    //receiptIdNumber:string;
+
+    reciptIssue=true;
+    receiptIdNumber:string="0104****226";
+
      constructor(private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,
             private alertController:AlertController,private serverProvider:ServerProvider,
@@ -36,9 +44,13 @@ export class ShopCartPage{
 	      console.log("ShopCartPage constructor");
         this.shopname=this.storageProvider.currentShopname();
         this.cart=this.storageProvider.cart;
+
+        if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
+            this.shopPhoneHref="tel:"+this.storageProvider.shopResponse.shopInfo.shopPhone;
+
         if(this.cart!=undefined){
             this.price=this.cart.total;
-            this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
+            this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
             this.amount=this.price-this.amount;
         }
         if(!this.storageProvider.isAndroid){ //ios
@@ -60,7 +72,7 @@ export class ShopCartPage{
      }
 
     checkTakeoutAvailable(){
-        //console.log("checkTakeoutAvailable-begin");
+        console.log("checkTakeoutAvailable-begin");
         if(this.cart.hasOwnProperty("menus")){
           var i;
           var takeoutAvailable=true;
@@ -82,7 +94,7 @@ export class ShopCartPage{
         //console.log("shopcartPage-ionViewWillEnter");
         this.cart=this.storageProvider.cart;        
         this.price=this.cart.total;
-        this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
+        this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
         this.amount=this.price-this.discount;
         this.checkTakeoutAvailable();
         //console.log("takeoutAvailable:"+this.takeoutAvailable);
@@ -283,7 +295,7 @@ export class ShopCartPage{
       this.storageProvider.saveCartInfo(this.storageProvider.takitId,JSON.stringify(cart)).then(()=>{
           this.cart=this.storageProvider.cart;
           this.price=this.cart.total;
-          this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
+          this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
           this.amount=this.price-this.discount;
       });
     }
@@ -293,7 +305,7 @@ export class ShopCartPage{
       this.storageProvider.saveCartInfo(this.storageProvider.takitId,JSON.stringify(cart)).then(()=>{
           this.cart=this.storageProvider.cart;
           this.price=this.cart.total;
-          this.discount=Math.round(this.cart.total*this.storageProvider.shopInfo.discountRate);
+          this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
           this.amount=this.price-this.discount;
       });
     }

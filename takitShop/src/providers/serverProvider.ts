@@ -27,7 +27,17 @@ export class ServerProvider{
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
 
-            this.http.post(this.storageProvider.serverAddress+request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>res.json()).subscribe((res)=>{
+            this.http.post(this.storageProvider.serverAddress+request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>{ console.log("headers:"+JSON.stringify(res.headers)); 
+                res.headers.forEach((element,name)=>{ 
+                    console.log(JSON.stringify(element));
+                    console.log("name:"+name);
+                    if(name=='version'){
+                        if(element[0]!=" "){
+                            console.log("client version doesn't match with server version");
+                        }
+                    }
+                });
+                return res.json(); }).subscribe((res)=>{
                 resolve(res);                    
             },(err)=>{
                 if(err.hasOwnProperty("status") && err.status==401){

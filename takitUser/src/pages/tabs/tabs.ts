@@ -1,16 +1,19 @@
-import {Component,EventEmitter,NgZone,ViewChild} from '@angular/core'
+import {Component,EventEmitter,NgZone,ViewChild} from '@angular/core';
 
 import {HomePage} from '../home/home';
 import {CashPage} from '../cash/cash';
 import {SearchPage} from '../search/search';
 import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {ErrorPage} from '../error/error';
+import {LoginPage} from '../login/login';
+
 import {Platform,IonicApp,MenuController,Tabs} from 'ionic-angular';
 import {ViewController,App,NavController,AlertController,ModalController} from 'ionic-angular';
 import {Push,PushNotification,Device} from 'ionic-native';
 import {Http,Headers} from '@angular/http';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
+import {Storage} from '@ionic/storage';
 
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/map';
@@ -31,10 +34,15 @@ export class TabsPage {
 
   pushNotification:PushNotification;
   askExitAlert:any;
+  
+  public isTestServer=false;
 
   constructor(public modalCtrl: ModalController,private navController: NavController,private app:App,private platform:Platform,public viewCtrl: ViewController,
     public storageProvider:StorageProvider,private http:Http, private alertController:AlertController,private ionicApp: IonicApp,
-    private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider) {
+    private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider,public storage:Storage) {
+        if(this.storageProvider.serverAddress.endsWith('8000')){
+            this.isTestServer=true;
+        }    
     // this tells the tabs component which Pages
     // should be each tab's root Page
     this.tabHome = HomePage;
@@ -138,8 +146,8 @@ export class TabsPage {
         this.serverProvider.post(this.storageProvider.serverAddress+"/getDiscountRate",body).then((res:any)=>{
             console.log("getDiscountRate-res:"+JSON.stringify(res));
             if(res.result=="success"){
-                shop.discountRate=res.discountRate;
-                console.log("shopinfo:"+JSON.stringify(this.storageProvider.shoplist));
+                console.log("tab discountRate:"+shop.discountRate);
+                //console.log("shopinfo:"+JSON.stringify(this.storageProvider.shoplist));
             }else{
                 console.log("couldn't get discount rate of "+shop.takitId+" due to unknwn reason");
             }
@@ -440,14 +448,14 @@ export class TabsPage {
                     senderID: this.storageProvider.userSenderID,
                     "gcmSandbox": "true",
                     "alert": "true",
-                    "sound": "true"
+                    "sound": "true",
+                   // "badge": "true",
                 },
                 windows: {}
             });
                         
             this.pushNotification.on('registration',(response)=>{
 
-                
               console.log("registration:"+JSON.stringify(response));
               console.log("registration..."+response.registrationId);
               var platform;
@@ -542,8 +550,23 @@ export class TabsPage {
                   console.log("GCMCashUpdateEmitter");
                   this.storageProvider.GCMCashUpdateEmitter.emit();
                   cashConfirmModal.present();
+                }else if(additionalData.GCMType==="multiLogin"){
+                    // logout and move into login page
+                    this.storage.clear(); 
+                    this.storage.remove("id"); //So far, clear() doesn't work. Please remove this line later
+                    this.storage.remove("refundBank");
+                    this.storage.remove("refundAccount");
+                    this.storageProvider.reset();
+                    this.storageProvider.dropCartInfo().then(()=>{
+                            console.log("call setRoot with LoginPage");
+                            this.app.getRootNav().setRoot(LoginPage);
+                    },(error)=>{
+                        console.log("fail to dropCartInfo");
+                            console.log("call setRoot with LoginPage");
+                            this.app.getRootNav().setRoot(LoginPage);
+                    });  
                 }
-                if(additionalData.GCMType!=="cash"){
+                if(additionalData.GCMType!=="cash" && additionalData.GCMType!=="multiLogin"){
                         this.confirmMsgDelivery(additionalData.notId).then(()=>{
                             console.log("confirmMsgDelivery success");
                         },(err)=>{
