@@ -102,6 +102,24 @@
   </ion-item> 
 </ion-col>
 </ion-row>
+
+<ion-list radio-group [hidden]="!receiptIssue">
+<ion-row>
+  <ion-col width-50>
+  <ion-item>
+    <ion-label>소득공제용</ion-label>
+    <ion-radio checked="true" value="go"></ion-radio>
+  </ion-item>
+  </ion-col>
+  <ion-col width-50>
+  <ion-item>
+    <ion-label>지출증빙용</ion-label>
+    <ion-radio value="rust"></ion-radio>
+  </ion-item>
+  </ion-col>
+</ion-row>
+</ion-list>
+
 <ion-item>
   <p class="explain"> 현금영수증발행을 원하실 경우 발급번호를 설정해 주시기 바랍니다. </p>
 </ion-item>

@@ -33,9 +33,10 @@ export class ShopCartPage{
 
     //reciptIssue=false;
     //receiptIdNumber:string;
-
+  
     reciptIssue=true;
     receiptIdNumber:string="0104****226";
+    receiptType:string="소득공제";
 
      constructor(private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,

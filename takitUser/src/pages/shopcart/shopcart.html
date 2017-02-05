@@ -108,14 +108,6 @@
         </ion-item>
       </ion-col>
       </ion-row>
-       
-      <ion-row class="textrow"[hidden]="!reciptIssue">
-          <ion-col class="cash">현금영수증 발행 </ion-col>
-          <ion-col class="cash">{{receiptIdNumber}}</ion-col>
-        </ion-row>
-        <ion-row class="textrow"[hidden]="reciptIssue">
-          <ion-col>*현금 영수증 발행을 원하시면 회원정보에서 설정해주시기 바랍니다.</ion-col>
-        </ion-row>
       </div>   
           
     <ion-segment *ngIf="!iOSOrderButtonHide">
@@ -124,6 +116,16 @@
     </ion-segment>
 
     <div>
+    <ion-row [hidden]="!reciptIssue">
+      <ion-col class="cash">현금영수증 발행 </ion-col>
+      <ion-col class="cash">{{receiptIdNumber}}</ion-col>
+      <ion-col class="cash">{{receiptType}} </ion-col>
+    </ion-row>
+    <ion-row [hidden]="reciptIssue">
+      <ion-col class="cash">*현금 영수증 발행을 원하시면 회원정보에서 설정해주시기 바랍니다.</ion-col>
+    </ion-row>
+    <br>
+
       <div class="orderInfo cancelNoti">
       주문접수전에는 MyPage에서 주문 취소가 가능합니다. <br>
     </div>

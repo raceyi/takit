@@ -37,11 +37,13 @@ export class OrderPage {
   
   cashPassword:string="";
 
-  //reciptIssue=false;
+  reciptIssue=false;
   //receiptIdNumber:string;
+  //receiptType;
 
-  reciptIssue=true;
-  receiptIdNumber:string="0104****226";
+  //reciptIssue=true;
+  receiptIdNumber:string="010****8226";
+  receiptType:string="소득공제";
 
   focusQunatityNum= new EventEmitter();
 
