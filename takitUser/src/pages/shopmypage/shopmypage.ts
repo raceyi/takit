@@ -207,7 +207,7 @@ export class ShopMyPage{
         headers.append('Content-Type', 'application/json');
         console.log("server:"+ this.storageProvider.serverAddress);
         let body  = JSON.stringify({ orderId:order.orderId,
-                                     cancelReason:"",
+                                     cancelReason:"고객접수취소",
                                      cashId:this.storageProvider.cashId});
          
          this.serverProvider.post(this.storageProvider.serverAddress+"/cancelOrder",body).then((res:any)=>{

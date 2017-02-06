@@ -48,7 +48,8 @@ export class SignupSubmitPage {
 
       /////////////////////////////////////////
       receiptIssue=false;
-      receiptIdNumber:string;
+      receiptId:string;
+      receiptType:string="IncomeDeduction";      
       /////////////////////////////////////////
       @ViewChild('signupPage') signupPageRef: Content;
 
@@ -193,6 +194,18 @@ export class SignupSubmitPage {
           }
           return;
       }
+      //check the validity of receiptId
+      if(this.receiptIssue){
+            if(this.receiptId==undefined || this.receiptId.trim().length<10){
+                    let alert = this.alertController.create({
+                        title: '현금 영수증 발급번호를 정확히 입력해 주시기바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present(); 
+            }
+            return;
+      }
+
       if(this.userAgreement==false){
             let alert = this.alertController.create({
                 title: ' 이용 약관에 동의해주시기바랍니다.',
@@ -227,14 +240,15 @@ export class SignupSubmitPage {
 
       if(this.id!=undefined){
           if(this.id.startsWith("kakao_")){
-              this.kakaoProvider.kakaoServerSignup(this.id,this.country,phone,this.email,this.name).then(
+              this.kakaoProvider.kakaoServerSignup(this.id,this.country,phone,this.email,this.name,this.receiptIssue,this.receiptId,this.receiptType).then(
                 (result:any)=>{
                     var serverCode:string=result.result;
                     if(serverCode=="success"){
                         var encrypted:string=this.storageProvider.encryptValue('id','kakao');// save kakao id 
                         this.storage.set('id',encodeURI(encrypted));
                         this.storageProvider.shoplist=[];
-                        this.storageProvider.userInfoSet(this.email,this.name,this.phone);
+                        this.storageProvider.userInfoSet(this.email,this.name,this.phone,
+                                        this.receiptIssue,this.receiptId,this.receiptType);
                         this.navController.setRoot(TabsPage);
                     }else if(serverCode=="duplication"){ // result.result=="exist"
                         let alert = this.alertController.create({
@@ -253,7 +267,7 @@ export class SignupSubmitPage {
                     // Save kakao and exit App.
                 });
           }else if(this.id.startsWith("facebook_")){
-              this.fbProvider.facebookServerSignup(this.id,this.name,this.email,this.country,phone).then(
+              this.fbProvider.facebookServerSignup(this.id,this.name,this.email,this.country,phone,this.receiptIssue,this.receiptId,this.receiptType).then(
                 (result:any)=>{
                     // move into home page.  
                     console.log("result..:"+JSON.stringify(result));
@@ -262,7 +276,8 @@ export class SignupSubmitPage {
                         var encrypted:string=this.storageProvider.encryptValue('id','facebook');// save facebook id 
                         this.storage.set('id',encodeURI(encrypted));
                         this.storageProvider.shoplist=[];
-                        this.storageProvider.userInfoSet(this.email,this.name,this.phone);
+                        this.storageProvider.userInfoSet(this.email,this.name,this.phone,
+                            this.receiptIssue,this.receiptId,this.receiptType);
                         this.navController.setRoot(TabsPage);
                     }else  if(serverCode=="duplication"){ // result.result=="exist"
                         let alert = this.alertController.create({
@@ -282,7 +297,7 @@ export class SignupSubmitPage {
               console.log("unknown login reference id:"+this.id);
           }
         }else{
-           this.emailProvider.emailServerSignup(this.password,this.name,this.email,this.country,phone).then( 
+           this.emailProvider.emailServerSignup(this.password,this.name,this.email,this.country,phone,this.receiptIssue,this.receiptId,this.receiptType).then( 
             (result:any)=>{
                     // move into home page.  
                     var output:string=result.result;
@@ -292,7 +307,8 @@ export class SignupSubmitPage {
                         encrypted=this.storageProvider.encryptValue('password',this.password);// save email id 
                         this.storage.set('password',encodeURI(encrypted));
                         this.storageProvider.shoplist=[];
-                        this.storageProvider.userInfoSet(this.email,this.name,this.phone);
+                        this.storageProvider.userInfoSet(this.email,this.name,this.phone,
+                                this.receiptIssue,this.receiptId,this.receiptType);
                         this.navController.setRoot(TabsPage);
                     }else if(output == "duplication"){ // result.result=="exist"
                         let alert = this.alertController.create({

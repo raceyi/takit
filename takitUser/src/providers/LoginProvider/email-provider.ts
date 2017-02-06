@@ -33,10 +33,12 @@ export class EmailProvider{
          });
   }
 
-  emailServerSignup(password,name,email,country,phone){
+  emailServerSignup(password,name,email,country,phone,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("emailServerSignup "+phone);
-              let body = JSON.stringify({referenceId:"email_"+email,password:password,name:name,email:email,country:country,phone:phone});
+              let body = JSON.stringify({referenceId:"email_"+email,password:password,name:name,
+                                            email:email,country:country,phone:phone,
+                                            receiptIssue:receiptIssue,receiptId:receiptId,receiptType:receiptType});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress+" body:"+JSON.stringify(body));

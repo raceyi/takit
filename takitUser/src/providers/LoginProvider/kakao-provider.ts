@@ -176,10 +176,12 @@ export class KakaoProvider {
   }
 
 
-  kakaoServerSignup(kakaoid:string,country:string,phone:string,email:string,name:string){
+  kakaoServerSignup(kakaoid:string,country:string,phone:string,email:string,name:string,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("kakaoServerSignup");
-              let body = JSON.stringify({referenceId:kakaoid,name:name,email:email,country:country,phone:phone});
+              let body = JSON.stringify({referenceId:kakaoid,name:name,
+                                            email:email,country:country,phone:phone,
+                                            receiptIssue:receiptIssue,receiptId:receiptId,receiptType:receiptType});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress);

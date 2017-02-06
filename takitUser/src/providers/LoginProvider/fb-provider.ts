@@ -139,10 +139,12 @@ export class FbProvider {
          });
   }
 
-  facebookServerSignup(facebookid,name,email,country,phone){
+  facebookServerSignup(facebookid,name,email,country,phone,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("facebookServerSignup !!!");
-              let body = JSON.stringify({referenceId:facebookid,name:name,email:email,country:country,phone:phone});
+              let body = JSON.stringify({referenceId:facebookid,name:name,
+                                            email:email,country:country,phone:phone,
+                                            receiptIssue:receiptIssue,receiptId:receiptId,receiptType:receiptType});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server: "+ this.storageProvider.serverAddress+ " body:"+body);

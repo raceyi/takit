@@ -44,7 +44,8 @@ export class UserInfoPage{
     userPhone;
 
     receiptIssue=false;
-    receiptIdNumber;
+    receiptId:string;
+    receiptType:string="IncomeDeduction";      
 
      constructor(public storageProvider:StorageProvider,private alertController:AlertController
         ,private app: App,private navController: NavController, private navParams: NavParams
@@ -56,6 +57,9 @@ export class UserInfoPage{
               this.existingPassword=password;
                console.log("existing password:"+this.existingPassword);
           }); 
+          this.receiptIssue=this.storageProvider.receiptIssue;
+          this.receiptId=this.storageProvider.receiptId;
+          this.receiptType=this.storageProvider.receiptType;
      }
 
     ionViewWillEnter(){
@@ -354,6 +358,16 @@ export class UserInfoPage{
           return;
         }
 
+      if(this.receiptIssue){
+            if(this.receiptId==undefined || this.receiptId.trim().length<10){
+                    let alert = this.alertController.create({
+                        title: '현금 영수증 발급번호를 정확히 입력해 주시기바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present(); 
+            }
+            return;
+      }
        console.log("modify-3");
       if(this.loginMethod=="이메일" && !this.passwordValidity(this.password)){
           this.paswordGuideHide=false;
@@ -402,7 +416,10 @@ export class UserInfoPage{
                                     newPassword:this.password,
                                     oldPassword:this.oldPassword, 
                                     phone:this.userPhone.trim(), 
-                                    name:this.name.trim()});
+                                    name:this.name.trim(),
+                                    receiptIssue:this.receiptIssue,
+                                    receiptId:this.receiptId,
+                                    receiptType:this.receiptType});
 
          console.log("call modifyUserInfo "+JSON.stringify(body));
          console.log("existing password:"+this.existingPassword);
@@ -413,6 +430,9 @@ export class UserInfoPage{
                  this.storageProvider.email=this.email.trim();
                  this.storageProvider.phone=this.userPhone.trim();
                  this.storageProvider.name=this.name.trim();
+                 this.storageProvider.receiptIssue=this.receiptIssue;
+                 this.storageProvider.receiptId=this.receiptId;
+                 this.storageProvider.receiptType=this.receiptType;
                  var encrypted=this.storageProvider.encryptValue('password',this.password);// save email id 
                  this.storage.set('password',encodeURI(encrypted));
                  this.existingPassword=this.password;

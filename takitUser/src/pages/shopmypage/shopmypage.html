@@ -4,10 +4,11 @@
       <ion-col width-80>
     <ion-title>{{shopname}}</ion-title>
       </ion-col>
-      <ion-col *ngIf="storageProvider.shopResponse.shopInfo.shopPhone">
+      <ion-col *ngIf="storageProvider.shopResponse.shopInfo.contactPhone!=null">
         <a [href]="shopPhoneHref"><ion-icon width-20 color="black" name="call"></ion-icon></a>
       </ion-col>
-    </ion-row>  </ion-navbar>
+    </ion-row>  
+    </ion-navbar>
 </ion-header>
 
 <!--

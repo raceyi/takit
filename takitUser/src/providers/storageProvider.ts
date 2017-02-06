@@ -43,7 +43,12 @@ export class StorageProvider{
     public refundAccount:string="";
     
     public cashMenu: string = "cashIn"; 
-     /////////////////////////////////////
+    /////////////////////////////////////
+    // cash receipt issue
+    public receiptIssue=false;
+    public receiptId:string;
+    public receiptType:string="IncomeDeduction";      
+    /////////////////////////////////////
     // 캐쉬정보 수동입력 
     public depositBank;
     public depositBranch;
@@ -346,17 +351,32 @@ export class StorageProvider{
         return this.shopInfo.shopName;
     }
 
-    userInfoSet(email,name,phone){
+    userInfoSet(email,name,phone,receiptIssue,receiptId,receiptType){
         this.email=email;
         this.name=name;
         this.phone=phone;
         this.tourMode=false;
+        this.receiptIssue=receiptIssue;
+        this.receiptId=receiptId;
+        this.receiptType=receiptType;  
+        if(!this.receiptIssue|| this.receiptIssue==undefined){
+            this.receiptIssue=false;
+            this.receiptType="IncomeDeduction";//default value   
+        }
     }
 
     userInfoSetFromServer(userInfo:any){
         this.email=userInfo.email;
         this.name=userInfo.name;
         this.phone=userInfo.phone;
+        this.receiptIssue=userInfo.receiptIssue;
+        this.receiptId=userInfo.receiptId;
+        this.receiptType=userInfo.receiptType;  
+        if(!this.receiptIssue|| this.receiptIssue==undefined){
+            this.receiptIssue=false;
+            this.receiptType="IncomeDeduction";//default value   
+        }
+        
         if(!userInfo.hasOwnProperty("cashId") || userInfo.cashId==null || userInfo.cashId==undefined){
             this.cashId="";
         }else{

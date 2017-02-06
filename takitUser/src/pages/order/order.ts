@@ -37,14 +37,6 @@ export class OrderPage {
   
   cashPassword:string="";
 
-  reciptIssue=false;
-  //receiptIdNumber:string;
-  //receiptType;
-
-  //reciptIssue=true;
-  receiptIdNumber:string="010****8226";
-  receiptType:string="소득공제";
-
   focusQunatityNum= new EventEmitter();
 
   iOSOrderButtonHide=true;
@@ -55,6 +47,8 @@ export class OrderPage {
         private alertController:AlertController, 
         private platform:Platform,public storageProvider:StorageProvider,
         private ngZone:NgZone,private serverProvider:ServerProvider) {
+
+      console.log("receiptIssue:"+this.storageProvider.receiptIssue);
 
       this.menu=JSON.parse(navParams.get("menu"));
       this.shopname=navParams.get("shopname");

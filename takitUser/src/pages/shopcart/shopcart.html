@@ -4,7 +4,7 @@
       <ion-col width-80>
     <ion-title>{{shopname}}</ion-title>
       </ion-col>
-      <ion-col *ngIf="storageProvider.shopResponse.shopInfo.shopPhone">
+      <ion-col *ngIf="storageProvider.shopResponse.shopInfo.contactPhone!=null">
         <a [href]="shopPhoneHref"><ion-icon width-20 color="black" name="call"></ion-icon></a>
       </ion-col>
     </ion-row>
@@ -116,12 +116,12 @@
     </ion-segment>
 
     <div>
-    <ion-row [hidden]="!reciptIssue">
+    <ion-row [hidden]="!storageProvider.receiptIssue">
       <ion-col class="cash">현금영수증 발행 </ion-col>
-      <ion-col class="cash">{{receiptIdNumber}}</ion-col>
-      <ion-col class="cash">{{receiptType}} </ion-col>
+      <ion-col class="cash">{{storageProvider.receiptId}}</ion-col>
+      <ion-col class="cash">{{storageProvider.receiptType}} </ion-col>
     </ion-row>
-    <ion-row [hidden]="reciptIssue">
+    <ion-row [hidden]="storageProvider.receiptIssue">
       <ion-col class="cash">*현금 영수증 발행을 원하시면 회원정보에서 설정해주시기 바랍니다.</ion-col>
     </ion-row>
     <br>
