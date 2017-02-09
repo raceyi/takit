@@ -195,14 +195,13 @@ export class SignupSubmitPage {
           return;
       }
       //check the validity of receiptId
-      if(this.receiptIssue){
-            if(this.receiptId==undefined || this.receiptId.trim().length<10){
+      console.log("receiptIssue:"+this.receiptIssue);
+      if(this.receiptIssue && (this.receiptId==undefined || this.receiptId.trim().length<10)){
                     let alert = this.alertController.create({
                         title: '현금 영수증 발급번호를 정확히 입력해 주시기바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present(); 
-            }
             return;
       }
 

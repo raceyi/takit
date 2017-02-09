@@ -356,7 +356,11 @@ export class StorageProvider{
         this.name=name;
         this.phone=phone;
         this.tourMode=false;
-        this.receiptIssue=receiptIssue;
+        if(receiptIssue=="1"){
+            this.receiptIssue=true;
+        }else{
+            this.receiptIssue=false;
+        }
         this.receiptId=receiptId;
         this.receiptType=receiptType;  
         if(!this.receiptIssue|| this.receiptIssue==undefined){
@@ -369,7 +373,11 @@ export class StorageProvider{
         this.email=userInfo.email;
         this.name=userInfo.name;
         this.phone=userInfo.phone;
-        this.receiptIssue=userInfo.receiptIssue;
+        if(userInfo.receiptIssue=="1"){
+            this.receiptIssue=true;
+        }else{
+            this.receiptIssue=false;
+        }
         this.receiptId=userInfo.receiptId;
         this.receiptType=userInfo.receiptType;  
         if(!this.receiptIssue|| this.receiptIssue==undefined){

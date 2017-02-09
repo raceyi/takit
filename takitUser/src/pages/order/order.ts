@@ -34,13 +34,14 @@ export class OrderPage {
   discount:number;
   amount:number;
   price:number;
-  
+  receiptIdMask:string;
+
   cashPassword:string="";
 
   focusQunatityNum= new EventEmitter();
 
   iOSOrderButtonHide=true;
-
+  
   @ViewChild('quantityNum') inputNumRef: TextInput;
 
   constructor(private app:App,private navController: NavController,private http:Http,private navParams: NavParams,
@@ -49,7 +50,10 @@ export class OrderPage {
         private ngZone:NgZone,private serverProvider:ServerProvider) {
 
       console.log("receiptIssue:"+this.storageProvider.receiptIssue);
-
+      if(this.storageProvider.receiptIssue){
+            this.receiptIdMask=this.storageProvider.receiptId.substr(0,3)+"****"+this.storageProvider.receiptId.substr(7,this.storageProvider.receiptId.length-7);
+            console.log("recpitIdMask:"+this.receiptIdMask);
+      }
       this.menu=JSON.parse(navParams.get("menu"));
       this.shopname=navParams.get("shopname");
       console.log("OrderPage-param(menu):"+navParams.get("menu"));
@@ -120,7 +124,12 @@ export class OrderPage {
                  takeout=1;
              }else
                  takeout=0;
-
+             let receiptIssueVal;
+              if(this.storageProvider.receiptIssue){
+                    receiptIssueVal=1;
+              }else{
+                    receiptIssueVal=0;
+              }
               let body = JSON.stringify({paymethod:"cash",
                                         takitId:this.takitId,
                                         orderList:JSON.stringify(cart), 
@@ -129,7 +138,10 @@ export class OrderPage {
                                         takeout: takeout,
                                         orderedTime:new Date().toISOString(),
                                         cashId: this.storageProvider.cashId,
-                                        password:this.cashPassword
+                                        password:this.cashPassword,
+                                        receiptIssu:receiptIssueVal,
+                                        receiptId:this.storageProvider.receiptId,
+                                        receiptType:this.storageProvider.receiptType
                                         });
               console.log("sendOrder:"+JSON.stringify(body));                          
               let headers = new Headers();

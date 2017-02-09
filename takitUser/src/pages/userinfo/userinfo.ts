@@ -358,14 +358,12 @@ export class UserInfoPage{
           return;
         }
 
-      if(this.receiptIssue){
-            if(this.receiptId==undefined || this.receiptId.trim().length<10){
+      if(this.receiptIssue && (this.receiptId==undefined || this.receiptId.trim().length<10)){
                     let alert = this.alertController.create({
                         title: '현금 영수증 발급번호를 정확히 입력해 주시기바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present(); 
-            }
             return;
       }
        console.log("modify-3");
@@ -411,13 +409,18 @@ export class UserInfoPage{
                         alert.present();
         }
          console.log("modify-7"); 
-
+             let receiptIssueVal;
+              if(this.receiptIssue){
+                    receiptIssueVal=1;
+              }else{
+                    receiptIssueVal=0;
+              }
          let body = JSON.stringify({email:this.email.trim(),
                                     newPassword:this.password,
                                     oldPassword:this.oldPassword, 
                                     phone:this.userPhone.trim(), 
                                     name:this.name.trim(),
-                                    receiptIssue:this.receiptIssue,
+                                    receiptIssue:receiptIssueVal,
                                     receiptId:this.receiptId,
                                     receiptType:this.receiptType});
 

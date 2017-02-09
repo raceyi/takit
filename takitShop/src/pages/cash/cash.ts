@@ -7,6 +7,8 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {Storage} from '@ionic/storage';
 
+declare var moment:any;
+
 @Component({
   selector: 'page-cash',
   templateUrl: 'cash.html',
@@ -85,6 +87,10 @@ export class CashPage {
 
            this.getWithdrawalList(-1).then((withdrawalList:any)=>{
              this.transactions=withdrawalList;
+             this.transactions.forEach(trans=>{                        // convert GMT time into local time
+                 this.addLocalTime(trans);  
+             });
+             console.log("transactions:"+JSON.stringify(this.transactions));
            },(err)=>{
               if(err=="NetworkFailure"){
                   console.log("/shop/getWithdrawalList error");
@@ -150,7 +156,9 @@ export class CashPage {
                 infiniteScroll.enable(false);
         }else{
           for(var i=0;i<withdrawalList.length-1;i++){
-            this.transactions.push(withdrawalList[i]);
+            let trans=withdrawalList[i];
+            this.addLocalTime(trans);
+            this.transactions.push(trans);
           }
           infiniteScroll.complete();
         }
@@ -174,15 +182,22 @@ export class CashPage {
       });
   }
    
-  
+  addLocalTime(trans){
+        var trTime:Date=moment.utc(trans.transactionTime).toDate();
+        var mm = trTime.getMonth() < 9 ? "0" + (trTime.getMonth() + 1) : (trTime.getMonth() + 1); // getMonth() is zero-based
+        var dd  = trTime.getDate() < 10 ? "0" + trTime.getDate() : trTime.getDate();
+        var dString=trTime.getFullYear()+'-'+(mm)+'-'+dd;
+        trans.localTime=dString;       
+  }
+
   doWithraw(){
      //takitId, bankCode(은행코드 3자리) , withdrawalAmount(인출금액),fee
         let body = JSON.stringify({takitId:this.storageProvider.myshop.takitId,
                                 bankCode:this.storageProvider.bankCode ,
                                 withdrawalAmount:this.withdrawAmount,
                                 fee:this.withrawFree});
-
-      this.serverProvider.post(this.storageProvider.serverAddress+"/shop/withdrawCash",body).then((res:any)=>{
+      console.log("doWithraw"+body);                      
+      this.serverProvider.post("/shop/withdrawCash",body).then((res:any)=>{
           console.log("refundCash res:"+JSON.stringify(res));
           if(res.result=="success"){
                let alert = this.alertController.create({
@@ -210,6 +225,10 @@ export class CashPage {
               });
               this.getWithdrawalList(-1).then((withdrawalList:any)=>{
                     this.transactions=withdrawalList;
+                    this.transactions.forEach(trans=>{
+                        // convert GMT time into local time
+                        this.addLocalTime(trans);  
+                    });
               },(err)=>{
                   if(err=="NetworkFailure"){
                       console.log("/shop/getWithdrawalList error");
@@ -272,7 +291,7 @@ export class CashPage {
             alert.present();
           return;
       }
-
+     console.log("!!!withdrawCash");
      this.checkWithrawFee().then((res)=>{
           if(res==0){
               this.withrawFree=0;
@@ -323,9 +342,12 @@ export class CashPage {
 
     checkWithrawFee(){
         return new Promise((resolve,reject)=>{
+            console.log("checkWithrawFee");
       let body = JSON.stringify({bankCode:this.storageProvider.bankCode,
                                 takitId:this.storageProvider.myshop.takitId});
-            this.serverProvider.post(this.storageProvider.serverAddress+"/shop/checkWithdrawalCount",body).then((res:any)=>{
+            console.log("checkWithrawFee "+body);
+
+            this.serverProvider.post("/shop/checkWithdrawalCount",body).then((res:any)=>{
                 console.log("checkWithdrawalCount res: "+JSON.stringify(res));
                 if(res.result=="success")
                     resolve(res.fee);

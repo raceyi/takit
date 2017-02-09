@@ -137,7 +137,7 @@ export class LoginPage {
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
                                         // How to show user a message here? move into error page?
                                         // Is it possible to show alert here?
-                                    this.navController.setRoot(MultiloginPage);
+                                    this.navController.setRoot(MultiloginPage,"facebook");
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
                                     let alert = this.alertController.create({
@@ -183,7 +183,7 @@ export class LoginPage {
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
                                         // How to show user a message here? move into error page?
                                         // Is it possible to show alert here?
-                                    this.navController.setRoot(MultiloginPage);
+                                    this.navController.setRoot(MultiloginPage,"kakao");
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
                                     let alert = this.alertController.create({
@@ -253,7 +253,7 @@ export class LoginPage {
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
                                         // How to show user a message here? move into error page?
                                         // Is it possible to show alert here?
-                                    this.navController.setRoot(MultiloginPage);
+                                    this.navController.setRoot(MultiloginPage,{id:this.email});
                                 }else{
                                     let alert = this.alertController.create({
                                                 title: '회원 정보가 일치하지 않습니다.',

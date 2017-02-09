@@ -155,6 +155,12 @@ export class ShopCartPage{
                  takeout=1;
              }else
                  takeout=0;
+             let receiptIssueVal;
+              if(this.storageProvider.receiptIssue){
+                    receiptIssueVal=1;
+              }else{
+                    receiptIssueVal=0;
+              }    
               let body = JSON.stringify({paymethod:"cash",
                                         takitId:this.storageProvider.takitId,
                                         orderList:JSON.stringify(this.cart), 
@@ -163,7 +169,11 @@ export class ShopCartPage{
                                         takeout: takeout,
                                         orderedTime:new Date().toISOString(),
                                         cashId:this.storageProvider.cashId,
-                                        password:this.cashPassword});
+                                        password:this.cashPassword,
+                                        receiptIssu:receiptIssueVal,
+                                        receiptId:this.storageProvider.receiptId,
+                                        receiptType:this.storageProvider.receiptType});
+
               console.log("order:"+JSON.stringify(body));
 
               let headers = new Headers();

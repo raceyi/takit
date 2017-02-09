@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Http,Headers} from '@angular/http';
 import {Platform} from 'ionic-angular';
 import {StorageProvider} from '../storageProvider';
+import { Device } from 'ionic-native';
 
 import 'rxjs/add/operator/map';
 
@@ -17,7 +18,7 @@ export class EmailProvider{
       console.log("email:"+email+"password:"+password);
       return new Promise((resolve, reject)=>{
               console.log("EmailServerLogin");
-              let body = JSON.stringify({email:email,password:password});
+              let body = JSON.stringify({email:email,password:password,uuid:Device.uuid});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
 
@@ -36,9 +37,16 @@ export class EmailProvider{
   emailServerSignup(password,name,email,country,phone,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("emailServerSignup "+phone);
+              let receiptIssueVal;
+              if(receiptIssue){
+                    receiptIssueVal=1;
+              }else{
+                    receiptIssueVal=0;
+              }
               let body = JSON.stringify({referenceId:"email_"+email,password:password,name:name,
                                             email:email,country:country,phone:phone,
-                                            receiptIssue:receiptIssue,receiptId:receiptId,receiptType:receiptType});
+                                            receiptIssue:receiptIssueVal,receiptId:receiptId,receiptType:receiptType,
+                                            uuid:Device.uuid});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress+" body:"+JSON.stringify(body));

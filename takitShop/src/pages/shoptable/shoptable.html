@@ -126,7 +126,7 @@
                     <!--
                     <ion-col width-10 class="detail"  [hidden]="printerProvider.printerStatus!='connected' || order.orderStatus!='paid'"><ion-icon name="print" (click)="printOrder(order)"></ion-icon></ion-col>
                     -->
-                    <ion-col width-10 class="detail" [hidden]="order.orderStatus!='paid'" ><ion-icon name="print" (click)="printOrder(order)"></ion-icon></ion-col>                    
+                    <ion-col width-10 class="detail" [hidden]="order.orderStatus=='cancelled' && order.cancelReason=='고객접수취소'"><ion-icon name="print" (click)="printOrder(order)"></ion-icon></ion-col>                    
                 </ion-row>
                 
                 </div>

@@ -26,11 +26,12 @@ export class ServerProvider{
        return new Promise((resolve,reject)=>{
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
-
-            this.http.post(this.storageProvider.serverAddress+request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>{ console.log("headers:"+JSON.stringify(res.headers)); 
+/*
+            this.http.post(this.storageProvider.serverAddress+request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>{ console.log("headers:"+JSON.stringify(res.headers));
+             
                 res.headers.forEach((element,name)=>{ 
-                    console.log(JSON.stringify(element));
-                    console.log("name:"+name);
+                    //console.log(JSON.stringify(element));
+                    //console.log("name:"+name);
                     if(name=='version'){
                         if(element[0]!=" "){
                             console.log("client version doesn't match with server version");
@@ -38,6 +39,10 @@ export class ServerProvider{
                     }
                 });
                 return res.json(); }).subscribe((res)=>{
+                resolve(res);                    
+            }
+*/            
+            this.http.post(this.storageProvider.serverAddress+request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>res.json()).subscribe((res)=>{
                 resolve(res);                    
             },(err)=>{
                 if(err.hasOwnProperty("status") && err.status==401){
@@ -118,6 +123,49 @@ export class ServerProvider{
            });
       });
   }
+
+    getShopInfo(takitId){
+        return new Promise((resolve,reject)=>{
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            console.log("takitId:"+takitId);
+            console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
+            this.get(encodeURI(this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId)).then((res)=>{
+                    console.log("res:"+JSON.stringify(res));
+                    //this.shopResponse=res.json();
+                    resolve(res);
+                },(err)=>{
+                reject("http error");  
+                });
+        });   
+    }
+
+    get(request){
+        return new Promise((resolve,reject)=>{
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            this.http.get(request,{headers: headers}).timeout(this.storageProvider.timeout).subscribe((res)=>{
+                resolve(res.json());
+            },(err)=>{
+                    if(err.hasOwnProperty("status") && err.status==401){
+                        //login again with id
+                        this.loginAgain().then(()=>{
+                            //call http post again
+                            this.http.get(request,{headers: headers}).timeout(this.storageProvider.timeout).subscribe((res)=>{
+                                resolve(res.json());  
+                            },(err)=>{
+                                reject("NetworkFailure");
+                            });
+                        },(err)=>{
+                            reject(err);
+                        });
+                    }else{
+                        reject("NetworkFailure");
+                    }
+            });
+        });
+    }
+
 
 }
 

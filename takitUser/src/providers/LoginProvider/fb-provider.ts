@@ -3,6 +3,7 @@ import {Http,Headers} from '@angular/http';
 import {Facebook} from 'ionic-native';
 import {Platform} from 'ionic-angular';
 import {StorageProvider} from '../storageProvider';
+import { Device } from 'ionic-native';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -123,7 +124,7 @@ export class FbProvider {
       return new Promise((resolve, reject)=>{
               console.log("facebookServerLogin facebookid"+facebookid);
 
-              let body = JSON.stringify({referenceId:"facebook_"+facebookid,token:token});
+              let body = JSON.stringify({referenceId:"facebook_"+facebookid,token:token,uuid:Device.uuid});
 
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
@@ -142,9 +143,16 @@ export class FbProvider {
   facebookServerSignup(facebookid,name,email,country,phone,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("facebookServerSignup !!!");
+              let receiptIssueVal;
+              if(receiptIssue){
+                    receiptIssueVal=1;
+              }else{
+                    receiptIssueVal=0;
+              }
               let body = JSON.stringify({referenceId:facebookid,name:name,
                                             email:email,country:country,phone:phone,
-                                            receiptIssue:receiptIssue,receiptId:receiptId,receiptType:receiptType});
+                                            receiptIssue:receiptIssueVal,receiptId:receiptId,receiptType:receiptType,
+                                            uuid:Device.uuid});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server: "+ this.storageProvider.serverAddress+ " body:"+body);

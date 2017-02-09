@@ -16,6 +16,8 @@ import {EmailProvider} from '../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../providers/LoginProvider/kakao-provider';
 import {StorageProvider} from '../providers/storageProvider';
 import {Storage} from '@ionic/storage';
+import { Device } from 'ionic-native';
+
 declare var cordova:any;
 
 @Component({
@@ -37,7 +39,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
         StatusBar.styleDefault();
 
-        console.log("platform ready comes");
+        console.log("platform ready comes uuid:"+Device.uuid);
         if(Network.connection=="none"){
             //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
             //Please check current page and then move into ErrorPage!

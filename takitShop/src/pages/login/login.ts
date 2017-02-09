@@ -249,7 +249,7 @@ export class LoginPage {
   emailReset(event){
       console.log("Please send an email with reset password");
   }
-
+/*
   scrollUpForKeypad(event){
         console.log("onFocusPassword");
         let dimensions = this.loginPageRef.getContentDimensions();
@@ -257,7 +257,7 @@ export class LoginPage {
         if(this.scrollTop>= dimensions.scrollTop)
             this.loginPageRef.scrollTo(0, dimensions.contentHeight);
   }
-
+*/
   emailLoginSelect(event){
       this.emailHide=!this.emailHide;      
   }

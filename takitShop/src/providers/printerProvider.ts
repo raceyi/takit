@@ -21,10 +21,10 @@ export class PrinterProvider{
     scanPrinter(){
         return new Promise((resolve,reject)=>{
             console.log("scanPrinter");
+            this.printerlist=[];
             BTPrinter.list((data)=>{
                 console.log("Success");
                 console.log(data); //list of printer in data array
-                //var printerlist=[];
                 
                 var printers=JSON.parse(data); 
                 for(var i=0;i<printers.length;i++){
@@ -102,6 +102,7 @@ export class PrinterProvider{
   }
 
     print(title,message){
+        console.log("print");
          return new Promise((resolve,reject)=>{
             if(this.printerStatus=="connected"){
                 BTPrinter.printText((data)=>{

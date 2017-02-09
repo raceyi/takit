@@ -61,7 +61,7 @@ export class ErrorPage{
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
                                         // How to show user a message here? move into error page?
                                         // Is it possible to show alert here?
-                                    this.app.getRootNav().setRoot(MultiloginPage);
+                                    this.app.getRootNav().setRoot(MultiloginPage,{id:"facebook"});
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
                                     //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
@@ -90,7 +90,7 @@ export class ErrorPage{
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
                                         // How to show user a message here? move into error page?
                                         // Is it possible to show alert here?
-                                    this.app.getRootNav().setRoot(MultiloginPage);
+                                    this.app.getRootNav().setRoot(MultiloginPage,{id:"kakao"});
                                 }else{
                                     console.log("invalid result comes from server-"+JSON.stringify(res));
                                     //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
@@ -116,7 +116,7 @@ export class ErrorPage{
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
                                         // How to show user a message here? move into error page?
                                         // Is it possible to show alert here?
-                                    this.app.getRootNav().setRoot(MultiloginPage);
+                                    this.app.getRootNav().setRoot(MultiloginPage,{id:id});
                                 }else{ 
                                     console.log("사용자 정보에 문제가 발생했습니다. 로그인 페이지로 이동합니다.");
                                     this.app.getRootNav().setRoot(LoginPage);

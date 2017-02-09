@@ -22,9 +22,9 @@ export class EmailProvider{
 
             this.http.post(this.storageProvider.serverAddress+"/shop/emailLogin",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                 console.log("res:"+JSON.stringify(res));
-                let result={result:res.result,userInfo:res.userInfo};
-                console.log("result:"+JSON.stringify(result));
-                resolve(result); // 'success'(move into home page) or 'invalidId'(move into signup page)
+                //let result={result:res.result,userInfo:res.userInfo};
+                //console.log("result:"+JSON.stringify(result));
+                resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)
             },(err)=>{
                  console.log("emailLogin no response");
                  reject("emailLogin no response");

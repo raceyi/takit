@@ -19,7 +19,7 @@ export class PrinterPage {
   constructor(private navController: NavController, private navParams: NavParams,public printerProvider:PrinterProvider,
                 private alertController:AlertController,private ngZone:NgZone,public storage:Storage,
                 public storageProvider:StorageProvider){
-           console.log("PrinterPage construtor");
+           console.log("PrinterPage construtor-printOn"+this.storageProvider.printOn);
   }
 
    ionViewDidLoad(){
@@ -71,6 +71,7 @@ export class PrinterPage {
 
   connectPrinter(){
       this.printerProvider.connectPrinter().then((status)=>{
+                console.log("connectPrinter:"+status);
                 this.printerStatus=status;
                 if(status=="lost"){
                     let alert = this.alertController.create({
@@ -90,6 +91,7 @@ export class PrinterPage {
                 }else{
                     //////////////////////////////////
                     // connected, connecting
+                    console.log("connected or connecting status");
                 }
       },(err)=>{
                 console.log("fail to connect");

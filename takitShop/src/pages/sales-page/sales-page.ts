@@ -49,6 +49,12 @@ export class SalesPage {
 
   }
 
+   sortBySales(array) {
+    return array.sort(function(a, b) {       
+        return ((parseInt(a.menuSales) > parseInt(b.menuSales)) ? -1 : ((parseInt(a.menuSales) < parseInt(b.menuSales)) ? 1 : 0));
+    });
+   }
+
   searchPeriod(){
    if(this.startDate==undefined || this.endDate==undefined){
       // 시작일과 종료일을 설정해 주시기 바랍니다. 
@@ -92,8 +98,13 @@ export class SalesPage {
       this.serverProvider.post("/shop/getSalesAndSatas",body).then((res:any)=>{
             if(res.result=="success"){
                   // show sales info
-                  this.statistics=res.stats;
-                  this.sales=res.sales;
+                   this.sales=res.sales;
+                   let stats=[];
+                   for(var i=0;i<res.stats.length;i++)
+                        if(res.stats[i].menuSales!=undefined && res.stats[i].menuSales!=null && res.stats[i].menuSales!='0'){
+                            stats.push(res.stats[i]);
+                        }
+                   this.statistics=this.sortBySales(stats);
             }else{
                   let alert = this.alertController.create({
                       title: '상점의 매출 정보를 알수 없습니다.',
@@ -104,7 +115,7 @@ export class SalesPage {
             }
         },(err)=>{
               if(err=="NetworkFailure"){
-                console.log("/shop/getAccount error"+body);
+                console.log("/shop/getSalesAndSatas error"+body);
                   let alert = this.alertController.create({
                                     title: '서버와 통신에 문제가 있습니다',
                                     subTitle: '네트웍상태를 확인해 주시기바랍니다',
@@ -130,8 +141,15 @@ export class SalesPage {
         this.serverProvider.post("/shop/getSalesAndSatas",body).then((res:any)=>{
             if(res.result=="success"){
                   // show sales info
-                  this.statistics=res.stats;
-                  this.sales=res.sales;
+                   this.sales=res.sales;
+                   let stats=[];
+                   for(var i=0;i<res.stats.length;i++)
+                        if(res.stats[i].menuSales!=undefined && res.stats[i].menuSales!=null && res.stats[i].menuSales!='0'){
+                            stats.push(res.stats[i]);
+                        }
+//                   console.log("stats:"+JSON.stringify(stats));
+                   this.statistics=this.sortBySales(stats);
+//                   console.log("statistics:"+JSON.stringify(this.statistics));
             }else{
                   let alert = this.alertController.create({
                       title: '상점의 매출 정보를 알수 없습니다.',
@@ -142,7 +160,7 @@ export class SalesPage {
             }
         },(err)=>{
               if(err=="NetworkFailure"){
-                console.log("/shop/getAccount error"+body);
+                console.log("/shop/getSalesAndSatas error"+body);
                   let alert = this.alertController.create({
                                     title: '서버와 통신에 문제가 있습니다',
                                     subTitle: '네트웍상태를 확인해 주시기바랍니다',

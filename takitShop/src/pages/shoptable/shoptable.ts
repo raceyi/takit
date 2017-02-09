@@ -87,6 +87,11 @@ export class ShopTablePage {
           });
           
           cordova.plugins.backgroundMode.enable(); //takitShop always runs in background Mode
+          //get shopInfo from server
+          this.serverProvider.getShopInfo(this.storageProvider.myshop.takitId).then((res:any)=>{
+              console.log("shopInfo:"+JSON.stringify(res));
+              this.storageProvider.shopInfoSet(res.shopInfo);
+          });
 
    if(this.platform.is("android")){
    // register backbutton handler
@@ -439,6 +444,48 @@ export class ShopTablePage {
       });   
     }
     
+    printCancel(order){
+      if(this.storageProvider.printOn==false)
+        return;
+      if(!this.platform.is("android")){ //Not yet supported
+        return;
+      }      
+      var title,message="";
+      if(order.orderStatus=="cancelled"){
+        title="**주문취소["+order.orderNO+"]";
+        order.orderListObj.menus.forEach((menu)=>{
+            message+="-------------\n";
+            message+=" "+menu.menuName+"("+menu.quantity+")\n"; 
+            menu.options.forEach((option)=>{
+              message+=" "+option.name;
+              if(option.select!=undefined){
+                  message+="("+option.select+")";
+              }
+              message+="\n";
+            });
+        });
+      }
+      this.printerProvider.print(title,message).then(()=>{
+             console.log("print successfully");
+      },(err)=>{
+            if(err=="printerUndefined"){
+              let alert = this.alertController.create({
+                  title: '앱에서 프린터 설정을 수행해 주시기 바랍니다.',
+                  buttons: ['OK']
+              });
+              alert.present();
+            }else{
+              let alert = this.alertController.create({
+                  title: '주문출력에 실패했습니다.',
+                  subTitle: '프린터상태를 확인해주시기바랍니다.',
+                  buttons: ['OK']
+              });
+              alert.present();
+            }
+      });
+        
+    }
+
     printOrder(order){
       if(this.storageProvider.printOn==false)
         return;
@@ -446,8 +493,8 @@ export class ShopTablePage {
         return;
       }
       var title,message="";
-
-      if(order.orderStatus=="paid"){
+      console.log("order:"+JSON.stringify(order));
+      if(order.orderStatus=="paid" ||order.orderStatus=="checked"){
           title="주문["+order.orderNO+"]";
           if(order.takeout!='0')          
             title+="Takeout";
@@ -463,21 +510,64 @@ export class ShopTablePage {
               });
               
           });
-      }else if(order.orderStatus=="cancelled"){
-          title="**주문취소["+order.orderNO+"]";
+      }else if(order.orderStatus=="completed"){ //print receipt
+          title="        영수증\n";
+          message+="상   호:"+this.storageProvider.currentShopname()+"\n";
+          message+="사업자번호:"+this.storageProvider.shopInfo.businessNumber+"\n";
+          message+="주   소:"+this.storageProvider.shopInfo.address+"\n";
+          message+="전화번호:"+ this.storageProvider.shopInfo.shopPhone;
+          message+="\n";
+          message+=order.localOrderedTime;
+          message+="\n";
           order.orderListObj.menus.forEach((menu)=>{
               message+="-------------\n";
               message+=" "+menu.menuName+"("+menu.quantity+")\n"; 
               menu.options.forEach((option)=>{
                 message+=" "+option.name;
                 if(option.select!=undefined){
-                   message+="("+option.select+")";
+                  message+="("+option.select+")";
+                }
+                message+=menu.quantity*option.price+"\n";
+              });
+              message+=" "+menu.amount;
+          });          
+          message+="\n";
+          let totalAmount=order.amount;
+          let tax=Math.round(totalAmount/11.0);
+          let amount=totalAmount-tax;
+          message+="판매금액  "+amount +"원";
+          message+="부가가치세  "+tax +"원";
+          message+="합계     "+totalAmount+"원";
+      }else if(order.orderStatus=="cancelled" && order.cancelReason!='고객접수취소'){ //print refund receipt
+          title="        영수증\n";
+          message+="상   호:"+this.storageProvider.currentShopname()+"\n";
+          message+="사업자번호:"+this.storageProvider.shopInfo.businessNumber+"\n";
+          message+="주   소:"+this.storageProvider.shopInfo.address;
+          message+="전화번호:"+ this.storageProvider.shopInfo.shopPhone;
+          message+="\n";
+          message+=order.localCancelledTime;
+          message+="\n";
+          order.orderListObj.menus.forEach((menu)=>{
+              message+="-------------\n";
+              message+=" "+menu.menuName+"(-"+menu.quantity+")\n"; 
+              menu.options.forEach((option)=>{
+                message+=" "+option.name;
+                if(option.select!=undefined){
+                  message+="("+option.select+")";
                 }
                 message+="\n";
               });
-          });
-      }else
-        return;
+          });          
+          message+="\n";
+          let totalAmount=order.amount;
+          let tax=Math.round(totalAmount/11.0);
+          let amount=totalAmount-tax;
+          message+="판매금액  -"+amount +"원";
+          message+="부가가치세  -"+tax +"원";
+          message+="합계     -"+totalAmount+"원";          
+
+
+      }
 
       this.printerProvider.print(title,message).then(()=>{
              console.log("print successfully");
@@ -587,7 +677,7 @@ export class ShopTablePage {
                         }else{
                            this.orders[i]=this.convertOrderInfo(incommingOrder);   
                            if(this.orders[i].orderStatus=="cancelled"){
-                                  this.printOrder(this.orders[i]);
+                                  this.printCancel(this.orders[i]);
                            }
                         }
                         console.log("orders update:"+JSON.stringify(this.orders));
@@ -690,6 +780,7 @@ export class ShopTablePage {
                  order.statusString="취소"; 
                  order.cancelReasonString=cancelReason;
                  order.cancelledTime=new Date().toISOString();
+                 order.localCancelledTime=new Date().toString(); // Temporary code. Please set this value with the response value of server.
                  order.hidden=true;
                 resolve();
             }else{
@@ -911,6 +1002,7 @@ export class ShopTablePage {
   }
 
   enableGotNoti(){
+    console.log("enableGotNoti"+ this.storageProvider.amIGotNoti);
     if(this.storageProvider.amIGotNoti==false){
           let confirm = this.alertController.create({
             title: '주문알림을 받으시겠습니까?',

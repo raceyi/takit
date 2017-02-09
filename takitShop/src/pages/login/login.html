@@ -12,11 +12,11 @@
         <ion-list [hidden]="emailHide">
           <ion-item>
              <ion-label fixed>이메일</ion-label>
-            <ion-input type="email" [focuser]="focusEmail" (focus)="scrollUpForKeypad($event)" [(ngModel)]="email"></ion-input>
+            <ion-input type="email" [focuser]="focusEmail" [(ngModel)]="email"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label fixed>비밀번호</ion-label>
-            <ion-input type="password" full [focuser]="focusPassword" (focus)="scrollUpForKeypad($event)" [(ngModel)]= "password" ></ion-input>
+            <ion-input type="password" full [focuser]="focusPassword"  [(ngModel)]= "password" ></ion-input>
           </ion-item>
             <ion-row>
             <ion-col>

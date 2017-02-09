@@ -3,6 +3,7 @@ import {Http,Headers} from '@angular/http';
 import {AppAvailability,InAppBrowserEvent,InAppBrowser} from 'ionic-native';
 import {Platform} from 'ionic-angular';
 import {StorageProvider} from '../storageProvider';
+import { Device } from 'ionic-native';
 import 'rxjs/add/operator/map';
 declare var KakaoTalk:any;
 
@@ -161,7 +162,7 @@ export class KakaoProvider {
   kakaoServerLogin(kakaoid,kakaoProvider:KakaoProvider){
       return new Promise((resolve, reject)=>{
               console.log("kakaoServerLogin");
-              let body = JSON.stringify({referenceId:"kakao_"+kakaoid});
+              let body = JSON.stringify({referenceId:"kakao_"+kakaoid,uuid:Device.uuid});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ kakaoProvider.storageProvider.serverAddress);
@@ -179,9 +180,16 @@ export class KakaoProvider {
   kakaoServerSignup(kakaoid:string,country:string,phone:string,email:string,name:string,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("kakaoServerSignup");
+              let receiptIssueVal;
+              if(receiptIssue){
+                    receiptIssueVal=1;
+              }else{
+                    receiptIssueVal=0;
+              }
               let body = JSON.stringify({referenceId:kakaoid,name:name,
                                             email:email,country:country,phone:phone,
-                                            receiptIssue:receiptIssue,receiptId:receiptId,receiptType:receiptType});
+                                            receiptIssue:receiptIssueVal,receiptId:receiptId,receiptType:receiptType,
+                                            uuid:Device.uuid});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress);
