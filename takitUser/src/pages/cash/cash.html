@@ -67,33 +67,73 @@
             </ion-item>
             </ion-col>
             </ion-row>
-
-            <ion-item>
+<!--
+    <ion-row>
+      <ion-col width-10 class="collapse">
+      <ion-icon name="add-circle" [hidden]="!cashExplainHidden" (click)="expand()"></ion-icon>
+      <ion-icon name="remove-circle" [hidden]="cashExplainHidden" (click)="collapse()"></ion-icon>
+      </ion-col>
+      <ion-col class="orderInfo title" width-90>
+       <button  ion-button clear small color="black" (click)="toggle()"> 자세히 보기</button>  
+      </ion-col>
+    </ion-row>
+    -->
+    <ion-row>
+        <button ion-button clear small color="black" (click)="toggle()"> <ion-icon [name]="cashExplainIcon" ></ion-icon> &nbsp;자세히 보기</button>  
+    </ion-row>
+    <div [hidden]="cashExplainHidden">
+             <ion-item>
                 <p class="explain" >
                 - 계좌이체시 <span style="color:red"> 받는통장 표시내용</span>에 반드시 <span style="color:red">캐쉬아이디를 입력</span>해주시기 바랍니다.
-                1회 <span style="color:red">10만원 이하</span>의 금액만 <span style="color:red">충전 가능</span>합니다. 
+                입금확인에 최대 5분이 소요될 수 있습니다. 
                 </p>
-             </ion-item> 
+                <button ion-button outline small color="primary" (click)="hrefCashIdInput()">주요은행 캐쉬아이디 입력방법</button>
+                <p>
+                -1회 <span style="color:red">10만원 이하</span>의 금액만 <span style="color:red">충전 가능</span>합니다.
+                </p>
+                <button ion-button outline small color="primary" (click)="hrefCashIdProcess()">캐쉬아이디 안전성 보기</button>
+                <p class="explain">
+                -이용제한시간 00:00~00:30 ,매달 3주 월요일 23:55~04:00
+                </p>                
+             </ion-item>
+             <!--
              <ion-item>    
                 <p class="explain">
-                - 입금확인에 최대 5분이 소요될 수 있습니다. 바로 확인하실려면 아래 <span style="color:blue">입금 바로 확인하기</span> 버튼을 클릭해주세요. 
+                - 입금확인에 최대 5분이 소요될 수 있습니다. 바로 확인하실려면 아래 <span style="color:blue">왼쪽 버튼</span> 을 클릭해주세요. 
                 </p>
              </ion-item>
+             -->
+             <!--
              <ion-item>   
                 <p class="explain">
-                - 받는통장 표시내용에 캐쉬아이디를 입력하지 않았을 시에는 아래 <span style="color:blue">입금 수동 확인하기</span>를 수행해주시기 바랍니다. 
+                - 받는통장 표시내용에 캐쉬아이디를 입력하지 않았을 시에는 아래 <span style="color:blue">오른쪽 버튼</span>을 클릭해주세요. 
                 </p>
              </ion-item>
+             -->
+         <!--    
              <ion-item>  
                 <p class="explain">
                 -이용제한시간 00:00~00:30 ,매달 3주 월요일 23:55~04:00
                 </p>
              </ion-item>
-                <button ion-button full (click)="cashInCheck(input)" [disabled]="storageProvider.cashId.length==0 || storageProvider.tourMode"> 입금 바로 확인하기 </button>
+          -->
+    </div>
 
-            <div class="cashIn-check">   
+            <ion-row>
+                <ion-col width-50 padding>
+                    <button ion-button block  (click)="cashInCheck(input)" class="confirmButton" color="primary"><div>이체후 캐쉬를 <br>바로 사용하셔야 <br>하나요? </div></button>
+                </ion-col>
+                <ion-col width-50 padding>
+                    <button ion-button block  class="confirmButton" (click)="manualCheck(true)" color="primary">
+                        <div>캐쉬아이디를 <br>잘못<br>입력하셨나요?<br><br>
+                        <span [hidden]="manualCheckHidden">아래 입금 확인하기를 <br>수행해 주세요</span>
+                        </div>
+                    </button>
+                </ion-col>
+            </ion-row>
+            
+            <div class="cashIn-check" [hidden]="manualCheckHidden">   
                 <ion-grid class="cashIn-check-table">
-
                 <ion-row center>
                     <ion-col>
                     <ion-item>
@@ -129,26 +169,7 @@
                     </ion-select>
                 </ion-item>
               </ion-col>
-             <!-- 
-              <ion-col width-40 [hidden]="storageProvider.depositBank!='0'">  
-                <ion-item>
-                    <ion-input class="cashIn-check-inputBox" [(ngModel)]="depositBankInput" type="number" ></ion-input>
-                </ion-item>
-              </ion-col>
-              <ion-col width-10 [hidden]="storageProvider.depositBank!='0'">
-                <ion-item class="selectButton">
-                    <button ion-button full class="selectButton" (click)="toggleSelectInput('depositBankTypeSelect')">선택</button>
-                </ion-item>    
-              </ion-col>
-              -->
             </ion-row>
-            <!--
-            <ion-row [hidden]="storageProvider.depositBank!='0'">
-                <p class="explain">
-                    은행코드(3자리)를 숫자로 입력해주시기 바랍니다.
-                </p>
-            </ion-row>
-              -->
             <ion-row>
               <ion-col width-50>
                 <ion-item >
@@ -168,19 +189,22 @@
 
               <ion-col width-10 [hidden]="storageProvider.depositBank=='0'">
                 <ion-item class="selectButton">
-                    <button ion-button full class="selectButton" [disabled]="storageProvider.cashId.length==0" (click)="toggleSelectInput('depositBranchTypeSelect')">선택</button>
+                    <button ion-button full class="selectButton" (click)="toggleSelectInput()">선택</button>
                 </ion-item>
               </ion-col>    
             </ion-row>
+         <!--   
             <ion-row>
                 <p class="explain" [hidden]="storageProvider.depositBranch=='codeInput'">
-                    입금 계좌의 관리(지)점입니다. 
+                    입금 계좌의 관리지점입니다.  
                 </p>
             </ion-row>
+            -->            
             <ion-row [hidden]="storageProvider.depositBranch!='codeInput'">
-                <p class="explain">
-                    입금 계좌의 관리(지)점입니다. 지점코드(7자리)를 숫자로 입력해주시기 바랍니다. 
-                </p>
+                <button ion-button clear small>지점코드(7자리숫자)조회방법</button>
+            </ion-row>
+            <ion-row [hidden]="storageProvider.depositBranch=='codeInput'">
+                <button ion-button clear small (click)="hrefBankBranch">주요은행 거래지점확인방법</button>
             </ion-row>
             <ion-row center>
             <ion-col>
@@ -194,9 +218,18 @@
             </ion-item>
             </ion-col>
             </ion-row>
-            <ion-item>
-            <button ion-button block (click)="cashInComplete(event)" [disabled]="storageProvider.cashId.length==0 || storageProvider.tourMode">입금 수동 확인하기</button>
-            </ion-item>
+            <ion-row>
+                <ion-col width-50>
+                    <ion-item>
+                    <button ion-button full (click)="manualCheck(false)">취소</button>
+                    </ion-item>
+                </ion-col>
+                <ion-col  width-50>
+                    <ion-item>
+                    <button ion-button full (click)="cashInComplete(event)">입금 확인하기</button>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
             </ion-grid>   
             </div>
             <div class="dummy">

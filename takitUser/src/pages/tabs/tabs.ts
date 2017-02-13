@@ -14,6 +14,7 @@ import {Http,Headers} from '@angular/http';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {Storage} from '@ionic/storage';
+import { TranslateService} from 'ng2-translate/ng2-translate';
 
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/map';
@@ -37,12 +38,23 @@ export class TabsPage {
   
   public isTestServer=false;
 
-  constructor(public modalCtrl: ModalController,private navController: NavController,private app:App,private platform:Platform,public viewCtrl: ViewController,
+  lang=navigator.language;
+
+  constructor(translateService: TranslateService, public modalCtrl: ModalController,private navController: NavController,private app:App,private platform:Platform,public viewCtrl: ViewController,
     public storageProvider:StorageProvider,private http:Http, private alertController:AlertController,private ionicApp: IonicApp,
     private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider,public storage:Storage) {
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
         }    
+    console.log("navigator.language:"+navigator.language);   
+    if(!navigator.language.startsWith("ko")){
+        translateService.setDefaultLang('en');
+        translateService.use('en');
+    }else{
+        translateService.setDefaultLang('ko');
+        translateService.use('ko');
+    }
+    
     // this tells the tabs component which Pages
     // should be each tab's root Page
     this.tabHome = HomePage;
@@ -166,6 +178,7 @@ export class TabsPage {
 
  if(this.storageProvider.tourMode==false){    
     //open database file
+        console.log("open db");
         this.storageProvider.open().then(()=>{
 
         },()=>{
@@ -387,7 +400,7 @@ export class TabsPage {
             }
         });
  }else{
-        console.log("tour mode is true");
+        console.log("tour mode is true-openDB");
         this.storageProvider.open().then(()=>{
 
         },()=>{
@@ -408,21 +421,23 @@ export class TabsPage {
   }
 
   ionViewWillUnload(){
-    console.log("!!!ionViewWillUnload-tabs!!!");
+    console.log("!!!ionViewWillUnload-tabs-tourMode:"+this.storageProvider.tourMode);
     if(this.storageProvider.tourMode==true){
         //drop table
-        console.log("tourMode drop table");
+        console.log("tourMode drop table this.storageProvider.db:"+this.storageProvider.db);
         this.storageProvider.dropCartInfo().then(()=>{
             this.storageProvider.db.close();    
         },()=>{
             this.storageProvider.db.close();
         });
     }else{
-        this.storageProvider.db.close(()=>{
+        if(this.storageProvider.db!=undefined){
+            this.storageProvider.db.close(()=>{
 
-        },(err)=>{
-            console.log("!!!fail to close db!!!");
-        });
+            },(err)=>{
+                console.log("!!!fail to close db!!!");
+            });
+        }
     }
   }
 
@@ -436,6 +451,40 @@ export class TabsPage {
 
   cash(event){
      console.log("cash tab selected"); 
+     if(this.storageProvider.cashId==undefined || this.storageProvider.cashId.length==0){
+         this.storage.get("cashDetailAlert").then((value)=>{
+            console.log("cashDetailAlert:"+value);
+         },(err)=>{
+             let alert = this.alertController.create({
+                        title: "타킷 고유의 캐쉬 서비스",
+                        message: "자세히 보기를 클릭하여 캐쉬아이디에 대해 알아보세요",
+                        inputs: [
+                                    {
+                                    name: 'getLink',
+                                    label: '다시 보지 않음',
+                                    type: "checkbox",
+                                    value: "true",
+                                    checked: false
+                                    }
+                                ],
+                        buttons: [
+                                    {
+                                    text: '확인',//'Ok',
+                                    handler: data => {
+                                        console.log(data);
+                                        if(data=="true"){
+                                            this.storage.set("cashDetailAlert","false");
+                                            console.log("Do not show Alert again.");
+                                        }else{
+                                            console.log("Show Alert again.");
+                                        }
+                                    }
+                                    }
+                                ]
+                    });
+                    alert.present();
+         });
+     }
   }
 
     registerPushService(){ // Please move this code into tabs.ts
@@ -446,11 +495,12 @@ export class TabsPage {
                 },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    //"gcmSandbox": "false", code for production mode
+                    //"gcmSandbox": "false", //code for production mode
                     "gcmSandbox": "true",  //code for development mode
                     "alert": "true",
                     "sound": "true",
                     "badge": "true",
+                    //"clearBadge": "true" ios???
                 },
                 windows: {}
             });

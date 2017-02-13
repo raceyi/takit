@@ -22,6 +22,8 @@ export class ServerProvider{
   }
 
   post(request,body){
+       console.log("!!!!post:"+request);
+
        return new Promise((resolve,reject)=>{
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
@@ -129,6 +131,7 @@ export class ServerProvider{
   }
 
   get(request){
+       console.log("!!!!get:"+request);
        return new Promise((resolve,reject)=>{
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');

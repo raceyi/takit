@@ -25,7 +25,7 @@
 
 <ion-row>
   <ion-col width-45>
-  <ion-searchbar [(ngModel)]="serviceQuery" autocomplete="on" placeholder="서비스" (ionBlur)="serviceBlur()" (ionClear)="serviceClear($event)" (ionFocus)="getFocusServices($event)" (ionInput)="getServices($event)" ></ion-searchbar>
+  <ion-searchbar [(ngModel)]="serviceQuery" autocomplete="on" [placeholder]="'Service' | translate" (ionBlur)="serviceBlur()" (ionClear)="serviceClear($event)" (ionFocus)="getFocusServices($event)" (ionInput)="getServices($event)" ></ion-searchbar>
   <ion-list>
     <ion-item class="searchBarItems" *ngFor="let item of servicesShown">
      <ion-row (click)="selectTakitService(item)">
@@ -40,7 +40,7 @@
   </ion-col>
 
   <ion-col width-45>
-  <ion-searchbar class="searchBarItems" [(ngModel)]="brandQuery"  autocomplete="on" placeholder="브랜드" (ionBlur)="brandBlur()" (ionClear)="brandClear($event)" (ionFocus)="getFocusBrands($event)" (ionInput)="getBrands($event)"></ion-searchbar>
+  <ion-searchbar class="searchBarItems" [(ngModel)]="brandQuery"  autocomplete="on" [placeholder]="'Brand' | translate" (ionBlur)="brandBlur()" (ionClear)="brandClear($event)" (ionFocus)="getFocusBrands($event)" (ionInput)="getBrands($event)"></ion-searchbar>
   <ion-list>
     <ion-item *ngFor="let item of brandsShown">
      <ion-row (click)="selectTakitBrand(item)">
@@ -51,7 +51,7 @@
   </ion-col>
 </ion-row>
 <ion-row>
-<button ion-button full (click)="goToShop()">상점들어가기</button>
+<button ion-button full (click)="goToShop()">{{ 'VisitTheStore' | translate }}</button>
 </ion-row>
 </ion-item>
 </ion-list>

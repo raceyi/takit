@@ -202,6 +202,7 @@ export class MyApp {
         this.storage.remove("id"); //So far, clear() doesn't work. Please remove this line later
         this.storage.remove("refundBank");
         this.storage.remove("refundAccount");
+        this.storage.remove("cashDetailAlert");
         this.storageProvider.reset();
         this.storageProvider.dropCartInfo().then(()=>{
             console.log("move into LoginPage"); //Please exit App and then restart it.

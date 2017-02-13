@@ -38,22 +38,24 @@ $colors: (
   gray:       #afafaf,
   red:        #ff0000,
   darkgray:   #A9A9A9,
+  lightgray: #A0A0A0,
   black:      #000000	
 );
-
 
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
 $alert-ios-title-font-size:	14px;
 $alert-ios-sub-title-font-size:	14px;
-
+$alert-ios-list-border-top	 :0px;
+$alert-ios-list-border-bottom:0px;
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
 $alert-md-title-font-size: 14px;
 $alert-md-sub-title-font-size: 14px;
-
+$alert-md-list-border-top   :0px;
+$alert-md-list-border-bottom:0px;
 
 // App Windows Variables
 // --------------------------------------------------

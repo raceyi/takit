@@ -145,7 +145,7 @@ export class StorageProvider{
 
     reset(){
         console.log("storageProvider.reset");
-        
+        if(this.db!=undefined) this.db.close();
         this.db=undefined;
         this.shoplist=[];
         this.takitId=undefined; 

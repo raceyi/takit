@@ -147,7 +147,7 @@
 
     <ion-segment [hidden]="iOSOrderButtonHide">
     <ion-segment-button value="shopcart" (click)="shopcart()">장바구니 담기</ion-segment-button>
-    <ion-segment-button value="order" [disabled]="storageProvider.tourMode==true" (click)="order()">주문결제하기</ion-segment-button>
+    <ion-segment-button value="order" (click)="order()">주문결제하기</ion-segment-button>
     </ion-segment>
     <div class="orderInfo cancelNoti">
       주문접수전에는 MyPage에서 주문 취소가 가능합니다. <br>
@@ -187,7 +187,7 @@
 <ion-footer class="orderPage">
     <ion-segment [hidden]="!iOSOrderButtonHide">
     <ion-segment-button value="shopcart" (click)="shopcart()">장바구니 담기</ion-segment-button>
-    <ion-segment-button value="order" [disabled]="storageProvider.tourMode==true" (click)="order()">주문결제하기</ion-segment-button>
+    <ion-segment-button value="order" (click)="order()">주문결제하기</ion-segment-button>
     </ion-segment>
 </ion-footer>
 

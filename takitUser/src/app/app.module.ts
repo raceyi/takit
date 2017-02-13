@@ -33,6 +33,8 @@ import {BankBranchPage} from '../pages/bankbranch/bankbranch';
 import {IOSAlertPage} from '../pages/ios-alert/ios-alert';
 import {CashDepositDeletePage} from '../pages/cash-deposit-delete/cash-deposit-delete';
 import {MultiloginPage} from '../pages/multilogin/multilogin';
+import { TranslateModule, TranslateLoader,TranslateStaticLoader} from 'ng2-translate/ng2-translate';
+import {Http,Headers} from '@angular/http';
 
 import {Focuser} from '../components/focuser/focuser';
 
@@ -65,7 +67,12 @@ import {Focuser} from '../components/focuser/focuser';
     MultiloginPage,
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    TranslateModule.forRoot({
+      provide: TranslateLoader,
+      useFactory: (createTranslateLoader),
+      deps: [Http]
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -104,4 +111,9 @@ import {Focuser} from '../components/focuser/focuser';
               KakaoProvider,
               ServerProvider]
 })
+
 export class AppModule {}
+
+export function createTranslateLoader(http: Http) {
+    return new TranslateStaticLoader(http, 'assets/i18n', '.json');
+}

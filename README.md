@@ -6,6 +6,8 @@ License: GPL
 
   특허 요소가 있는 일부 기능은 GPL로도 사용불가합니다.
 
+ !!!구글플레이스토어와 애플앱스토어에서 타킷을 다운받으시면됩니다.!!!
+ 
 # takitUser
 
  $ionic start takitUser --v2

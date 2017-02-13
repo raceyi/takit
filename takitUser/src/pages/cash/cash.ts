@@ -48,6 +48,11 @@ export class CashPage {
 
   messageEmitterSubscription;
 
+  cashExplainHidden=true; // Please read this value from local storage
+  cashExplainIcon="add-circle";
+
+  manualCheckHidden=true;
+
   constructor(private app:App,private platform:Platform, private navController: NavController
         ,private navParams: NavParams,public http:Http ,private alertController:AlertController
         ,public storageProvider:StorageProvider,private serverProvider:ServerProvider
@@ -185,6 +190,20 @@ ionViewDidEnter() {
 
   cashInCheck(confirm){
       console.log("cashInCheck comes(confirm)");
+      if(this.storageProvider.cashId.length==0){
+                let alert = this.alertController.create({
+                    title: '캐쉬아이디를 설정해주시기바랍니다.',
+                    buttons: ['OK']
+                });
+                alert.present();
+      }
+      if(this.storageProvider.tourMode){
+                let alert = this.alertController.create({
+                    title: '둘러보기모드입니다.',
+                    buttons: ['OK']
+                });
+                alert.present();
+      }
       let body = JSON.stringify({});
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashInstantly",body).then((res:any)=>{
           console.log("checkCashInstantly res:"+JSON.stringify(res));
@@ -846,12 +865,8 @@ checkDepositInLatestCashlist(cashList){
     console.log("depositBranch is"+depositBranch);
   }
 
-  toggleSelectInput(type){
-        if(type=='depositBankTypeSelect'){
-            this.storageProvider.depositBank=undefined;
-            this.storageProvider.depositBranch=undefined;
-        }else if(type=='depositBranchTypeSelect'){
-            if(this.storageProvider.depositBank!='0' && this.storageProvider.depositBank.length>0){
+  toggleSelectInput(){
+            if( this.storageProvider.depositBank!=undefined && this.storageProvider.depositBank!='0' && this.storageProvider.depositBank.length>0){
                 var i;
                 for(i=0;i<this.storageProvider.banklist.length;i++){
                         if(this.storageProvider.banklist[i].value==this.storageProvider.depositBank){
@@ -867,7 +882,6 @@ checkDepositInLatestCashlist(cashList){
                     });
                     alert.present();
             }
-        }
   }
 
   checkWithrawAccount(){
@@ -1123,4 +1137,71 @@ checkDepositInLatestCashlist(cashList){
   toggleTransaction(tr){
       tr.hide=!tr.hide;
   }
+
+  expand(){
+    this.cashExplainHidden=false;
+  }
+
+  collapse(){
+    this.cashExplainHidden=true;
+  }
+
+  toggle(){
+    this.cashExplainHidden=!this.cashExplainHidden;     
+    if(this.cashExplainHidden)
+        this.cashExplainIcon="add-circle";
+    else    
+        this.cashExplainIcon="remove-circle";
+  }
+
+    manualCheck(show){
+        console.log("manualCheck "+show);
+        if(show){
+            if(this.storageProvider.cashId.length==0){
+                        let alert = this.alertController.create({
+                            title: '캐쉬아이디를 설정해주시기바랍니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+            }
+            if(this.storageProvider.tourMode){
+                        let alert = this.alertController.create({
+                            title: '둘러보기모드입니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+            }
+            this.manualCheckHidden=false;
+        }else{
+            this.manualCheckHidden=true;
+        }
+    }
+
+    hrefCashIdInput(){
+        console.log("hrefCashIdInput");
+        if(this.storageProvider.isAndroid){
+            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'toolbar=no');
+        }else{ // ios
+            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'location=no,closebuttoncaption=종료');
+        }
+    }
+
+    hrefCashIdProcess(){
+        console.log("hrefCashIdProcess");
+        if(this.storageProvider.isAndroid){
+            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'toolbar=no');
+        }else{ // ios
+            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'location=no,closebuttoncaption=종료');
+        }
+    }
+
+    hrefBankBranch(){
+        console.log("hrefBankBranch");
+        if(this.storageProvider.isAndroid){
+            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'toolbar=no');
+        }else{ // ios
+            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'location=no,closebuttoncaption=종료');
+        }         
+    }
+
 }

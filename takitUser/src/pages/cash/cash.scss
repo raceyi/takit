@@ -412,4 +412,39 @@ page-cash{
     .cashHistoryDummy{
         height:60vh;
     }
+
+    .confirmButton{
+        height:15vh;   
+    }
+
+    .collapse{
+        padding-left:15px;
+        padding-top:0px;
+        padding-bottom: 0px;
+        padding-right: 0px;
+
+        button{
+            background-color:white;
+            color:inherit;
+            box-shadow:none;
+        }
+        span{
+            display:block;
+        }
+        .button-icon-only ion-icon{
+            font-size:1.2em;
+            line-height:inherit;
+        }
+    }
+
+    .button-outline-md-primary {
+        border-color: #3578e9;
+    }
+    .button-outline-md {
+        border-color: #3578e9;
+    }
+    .button-outline-ios {
+        border-color: #3578e9;
+    }
+
 }
