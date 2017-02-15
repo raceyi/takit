@@ -47,6 +47,8 @@ export class UserInfoPage{
     receiptId:string;
     receiptType:string="IncomeDeduction";      
 
+    passwordChange=false;
+
      constructor(public storageProvider:StorageProvider,private alertController:AlertController
         ,private app: App,private navController: NavController, private navParams: NavParams
         ,private serverProvider:ServerProvider,public ngZone:NgZone,private http:Http
@@ -367,7 +369,7 @@ export class UserInfoPage{
             return;
       }
        console.log("modify-3");
-      if(this.loginMethod=="이메일" && !this.passwordValidity(this.password)){
+      if(this.loginMethod=="이메일" && this.passwordChange &&!this.passwordValidity(this.password)){
           this.paswordGuideHide=false;
           if(this.storageProvider.isAndroid)
                 this.focusPassword.emit(true);
@@ -377,7 +379,7 @@ export class UserInfoPage{
       }
 
        console.log("modify-4"); 
-      if(this.loginMethod=="이메일" && this.password!=this.passwordCheck){
+      if(this.loginMethod=="이메일" && this.passwordChange && this.password!=this.passwordCheck){
           console.log("password:"+this.password+ "passwordCheck:"+this.passwordCheck);
           this.passwordMatch=false;
           if(this.storageProvider.isAndroid)
@@ -469,5 +471,14 @@ export class UserInfoPage{
          });
      }
 
+    changePassword(){
+        this.passwordChange=true;
+    }
+
+    cancelChangePassword(){
+        this.passwordChange=false;
+        this.password="";
+        this.passwordCheck="";
+    }
 }
 
