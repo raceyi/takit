@@ -42,6 +42,8 @@ export class OrderPage {
 
   iOSOrderButtonHide=true;
   
+  lang;
+
   @ViewChild('quantityNum') inputNumRef: TextInput;
 
   constructor(private app:App,private navController: NavController,private http:Http,private navParams: NavParams,
@@ -49,6 +51,11 @@ export class OrderPage {
         private platform:Platform,public storageProvider:StorageProvider,
         private ngZone:NgZone,private serverProvider:ServerProvider) {
 
+      if(!navigator.language.startsWith("ko")){
+          this.lang="en";
+      }else{
+          this.lang="ko";
+      }
       console.log("receiptIssue:"+this.storageProvider.receiptIssue);
       if(this.storageProvider.receiptIssue){
             this.receiptIdMask=this.storageProvider.receiptId.substr(0,3)+"****"+this.storageProvider.receiptId.substr(7,this.storageProvider.receiptId.length-7);
@@ -71,9 +78,11 @@ export class OrderPage {
          this.takeoutAvailable=true;
          this.takeout=false;
       }
+      console.log("hum....--1");
       if(this.menu.hasOwnProperty("options") 
       //&& Array.isArray(this.menu.options)
       && this.menu.options!=null && this.menu.options.length>0){
+          console.log("hum...-1.1");
           this.hasOptions=true;         
           this.options=JSON.parse(this.menu.options);
           this.options.forEach((option)=>{
@@ -89,7 +98,8 @@ export class OrderPage {
               }
           });
       }
-      
+      console.log("hum....--2");
+
       this.quantityInputType="select";
 
       /* It doesn't work in ios 

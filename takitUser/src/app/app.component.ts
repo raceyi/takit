@@ -15,6 +15,8 @@ import {FbProvider} from '../providers/LoginProvider/fb-provider';
 import {EmailProvider} from '../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../providers/LoginProvider/kakao-provider';
 import {StorageProvider} from '../providers/storageProvider';
+import {TranslateService} from 'ng2-translate/ng2-translate';
+
 import {Storage} from '@ionic/storage';
 import { Device } from 'ionic-native';
 
@@ -31,7 +33,8 @@ export class MyApp {
   constructor(platform: Platform,public storageProvider:StorageProvider,
                 public storage:Storage,public app:App,
                 public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
-                public emailProvider:EmailProvider,public alertCtrl:AlertController) {
+                public emailProvider:EmailProvider,public alertCtrl:AlertController,
+                public translateService: TranslateService) {
     console.log("platform ready comes");
 
     platform.ready().then(() => {
@@ -257,19 +260,31 @@ export class MyApp {
                     console.log("facebook-logout failure");
                     console.log("logout err:"+err);
                     if(err=="NetworkFailure"){
-                        let alert = this.alertCtrl.create({
-                            title: '서버와 통신에 문제가 있습니다',
-                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                            buttons: ['OK']
-                        });
-                        alert.present();
+                        this.translateService.get('NetworkProblem').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('checkNetwork').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
                     }else{
-                        let alert = this.alertCtrl.create({
-                            title: '로그아웃에 실패했습니다.',
-                            subTitle: '잠시후 다시 실도해 주시기 바랍니다.',
-                            buttons: ['OK']
-                        });
-                        alert.present();
+                        this.translateService.get('LogoutFailed').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('TryItAgainLater').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
                     }
                     //cordova.plugins.backgroundMode.disable();
                     //this.removeStoredInfo();
@@ -285,19 +300,31 @@ export class MyApp {
                     console.log("kakao-logout failure");
                     console.log("logout err:"+err);
                     if(err=="NetworkFailure"){
-                        let alert = this.alertCtrl.create({
-                            title: '서버와 통신에 문제가 있습니다',
-                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                            buttons: ['OK']
-                        });
-                        alert.present();
+                        this.translateService.get('NetworkProblem').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('checkNetwork').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
                     }else{
-                        let alert = this.alertCtrl.create({
-                            title: '로그아웃에 실패했습니다.',
-                            subTitle: '잠시후 다시 실도해 주시기 바랍니다.',
-                            buttons: ['OK']
-                        });
-                        alert.present();
+                        this.translateService.get('LogoutFailed').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('TryItAgainLater').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
                     }
                     //cordova.plugins.backgroundMode.disable();
                     //this.removeStoredInfo();
@@ -310,19 +337,31 @@ export class MyApp {
                 },(err)=>{
                     console.log("logout err:"+err);
                     if(err=="NetworkFailure"){
-                        let alert = this.alertCtrl.create({
-                            title: '서버와 통신에 문제가 있습니다',
-                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                            buttons: ['OK']
-                        });
-                        alert.present();
+                        this.translateService.get('NetworkProblem').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('checkNetwork').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
                     }else{
-                        let alert = this.alertCtrl.create({
-                            title: '로그아웃에 실패했습니다.',
-                            subTitle: '잠시후 다시 실도해 주시기 바랍니다.',
-                            buttons: ['OK']
-                        });
-                        alert.present();
+                        this.translateService.get('LogoutFailed').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('TryItAgainLater').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
                     }
                     //cordova.plugins.backgroundMode.disable();
                     //this.removeStoredInfo();

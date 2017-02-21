@@ -44,6 +44,7 @@ export class ShopHomePage {
   constructor(private app:App, private platform: Platform, private navController: NavController
       ,private navParams: NavParams,private http:Http,private storageProvider:StorageProvider
       ,private alertController:AlertController,private serverProvider:ServerProvider) {
+          console.log("ShopHomePage");
   }
 
   ionViewDidEnter(){
@@ -65,24 +66,32 @@ export class ShopHomePage {
                 var no:string=menu.menuNO.substr(menu.menuNO.indexOf(';')+1);
                 //console.log("category.category_no:"+category.categoryNO+" no:"+no);
                 if(no==category.categoryNO){
-                menu.filename=encodeURI(this.storageProvider.awsS3+menu.imagePath);
-                menu.category_no=no;
-                //console.log("menu.filename:"+menu.filename);
-                let menu_name=menu.menuName.toString();
-                //console.log("menu.name:"+menu_name);
-                if(menu_name.indexOf("(")>0){
-                    //console.log("name has (");
-                    menu.menuName = menu_name.substr(0,menu_name.indexOf('('));
-                    //console.log("menu.name:"+menu.name);
-                    menu.description = menu_name.substr(menu_name.indexOf('('));
-                    menu.descriptionHide=false;
-                }else{
-                    menu.descriptionHide=true;
+                    menu.filename=encodeURI(this.storageProvider.awsS3+menu.imagePath);
+                    menu.category_no=no;
+                    //console.log("menu.filename:"+menu.filename);
+
+                    let menu_name=menu.menuName.toString();
+                    //console.log("menu.name:"+menu_name);
+                    if(navigator.language.startsWith("ko") && menu_name.indexOf("(")>0){
+                        //console.log("name has (");
+                        menu.menuName = menu_name.substr(0,menu_name.indexOf('('));
+                        //console.log("menu.name:"+menu.name);
+                        menu.description = menu_name.substr(menu_name.indexOf('('));
+                        menu.descriptionHide=false;
+                    }else{
+                        menu.descriptionHide=true;
+                    }
+                    console.log("menu:"+JSON.stringify(menu));
+                    menus.push(menu);
                 }
-                menus.push(menu);
-            }
         });
-        this.categories.push({no:parseInt(category.categoryNO),name:category.categoryName,menus:menus});
+
+        if(!navigator.language.startsWith("ko") && category.categoryNameEn!=undefined && category.categoryNameEn!=null){
+            //console.log("!ko && hasEn");
+            this.categories.push({no:parseInt(category.categoryNO),name:category.categoryNameEn,menus:menus});
+        }else // Korean
+            this.categories.push({no:parseInt(category.categoryNO),name:category.categoryName,menus:menus});
+
         //console.log("[categories]:"+JSON.stringify(this.categories));
         //console.log("menus.length:"+menus.length);
         });
@@ -93,7 +102,27 @@ export class ShopHomePage {
         for(var i=0;i<category.menus.length;){
             var menus=[];
             for(var j=0;j<this.storageProvider.menusInRow && i<category.menus.length;j++,i++){
-                menus.push(category.menus[i]);
+                //console.log("menus[i]:"+JSON.stringify(category.menus[i]));
+                var menu=category.menus[i];
+                if( !navigator.language.startsWith("ko")){
+                    if(menu.menuNameEn!=undefined && menu.menuNameEn!=null){
+                        menu.menuName=menu.menuNameEn;
+                        if(menu.menuNameEn.indexOf("(")>0){
+                            //console.log("name has (");
+                            menu.menuName = menu.menuNameEn.substr(0,menu.menuNameEn.indexOf('('));
+                            //console.log("menu.name:"+menu.name);
+                            menu.description = menu.menuNameEn.substr(menu.menuNameEn.indexOf('('));
+                            menu.descriptionHide=false;
+                        }else{
+                            menu.descriptionHide=true;
+                        }
+                    }
+                    if(menu.explanationEn!=undefined && menu.explanationEn!=null)    
+                        menu.explanation=menu.explanationEn;
+                    if(menu.optionsEn!=undefined &&menu.optionsEn!=null)       
+                        menu.options=menu.optionsEn;
+                }
+                menus.push(menu);
             }
             menuRows.push({menus:menus});
         }
@@ -154,16 +183,8 @@ export class ShopHomePage {
 
         //var shop=this.storageProvider.shopResponse;
 
-        console.log("[loadShopInfo]this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
+//        console.log("[loadShopInfo]this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
 
-        /*
-        console.log("shop.menus:"+JSON.stringify(shop.menus));
-        console.log("shop.categories:"+JSON.stringify(shop.categories));
-        console.log("shop.shopInfo:"+JSON.stringify(shop.shopInfo));
-        //console.log("shop.menus.length:"+shop.menus.length);
-        */
-        //console.log("shop.categories.length:"+shop.categories.length);
-        //console.log("shop.shopInfo:"+JSON.stringify(shop.shopInfo));
         this.shop=this.storageProvider.shopResponse;
         this.shopname=this.shop.shopInfo.shopName;
         

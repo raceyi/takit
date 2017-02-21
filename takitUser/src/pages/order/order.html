@@ -12,6 +12,7 @@
    </ion-col>
    <ion-col width-50>
           <p id="imgText"><b>{{menu.menuName}}<span *ngIf="menu.description!=undefined" >{{menu.description}}</span></b><br>{{menu.price}}원</p>
+          <p *ngIf="lang=='en' && menu.explanationEn!=undefined && menu.explanationEn!=null"> {{menu.explanationEn}}</p>
    </ion-col>
    <ion-col width-20>
      <button ion-button clear id="CloseButton" (click)="closePage($event)" >취소</button>

@@ -151,7 +151,7 @@
 <ion-item [hidden]="!passwordChange">
     <ion-input [focuser]="focusPasswordCheck" type="password"  (focus)="restPasswordMatch()" placeholder="새비밀번호확인" [(ngModel)]="passwordCheck"></ion-input>
 </ion-item>
-<p [hidden]="passwordMatch">비밀번호가 일치하지 않습니다.</p> 
+<p [hidden]="!passwordChange || (passwordChange && passwordMatch)">비밀번호가 일치하지 않습니다.</p> 
 </div>
 </ion-content>
 

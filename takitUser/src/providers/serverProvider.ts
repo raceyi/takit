@@ -131,7 +131,7 @@ export class ServerProvider{
   }
 
   get(request){
-       console.log("!!!!get:"+request);
+      // console.log("!!!!get:"+request);
        return new Promise((resolve,reject)=>{
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -162,9 +162,9 @@ export class ServerProvider{
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
             console.log("takitId:"+takitId);
-            console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
+            //console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
             this.get(encodeURI(this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId)).then((res)=>{
-                    console.log("res:"+JSON.stringify(res));
+                    //console.log("res:"+JSON.stringify(res));
                     //this.shopResponse=res.json();
                     resolve(res);
                 },(err)=>{

@@ -26,10 +26,16 @@
   </ion-navbar>
 </ion-header>
 <ion-tabs  #myTabs>
+  <ion-tab [root]="tabHome" [tabTitle]="homeTitle" (ionSelect)="home($event)" tabIcon="home"></ion-tab>
+  <ion-tab [root]="tabSearch" [tabTitle]="searchTitle" (ionSelect)="search($event)" tabIcon="search"></ion-tab>
+  <ion-tab [root]="tabCash" [tabTitle]="cashTitle" (ionSelect)="cash($event)" tabIcon="cash"></ion-tab>
+
+    <!--
   <ion-tab *ngIf="lang=='ko-KR' || lang=='ko-kr'" [root]="tabHome" tabTitle="홈" (ionSelect)="home($event)" tabIcon="home"></ion-tab>
   <ion-tab *ngIf="lang=='ko-KR' || lang=='ko-kr'" [root]="tabSearch" tabTitle="상점인식" (ionSelect)="search($event)" tabIcon="search"></ion-tab>
   <ion-tab *ngIf="lang=='ko-KR' || lang=='ko-kr'" [root]="tabCash" tabTitle="캐쉬" (ionSelect)="cash($event)" tabIcon="cash"></ion-tab>
   <ion-tab *ngIf="lang!='ko-KR' && lang!='ko-kr'" [root]="tabHome" tabTitle="Home" (ionSelect)="home($event)" tabIcon="home"></ion-tab>
   <ion-tab *ngIf="lang!='ko-KR' && lang!='ko-kr'" [root]="tabSearch" tabTitle="Search" (ionSelect)="search($event)" tabIcon="search"></ion-tab>
   <ion-tab *ngIf="lang!='ko-KR' && lang!='ko-kr'" [root]="tabCash" tabTitle="Cash" (ionSelect)="cash($event)" tabIcon="cash"></ion-tab>
+   --> 
 </ion-tabs>

@@ -15,6 +15,7 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {Storage} from '@ionic/storage';
 import { TranslateService} from 'ng2-translate/ng2-translate';
+//import { MediaPlugin } from 'ionic-native';
 
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/map';
@@ -38,7 +39,9 @@ export class TabsPage {
   
   public isTestServer=false;
 
-  lang=navigator.language;
+  public homeTitle="홈";
+  public searchTitle="검색";
+  public cashTitle="캐쉬";
 
   constructor(translateService: TranslateService, public modalCtrl: ModalController,private navController: NavController,private app:App,private platform:Platform,public viewCtrl: ViewController,
     public storageProvider:StorageProvider,private http:Http, private alertController:AlertController,private ionicApp: IonicApp,
@@ -50,6 +53,9 @@ export class TabsPage {
     if(!navigator.language.startsWith("ko")){
         translateService.setDefaultLang('en');
         translateService.use('en');
+        this.homeTitle="Home";
+        this.searchTitle="Search";
+        this.cashTitle="Cash";
     }else{
         translateService.setDefaultLang('ko');
         translateService.use('ko');
@@ -454,6 +460,36 @@ export class TabsPage {
      if(this.storageProvider.cashId==undefined || this.storageProvider.cashId.length==0){
          this.storage.get("cashDetailAlert").then((value)=>{
             console.log("cashDetailAlert:"+value);
+            if(value==null){
+                let alert = this.alertController.create({
+                        title: "타킷 고유의 캐쉬 서비스",
+                        message: "자세히 보기를 클릭하여 캐쉬아이디에 대해 알아보세요",
+                        inputs: [
+                                    {
+                                    name: 'getLink',
+                                    label: '다시 보지 않음',
+                                    type: "checkbox",
+                                    value: "true",
+                                    checked: false
+                                    }
+                                ],
+                        buttons: [
+                                    {
+                                    text: '확인',//'Ok',
+                                    handler: data => {
+                                        console.log(data);
+                                        if(data=="true"){
+                                            this.storage.set("cashDetailAlert","false");
+                                            console.log("Do not show Alert again.");
+                                        }else{
+                                            console.log("Show Alert again.");
+                                        }
+                                    }
+                                    }
+                                ]
+                    });
+                    alert.present();
+            }
          },(err)=>{
              let alert = this.alertController.create({
                         title: "타킷 고유의 캐쉬 서비스",
@@ -514,6 +550,7 @@ export class TabsPage {
                   platform="android";
               }else if(this.platform.is("ios")){
                   platform="ios";
+
               }else{
                   platform="unknown";
               }
@@ -549,7 +586,13 @@ export class TabsPage {
                   let cashConfirmModal = this.modalCtrl.create(CashConfirmPage, { custom: custom });
                   cashConfirmModal.present();
 */
-                 
+/*                 
+                if(!this.storageProvider.isAndroid){
+                    console.log("ios -- data.sound:"+data.sound);
+                    var snd =  new MediaPlugin(data.sound);
+                    snd.play();
+                }
+*/                
                 console.log("[home.ts]pushNotification.on-data:"+JSON.stringify(data));
                 console.log("[home.ts]pushNotification.on-data.title:"+JSON.stringify(data.title));
                 

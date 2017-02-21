@@ -5,20 +5,20 @@
 
 <ion-content #cashContent class="cash">
     <ion-item #firstItem>
-        <ion-label class="textSet"><strong>사용가능 금액</strong></ion-label>
-        <ion-label class="available-amount"><span>{{storageProvider.cashAmount}}</span> 원</ion-label>
+        <ion-label class="textSet"><strong>{{'AvailableAmount'|translate}}</strong></ion-label>
+        <ion-label class="available-amount"><span>{{storageProvider.cashAmount}}</span> {{'won'|translate}}</ion-label>
     </ion-item>
 
     <div>
     <ion-segment [(ngModel)]="storageProvider.cashMenu">
       <ion-segment-button  value="cashIn" (click)="disableInfiniteScroll()">
-      입금하기
+        {{ 'DoDeposit' | translate }}
       </ion-segment-button>
       <ion-segment-button  value="cashHistory" (click)="enableInfiniteScroll()">
-       전체내역
+        {{ 'History' | translate }}
       </ion-segment-button>
       <ion-segment-button  value="cashOut" (click)="disableInfiniteScroll()">
-       환불받기
+        {{ 'DoWithdrawal' | translate }}
       </ion-segment-button>
     </ion-segment>
     </div>
@@ -26,18 +26,19 @@
     <div [ngSwitch]="storageProvider.cashMenu">
         <ion-list *ngSwitchCase="'cashIn'">
             <ion-item>
-                <ion-label class="textSet"><strong>캐쉬아이디(받는통장 표시내용)</strong></ion-label>
+                <ion-label class="textSet"><strong>{{'cashId'| translate}}</strong></ion-label>
             </ion-item>
             <ion-row>
-            <ion-item ion-col class="cashId">
-                <ion-input class="cashIdValue" type="text" [(ngModel)]="storageProvider.cashId" disabled placeholder="설정버튼을 눌러주세요"></ion-input>
+            <ion-item ion-col class="cashId">         
+                <ion-input class="cashIdValue" type="text" [(ngModel)]="storageProvider.cashId" disabled placeholder="{{ 'pressConfiguration' | translate }}"></ion-input>
             </ion-item>
                 <button ion-button class="config" [disabled]="storageProvider.tourMode" (click)="configureCashId()">
-                    <span>설정</span>
+                    <span *ngIf="lang=='ko'">설정</span>
+                    <span *ngIf="lang!='ko'"style="font-size:1.2rem;">setting</span>
                 </button>
             </ion-row>
 
-            <ion-row *ngIf="!storageProvider.iphone5">
+            <ion-row *ngIf="!storageProvider.iphone5 && lang=='ko'" >
                 <ion-col width-90>
             <ion-item >
                 <ion-label class="textSet" style="text-align:right;padding:0px;">입금계좌: 농협 301-2424-3636-21 (타킷주식회사)</ion-label>
@@ -52,7 +53,23 @@
             </ion-col>
             </ion-row>
 
-            <ion-row *ngIf="storageProvider.iphone5">
+            <ion-row *ngIf="lang!='ko'" >
+                <ion-col width-80>
+                <ion-item >
+                    <ion-row class="textSet" style="text-align:right;padding:0px;">Deposit account:Nonghyup</ion-row>
+                    <ion-row class="textSetEn" style="text-align:right;padding:0px;">&nbsp;&nbsp;(National agricultural cooperative federation)</ion-row>
+                    <ion-row class="textSet" >&nbsp;&nbsp;301-2424-3636-21 (타킷주식회사)</ion-row>
+                </ion-item>
+                </ion-col>
+                <ion-col width-20>
+                    <ion-item>
+                            <button ion-button full class="selectButton copyClipboardButton" color="darkgray" (click)="copyAccountInfo()">Copy</button>
+                    </ion-item>            
+                </ion-col>
+            </ion-row>
+
+
+            <ion-row *ngIf="storageProvider.iphone5 && lang=='ko'">
                 <ion-col width-80>
             <ion-item>
                 <ion-row class="textSet">&nbsp;&nbsp;&nbsp;&nbsp;입금계좌: 농협 301-2424-3636-21</ion-row>
@@ -67,66 +84,57 @@
             </ion-item>
             </ion-col>
             </ion-row>
-<!--
+            
     <ion-row>
-      <ion-col width-10 class="collapse">
-      <ion-icon name="add-circle" [hidden]="!cashExplainHidden" (click)="expand()"></ion-icon>
-      <ion-icon name="remove-circle" [hidden]="cashExplainHidden" (click)="collapse()"></ion-icon>
-      </ion-col>
-      <ion-col class="orderInfo title" width-90>
-       <button  ion-button clear small color="black" (click)="toggle()"> 자세히 보기</button>  
-      </ion-col>
+        <button ion-button clear small color="black" (click)="toggle()"> <ion-icon [name]="cashExplainIcon" ></ion-icon> &nbsp;{{'Details'| translate}} </button>  
     </ion-row>
-    -->
-    <ion-row>
-        <button ion-button clear small color="black" (click)="toggle()"> <ion-icon [name]="cashExplainIcon" ></ion-icon> &nbsp;자세히 보기</button>  
-    </ion-row>
-    <div [hidden]="cashExplainHidden">
+    <div [hidden]="cashExplainHidden" *ngIf="lang=='ko'">
              <ion-item>
                 <p class="explain" >
                 - 계좌이체시 <span style="color:red"> 받는통장 표시내용</span>에 반드시 <span style="color:red">캐쉬아이디를 입력</span>해주시기 바랍니다.
                 입금확인에 최대 5분이 소요될 수 있습니다. 
                 </p>
-                <button ion-button outline small color="primary" (click)="hrefCashIdInput()">주요은행 캐쉬아이디 입력방법</button>
+                <button ion-button outline small color="primary" (click)="hrefCashIdInput()">토스/주요은행 캐쉬아이디 입력방법</button>
                 <p>
                 -1회 <span style="color:red">10만원 이하</span>의 금액만 <span style="color:red">충전 가능</span>합니다.
                 </p>
-                <button ion-button outline small color="primary" (click)="hrefCashIdProcess()">캐쉬아이디 안전성 보기</button>
+                <button ion-button outline small color="primary" (click)="hrefCashIdProcess()">캐쉬충전 안전성</button>
                 <p class="explain">
                 -이용제한시간 00:00~00:30 ,매달 3주 월요일 23:55~04:00
                 </p>                
              </ion-item>
-             <!--
-             <ion-item>    
-                <p class="explain">
-                - 입금확인에 최대 5분이 소요될 수 있습니다. 바로 확인하실려면 아래 <span style="color:blue">왼쪽 버튼</span> 을 클릭해주세요. 
+    </div>
+    <div [hidden]="cashExplainHidden"  *ngIf="lang!='ko'">
+             <ion-item>
+                <p class="explain" >
+                - Please input <span style="color:red">cashId</span> in <span style="color:red">memo on the receiver's passbook </span> at transfer. 
+                  You will receive an alert to confirm your deposit in 5 minutes.
                 </p>
-             </ion-item>
-             -->
-             <!--
-             <ion-item>   
+                <button ion-button outline small color="primary" (click)="hrefCashIdInput()">Major banks's cashId</button>
                 <p class="explain">
-                - 받는통장 표시내용에 캐쉬아이디를 입력하지 않았을 시에는 아래 <span style="color:blue">오른쪽 버튼</span>을 클릭해주세요. 
+                -The amount of deposit must not be more than <span style="color:red">100 thousands won</span> at a time. 
                 </p>
-             </ion-item>
-             -->
-         <!--    
-             <ion-item>  
+                <button ion-button outline small color="primary" (click)="hrefCashIdProcess()">Take a look at the security of Takit cash </button>
                 <p class="explain">
-                -이용제한시간 00:00~00:30 ,매달 3주 월요일 23:55~04:00
-                </p>
+                -Service unavaiable 00:00~00:30 everyday, monday of third week every month 23:55~04:00
+                </p>                
              </ion-item>
-          -->
     </div>
 
             <ion-row>
                 <ion-col width-50 padding>
-                    <button ion-button block  (click)="cashInCheck(input)" class="confirmButton" color="primary"><div>이체후 캐쉬를 <br>바로 사용하셔야 <br>하나요? </div></button>
+                    <button ion-button block  (click)="cashInCheck(input)" class="confirmButton" color="primary">
+                        <div *ngIf="lang=='ko'">이체후 캐쉬를 <br>바로 사용하셔야 <br>하나요? </div>
+                        <div *ngIf="lang!='ko'"><p>Do you want to <br>order <br>immediately?</p></div>
+                    </button>
                 </ion-col>
                 <ion-col width-50 padding>
                     <button ion-button block  class="confirmButton" (click)="manualCheck(true)" color="primary">
-                        <div>캐쉬아이디를 <br>잘못<br>입력하셨나요?<br><br>
+                        <div *ngIf="lang=='ko'">캐쉬아이디 <br>입력을<br>잊으셨나요?<br><br>
                         <span [hidden]="manualCheckHidden">아래 입금 확인하기를 <br>수행해 주세요</span>
+                        </div>
+                        <div *ngIf="lang!='ko'">Forgot to <br>input cashId?<br>
+                        <p [hidden]="manualCheckHidden">go through <br> below box</p>
                         </div>
                     </button>
                 </ion-col>
@@ -137,7 +145,7 @@
                 <ion-row center>
                     <ion-col>
                     <ion-item>
-                    <ion-label>입금일</ion-label>
+                    <ion-label>{{'DepositDate'| translate}}</ion-label>
                     <ion-datetime displayFormat="YYYY M DD" min="2016" [(ngModel)]="transferDate"></ion-datetime>
                     </ion-item>
                     </ion-col>
@@ -145,7 +153,7 @@
                 <ion-row center>
                     <ion-col>
                         <ion-item>
-                        입금액
+                        {{'DepositAmount'| translate}}
                         </ion-item>
                     </ion-col>
                     <ion-col>
@@ -157,7 +165,7 @@
             <ion-row>
               <ion-col width-50>
                 <ion-item >
-                    <ion-label>입금은행</ion-label>
+                    <ion-label>{{'DepositBank'| translate}}</ion-label>
                 </ion-item>
               </ion-col>
               <ion-col width-50>
@@ -173,7 +181,7 @@
             <ion-row>
               <ion-col width-50>
                 <ion-item >
-                    <ion-label>거래지점</ion-label>
+                    <ion-label>{{'DepositBranch'| translate}}</ion-label>
                 </ion-item>
               </ion-col>
               <ion-col width-40 [hidden]="storageProvider.depositBranch=='codeInput'">
@@ -204,13 +212,19 @@
                 <button ion-button clear small>지점코드(7자리숫자)조회방법</button>
             </ion-row>
             <ion-row [hidden]="storageProvider.depositBranch=='codeInput'">
-                <button ion-button clear small (click)="hrefBankBranch">주요은행 거래지점확인방법</button>
+                <button ion-button clear small (click)="hrefBankBranch()">거래지점확인방법</button>
             </ion-row>
             <ion-row center>
             <ion-col>
-                <ion-item>
-                통장표시내용
+                <ion-item *ngIf="lang=='ko'">
+                <ion-row style="text-align:center">받는 통장</ion-row>
+                <ion-row style="text-align:center">표시내용 </ion-row>
                 </ion-item>
+                <ion-item *ngIf="lang!='ko'">
+                <ion-row style="text-align:center">Memo on </ion-row>
+                <ion-row style="text-align:center">the receiver's</ion-row>
+                <ion-row style="text-align:center"> passbook</ion-row>
+                </ion-item>                
             </ion-col>
             <ion-col>
             <ion-item>
@@ -221,12 +235,12 @@
             <ion-row>
                 <ion-col width-50>
                     <ion-item>
-                    <button ion-button full (click)="manualCheck(false)">취소</button>
+                    <button ion-button full (click)="manualCheck(false)">{{'cancel'| translate}}</button>
                     </ion-item>
                 </ion-col>
                 <ion-col  width-50>
                     <ion-item>
-                    <button ion-button full (click)="cashInComplete(event)">입금 확인하기</button>
+                    <button ion-button full (click)="cashInComplete(event)">{{'ConfirmDeposit'| translate}}</button>
                     </ion-item>
                 </ion-col>
             </ion-row>

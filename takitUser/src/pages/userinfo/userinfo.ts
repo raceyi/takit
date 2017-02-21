@@ -401,7 +401,7 @@ export class UserInfoPage{
           }
           return;
       }
-
+/*
         console.log("modify-6"); 
         if(this.loginMethod=="이메일" && this.existingPassword!=this.oldPassword){
                 let alert = this.alertController.create({
@@ -410,6 +410,7 @@ export class UserInfoPage{
                         });
                         alert.present();
         }
+*/        
          console.log("modify-7"); 
              let receiptIssueVal;
               if(this.receiptIssue){
@@ -417,7 +418,11 @@ export class UserInfoPage{
               }else{
                     receiptIssueVal=0;
               }
-         let body = JSON.stringify({email:this.email.trim(),
+
+         let body;
+         if(this.loginMethod=="이메일"){ 
+             if(this.passwordChange){ 
+                body= JSON.stringify({email:this.email.trim(),
                                     newPassword:this.password,
                                     oldPassword:this.oldPassword, 
                                     phone:this.userPhone.trim(), 
@@ -425,6 +430,23 @@ export class UserInfoPage{
                                     receiptIssue:receiptIssueVal,
                                     receiptId:this.receiptId,
                                     receiptType:this.receiptType});
+             }else{
+                body= JSON.stringify({email:this.email.trim(),
+                                    oldPassword:this.oldPassword, 
+                                    phone:this.userPhone.trim(), 
+                                    name:this.name.trim(),
+                                    receiptIssue:receiptIssueVal,
+                                    receiptId:this.receiptId,
+                                    receiptType:this.receiptType});
+             }
+         }else{
+            body= JSON.stringify({email:this.email.trim(),
+                                    phone:this.userPhone.trim(), 
+                                    name:this.name.trim(),
+                                    receiptIssue:receiptIssueVal,
+                                    receiptId:this.receiptId,
+                                    receiptType:this.receiptType});
+         }
 
          console.log("call modifyUserInfo "+JSON.stringify(body));
          console.log("existing password:"+this.existingPassword);
@@ -438,10 +460,12 @@ export class UserInfoPage{
                  this.storageProvider.receiptIssue=this.receiptIssue;
                  this.storageProvider.receiptId=this.receiptId;
                  this.storageProvider.receiptType=this.receiptType;
-                 var encrypted=this.storageProvider.encryptValue('password',this.password);// save email id 
-                 this.storage.set('password',encodeURI(encrypted));
-                 this.existingPassword=this.password;
-                 
+                 if(this.passwordChange){
+                    var encrypted=this.storageProvider.encryptValue('password',this.password);// save email id 
+                    this.storage.set('password',encodeURI(encrypted));
+                    this.existingPassword=this.password;
+                }
+                
                 let alert = this.alertController.create({
                             title: "회원 정보가 수정되었습니다",
                             buttons: ['OK']

@@ -12,6 +12,7 @@ import {Storage} from '@ionic/storage';
 import {BankBranchPage} from '../bankbranch/bankbranch';
 import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {IOSAlertPage} from '../ios-alert/ios-alert';
+import {TranslateService} from 'ng2-translate/ng2-translate';
 
 declare var cordova:any;
 declare var moment:any;
@@ -53,12 +54,18 @@ export class CashPage {
 
   manualCheckHidden=true;
 
+  lang;
+
   constructor(private app:App,private platform:Platform, private navController: NavController
         ,private navParams: NavParams,public http:Http ,private alertController:AlertController
         ,public storageProvider:StorageProvider,private serverProvider:ServerProvider
         ,public storage:Storage,public modalCtrl: ModalController,private ngZone:NgZone
-        ,public alertCtrl:AlertController) {
+        ,public alertCtrl:AlertController,public translateService: TranslateService) {
 
+    if(navigator.language.startsWith("ko"))        
+        this.lang="ko";
+    else
+        this.lang="en";    
     var d = new Date();
     var mm = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1); // getMonth() is zero-based
     var dd  = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
@@ -159,17 +166,25 @@ ionViewDidEnter() {
 
         },(err)=>{
             if(err=="NetworkFailure"){
+                    this.translateService.get('NetworkProblem').subscribe(
+                        value => {
                             let alert = this.alertController.create({
-                                title: "서버와 통신에 문제가 있습니다.",
+                                title: value,
                                 buttons: ['OK']
                             });
                             alert.present();
+                        }
+                    );
                 }else{
-                let alert = this.alertController.create({
-                        title: "캐쉬정보를 가져오지 못했습니다.",
-                        buttons: ['OK']
-                    });
-                        alert.present();
+                    this.translateService.get('failedGetCashData').subscribe(
+                        failedGetCashData => {
+                            let alert = this.alertController.create({
+                                title: failedGetCashData,
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    );
                 }
         });
     }
@@ -191,18 +206,28 @@ ionViewDidEnter() {
   cashInCheck(confirm){
       console.log("cashInCheck comes(confirm)");
       if(this.storageProvider.cashId.length==0){
-                let alert = this.alertController.create({
-                    title: '캐쉬아이디를 설정해주시기바랍니다.',
-                    buttons: ['OK']
-                });
-                alert.present();
+                this.translateService.get('setUpYourCashId').subscribe(
+                        setUpYourCashId => {
+                            let alert = this.alertController.create({
+                                title: setUpYourCashId,
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    );
+                return;    
       }
       if(this.storageProvider.tourMode){
-                let alert = this.alertController.create({
-                    title: '둘러보기모드입니다.',
-                    buttons: ['OK']
-                });
-                alert.present();
+                    this.translateService.get('tourMode').subscribe(
+                        tourMode => {
+                            let alert = this.alertController.create({
+                                title: tourMode,
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    );
+                    return;
       }
       let body = JSON.stringify({});
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashInstantly",body).then((res:any)=>{
@@ -211,40 +236,66 @@ ionViewDidEnter() {
                   let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
                   iOSAlertPage.present();
           }else if(res.result=="failure" && res.error=="gcm:400"){
-                let alert = this.alertController.create({
-                    title: '전체내역에서 확인버튼을 눌러 입금을 확인해주세요.',
-                    buttons: ['OK']
-                });
-                alert.present();
+                    this.translateService.get('confirmDepositInHistory').subscribe(
+                        confirmDepositInHistory => {
+                            let alert = this.alertController.create({
+                                title: confirmDepositInHistory,
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    );
           }else if(res.result=="failure" && res.error=="no service time"){
-                let  alert = this.alertController.create({
-                        title: '이용 제한시간입니다.',
-                        subTitle: '제한시간 이후 다시 시도 바랍니다.',
-                        buttons: ['OK']
+                this.translateService.get('serviceUnavailableInspectionPeriod').subscribe( serviceUnavailableInspectionPeriod=>{
+                    this.translateService.get('tryAgainAfterLimit').subscribe(
+                                tryAgainAfterLimit => {
+                                    let alert = this.alertController.create({
+                                        title: serviceUnavailableInspectionPeriod,
+                                        subTitle:tryAgainAfterLimit,
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
                 });
-              alert.present();
           }else{
-              
-                let alert = this.alertController.create({
-                    title: '요청에 실패했습니다. 잠시후 다시 요청바랍니다.',
-                    buttons: ['OK']
+                this.translateService.get('failedRequest').subscribe( failedRequest=>{
+                    this.translateService.get('TryItAgainLater').subscribe(
+                                TryItAgainLater => {
+                                    let alert = this.alertController.create({
+                                        title: failedRequest,
+                                        subTitle:TryItAgainLater,
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
                 });
-                alert.present();
           }
       },(err)=>{
           if(err=="NetworkFailure"){
-                let alert = this.alertController.create({
-                    title: '서버와 통신에 문제가 있습니다',
-                    subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                    buttons: ['OK']
-                });
-                alert.present();
+                this.translateService.get('NetworkProblem').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('checkNetwork').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
           }else{
-                let alert = this.alertController.create({
-                    title: '요청에 실패했습니다. 잠시후 다시 요청바랍니다.',
-                    buttons: ['OK']
+                this.translateService.get('failedRequest').subscribe( failedRequest=>{
+                    this.translateService.get('TryItAgainLater').subscribe(
+                                TryItAgainLater => {
+                                    let alert = this.alertController.create({
+                                        title: failedRequest,
+                                        subTitle:TryItAgainLater,
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
                 });
-                alert.present();
           }
       });
   }
@@ -252,29 +303,41 @@ ionViewDidEnter() {
   cashInComplete(){
       console.log("cashInComplete");
       if(this.depositAmount==undefined){
-            let alert = this.alertController.create({
-                title: '입금액을 입력해주시기바랍니다.',
-                buttons: ['OK']
-            });
-            alert.present();
+                    this.translateService.get('inputDepositAmount').subscribe(
+                        inputDepositAmount => {
+                            let alert = this.alertController.create({
+                                title: inputDepositAmount,
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    );
           return;
       }
 
       if(this.storageProvider.depositBank==undefined){
-           let alert = this.alertController.create({
-                title: '입금 은행을 입력해주시기바랍니다.',
-                buttons: ['OK']
-            });
-            alert.present();
+            this.translateService.get('inputDepositBank').subscribe(
+                        inputDepositBank => {
+                            let alert = this.alertController.create({
+                                title: inputDepositBank,
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    );
             return;
       }
 
       if(this.storageProvider.depositBank!="0" && this.storageProvider.depositBranch!="codeInput" && this.storageProvider.depositBank==undefined){
-            let alert = this.alertController.create({
-                title: '거래 지점을 선택해주시기바랍니다.',
-                buttons: ['OK']
-            });
-            alert.present();
+            this.translateService.get('inputDepositBranch').subscribe(
+                        inputDepositBranch => {
+                            let alert = this.alertController.create({
+                                title: inputDepositBranch,
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    );
             return;
       }
 
@@ -292,11 +355,15 @@ ionViewDidEnter() {
 
       if((this.storageProvider.depositBank=="0"|| this.storageProvider.depositBranch=="codeInput" ) && 
         (this.storageProvider.depositBranchInput==undefined || this.storageProvider.depositBranchInput.trim().length!=7)){
-            let alert = this.alertController.create({
-                title: '입금 지점을 코드를 정확히 입력해주시기바랍니다.',
-                buttons: ['OK']
-            });
-            alert.present();
+                        this.translateService.get('inputDepositBranchCode').subscribe(
+                        inputDepositBranchCode => {
+                            let alert = this.alertController.create({
+                                title: inputDepositBranchCode,
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    );
             return;
       }
       
@@ -343,25 +410,39 @@ ionViewDidEnter() {
                   let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
                   iOSAlertPage.present();
           }else if(res.result=="failure" && res.error=="gcm:400"){
-                let alert = this.alertController.create({
-                    title: '전체내역에서 확인버튼을 눌러 입금을 확인해주세요.',
-                    buttons: ['OK']
-                });
-                alert.present();
+                    this.translateService.get('confirmDepositInHistory').subscribe(
+                        confirmDepositInHistory => {
+                            let alert = this.alertController.create({
+                                title: confirmDepositInHistory,
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    );
           }else if(res.result=="failure" && res.error=="incorrect depositor"){
-                let  alert = this.alertController.create({
-                        title: '입력 내용을 확인하신후 다시 요청해주시기 바랍니다.',
-                        subTitle: '3회 연속오류시 수동확인이 불가능합니다.',
-                        buttons: ['OK']
+                    this.translateService.get('checkDepositInput').subscribe( checkDepositInput=>{
+                    this.translateService.get('LimitedThreeTrials').subscribe(
+                                LimitedThreeTrials => {
+                                    let alert = this.alertController.create({
+                                        title: checkDepositInput,
+                                        subTitle:LimitedThreeTrials,
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
                 });
-              alert.present();
           }else if(res.result=="failure" && res.error=="no service time"){
-                let  alert = this.alertController.create({
-                        title: '이용 제한시간입니다.',
-                        subTitle: '제한시간 이후 다시 시도 바랍니다.',
-                        buttons: ['OK']
+                this.translateService.get('serviceUnavailableInspectionPeriod').subscribe( serviceUnavailableInspectionPeriod=>{
+                    this.translateService.get('tryAgainAfterLimit').subscribe(
+                                tryAgainAfterLimit => {
+                                    let alert = this.alertController.create({
+                                        title: serviceUnavailableInspectionPeriod,
+                                        subTitle:tryAgainAfterLimit,
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
                 });
-              alert.present();
           }else{
               let alert;
 
@@ -372,29 +453,45 @@ ionViewDidEnter() {
                         buttons: ['OK']
                     });
               }else{
-                    alert = this.alertController.create({
-                        title: '입금 확인 요청에 실패했습니다.',
-                        subTitle: '잠시후 다시 요청해주시기 바랍니다.',
-                        buttons: ['OK']
-                    });
+                this.translateService.get('failedRequest').subscribe( failedRequest=>{
+                    this.translateService.get('TryItAgainLater').subscribe(
+                                TryItAgainLater => {
+                                    let alert = this.alertController.create({
+                                        title: failedRequest,
+                                        subTitle:TryItAgainLater,
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
+                });
               }
-              alert.present();
           }
       },(err)=>{
                 if(err=="NetworkFailure"){
-                    let alert = this.alertController.create({
-                        title: '서버와 통신에 문제가 있습니다',
-                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                        buttons: ['OK']
+                    this.translateService.get('NetworkProblem').subscribe(
+                        NetworkProblem => {
+                                this.translateService.get('checkNetwork').subscribe(
+                                checkNetwork => {
+                                    let alert = this.alertCtrl.create({
+                                        title: NetworkProblem,
+                                        subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
                     });
-                    alert.present();
                 }else{
-                    let alert = this.alertController.create({
-                        title: '입금 확인 요청에 실패했습니다.',
-                        subTitle: '잠시후 다시 요청해주시기 바랍니다.',
-                        buttons: ['OK']
+                    this.translateService.get('failedRequest').subscribe( failedRequest=>{
+                    this.translateService.get('TryItAgainLater').subscribe(
+                                TryItAgainLater => {
+                                    let alert = this.alertController.create({
+                                        title: failedRequest,
+                                        subTitle:TryItAgainLater,
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
                     });
-                    alert.present();
                 }
       });     
   }
@@ -403,40 +500,51 @@ ionViewDidEnter() {
    // this.app.getRootNav().push(CashIdPage);
    console.log("configureCashId");
    if(this.storageProvider.isAndroid){
-        let confirm = this.alertController.create({
-        title: '캐쉬아이디 설정을 진행하시겠습니까?',
-        message: '회원정보와 휴대폰 본인인증 정보가 다를 경우 회원정보 수정후 진행해주시기바랍니다.',
-        buttons: [
-            {
-            text: '아니오',
-            handler: () => {
-                console.log('Disagree clicked');
-                return;
-            }
-            },
-            {
-            text: '네',
-            handler: () => {
-                console.log('Agree clicked');               
-                this.mobileAuth().then(()=>{ // success
-                    this.app.getRootNav().push(CashIdPage);
-                },(err)=>{ //failure
-                    if(err=="invalidUserInfo"){
-                        console.log("invalidUserInfo");
-                        let alert = this.alertController.create({
-                                title: '사용자 정보가 일치하지 않습니다.',
-                                subTitle: '회원정보를 수정해주시기 바랍니다',
-                                buttons: ['OK']
-                            });
-                            alert.present();
+       this.translateService.get('willSetUpCashId').subscribe( willSetUpCashId=>{
+            this.translateService.get('checkUserNameForCashId').subscribe( checkUserNameForCashId=>{
+            this.translateService.get('yes').subscribe( yes=>{
+            this.translateService.get('no').subscribe( no=>{
+                let confirm = this.alertController.create({
+                title: willSetUpCashId,//'캐쉬아이디 설정을 진행하시겠습니까?',
+                message:checkUserNameForCashId,// '회원정보와 휴대폰 본인인증 정보가 다를 경우 회원정보 수정후 진행해주시기바랍니다.',
+                buttons: [
+                    {
+                    text: no,
+                    handler: () => {
+                        console.log('Disagree clicked');
+                        return;
                     }
-                });
-                
-            }
-            }
-        ]
-        });
-        confirm.present();    
+                    },
+                    {
+                        text: yes,
+                        handler: () => {
+                            console.log('Agree clicked');               
+                            this.mobileAuth().then(()=>{ // success
+                                this.app.getRootNav().push(CashIdPage);
+                            },(err)=>{ //failure
+                                if(err=="invalidUserInfo"){
+                                    console.log("invalidUserInfo");
+                                    this.translateService.get('userNameDiffers').subscribe( userNameDiffers=>{
+                                        this.translateService.get('modifyUserName').subscribe( modifyUserName=>{
+                                                let alert = this.alertController.create({
+                                                        title: userNameDiffers,//'사용자 정보가 일치하지 않습니다.',
+                                                        subTitle: modifyUserName,//'회원정보를 수정해주시기 바랍니다',
+                                                        buttons: ['OK']
+                                                    });
+                                                    alert.present();
+                                            })
+                                        })
+                                }
+                            })
+                        }
+                    }
+                ]
+                })
+                confirm.present();
+            })
+            })    
+            })
+       });
     }else{
  /*        
           this.app.getRootNav().push(CashIdPage);
@@ -447,12 +555,16 @@ ionViewDidEnter() {
                 },(err)=>{ //failure
                     if(err=="invalidUserInfo"){
                         console.log("invalidUserInfo");
-                        let alert = this.alertController.create({
-                                title: '사용자 정보가 일치하지 않습니다.',
-                                subTitle: '회원정보를 수정해주시기 바랍니다',
-                                buttons: ['OK']
-                            });
-                            alert.present();
+                        this.translateService.get('userNameDiffers').subscribe( userNameDiffers=>{
+                            this.translateService.get('modifyUserName').subscribe( modifyUserName=>{
+                                    let alert = this.alertController.create({
+                                            title: userNameDiffers,//'사용자 정보가 일치하지 않습니다.',
+                                            subTitle: modifyUserName,//'회원정보를 수정해주시기 바랍니다',
+                                            buttons: ['OK']
+                                        });
+                                        alert.present();
+                                })
+                            })
                     }
                 });
     }
@@ -495,12 +607,18 @@ ionViewDidEnter() {
                                     }
                                 },(err)=>{
                                     if(err=="NetworkFailure"){
-                                        let alert = this.alertController.create({
-                                            title: '서버와 통신에 문제가 있습니다',
-                                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                                            buttons: ['OK']
+                                        this.translateService.get('NetworkProblem').subscribe(
+                                        NetworkProblem => {
+                                                this.translateService.get('checkNetwork').subscribe(
+                                                    checkNetwork => {
+                                                        let alert = this.alertCtrl.create({
+                                                            title: NetworkProblem,
+                                                            subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                            buttons: ['OK']
+                                                        });
+                                                        alert.present();
+                                                    });
                                         });
-                                        alert.present();
                                     }
                                     reject(err);
                                 });
@@ -518,20 +636,41 @@ ionViewDidEnter() {
     });
   }
 
-  convertType(type){
-      if(type=='deposit'){
-          return '입금';
-      }else if(type=='payment'){
-          return '구매';
-      }else if(type=='refund'){
-          return '환불';
-      }else if(type=='interest'){
-          return '이자';
-      }else if(type=='cancel'){
-          return '취소';
+// humm... synchronous call required.
+//https://labs.encoded.io/2016/12/08/asyncawait-with-angular/
+// I am not sure if ionic2 supports await,async.
+// Please update below codes later when it does.
+  convertType(type){ 
+      if(this.lang=="ko"){
+        if(type=='deposit'){
+            return '입금';
+        }else if(type=='payment'){
+            return '구매';
+        }else if(type=='refund'){
+            return '환불';
+        }else if(type=='interest'){
+            return '이자';
+        }else if(type=='cancel'){
+            return '취소';
+        }else{
+            console.log("convertType invalid type:"+type);
+            return '알수 없음';
+        }
       }else{
-          console.log("convertType invalid type:"+type);
-          return '알수 없음';
+        if(type=='deposit'){
+            return 'deposit';
+        }else if(type=='payment'){
+            return 'payment';
+        }else if(type=='refund'){
+            return 'withdrawal';
+        }else if(type=='interest'){
+            return 'interest';
+        }else if(type=='cancel'){
+            return 'refund';
+        }else{
+            console.log("convertType invalid type:"+type);
+            return 'unknown';
+        }
       }
   }
   
@@ -619,18 +758,27 @@ ionViewDidEnter() {
         }
     },(err)=>{
                 if(err=="NetworkFailure"){
-                    let alert = this.alertController.create({
-                        title: '서버와 통신에 문제가 있습니다',
-                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                        buttons: ['OK']
-                    });
-                    alert.present();
+                        this.translateService.get('NetworkProblem').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('checkNetwork').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
                 }else{
-                    let alert = this.alertController.create({
-                        title: '캐쉬 내역을 가져오지 못했습니다.',
-                        buttons: ['OK']
-                    });
-                    alert.present();
+                    this.translateService.get('failedGetCashHistory').subscribe(
+                                        failedGetCashHistory => {
+                                            let alert = this.alertCtrl.create({
+                                                title: failedGetCashHistory, //'캐쉬 내역을 가져오지 못했습니다.',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
                 }
     });
     //this.transactions.push({date:"2016-01-29" ,type:"확인", amount:"+5,000",balance:"13,002"});
@@ -712,18 +860,27 @@ checkDepositInLatestCashlist(cashList){
                 });
             },(err)=>{
                 if(err=="NetworkFailure"){
-                    let alert = this.alertController.create({
-                        title: '서버와 통신에 문제가 있습니다',
-                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                        buttons: ['OK']
+                    this.translateService.get('NetworkProblem').subscribe(
+                    NetworkProblem => {
+                                this.translateService.get('checkNetwork').subscribe(
+                                checkNetwork => {
+                                    let alert = this.alertCtrl.create({
+                                        title: NetworkProblem,
+                                        subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
                     });
-                    alert.present();
                 }else{
-                    let alert = this.alertController.create({
-                        title: '캐쉬 내역을 가져오지 못했습니다.',
-                        buttons: ['OK']
+                    this.translateService.get('failedGetCashHistory').subscribe(
+                    failedGetCashHistory => {
+                        let alert = this.alertCtrl.create({
+                            title: failedGetCashHistory, //'캐쉬 내역을 가져오지 못했습니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
                     });
-                    alert.present();
                 }
             });
       }else{
@@ -784,18 +941,27 @@ checkDepositInLatestCashlist(cashList){
                 });
             },(err)=>{
                 if(err=="NetworkFailure"){
-                    let alert = this.alertController.create({
-                        title: '서버와 통신에 문제가 있습니다',
-                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                        buttons: ['OK']
+                    this.translateService.get('NetworkProblem').subscribe(
+                    NetworkProblem => {
+                                this.translateService.get('checkNetwork').subscribe(
+                                checkNetwork => {
+                                    let alert = this.alertCtrl.create({
+                                        title: NetworkProblem,
+                                        subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
                     });
-                    alert.present();
                 }else{
-                    let alert = this.alertController.create({
-                        title: '캐쉬 내역을 가져오지 못했습니다.',
-                        buttons: ['OK']
+                    this.translateService.get('failedGetCashHistory').subscribe(
+                    failedGetCashHistory => {
+                        let alert = this.alertCtrl.create({
+                            title: failedGetCashHistory, //'캐쉬 내역을 가져오지 못했습니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
                     });
-                    alert.present();
                 }
             });
        }
@@ -1022,25 +1188,45 @@ checkDepositInLatestCashlist(cashList){
           }
       },(err)=>{
           if(err=="NetworkFailure"){
-                        let alert = this.alertController.create({
-                            title: "서버와 통신에 문제가 있습니다.",
-                            buttons: ['OK']
-                        });
-                        alert.present();
+                       this.translateService.get('NetworkProblem').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('checkNetwork').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
             }else if(err="checkWithrawFee"){
-                let alert = this.alertController.create({
-                        title: "환불이 불가능합니다.",
-                        subTitle: "환불금액이 수수료보다 적습니다.",
-                        buttons: ['OK']
-                    });
-                        alert.present();
+                        this.translateService.get('refundUnavailable').subscribe(
+                            refundUnavailable => {
+                                     this.translateService.get('AvailableCashLessThanTransferFee').subscribe(
+                                        AvailableCashLessThanTransferFee => {
+                                            let alert = this.alertCtrl.create({
+                                                title: refundUnavailable,
+                                                subTitle: AvailableCashLessThanTransferFee,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
+
             }else{
-                let alert = this.alertController.create({
-                        title: "환불에 실패했습니다.",
-                        subTitle: "잠시후 다시 시도 바랍니다.",
-                        buttons: ['OK']
-                    });
-                        alert.present();
+                       this.translateService.get('refundFailed').subscribe(
+                            refundFailed => {
+                                     this.translateService.get('TryItAgainLater').subscribe(
+                                        TryItAgainLater => {
+                                            let alert = this.alertCtrl.create({
+                                                title: refundFailed,
+                                                subTitle: TryItAgainLater,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
             }
       }); 
   }
@@ -1124,14 +1310,16 @@ checkDepositInLatestCashlist(cashList){
 
   copyAccountInfo(){
     var account = "3012424363621";
-
     cordova.plugins.clipboard.copy(account);
-    let alert = this.alertController.create({
-        title: "클립보드로 계좌번호가 복사되었습니다.",
-        buttons: ['OK']
-    });
-    alert.present();
-
+    this.translateService.get('AccountNumberClipbaordCopy').subscribe(
+        value => {
+            let alert = this.alertController.create({
+                title: value,
+                buttons: ['OK']
+            });
+            alert.present();
+        }
+    );
   }
 
   toggleTransaction(tr){
@@ -1180,27 +1368,27 @@ checkDepositInLatestCashlist(cashList){
     hrefCashIdInput(){
         console.log("hrefCashIdInput");
         if(this.storageProvider.isAndroid){
-            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'toolbar=no');
+            this.browserRef=new InAppBrowser("http://www.takit.biz/cashId.html","_blank" ,'toolbar=no');
         }else{ // ios
-            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'location=no,closebuttoncaption=종료');
+            this.browserRef=new InAppBrowser("http://www.takit.biz/cashId.html","_blank" ,'location=no,closebuttoncaption=종료');
         }
     }
 
     hrefCashIdProcess(){
         console.log("hrefCashIdProcess");
         if(this.storageProvider.isAndroid){
-            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'toolbar=no');
+            this.browserRef=new InAppBrowser("http://www.takit.biz/security.html","_blank" ,'toolbar=no');
         }else{ // ios
-            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'location=no,closebuttoncaption=종료');
+            this.browserRef=new InAppBrowser("http://www.takit.biz/security.html","_blank" ,'location=no,closebuttoncaption=종료');
         }
     }
 
     hrefBankBranch(){
         console.log("hrefBankBranch");
         if(this.storageProvider.isAndroid){
-            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'toolbar=no');
+            this.browserRef=new InAppBrowser("http://www.takit.biz/branch.html","_blank" ,'toolbar=no');
         }else{ // ios
-            this.browserRef=new InAppBrowser("http://www.takit.biz","_blank" ,'location=no,closebuttoncaption=종료');
+            this.browserRef=new InAppBrowser("http://www.takit.biz/branch.html","_blank" ,'location=no,closebuttoncaption=종료');
         }         
     }
 
