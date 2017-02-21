@@ -26,6 +26,7 @@ export class ShopCartPage{
     takeoutAvailable:boolean=false;
     takeout:boolean=false;
     cashPassword="";
+    receiptIdMask:string;
 
     iOSOrderButtonHide=true;
 
@@ -39,6 +40,10 @@ export class ShopCartPage{
         this.shopname=this.storageProvider.currentShopname();
         this.cart=this.storageProvider.cart;
 
+        if(this.storageProvider.receiptIssue){
+            this.receiptIdMask=this.storageProvider.receiptId.substr(0,3)+"****"+this.storageProvider.receiptId.substr(7,this.storageProvider.receiptId.length-7);
+            console.log("recpitIdMask:"+this.receiptIdMask);
+        }
         if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
             this.shopPhoneHref="tel:"+this.storageProvider.shopResponse.shopInfo.shopPhone;
 

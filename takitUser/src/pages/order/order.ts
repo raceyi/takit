@@ -85,6 +85,7 @@ export class OrderPage {
           console.log("hum...-1.1");
           this.hasOptions=true;         
           this.options=JSON.parse(this.menu.options);
+          
           this.options.forEach((option)=>{
               if(option.hasOwnProperty("choice") && Array.isArray(option.choice)){
                   option.flag=false;
@@ -94,6 +95,15 @@ export class OrderPage {
                   for(i=0;i<option.choice.length;i++){
                       option.flags.push(false);
                       option.disabled.push(false);
+                  }
+                  if(option.hasOwnProperty("default")){
+                      console.log("default:"+option.default);
+                        for(i=0;i<option.choice.length;i++){
+                            if(option.choice[i]==option.default){
+                                    option.flags[i]=true;
+                                    option.flag=true;
+                            }
+                        }
                   }
               }
           });
