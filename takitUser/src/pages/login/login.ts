@@ -16,7 +16,7 @@ import {MultiloginPage} from '../multilogin/multilogin';
 import {StorageProvider} from '../../providers/storageProvider';
 import {Storage} from "@ionic/storage";
 import {Device} from 'ionic-native';
-
+import { TranslateService} from 'ng2-translate/ng2-translate';
 import {Http,Headers} from '@angular/http';
 
 @Component({
@@ -39,7 +39,8 @@ export class LoginPage {
                 private kakaoProvider:KakaoProvider, public storage:Storage,
                 private storageProvider:StorageProvider,private platform:Platform,
                 private alertController:AlertController,private ionicApp: IonicApp,
-                private menuCtrl: MenuController,private http:Http,public viewCtrl: ViewController){
+                private menuCtrl: MenuController,private http:Http,public viewCtrl: ViewController,
+                private translateService:TranslateService){
                     
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
@@ -53,6 +54,15 @@ export class LoginPage {
             }else{
                 console.log("iphone 6 or more than 6");
             }
+        }
+
+        console.log("navigator.language:"+navigator.language);   
+        if(!navigator.language.startsWith("ko")){
+            translateService.setDefaultLang('en');
+            translateService.use('en');
+        }else{
+            translateService.setDefaultLang('ko');
+            translateService.use('ko');
         }
 
   }
@@ -123,7 +133,7 @@ export class LoginPage {
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("move into TabsPage");
                                     this.navController.setRoot(TabsPage);
-                                }else if(res.result=='failure' && res.result=='invalidId'){
+                                }else if(res.result=='invalidId'){
                                     console.log("move into SignupPage....");
                                     var param:any={id:res.id};
                                     if(res.hasOwnProperty("email")){
@@ -177,7 +187,7 @@ export class LoginPage {
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("move into TabsPage");
                                     this.navController.setRoot(TabsPage);
-                                }else if(res.result=='failure' && res.result=='invalidId'){
+                                }else if(res.result=='invalidId'){
                                     //console.log("move into SignupPage!! SignupPage is not implmented yet");
                                     this.navController.push(SignupSubmitPage ,{id:res.id/* kakaoid*/});
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
@@ -298,7 +308,62 @@ export class LoginPage {
                     }
                     // show user cashId
                     this.storageProvider.cashId=res.userInfo.cashId;
-                    this.navController.push(TabsPage);//hum... !!! Please check how backbutton works !!!                    
+
+                    if(!navigator.language.startsWith("ko")){
+                        // please select food you avoid 
+                        // pork, beef, chicken
+                            let alert = this.alertController.create({
+                            title: "Please select food you avoid",
+                            inputs: [
+                                        {
+                                        name: 'pork',
+                                        label: 'Pork',
+                                        type: "checkbox",
+                                        value: "pork",
+                                        checked: false
+                                        },
+                                        {
+                                        name: 'beef',
+                                        label: 'Beef',
+                                        type: "checkbox",
+                                        value: "beef",
+                                        checked: false
+                                        },
+                                        {
+                                        name: 'chicken',
+                                        label: 'Chicken',
+                                        type: "checkbox",
+                                        value: "chicken",
+                                        checked: false
+                                        }/*,
+                                        {
+                                        name: 'fish',
+                                        label: 'Fish',
+                                        type: "checkbox",
+                                        value: "fish",
+                                        checked: false
+                                        }*/
+                                    ],
+                            buttons: [
+                                        {
+                                        text: 'OK',//'Ok',
+                                        handler: data => {
+                                            console.log("avoid foods"+data);
+                                            var splits:string[]=data.toString().split(",");
+                                            this.storageProvider.avoids=[];
+                                            splits.forEach(food=>{
+                                                this.storageProvider.avoids.push(food);
+                                            })
+                                            console.log("avoids:"+JSON.stringify(this.storageProvider.avoids));
+                                        }
+                                        }
+                                    ]
+                        });
+                        alert.present();
+
+                    }
+
+                    this.navController.push(TabsPage);                    
                 }else{
                     console.log("hum... tour id doesn't work.");
                 }

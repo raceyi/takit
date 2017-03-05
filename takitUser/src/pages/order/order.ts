@@ -322,8 +322,27 @@ export class OrderPage {
     if(this.storageProvider.cashId==undefined ||
                 this.storageProvider.cashId.length<5){
         let alert = this.alertController.create({
-            subTitle: '캐쉬아이디를 설정해 주시기 바랍니다.',
-            buttons: ['OK']
+            title:'캐쉬아이디를 설정해 주시기 바랍니다.',
+            subTitle: '캐쉬 충전 화면으로 이동하시겠습니까?',
+            buttons:
+            [{
+            text: '아니오',
+            handler: () => {
+                console.log('Disagree clicked');
+                return;
+            }
+            },
+            {
+            text: '네',
+            handler: () => {
+                //['OK']
+                 this.app.getRootNav().pop(); // pop order page
+                 this.app.getRootNav().pop(); // pop shop tab page
+                 // move into cash page
+                 this.storageProvider.tabMessageEmitter.emit("moveCashConfiguration");
+                 return;
+                }
+            }]
         });
         alert.present();
         return;               

@@ -4,10 +4,17 @@ page-home {
     //}
 
     ion-card{
-      margin:0px !important;
-      width:calc(100%) !important;
+     // margin:0px !important;
+     // width:calc(100%) !important;
+      border-width:2px;
+      border-color:black;
     }
 
+    .shopImage{
+          height : 100% !important;
+          width : 100% !important;
+    }
+    
     .cardImage{
       margin:0px !important;
       padding:0px;

@@ -1,5 +1,5 @@
 import {Component,NgZone,ViewChild,ElementRef} from "@angular/core";
-import {NavController,NavParams,Content,AlertController,Tabs} from 'ionic-angular';
+import {NavController,NavParams,Content,AlertController,Tabs,App} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -32,7 +32,7 @@ export class ShopCartPage{
 
     shopPhoneHref:string;
 
-     constructor(private navController: NavController,private http:Http,
+     constructor(private app:App,private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,
             private alertController:AlertController,private serverProvider:ServerProvider,
             private ngZone:NgZone,){
@@ -130,8 +130,26 @@ export class ShopCartPage{
         if(this.storageProvider.cashId==undefined ||
                     this.storageProvider.cashId.length<5){
             let alert = this.alertController.create({
-                subTitle: '캐쉬아이디를 설정해 주시기 바랍니다.',
-                buttons: ['OK']
+                title:'캐쉬아이디를 설정해 주시기 바랍니다.',
+                subTitle: '캐쉬 충전 화면으로 이동하시겠습니까?',
+                buttons:
+                [{
+                text: '아니오',
+                handler: () => {
+                    console.log('Disagree clicked');
+                    return;
+                }
+                },
+                {
+                text: '네',
+                handler: () => {
+                    //['OK']
+                    this.app.getRootNav().pop(); // pop shop tab page
+                    // move into cash page
+                    this.storageProvider.tabMessageEmitter.emit("moveCashConfiguration");
+                    return;
+                    }
+                }]
             });
             alert.present();
             return;               
@@ -307,6 +325,7 @@ export class ShopCartPage{
           this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
           this.amount=this.price-this.discount;
       });
+      this.checkTakeoutAvailable();
     }
 
     deleteAll(){

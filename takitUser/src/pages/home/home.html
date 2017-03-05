@@ -9,12 +9,24 @@
   
 <ion-content #homeContent class="home">
      <ion-card *ngFor="let shop of storageProvider.shoplist" >
+       <ion-row  (click)="getSelected(shop.takitId)">
+         <ion-col width-30>
+            <button ion-button full class="cardImage">
+            <img class="shopImage" [src]="shop.filename" />
+            </button>     
+         </ion-col>
+         <ion-col  width-70>
+          {{shop.takitId}}
+          <br>
+          <span *ngIf="shop.discountRate!=undefined"> {{'discountRate'|translate}}:{{shop.discountRate}}</span>
+         </ion-col>
+       </ion-row>
+      <!-- 
        <button ion-button full class="cardImage" (click)="getSelected(shop.takitId)">
        <img [src]="shop.filename"/>
        </button>
        <ion-card-title class="takitId">
        {{shop.takitId}}<span *ngIf="shop.discountRate!=undefined">{{shop.discountRate}}</span>
- <!--        
        <ion-row>
        <ion-col width-80>
        {{shop.takitId}}
@@ -23,16 +35,20 @@
        <ion-icon class="iconRemove" name="close-circle" (click)="removeSelected(shop.takitId)"></ion-icon>
        </ion-col>
        </ion-row>
--->
        </ion-card-title>
+-->
     </ion-card>
     
    <div class="frontDummy" *ngIf="storageProvider.shoplist.length==0" >
    </div>    
    <div padding *ngIf="storageProvider.shoplist.length==0" style="text-align:center;">
-      하단 "상점인식"버튼을 통해<br> 
-      상점 검색 페이지로 이동하여<br> 
-      상점을 방문하시면 홈에 등록됩니다.   
+      하단 "검색"탭을 선택하여<br> 
+      상점의 타킷아이디를 입력하시기바랍니다.<br> 
+      방문하신 상점은 홈화면에 등록됩니다.<br>   
+      <br>
+      예) 세종대@더큰도시락 <br>
+         세종대@HandelAndGretel<br>
+         세종대기숙사@PANDOROTHY<br>
    </div>
 <div class="dummy">
   <br><br><br>

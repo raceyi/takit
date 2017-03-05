@@ -33,7 +33,9 @@ import {BankBranchPage} from '../pages/bankbranch/bankbranch';
 import {IOSAlertPage} from '../pages/ios-alert/ios-alert';
 import {CashDepositDeletePage} from '../pages/cash-deposit-delete/cash-deposit-delete';
 import {MultiloginPage} from '../pages/multilogin/multilogin';
-import { TranslateModule, TranslateLoader,TranslateStaticLoader} from 'ng2-translate/ng2-translate';
+import {FaqPage} from '../pages/faq/faq';
+import {TutorialPage} from '../pages/tutorial/tutorial';
+import {TranslateModule, TranslateLoader,TranslateStaticLoader} from 'ng2-translate/ng2-translate';
 import {Http,Headers} from '@angular/http';
 
 import {Focuser} from '../components/focuser/focuser';
@@ -65,6 +67,8 @@ import {Focuser} from '../components/focuser/focuser';
     IOSAlertPage,
     CashDepositDeletePage,
     MultiloginPage,
+    FaqPage,
+    TutorialPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -99,7 +103,9 @@ import {Focuser} from '../components/focuser/focuser';
     BankBranchPage,
     IOSAlertPage,
     CashDepositDeletePage,
-    MultiloginPage  
+    MultiloginPage,
+    FaqPage,
+    TutorialPage  
   ],
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},

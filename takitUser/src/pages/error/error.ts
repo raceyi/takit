@@ -7,10 +7,10 @@ import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import {Storage} from '@ionic/storage';
-
 import {TabsPage} from '../tabs/tabs';
 import {LoginPage} from '../login/login';
 import {MultiloginPage} from '../multilogin/multilogin';
+import { TranslateService} from 'ng2-translate/ng2-translate';
 
 @Component({
   selector: 'page-error',
@@ -24,11 +24,20 @@ export class ErrorPage{
      constructor(private navController: NavController, private _navParams: NavParams,
         private platform:Platform,public storageProvider:StorageProvider,
         public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
-        public emailProvider:EmailProvider,public storage:Storage,private app:App){
+        public emailProvider:EmailProvider,public storage:Storage,private app:App,
+        private translateService:TranslateService){
 
          console.log("ErrorPage constructor");
          //this.android_platform=this.platform.is('android');
          //this.reason=this.storageProvider.errorReason;
+
+        if(!navigator.language.startsWith("ko")){
+            translateService.setDefaultLang('en');
+            translateService.use('en');
+        }else{
+            translateService.setDefaultLang('ko');
+            translateService.use('ko');
+        }
      }
 
      ionViewDidEnter(){

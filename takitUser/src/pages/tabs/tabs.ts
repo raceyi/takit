@@ -15,7 +15,6 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {Storage} from '@ionic/storage';
 import { TranslateService} from 'ng2-translate/ng2-translate';
-//import { MediaPlugin } from 'ionic-native';
 
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/map';
@@ -232,6 +231,18 @@ export class TabsPage {
                             alert.present();
                         }
                 });
+            }else if(cmd=="moveCashConfiguration"){
+                //move into cashTab and then select deposit segment.
+                this.tabRef.select(2);
+                this.storageProvider.cashInfoUpdateEmitter.emit("moveCashConfiguration");
+            }else if(cmd=="invalidVersion"){
+                 console.log("invalid app version");
+                let alert = this.alertController.create({
+                                    title: "앱을 업데이트해주세요.",
+                                    subTitle: "앱이 정상동작하지 않을수 있습니다.",
+                                    buttons: ['OK']
+                                });
+                    alert.present();
             }
         }); 
 
@@ -463,7 +474,7 @@ export class TabsPage {
             if(value==null){
                 let alert = this.alertController.create({
                         title: "타킷 고유의 캐쉬 서비스",
-                        message: "자세히 보기를 클릭하여 캐쉬아이디에 대해 알아보세요",
+                        message: "충전방법보기를 클릭하여 캐쉬아이디에 대해 알아보세요",
                         inputs: [
                                     {
                                     name: 'getLink',
@@ -531,8 +542,8 @@ export class TabsPage {
                 },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    //"gcmSandbox": "false", //code for production mode
-                    "gcmSandbox": "true",  //code for development mode
+                    "gcmSandbox": "false", //code for production mode
+                    //"gcmSandbox": "true",  //code for development mode
                     "alert": "true",
                     "sound": "true",
                     "badge": "true",

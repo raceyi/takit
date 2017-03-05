@@ -118,12 +118,12 @@
           <ion-item *ngFor="let row of menuRows">
             <div>
               <ion-row> 
-                <ion-col width-33 *ngFor="let menu of row.menus">
+                <ion-col width-33 [hidden]="menu.hide===true" *ngFor="let menu of row.menus">
                   <button ion-button clear (click)="menuSelected(menu.category_no,menu.menuName)" class="menuImgButton"><img [src]="menu.filename"  class="menuImg" ></button>
                 </ion-col>  
               </ion-row>
               <ion-row>
-                <ion-col width-33 *ngFor="let menu of row.menus"> 
+                <ion-col width-33 [hidden]="menu.hide===true" *ngFor="let menu of row.menus"> 
                   <p class="MenuText">{{menu.menuName}}</p>
                   <div [hidden]="hideFlag(menu.descriptionHide)" >
                   <p class="MenuText">{{menu.description}}</p>

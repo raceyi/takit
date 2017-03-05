@@ -1,0 +1,45 @@
+<!--
+  Generated template for the Tutorial page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>캐쉬 충전 방법</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+<ion-slides #slides [options]="{pager:true}">
+  <ion-slide>
+      <h2 class="slide-title" >계좌이체시 캐쉬아이디 입력!</h2>
+      <img src="assets/cash/toss.png" class="slide-image"/>
+      <p>온라인 계좌이체시 고객님의 <b>{{this.cashId}}</b>를 잊지말고 입력해주세요. <br> 캐쉬아이디는 <b>대소문자를 구분하지 않습니다</b>.
+       <br>1회 <b>10만원 이하의 금액</b>만 충전가능합니다.
+        <br><br><a href="http://www.takit.biz/cashId.html">토스/주요은행 캐쉬아이디 입력방법</a>
+      </p>
+    </ion-slide>
+
+    <ion-slide *ngFor="let slide of slidesContent">
+      <h2 class="slide-title" [innerHTML]="slide.title"></h2>
+      <img [src]="slide.image" class="slide-image"/>
+      <p [innerHTML]="slide.description"></p>
+    </ion-slide>
+    <ion-slide>
+      <ion-toolbar>
+      </ion-toolbar>
+     <img src="assets/logo.png" class="slide-image"/>
+      <h2 class="slide-title">이제 타킷으로 주문하세요</h2>
+      <p>고객님의 캐쉬아이디 입력으로 저비용의 온라인 결제서비스가 가능해집니다.</p>
+      <p> <a href="http://www.takit.biz/security.html">캐쉬충전 안전성</a></p>
+      <br>
+      <button ion-button large clear icon-right (click)="dismiss()" color="primary">
+         캐쉬 충전 시작하기  
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

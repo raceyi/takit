@@ -13,6 +13,8 @@ import {BankBranchPage} from '../bankbranch/bankbranch';
 import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {IOSAlertPage} from '../ios-alert/ios-alert';
 import {TranslateService} from 'ng2-translate/ng2-translate';
+import {FaqPage} from '../faq/faq';
+import {TutorialPage} from '../tutorial/tutorial';
 
 declare var cordova:any;
 declare var moment:any;
@@ -109,6 +111,10 @@ export class CashPage {
      });
 
         this.messageEmitterSubscription= this.storageProvider.cashInfoUpdateEmitter.subscribe((option)=> {
+            if(option=="moveCashConfiguration"){
+                storageProvider.cashMenu="cashIn";
+                return;
+            }
             console.log("!!!update cashInfo comes!!!-"+this.storageProvider.cashMenu);
             if(this.storageProvider.cashMenu=='cashHistory'){
                 this.getTransactions(-1,true).then((res:any)=>{
@@ -406,10 +412,13 @@ ionViewDidEnter() {
 
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashUserself",body).then((res:any)=>{
           console.log("res:"+JSON.stringify(res));
+                   
           if(res.result=="success"){
+                  this.manualCheckHidden=true;                   
                   let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
                   iOSAlertPage.present();
           }else if(res.result=="failure" && res.error=="gcm:400"){
+                    this.manualCheckHidden=true; 
                     this.translateService.get('confirmDepositInHistory').subscribe(
                         confirmDepositInHistory => {
                             let alert = this.alertController.create({
@@ -445,13 +454,14 @@ ionViewDidEnter() {
                 });
           }else{
               let alert;
-
               if(res.error=="count excess"){
+                    this.manualCheckHidden=true; 
                     alert = this.alertController.create({
                         title: '3회 연속 오류로 수동확인이 불가능합니다.',
                         subTitle: '고객센터(help@takit.biz,0505-170-3636)에 연락하여 주시기바랍니다.',
                         buttons: ['OK']
                     });
+                    alert.present();
               }else{
                 this.translateService.get('failedRequest').subscribe( failedRequest=>{
                     this.translateService.get('TryItAgainLater').subscribe(
@@ -497,16 +507,17 @@ ionViewDidEnter() {
   }
   
   configureCashId(){
-   // this.app.getRootNav().push(CashIdPage);
    console.log("configureCashId");
    if(this.storageProvider.isAndroid){
        this.translateService.get('willSetUpCashId').subscribe( willSetUpCashId=>{
             this.translateService.get('checkUserNameForCashId').subscribe( checkUserNameForCashId=>{
             this.translateService.get('yes').subscribe( yes=>{
             this.translateService.get('no').subscribe( no=>{
+            this.translateService.get('waitForLoading').subscribe( waitForLoading=>{    
                 let confirm = this.alertController.create({
                 title: willSetUpCashId,//'캐쉬아이디 설정을 진행하시겠습니까?',
-                message:checkUserNameForCashId,// '회원정보와 휴대폰 본인인증 정보가 다를 경우 회원정보 수정후 진행해주시기바랍니다.',
+                subTitle:checkUserNameForCashId,// '회원정보와 휴대폰 본인인증 정보가 다를 경우 회원정보 수정후 진행해주시기바랍니다.',
+                message: waitForLoading ,//'화면 전환에 시간이 걸릴수 있습니다. 잠시 기다려 주시기바랍니다.'
                 buttons: [
                     {
                     text: no,
@@ -544,11 +555,9 @@ ionViewDidEnter() {
             })
             })    
             })
+            })
        });
     }else{
- /*        
-          this.app.getRootNav().push(CashIdPage);
- */         
           console.log("ios....call mobileAuth");
                 this.mobileAuth().then(()=>{ // success
                     this.app.getRootNav().push(CashIdPage);
@@ -1351,6 +1360,7 @@ checkDepositInLatestCashlist(cashList){
                             buttons: ['OK']
                         });
                         alert.present();
+                        return;
             }
             if(this.storageProvider.tourMode){
                         let alert = this.alertController.create({
@@ -1358,6 +1368,7 @@ checkDepositInLatestCashlist(cashList){
                             buttons: ['OK']
                         });
                         alert.present();
+                        return;
             }
             this.manualCheckHidden=false;
         }else{
@@ -1392,4 +1403,11 @@ checkDepositInLatestCashlist(cashList){
         }         
     }
 
+    moveFaq(){
+        this.app.getRootNav().push(FaqPage);
+    }
+
+    moveTutorial(){
+        this.app.getRootNav().push(TutorialPage);
+    }
 }

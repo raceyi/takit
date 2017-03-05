@@ -7,6 +7,7 @@ import {TabsPage} from '../pages/tabs/tabs';
 import {LoginPage} from '../pages/login/login';
 import {ErrorPage} from '../pages/error/error';
 import {MultiloginPage} from '../pages/multilogin/multilogin';
+import {FaqPage} from '../pages/faq/faq';
 
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
@@ -189,6 +190,11 @@ export class MyApp {
     });
   }
   
+  openFaq(){
+    console.log("openFaqPage...");
+    this.app.getRootNav().push(FaqPage);
+  }
+
   openServiceInfo(){
     console.log("serviceInfo");
     this.app.getRootNav().push(ServiceInfoPage);

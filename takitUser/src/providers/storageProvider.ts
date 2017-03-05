@@ -24,6 +24,7 @@ export class StorageProvider{
     public tabMessageEmitter = new EventEmitter();
     public cashInfoUpdateEmitter= new EventEmitter();
     public GCMCashUpdateEmitter= new EventEmitter();
+    //public versionChecker= new EventEmitter();
     public shopTabRef:Tabs;
     public login:boolean=false;
     public navController:NavController;
@@ -43,6 +44,8 @@ export class StorageProvider{
     public refundAccount:string="";
     
     public cashMenu: string = "cashIn"; 
+    /////////////////////////////////////
+    public avoids=[]; // So far, just for tour mode
     /////////////////////////////////////
     // cash receipt issue
     public receiptIssue=false;

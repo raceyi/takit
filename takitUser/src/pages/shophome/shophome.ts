@@ -117,10 +117,22 @@ export class ShopHomePage {
                             menu.descriptionHide=true;
                         }
                     }
-                    if(menu.explanationEn!=undefined && menu.explanationEn!=null)    
+                    if(menu.explanationEn!=undefined && menu.explanationEn!=null){    
                         menu.explanation=menu.explanationEn;
+                        if(this.storageProvider.tourMode && menu.explanation.trim().length>0){
+                            var foods:string[]=menu.explanation.toString().split(",");
+                            console.log(menu.menuName+" foods"+JSON.stringify(foods));
+                            foods.forEach(food=>{    
+                                console.log("food:"+food.trim()+" avoids:"+JSON.stringify(this.storageProvider.avoids));
+                                if(this.storageProvider.avoids.indexOf(food.trim())>=0){
+                                        menu.hide=true;
+                                }
+                            });
+                        }  
+                    }
                     if(menu.optionsEn!=undefined &&menu.optionsEn!=null)       
                         menu.options=menu.optionsEn;
+                        
                 }
                 menus.push(menu);
             }

@@ -4,6 +4,8 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ServerProvider} from '../../providers/serverProvider';
+import {InAppBrowserEvent,InAppBrowser} from 'ionic-native';
+import {TutorialPage} from '../tutorial/tutorial';
 
 declare var window:any;
 
@@ -21,6 +23,8 @@ export class CashIdPage {
     cashIdComment=true;
     passwordComment=true;
     passwordMismatch=true;
+
+    public browserRef:InAppBrowser;
 
     constructor(private app:App,private platform:Platform,private navController:NavController,
         private alertController:AlertController,private serverProvider:ServerProvider
@@ -70,8 +74,23 @@ export class CashIdPage {
                 this.serverProvider.post(this.storageProvider.serverAddress+"/createCashId",body).then((res:any)=>{
                     console.log("configureCashId:"+JSON.stringify(res));
                     if(res.result=="success"){
-                        this.storageProvider.cashId=this.cashId.trim().toUpperCase();
-                        this.app.getRootNav().pop();
+                            this.storageProvider.cashId=this.cashId.trim().toUpperCase();
+                            this.storageProvider.cashAmount=0;
+                            let alert = this.alertController.create({
+                                    title: "캐쉬아이디 만들기에 성공했습니다.",
+                                    subTitle:"충전방법 설명으로 이동합니다.",
+                                    buttons: [
+                                    {
+                                        text: 'OK',
+                                        handler: () => {
+                                            // show cashId and then go back cash UI
+                                                this.app.getRootNav().pop().then(()=>{
+                                                    this.app.getRootNav().push(TutorialPage);
+                                                });
+                                        }
+                                    }]
+                                });
+                            alert.present();
                     }else{ 
                         if(res.hasOwnProperty("error") && res.error=="duplicationCashId"){
                             let alert = this.alertController.create({
@@ -115,8 +134,17 @@ export class CashIdPage {
                         console.log("modifyCashPwd");
                         this.serverProvider.post(this.storageProvider.serverAddress+"/modifyCashPwd",body).then((res:any)=>{
                             if(res.result=="success"){
-                                //this.storage
-                                this.app.getRootNav().pop();
+                               let alert = this.alertController.create({
+                                    title: "비밀번호 수정에 성공했습니다.",
+                                    buttons:[
+                                    {
+                                        text: 'OK',
+                                        handler: () => {
+                                            this.app.getRootNav().pop();
+                                        }
+                                    }]
+                                });
+                                alert.present();
                             }else{
                                 let alert = this.alertController.create({
                                     title: "캐쉬 비밀번호 설정에 실패했습니다.",

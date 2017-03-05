@@ -33,8 +33,9 @@
                 <ion-input class="cashIdValue" type="text" [(ngModel)]="storageProvider.cashId" disabled placeholder="{{ 'pressConfiguration' | translate }}"></ion-input>
             </ion-item>
                 <button ion-button class="config" [disabled]="storageProvider.tourMode" (click)="configureCashId()">
-                    <span *ngIf="lang=='ko'">설정</span>
-                    <span *ngIf="lang!='ko'"style="font-size:1.2rem;">setting</span>
+                    <span *ngIf="lang=='ko' && (storageProvider.cashId.length==0 ||storageProvider.tourMode)">설정</span>
+                    <span *ngIf="lang=='ko' && storageProvider.cashId.length!=0 && !storageProvider.tourMode">비밀번호수정</span>
+                    <span *ngIf="lang!='ko'" style="font-size:1.2rem;">setting</span>
                 </button>
             </ion-row>
 
@@ -51,7 +52,7 @@
                 </button>
             </ion-item>
             </ion-col>
-            </ion-row>
+            </ion-row>           
 
             <ion-row *ngIf="lang!='ko'" >
                 <ion-col width-80>
@@ -84,26 +85,36 @@
             </ion-item>
             </ion-col>
             </ion-row>
-            
-    <ion-row>
-        <button ion-button clear small color="black" (click)="toggle()"> <ion-icon [name]="cashExplainIcon" ></ion-icon> &nbsp;{{'Details'| translate}} </button>  
-    </ion-row>
+    
+    <!--
     <div [hidden]="cashExplainHidden" *ngIf="lang=='ko'">
+    -->
+    <div *ngIf="lang=='ko'">
              <ion-item>
-                <p class="explain" >
-                - 계좌이체시 <span style="color:red"> 받는통장 표시내용</span>에 반드시 <span style="color:red">캐쉬아이디를 입력</span>해주시기 바랍니다.
-                입금확인에 최대 5분이 소요될 수 있습니다. 
-                </p>
-                <button ion-button outline small color="primary" (click)="hrefCashIdInput()">토스/주요은행 캐쉬아이디 입력방법</button>
+                 <!--
                 <p>
                 -1회 <span style="color:red">10만원 이하</span>의 금액만 <span style="color:red">충전 가능</span>합니다.
                 </p>
-                <button ion-button outline small color="primary" (click)="hrefCashIdProcess()">캐쉬충전 안전성</button>
+                -->
                 <p class="explain">
-                -이용제한시간 00:00~00:30 ,매달 3주 월요일 23:55~04:00
-                </p>                
+                &nbsp;&nbsp;이용제한시간 00:00~00:30 ,매달 3주 월요일 23:55~04:00
+                </p>               
              </ion-item>
     </div>
+
+    <ion-row>
+        <ion-col>
+            <ion-buttons end>
+            <button ion-button outline small color="primary" (click)="moveTutorial()">충전방법보기</button>    
+            </ion-buttons>
+        </ion-col>
+        <ion-col>
+            <ion-buttons begin>
+            <button ion-button outline small color="primary" (click)="moveFaq()">자주묻는질문</button>        
+            </ion-buttons>
+        </ion-col>
+    </ion-row>
+
     <div [hidden]="cashExplainHidden"  *ngIf="lang!='ko'">
              <ion-item>
                 <p class="explain" >

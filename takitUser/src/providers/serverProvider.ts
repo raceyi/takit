@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable,EventEmitter} from '@angular/core';
 import {Platform} from 'ionic-angular';
 import {Http,Headers} from '@angular/http';
 import {Storage} from '@ionic/storage';
@@ -29,8 +29,14 @@ export class ServerProvider{
             headers.append('Content-Type', 'application/json');
 
             this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>res.json()).subscribe((res)=>{
+                console.log("post version:"+res.version+" version:"+this.storageProvider.version);
+                if(res.version!=this.storageProvider.version){
+                    console.log("post invalid version");
+                    this.storageProvider.tabMessageEmitter.emit("invalidVersion");
+                }
                 resolve(res);                    
             },(err)=>{
+                console.log("post-err:"+JSON.stringify(err));
                 if(err.hasOwnProperty("status") && err.status==401){
                     //login again with id
                     this.loginAgain().then(()=>{
@@ -136,6 +142,11 @@ export class ServerProvider{
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         this.http.get(request,{headers: headers}).timeout(this.storageProvider.timeout).subscribe((res)=>{
+            //console.log("get version:"+res.json().version);
+            if(res.json().version!=this.storageProvider.version){
+                    console.log("get invalid version");
+                    this.storageProvider.tabMessageEmitter.emit("invalidVersion");
+            }
             resolve(res.json());
         },(err)=>{
                 if(err.hasOwnProperty("status") && err.status==401){
