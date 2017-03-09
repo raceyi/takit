@@ -122,6 +122,14 @@ export class LoginPage {
       console.log('facebookLogin comes');
       this.fbProvider.login().then((res:any)=>{
                                 console.log("facebookLogin-login page:"+JSON.stringify(res));
+                                if(res.version!=this.storageProvider.version){
+                                        let alert = this.alertController.create({
+                                                        title: '앱버전을 업데이트해주시기 바랍니다.',
+                                                        subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                                                        buttons: ['OK']
+                                                    });
+                                            alert.present();
+                                }
                                 if(res.result=="success"){
                                     var encrypted:string=this.storageProvider.encryptValue('id','facebook');
                                     console.log("encrypted "+encrypted);
@@ -177,6 +185,14 @@ export class LoginPage {
       this.kakaoProvider.login().then((res:any)=>{
                                 console.log("kakaoProvider-login page:"+JSON.stringify(res));
                                 if(res.result=="success"){
+                                    if(res.version!=this.storageProvider.version){
+                                        let alert = this.alertController.create({
+                                                        title: '앱버전을 업데이트해주시기 바랍니다.',
+                                                        subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                                                        buttons: ['OK']
+                                                    });
+                                            alert.present();
+                                    }
                                     var encrypted:string=this.storageProvider.encryptValue('id','kakao');
                                     this.storage.set('id',encodeURI(encrypted));
 
@@ -247,6 +263,14 @@ export class LoginPage {
       }
       this.emailProvider.EmailServerLogin(this.email,this.password).then((res:any)=>{
                                 console.log("emailLogin-login page:"+JSON.stringify(res));
+                                if(res.version!=this.storageProvider.version){
+                                        let alert = this.alertController.create({
+                                                        title: '앱버전을 업데이트해주시기 바랍니다.',
+                                                        subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                                                        buttons: ['OK']
+                                                    });
+                                            alert.present();
+                                }
                                 if(res.result=="success"){
                                     var encrypted:string=this.storageProvider.encryptValue('id',this.email);
                                     this.storage.set('id',encodeURI(encrypted));
@@ -300,6 +324,14 @@ export class LoginPage {
       
       this.emailProvider.EmailServerLogin(this.storageProvider.tourEmail,this.storageProvider.tourPassword).then((res:any)=>{
                 console.log("emailLogin-login page:"+JSON.stringify(res));
+                if(res.version!=this.storageProvider.version){
+                        let alert = this.alertController.create({
+                                        title: '앱버전을 업데이트해주시기 바랍니다.',
+                                        subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                                        buttons: ['OK']
+                                    });
+                            alert.present();
+                }
                 if(res.result=="success"){
                     this.storageProvider.tourMode=true;
                     if(res.userInfo.hasOwnProperty("shopList")){

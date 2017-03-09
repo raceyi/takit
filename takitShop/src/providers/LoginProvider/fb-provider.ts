@@ -123,7 +123,7 @@ export class FbProvider {
       return new Promise((resolve, reject)=>{
               console.log("facebookServerLogin facebookid"+facebookid);
 
-              let body = JSON.stringify({referenceId:"facebook_"+facebookid,token:token});
+              let body = JSON.stringify({referenceId:"facebook_"+facebookid,token:token,version:fbProvider.storageProvider.version});
 
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
@@ -147,8 +147,9 @@ export class FbProvider {
                     let headers = new Headers();
                     headers.append('Content-Type', 'application/json');
                     console.log("server: "+ this.storageProvider.serverAddress);
+                    let body = JSON.stringify({version:this.storageProvider.version});
 
-                    this.http.post(this.storageProvider.serverAddress+"/shop/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+                    this.http.post(this.storageProvider.serverAddress+"/shop/logout",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                         resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)
                     },(err)=>{
                         console.log("logout no response "+JSON.stringify(err));

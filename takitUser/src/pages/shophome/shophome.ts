@@ -183,6 +183,15 @@ export class ShopHomePage {
         }else{
             this.todayMenuHideFlag=true;
         }
+
+        if(navigator.language.startsWith("ko") && this.shop.shopInfo.hasOwnProperty("notice")){
+            let alert = this.alertController.create({
+                        title: this.shop.shopInfo.notice,
+                        buttons: ['OK']
+                    });
+                    alert.present();
+        }
+        
   }
 
   loadShopInfo()

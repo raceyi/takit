@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Platform ,NavController} from 'ionic-angular';
 import {SQLite} from 'ionic-native';
+import {Storage} from '@ionic/storage';
 //import * as CryptoJS from 'crypto-js';
 declare var CryptoJS:any;
 import {ConfigProvider} from './configProvider';
@@ -34,6 +35,7 @@ export class StorageProvider{
     public bankCode;
     public depositor;
     public isTestServer;
+    public printer;
 
     public serverAddress:string=this.configProvider.getServerAddress();
 
@@ -53,11 +55,29 @@ export class StorageProvider{
     public accountMaskExceptFront=this.configProvider.getAccountMaskExceptFront();
     public accountMaskExceptEnd=this.configProvider.getAccountMaskExceptEnd();
 
-    constructor(private platform:Platform,private configProvider:ConfigProvider){
+    constructor(private platform:Platform,private storage:Storage,private configProvider:ConfigProvider){
         console.log("StorageProvider constructor");  
         if(this.serverAddress.endsWith('8000')){
             this.isTestServer = true;     
         }
+        this.storage.get("printOn").then((value:string)=>{
+            console.log("printOn is "+value+" in storage");
+            if(value==null || value==undefined){
+                this.printOn=false;
+            }else{
+                this.printOn= (value.toLowerCase() === 'true');
+            }
+        });
+        console.log("printOn is "+this.printOn);
+        if(this.printOn){
+            this.storage.get("print").then((value:string)=>{
+            console.log("print is "+value+" in storage");
+            this.printer= value;
+            });
+        }else{
+            this.printer=undefined;
+        }
+    
     }
 
     reset(){

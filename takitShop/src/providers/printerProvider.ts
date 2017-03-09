@@ -1,5 +1,7 @@
 import {Injectable,EventEmitter} from '@angular/core';
 import {Platform} from 'ionic-angular';
+import {StorageProvider} from './storageProvider';
+
 declare var BTPrinter:any;
 
 @Injectable()
@@ -10,8 +12,9 @@ export class PrinterProvider{
     
     public messageEmitter= new EventEmitter();
 
-    constructor(){
+    constructor(public storageProvider:StorageProvider){
         console.log("printerProvider constructor"); 
+        this.printer=this.storageProvider.printer;
     }
 
     setPrinter(printer){
@@ -115,9 +118,11 @@ export class PrinterProvider{
                     reject(err);
                 }, title+','+message+"\n\n\n\n ************"); // format: title, message
             }else{
+                console.log("this.printer:"+this.printer);
                 if(this.printer==undefined){
                     reject("printerUndefined");
                 }else{
+                    console.log("try to connect Printer");
                     this.connectPrinter().then(()=>{
                         // give one second
                         setTimeout(() => {

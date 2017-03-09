@@ -10,10 +10,10 @@
 
   <ion-item>
   <ion-label> 자동연결 </ion-label>
-  <ion-toggle  [(ngModel)]="storageProvider.printOn" (ionChange)="printOnChange()"></ion-toggle>
+  <ion-toggle  [(ngModel)]="printOn" (ionChange)="printOnChange()"></ion-toggle>
   </ion-item>
 
-<div [hidden]="storageProvider.printOn==false" >
+<div [hidden]="printOn==false" >
   <button ion-button (click)="scanPrinter()">프린터 검색하기</button>
   <ion-list>
     <ion-item>

@@ -13,7 +13,8 @@ export class FbProvider {
   country:string;
   name:string;
 
-  constructor(private platform:Platform,private http:Http,private storageProvider:StorageProvider) {
+  constructor(private platform:Platform,private http:Http
+        ,private storageProvider:StorageProvider) {
       console.log("FbProvider");
   }
 
@@ -124,15 +125,15 @@ export class FbProvider {
       return new Promise((resolve, reject)=>{
               console.log("facebookServerLogin facebookid"+facebookid);
 
-              let body = JSON.stringify({referenceId:"facebook_"+facebookid,token:token,uuid:Device.uuid});
+              let body = JSON.stringify({referenceId:"facebook_"+facebookid,token:token,uuid:Device.uuid,version:fbProvider.storageProvider.version});
 
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ fbProvider.storageProvider.serverAddress);
 
-             fbProvider.http.post(fbProvider.storageProvider.serverAddress+"/facebooklogin",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{                 
+              fbProvider.http.post(fbProvider.storageProvider.serverAddress+"/facebooklogin",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{              
                  console.log("facebook login res:"+JSON.stringify(res));
-                    resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)
+                 resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)
              },(err)=>{
                  console.log("facebooklogin no response");
                  reject("facebooklogin no response");
@@ -152,7 +153,7 @@ export class FbProvider {
               let body = JSON.stringify({referenceId:facebookid,name:name,
                                             email:email,country:country,phone:phone,
                                             receiptIssue:receiptIssueVal,receiptId:receiptId,receiptType:receiptType,
-                                            uuid:Device.uuid});
+                                            uuid:Device.uuid,version:this.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server: "+ this.storageProvider.serverAddress+ " body:"+body);
@@ -166,37 +167,13 @@ export class FbProvider {
          });
   }
 
-/*
-  logout(){
-      return new Promise((resolve,reject)=>{
-            Facebook.logout().then((result)=>{
-                console.log("facebook logout success");
-                    console.log("logout");
-                    let headers = new Headers();
-                    headers.append('Content-Type', 'application/json');
-                    console.log("server: "+ this.storageProvider.serverAddress);
-
-                    this.http.post(this.storageProvider.serverAddress+"/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
-                        resolve(res); 
-                    },(err)=>{
-                        //console.log("logout no response "+JSON.stringify(err));
-                        reject("logout no response");
-                    });
-            },(err)=>{
-                console.log("facebook logout failure");
-                reject("facebook logout failure");
-            });
-      });
-  }
-*/
-
   logout(){
       return new Promise((resolve,reject)=>{
                     let headers = new Headers();
                     headers.append('Content-Type', 'application/json');
                     console.log("server: "+ this.storageProvider.serverAddress);
 
-                    this.http.post(this.storageProvider.serverAddress+"/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+                    this.http.post(this.storageProvider.serverAddress+"/logout",JSON.stringify({version:this.storageProvider.version}),{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                         Facebook.logout().then((result)=>{
                              resolve(res); 
                         },(err)=>{
@@ -215,7 +192,7 @@ export class FbProvider {
               headers.append('Content-Type', 'application/json');
               console.log("server: "+ this.storageProvider.serverAddress);
 
-             this.http.post(this.storageProvider.serverAddress+"/unregister",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+             this.http.post(this.storageProvider.serverAddress+"/unregister",JSON.stringify({version:this.storageProvider.version}) ,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                  console.log("unregister "+JSON.stringify(res));
                  Facebook.logout();
                  resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)

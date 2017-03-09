@@ -15,7 +15,8 @@ export class KakaoProvider {
   country:string;
   name:string;
 
-  constructor(private platform:Platform,private http:Http,private storageProvider:StorageProvider) {
+  constructor(private platform:Platform,private http:Http
+    ,private storageProvider:StorageProvider) {
       console.log("KakaoProvider");
   }
 
@@ -162,7 +163,7 @@ export class KakaoProvider {
   kakaoServerLogin(kakaoid,kakaoProvider:KakaoProvider){
       return new Promise((resolve, reject)=>{
               console.log("kakaoServerLogin");
-              let body = JSON.stringify({referenceId:"kakao_"+kakaoid,uuid:Device.uuid});
+              let body = JSON.stringify({referenceId:"kakao_"+kakaoid,uuid:Device.uuid,version:kakaoProvider.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ kakaoProvider.storageProvider.serverAddress);
@@ -189,7 +190,7 @@ export class KakaoProvider {
               let body = JSON.stringify({referenceId:kakaoid,name:name,
                                             email:email,country:country,phone:phone,
                                             receiptIssue:receiptIssueVal,receiptId:receiptId,receiptType:receiptType,
-                                            uuid:Device.uuid});
+                                            uuid:Device.uuid,version:this.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress);
@@ -203,56 +204,13 @@ export class KakaoProvider {
          });
   }
   
-  /*
-  logout(){
-    return new Promise((resolve,reject)=>{ 
-      console.log("kakao-provider.logout");    
-       var scheme;
-      if(this.platform.is('android')){
-          scheme='com.kakao.talk';         
-      }else if(this.platform.is('ios')){
-          scheme='kakaotalk://';
-      }else{
-          console.log("unknown platform");
-          reject("unknown platform");
-          reject();
-      }
-
-       AppAvailability.check(scheme).then(
-          ()=> {  // Success callback
-              console.log("call KakaoTalk.logout");
-              KakaoTalk.logout(()=>{
-                    console.log("logout");
-                    let headers = new Headers();
-                    headers.append('Content-Type', 'application/json');
-                    console.log("server: "+ this.storageProvider.serverAddress);
-
-                    this.http.post(this.storageProvider.serverAddress+"/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
-                        console.log("logout response"+JSON.stringify(res));
-                        resolve(res);
-                    },(err)=>{
-                        //console.log("logout no response "+JSON.stringify(err));
-                        reject("logout no response");
-                    });
-                },
-                (err)=>{ // KakaoTalk.logout failure
-                      reject("KakaoTalk.logout failure");
-                });
-          },(error)=>{  // Error callback
-              console.log("KakaoTalk doesn't exist");
-              reject("KakaoTalk doesn't exist");
-          });
-    });
-  }
-*/
-
   logout(){
     return new Promise((resolve,reject)=>{ 
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         console.log("server: "+ this.storageProvider.serverAddress);
 
-        this.http.post(this.storageProvider.serverAddress+"/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+        this.http.post(this.storageProvider.serverAddress+"/logout",JSON.stringify({version:this.storageProvider.version}) ,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
             console.log("logout response"+JSON.stringify(res));
             if(res.result=="success"){
                 console.log("kakao-provider.logout");    
@@ -299,7 +257,7 @@ export class KakaoProvider {
         headers.append('Content-Type', 'application/json');
         console.log("server: "+ this.storageProvider.serverAddress);
 
-        this.http.post(this.storageProvider.serverAddress+"/unregister",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+        this.http.post(this.storageProvider.serverAddress+"/unregister",JSON.stringify({version:this.storageProvider.version}),{headers: headers}).map(res=>res.json()).subscribe((res)=>{
             AppAvailability.check(scheme).then(
                 ()=> {  // Success callback
                     KakaoTalk.logout();

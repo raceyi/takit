@@ -11,6 +11,8 @@ import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 //import {Focuser} from "../../components/focuser/focuser";
 import {Storage} from "@ionic/storage";
 import {Http,Headers} from '@angular/http';
+import {ServerProvider} from '../../providers/serverProvider';
+
 import 'rxjs/add/operator/map';
 
 declare var window:any;
@@ -57,7 +59,8 @@ export class SignupSubmitPage {
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
                 private kakaoProvider:KakaoProvider,private alertController:AlertController,
                 private platform: Platform, private storageProvider:StorageProvider,
-                public storage:Storage,private http:Http, private ngZone:NgZone){
+                public storage:Storage,private http:Http, private ngZone:NgZone,
+                private serverProvider:ServerProvider){
       console.log("SignupPage construtor");
       if(navParams.get("id")!=undefined){
           this.id=navParams.get("id");
@@ -181,7 +184,7 @@ export class SignupSubmitPage {
           }
       }
       // check the validity of name      
-      if(this.name.trim().length<3){ // The length of name must be more than or equal to 3 
+      if(this.name.trim().length<2){ // The length of name must be more than or equal to 2 
           if(this.platform.is("android")){
             //give focus into name
             this.focusName.emit(true);
@@ -242,6 +245,14 @@ export class SignupSubmitPage {
               this.kakaoProvider.kakaoServerSignup(this.id,this.country,phone,this.email,this.name,this.receiptIssue,this.receiptId,this.receiptType).then(
                 (result:any)=>{
                     var serverCode:string=result.result;
+                    if(result.version!=this.storageProvider.version){
+                            let alert = this.alertController.create({
+                                            title: '앱버전을 업데이트해주시기 바랍니다.',
+                                            subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                                            buttons: ['OK']
+                                        });
+                                alert.present();
+                    }
                     if(serverCode=="success"){
                         var encrypted:string=this.storageProvider.encryptValue('id','kakao');// save kakao id 
                         this.storage.set('id',encodeURI(encrypted));
@@ -271,6 +282,14 @@ export class SignupSubmitPage {
                     // move into home page.  
                     console.log("result..:"+JSON.stringify(result));
                     var serverCode:string=result.result;
+                    if(result.version!=this.storageProvider.version){
+                            let alert = this.alertController.create({
+                                            title: '앱버전을 업데이트해주시기 바랍니다.',
+                                            subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                                            buttons: ['OK']
+                                        });
+                                alert.present();
+                    }
                     if(serverCode=="success"){
                         var encrypted:string=this.storageProvider.encryptValue('id','facebook');// save facebook id 
                         this.storage.set('id',encodeURI(encrypted));
@@ -298,6 +317,14 @@ export class SignupSubmitPage {
         }else{
            this.emailProvider.emailServerSignup(this.password,this.name,this.email,this.country,phone,this.receiptIssue,this.receiptId,this.receiptType).then( 
             (result:any)=>{
+                    if(result.version!=this.storageProvider.version){
+                            let alert = this.alertController.create({
+                                            title: '앱버전을 업데이트해주시기 바랍니다.',
+                                            subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                                            buttons: ['OK']
+                                        });
+                                alert.present();
+                    }
                     // move into home page.  
                     var output:string=result.result;
                     if(output=="success"){
@@ -427,7 +454,8 @@ export class SignupSubmitPage {
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress+ " body:"+JSON.stringify(body));
 
-             this.http.post(this.storageProvider.serverAddress+"/SMSCertification",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+              this.serverProvider.postAnonymous(this.storageProvider.serverAddress+"/SMSCertification",body).then((res:any)=>{
+             //this.http.post(this.storageProvider.serverAddress+"/SMSCertification",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                  console.log(res); 
                  var result:string=res.result;
                  if(result=="success"){
@@ -474,7 +502,8 @@ export class SignupSubmitPage {
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress);
               console.log("body:"+JSON.stringify(body)); 
-             this.http.post(this.storageProvider.serverAddress+"/checkSMSCode",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+              this.serverProvider.postAnonymous(this.storageProvider.serverAddress+"/checkSMSCode",body).then((res:any)=>{
+             //this.http.post(this.storageProvider.serverAddress+"/checkSMSCode",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                  console.log(JSON.stringify(res)); 
                  var result:string=res.result;
                  if(result=="success"){

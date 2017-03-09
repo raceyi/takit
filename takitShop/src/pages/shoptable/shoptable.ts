@@ -607,7 +607,8 @@ export class ShopTablePage {
                     senderID: this.storageProvider.userSenderID                },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    "gcmSandbox": "true",
+                    //"gcmSandbox": "true",
+                    "gcmSandbox": "false",
                     "alert": "true",
                     "badge": "true",
                     "sound": "true"
@@ -632,7 +633,7 @@ export class ShopTablePage {
               this.serverProvider.post("/shop/registrationId",body).then((res:any)=>{    
                   console.log("registrationId sent successfully");
              },(err)=>{
-                  console.log("registrationId sent failure");
+                  console.log("registrationId sent failure "+JSON.stringify(err));
                   if(err=="NetworkFailure"){
                       //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
                       //Please move into ErrorPage!
@@ -750,19 +751,33 @@ export class ShopTablePage {
                   alert.present();
                });
         }else if(order.orderStatus=="checked"){
-               this.updateStatus(order,"completeOrder").then(()=>{
-                 order.orderStatus="completed";
-                 order.statusString="종료"; 
-                 order.completedTime=new Date().toISOString();
-                 order.hidden=true;
-               },()=>{
-                 console.log("주문 완료에 실패했습니다.");
-                 let alert = this.alertController.create({
-                                title: '주문 완료에 실패했습니다.',
-                                buttons: ['OK']
-                            });
-                  alert.present();
-               });;
+            let confirm = this.alertController.create({
+                title: '고객님께 준비완료 메시지를 전달할까요?',
+                buttons: [{
+                            text: '아니오',
+                            handler: () => {
+                              console.log('Disagree clicked');
+                            }
+                          },
+                          {
+                            text: '네',
+                            handler: () => {
+                                this.updateStatus(order,"completeOrder").then(()=>{
+                                  order.orderStatus="completed";
+                                  order.statusString="종료"; 
+                                  order.completedTime=new Date().toISOString();
+                                  order.hidden=true;
+                                },()=>{
+                                  console.log("주문 완료에 실패했습니다.");
+                                  let alert = this.alertController.create({
+                                                  title: '주문 완료에 실패했습니다.',
+                                                  buttons: ['OK']
+                                              });
+                                    alert.present();
+                                });;
+                            }
+                      }]});
+              confirm.present();        
         }
     }
 

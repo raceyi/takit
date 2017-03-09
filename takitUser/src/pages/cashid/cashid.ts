@@ -84,9 +84,13 @@ export class CashIdPage {
                                         text: 'OK',
                                         handler: () => {
                                             // show cashId and then go back cash UI
-                                                this.app.getRootNav().pop().then(()=>{
-                                                    this.app.getRootNav().push(TutorialPage);
-                                                });
+                                            //    this.app.getRootNav().pop().then(()=>{
+                                            //        this.app.getRootNav().push(TutorialPage);
+                                            //    });
+                                            this.navController.push(TutorialPage).then(()=>{
+                                                const index = this.navController.getActive().index;
+                                                this.navController.remove(index-1);
+                                            });
                                         }
                                     }]
                                 });

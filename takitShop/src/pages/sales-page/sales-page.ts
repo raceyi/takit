@@ -98,13 +98,17 @@ export class SalesPage {
       this.serverProvider.post("/shop/getSalesAndSatas",body).then((res:any)=>{
             if(res.result=="success"){
                   // show sales info
-                   this.sales=res.sales;
-                   let stats=[];
-                   for(var i=0;i<res.stats.length;i++)
-                        if(res.stats[i].menuSales!=undefined && res.stats[i].menuSales!=null && res.stats[i].menuSales!='0'){
-                            stats.push(res.stats[i]);
-                        }
-                   this.statistics=this.sortBySales(stats);
+                  //if(this.sales==0){
+                  //      this.statistics=[];
+                  //}else{
+                        this.sales=res.sales;
+                        let stats=[];
+                        for(var i=0;i<res.stats.length;i++)
+                                if(res.stats[i].menuSales!=undefined && res.stats[i].menuSales!=null && res.stats[i].menuSales!='0'){
+                                    stats.push(res.stats[i]);
+                                }
+                        this.statistics=this.sortBySales(stats);
+                  //}
             }else{
                   let alert = this.alertController.create({
                       title: '상점의 매출 정보를 알수 없습니다.',
@@ -142,14 +146,18 @@ export class SalesPage {
             if(res.result=="success"){
                   // show sales info
                    this.sales=res.sales;
-                   let stats=[];
-                   for(var i=0;i<res.stats.length;i++)
-                        if(res.stats[i].menuSales!=undefined && res.stats[i].menuSales!=null && res.stats[i].menuSales!='0'){
-                            stats.push(res.stats[i]);
-                        }
-//                   console.log("stats:"+JSON.stringify(stats));
-                   this.statistics=this.sortBySales(stats);
-//                   console.log("statistics:"+JSON.stringify(this.statistics));
+                   if(this.sales==0){
+                        this.statistics=[];
+                   }else{
+                        let stats=[];
+                        for(var i=0;i<res.stats.length;i++)
+                                if(res.stats[i].menuSales!=undefined && res.stats[i].menuSales!=null && res.stats[i].menuSales!='0'){
+                                    stats.push(res.stats[i]);
+                                }
+        //                   console.log("stats:"+JSON.stringify(stats));
+                        this.statistics=this.sortBySales(stats);
+        //                   console.log("statistics:"+JSON.stringify(this.statistics));
+                   }
             }else{
                   let alert = this.alertController.create({
                       title: '상점의 매출 정보를 알수 없습니다.',

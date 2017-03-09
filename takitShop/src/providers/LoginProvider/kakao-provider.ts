@@ -177,7 +177,7 @@ export class KakaoProvider {
   kakaoServerLogin(kakaoid,kakaoProvider:KakaoProvider){
       return new Promise((resolve, reject)=>{
               console.log("kakaoServerLogin");
-              let body = JSON.stringify({referenceId:"kakao_"+kakaoid});
+              let body = JSON.stringify({referenceId:"kakao_"+kakaoid,version:this.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ kakaoProvider.storageProvider.serverAddress);
@@ -211,8 +211,9 @@ export class KakaoProvider {
                     let headers = new Headers();
                     headers.append('Content-Type', 'application/json');
                     console.log("server: "+ this.storageProvider.serverAddress);
-
-                    this.http.post(this.storageProvider.serverAddress+"/shop/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+                    let body = JSON.stringify({version:this.storageProvider.version});
+                    
+                    this.http.post(this.storageProvider.serverAddress+"/shop/logout",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                         resolve(res);
                     },(err)=>{
                         console.log("logout no response "+JSON.stringify(err));

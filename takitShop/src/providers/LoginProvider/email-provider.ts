@@ -16,7 +16,7 @@ export class EmailProvider{
       console.log("email:"+email+"password:"+password);
       return new Promise((resolve, reject)=>{
               console.log("EmailServerLogin");
-              let body = JSON.stringify({email:email,password:password});
+              let body = JSON.stringify({email:email,password:password,version:this.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
 
@@ -35,7 +35,8 @@ export class EmailProvider{
   emailServerSignup(password,name,email,country,phone){
       return new Promise((resolve, reject)=>{
               console.log("emailServerSignup");
-              let body = JSON.stringify({referenceId:"email_"+email,password:password,name:name,email:email,country:country,phone:phone});
+              let body = JSON.stringify({referenceId:"email_"+email,password:password,name:name,email:email
+                            ,country:country,phone:phone,version:this.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress);
@@ -55,8 +56,8 @@ export class EmailProvider{
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server: "+ this.storageProvider.serverAddress);
-
-             this.http.post(this.storageProvider.serverAddress+"/logout",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+              let body = JSON.stringify({version:this.storageProvider.version});
+             this.http.post(this.storageProvider.serverAddress+"/logout",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                  resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)
              },(err)=>{
                  console.log("logout no response "+JSON.stringify(err));
@@ -71,8 +72,8 @@ export class EmailProvider{
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server: "+ this.storageProvider.serverAddress);
-
-             this.http.post(this.storageProvider.serverAddress+"/unregister",{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+              let body = JSON.stringify({version:this.storageProvider.version});
+             this.http.post(this.storageProvider.serverAddress+"/unregister",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                  resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)
              },(err)=>{
                  console.log("unregister no response "+JSON.stringify(err));

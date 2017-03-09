@@ -15,11 +15,13 @@ export class PrinterPage {
     printerlist=[];
     printerStatus;  
     printerEmitterSubscription;
+    printOn;
 
   constructor(private navController: NavController, private navParams: NavParams,public printerProvider:PrinterProvider,
                 private alertController:AlertController,private ngZone:NgZone,public storage:Storage,
                 public storageProvider:StorageProvider){
            console.log("PrinterPage construtor-printOn"+this.storageProvider.printOn);
+           this.printOn=this.storageProvider.printOn;
   }
 
    ionViewDidLoad(){
@@ -125,11 +127,16 @@ export class PrinterPage {
   savePrinter(){
       this.storage.set('printer',this.printerProvider.printer);
       this.storageProvider.printerName=this.printerProvider.printer;
+      //save it into localstorage
+      this.storageProvider.printOn=this.printOn;
+      this.storage.set("printOn",this.storageProvider.printOn.toString());
   }    
-
 
   printOnChange(){
       //save it into localstorage
+      //console.log("printOn:"+this.printOn);
+      this.storageProvider.printOn=this.printOn;
+      console.log("save printOn as "+this.storageProvider.printOn.toString());
       this.storage.set("printOn",this.storageProvider.printOn.toString());
   }
 }

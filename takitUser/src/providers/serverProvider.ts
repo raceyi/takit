@@ -21,28 +21,34 @@ export class ServerProvider{
       console.log("ServerProvider constructor");
   }
 
-  post(request,body){
-       console.log("!!!!post:"+request);
+  post(request,bodyIn){
+       console.log("!!!!post:"+bodyIn);
+       let bodyObj=JSON.parse(bodyIn);
+       bodyObj.version=this.storageProvider.version;
+       let body=JSON.stringify(bodyObj);
+       console.log("request:"+request);
 
        return new Promise((resolve,reject)=>{
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
-
-            this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>res.json()).subscribe((res)=>{
-                console.log("post version:"+res.version+" version:"+this.storageProvider.version);
-                if(res.version!=this.storageProvider.version){
-                    console.log("post invalid version");
-                    this.storageProvider.tabMessageEmitter.emit("invalidVersion");
-                }
-                resolve(res);                    
+           // this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>res.json()).subscribe((res)=>{
+            this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).subscribe((res)=>{               
+                console.log("post version:"+res.json().version+" version:"+this.storageProvider.version);
+                resolve(res.json());                    
             },(err)=>{
                 console.log("post-err:"+JSON.stringify(err));
                 if(err.hasOwnProperty("status") && err.status==401){
                     //login again with id
                     this.loginAgain().then(()=>{
                         //call http post again
-                         this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>res.json()).subscribe((res)=>{
-                            resolve(res);  
+                         //this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>res.json()).subscribe((res)=>{
+                        this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).subscribe((res)=>{
+                            console.log("post version:"+res.json().version+" version:"+this.storageProvider.version);
+                            if(res.json().version!=this.storageProvider.version){
+                                console.log("post invalid version");
+                                this.storageProvider.tabMessageEmitter.emit("invalidVersion");
+                            }
+                            resolve(res.json());  
                          },(err)=>{
                              reject("NetworkFailure");
                          });
@@ -62,6 +68,10 @@ export class ServerProvider{
                 if(this.storageProvider.id=="facebook"){
                     this.fbProvider.login().then((res:any)=>{
                                 if(res.result=="success"){
+                                    if(res.version!=this.storageProvider.version){
+                                        console.log("post invalid version");
+                                        this.storageProvider.tabMessageEmitter.emit("invalidVersion");
+                                    }
                                     resolve();
                                 }else
                                     reject("HttpFailure");
@@ -73,6 +83,11 @@ export class ServerProvider{
                         this.kakaoProvider.login().then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));
                                 if(res.result=="success"){
+                                    if(res.version!=this.storageProvider.version){
+                                        console.log("post invalid version");
+                                        this.storageProvider.tabMessageEmitter.emit("invalidVersion");
+                                    }
+                                    resolve();
                                     //save shoplist
                                     resolve();
                                 }else
@@ -86,6 +101,10 @@ export class ServerProvider{
                         this.emailProvider.EmailServerLogin(this.storageProvider.id,password).then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));
                                 if(res.result=="success"){
+                                    if(res.version!=this.storageProvider.version){
+                                        console.log("post invalid version");
+                                        this.storageProvider.tabMessageEmitter.emit("invalidVersion");
+                                    }
                                     resolve();
                                 }else
                                     reject("HttpFailure");
@@ -135,18 +154,30 @@ export class ServerProvider{
             });
       });
   }
+/*
+    getShopInfo(takitId){
+        return new Promise((resolve,reject)=>{
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            console.log("takitId:"+takitId);
+            //console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
+            let body={takitId:takitId,version:this.storageProvider.version};
+            this.post("/cafe/shopHome",JSON.stringify(body)).then((res)=>{
+                    resolve(res);
+                },(err)=>{
+                reject("http error");  
+                });
+        });   
+    }
+*/
 
-  get(request){
+ get(request){
       // console.log("!!!!get:"+request);
        return new Promise((resolve,reject)=>{
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         this.http.get(request,{headers: headers}).timeout(this.storageProvider.timeout).subscribe((res)=>{
             //console.log("get version:"+res.json().version);
-            if(res.json().version!=this.storageProvider.version){
-                    console.log("get invalid version");
-                    this.storageProvider.tabMessageEmitter.emit("invalidVersion");
-            }
             resolve(res.json());
         },(err)=>{
                 if(err.hasOwnProperty("status") && err.status==401){
@@ -176,13 +207,13 @@ export class ServerProvider{
             //console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
             this.get(encodeURI(this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId)).then((res)=>{
                     //console.log("res:"+JSON.stringify(res));
-                    //this.shopResponse=res.json();
                     resolve(res);
                 },(err)=>{
                 reject("http error");  
                 });
         });   
     }
+
 
     updateCashAvailable(){
         return new Promise((resolve,reject)=>{
@@ -200,6 +231,27 @@ export class ServerProvider{
                                  reject(err);                                  
                         });
         });
+    }
+
+    postAnonymous(request,bodyIn){
+       console.log("!!!!post:"+bodyIn);
+       let bodyObj=JSON.parse(bodyIn);
+       bodyObj.version=this.storageProvider.version;
+       let body=JSON.stringify(bodyObj);
+       console.log("request:"+request);
+
+       return new Promise((resolve,reject)=>{
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+           // this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>res.json()).subscribe((res)=>{
+            this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).subscribe((res)=>{               
+                console.log("post version:"+res.json().version+" version:"+this.storageProvider.version);
+                resolve(res.json());                    
+            },(err)=>{
+                console.log("post-err:"+JSON.stringify(err));
+                reject(err);
+            });
+       });
     }
 }
 

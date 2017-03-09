@@ -2,6 +2,7 @@ import {Component,EventEmitter,ViewChild} from "@angular/core";
 import {Platform,AlertController,NavController} from 'ionic-angular';
 import {Http,Headers} from '@angular/http';
 import {StorageProvider} from '../../providers/storageProvider';
+import {ServerProvider} from '../../providers/serverProvider';
 
 import 'rxjs/add/operator/map';
 
@@ -19,7 +20,7 @@ export class PasswordPage {
 
     constructor(private platform:Platform,private navController:NavController,
     private alertController:AlertController,private http:Http,
-    private storageProvider:StorageProvider){
+    private storageProvider:StorageProvider,private serverProvider:ServerProvider){
         console.log("PasswordPage construtor");
     }
 
@@ -79,7 +80,8 @@ export class PasswordPage {
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress);
 
-             this.http.post(this.storageProvider.serverAddress+"/passwordReset",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+              this.serverProvider.postAnonymous(this.storageProvider.serverAddress+"/passwordReset", body).then((res:any)=>{
+              //this.http.post(this.storageProvider.serverAddress+"/passwordReset",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
                 var result:string=res.result;
                 console.log("res:"+JSON.stringify(res));
                 if(result==="success")

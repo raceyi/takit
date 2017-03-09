@@ -175,7 +175,7 @@ export class SearchPage {
             headers.append('Content-Type', 'application/json');
             this.serverProvider.post(this.storageProvider.serverAddress+"/takitIdAutocomplete",JSON.stringify(body)).then((res:any)=>{
                 console.log("res:"+JSON.stringify(res));
-                    this.takitIds=res;
+                    this.takitIds=res.shoplist;
                     this.services=[];
                     this.brands=[];
                     this.takitIds.forEach((takitId)=>{ 
