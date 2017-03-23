@@ -74,6 +74,8 @@ License: GPL
 
  $npm install @types/crypto-js --save
 
+ $npm install ng2-translate --save
+
  $ionic g directive focuser
 
  $git checkout platforms/ios/타킷/Classes/AppDelegate.m
@@ -237,6 +239,8 @@ $ionic plugin add https://github.com/srehanuddin/Cordova-Plugin-Bluetooth-Printe
 $ionic plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
 
 $ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git
+
+$ionic plugin add cordova-plugin-media
 
 $npm install crypto-js
 
