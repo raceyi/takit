@@ -542,8 +542,8 @@ export class TabsPage {
                 },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    "gcmSandbox": "false", //code for production mode
-                    //"gcmSandbox": "true",  //code for development mode
+                    //"gcmSandbox": "false", //code for production mode
+                    "gcmSandbox": "true",  //code for development mode
                     "alert": "true",
                     "sound": "true",
                     "badge": "true",
@@ -833,4 +833,13 @@ export class TabsPage {
       this.tabRef.select(2);
   }
 
+ ionViewWillEnter(){
+     console.log("ionViewWillEnter-tabsPage ");
+ }
+
+ ionViewDidEnter(){
+     this.storageProvider.shopSelected=false;
+     console.log("ionViewDidEnter-tabsPage shopSelected is false");
+ }
+ 
 }

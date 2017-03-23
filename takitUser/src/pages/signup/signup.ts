@@ -45,7 +45,7 @@ export class SignupPage {
       }
   }
  
-   ionViewDidEnter() {
+   ionViewDidLoad() {
         console.log("Login page did enter");
         Splashscreen.hide();
         let dimensions = this.signupPageRef.getContentDimensions();

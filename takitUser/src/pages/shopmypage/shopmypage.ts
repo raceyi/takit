@@ -41,8 +41,9 @@ export class ShopMyPage{
                 this.ngZone.run(()=>{
                     var i;
                     for(i=0;i<this.storageProvider.OrdersInPage && i<this.orders.length;i++){  // if new order comes, add it at the front. otherwise, cange status.
-                      //console.log(" "+ this.orders[i].orderId+" "+order.orderId);
-                        if(parseInt(this.orders[i].orderId)==parseInt(order.orderId) && this.orders[i].orderStatus!=order.orderStatus){
+                      console.log(" "+ this.orders[i].orderId+" "+order.orderId);
+                      if(parseInt(this.orders[i].orderId)==parseInt(order.orderId)){
+                        if(this.orders[i].orderStatus!=order.orderStatus){
                               //update order statusString
                               this.orders[i].orderStatus=order.orderStatus;
                               this.orders[i].statusString=this.getStatusString(order.orderStatus);
@@ -50,8 +51,9 @@ export class ShopMyPage{
                               if(order.orderStatus=="cancelled"){
                                   this.storageProvider.cashInfoUpdateEmitter.emit("all");
                               }
-                              break;
                         }
+                        break;
+                      }
                     }
                     if(i==this.storageProvider.OrdersInPage || i==this.orders.length){// new one
                         console.log("add new one at the front");
@@ -63,7 +65,6 @@ export class ShopMyPage{
      }
 
     ionViewDidEnter(){
-        console.log("ionViewDidEnter");
         if(this.orders.length==0){
             this.getOrders(-1,false);
         }else{

@@ -79,7 +79,7 @@
             </ion-col>
             <ion-col width-10>
             <ion-item class="selectButton">
-                <button full ion-button class="selectButton copyClipboardButton" color="darkgray">
+                <button full ion-button class="selectButton copyClipboardButton" color="darkgray" (click)="copyAccountInfo()">
                 복사 
                 </button>
             </ion-item>
@@ -89,18 +89,7 @@
     <!--
     <div [hidden]="cashExplainHidden" *ngIf="lang=='ko'">
     -->
-    <div *ngIf="lang=='ko'">
-             <ion-item>
-                 <!--
-                <p>
-                -1회 <span style="color:red">10만원 이하</span>의 금액만 <span style="color:red">충전 가능</span>합니다.
-                </p>
-                -->
-                <p class="explain">
-                &nbsp;&nbsp;이용제한시간 00:00~00:30 ,매달 3주 월요일 23:55~04:00
-                </p>               
-             </ion-item>
-    </div>
+   
 
     <ion-row>
         <ion-col>
@@ -114,6 +103,18 @@
             </ion-buttons>
         </ion-col>
     </ion-row>
+    <div *ngIf="lang=='ko'">
+             <ion-item>
+                 <!--
+                <p>
+                -1회 <span style="color:red">10만원 이하</span>의 금액만 <span style="color:red">충전 가능</span>합니다.
+                </p>
+                -->
+                <p class="explain">
+                &nbsp;&nbsp;이용제한시간 00:00~00:30 ,매달 3주 월요일 23:55~04:00
+                </p>               
+             </ion-item>
+    </div>
 
     <div [hidden]="cashExplainHidden"  *ngIf="lang!='ko'">
              <ion-item>
@@ -132,25 +133,8 @@
              </ion-item>
     </div>
 
-            <ion-row>
-                <ion-col width-50 padding>
-                    <button ion-button block  (click)="cashInCheck(input)" class="confirmButton" color="primary">
-                        <div *ngIf="lang=='ko'">이체후 캐쉬를 <br>바로 사용하셔야 <br>하나요? </div>
-                        <div *ngIf="lang!='ko'"><p>Do you want to <br>order <br>immediately?</p></div>
-                    </button>
-                </ion-col>
-                <ion-col width-50 padding>
-                    <button ion-button block  class="confirmButton" (click)="manualCheck(true)" color="primary">
-                        <div *ngIf="lang=='ko'">캐쉬아이디 <br>입력을<br>잊으셨나요?<br><br>
-                        <span [hidden]="manualCheckHidden">아래 입금 확인하기를 <br>수행해 주세요</span>
-                        </div>
-                        <div *ngIf="lang!='ko'">Forgot to <br>input cashId?<br>
-                        <p [hidden]="manualCheckHidden">go through <br> below box</p>
-                        </div>
-                    </button>
-                </ion-col>
-            </ion-row>
-            
+        <img class="manualButton" (click)="manualCheck(true)" src="assets/manualButton.png"/>
+
             <div class="cashIn-check" [hidden]="manualCheckHidden">   
                 <ion-grid class="cashIn-check-table">
                 <ion-row center>

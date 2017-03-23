@@ -1318,6 +1318,7 @@ checkDepositInLatestCashlist(cashList){
   }
 
   copyAccountInfo(){
+    console.log("copyAccountInfo");
     var account = "3012424363621";
     cordova.plugins.clipboard.copy(account);
     this.translateService.get('AccountNumberClipbaordCopy').subscribe(

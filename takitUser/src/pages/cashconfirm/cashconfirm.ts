@@ -69,14 +69,6 @@ export class CashConfirmPage{
       console.log("tuno:"+this.tuno);
   }
 
-/*
-  ionViewDidEnter(){
-      console.log("ionicViewDidEnter");
-      this.ngZone.run(()=>{
-      });
-  }
- */
-
   dismiss() {
     this.viewCtrl.dismiss();
     this.storageProvider.cashInfoUpdateEmitter.emit("listOnly");

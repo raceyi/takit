@@ -9,18 +9,27 @@
   
 <ion-content #homeContent class="home">
      <ion-card *ngFor="let shop of storageProvider.shoplist" >
-       <ion-row  (click)="getSelected(shop.takitId)">
-         <ion-col width-30>
-            <button ion-button full class="cardImage">
-            <img class="shopImage" [src]="shop.filename" />
-            </button>     
-         </ion-col>
-         <ion-col  width-70>
-          {{shop.takitId}}
-          <br>
-          <span *ngIf="shop.discountRate!=undefined"> {{'discountRate'|translate}}:{{shop.discountRate}}</span>
-         </ion-col>
-       </ion-row>
+           <div>
+             <!--
+             <div class="iconRemove">
+              <ion-icon class="iconRemove" name="close" (click)="removeSelected(shop.takitId)"></ion-icon>
+              </div>
+              -->
+              <ion-row  (click)="getSelected(shop.takitId)">
+                <ion-col width-30>
+                    <button ion-button full class="cardImage">
+                    <img class="shopImage" [src]="shop.filename" />
+                    </button>     
+                </ion-col>
+                <ion-col  width-70>
+                  <br>
+                  <br>
+                  {{shop.takitId}}
+                  <br>
+                  <span *ngIf="shop.discountRate!=undefined"> {{'discountRate'|translate}}:{{shop.discountRate}}</span>
+                </ion-col>
+              </ion-row>
+           </div>
       <!-- 
        <button ion-button full class="cardImage" (click)="getSelected(shop.takitId)">
        <img [src]="shop.filename"/>

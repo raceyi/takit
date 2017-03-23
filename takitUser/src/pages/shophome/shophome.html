@@ -111,9 +111,10 @@
         </ion-col>
     </ion-row>
   </ion-content>
-
-  <ion-content class="menus" #menusContent  (swipe)="swipeCategory($event)">
-      <div [ngSwitch]="categorySelected">
+  
+  <ion-content class="menus" #menusContent>
+    <ion-card (swipe)="swipeCategory($event)">
+      <div [ngSwitch]="categorySelected" >
         <ion-list *ngSwitchCase="categorySelected">
           <ion-item *ngFor="let row of menuRows">
             <div>
@@ -138,5 +139,6 @@
       <div class="Dummy">
         <br><br><br><br><br><br><br><br>
       </div>
+    </ion-card>  
 </ion-content>
 

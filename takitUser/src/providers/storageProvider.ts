@@ -44,6 +44,11 @@ export class StorageProvider{
     public refundAccount:string="";
     
     public cashMenu: string = "cashIn"; 
+
+    public shopSelected:boolean=false; //used by home.ts and tabs.ts
+    public orderPageEntered:boolean=false; //used by order.ts and shoptabs.ts
+    public shoptabsShown:boolean=false; // used by shoptabs.ts and app.html
+
     /////////////////////////////////////
     public avoids=[]; // So far, just for tour mode
     /////////////////////////////////////

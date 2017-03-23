@@ -54,6 +54,7 @@ export class ShopTabsPage {
 
   ionViewDidEnter	(){
     this.storageProvider.shopTabRef=this.tabRef;
+    this.storageProvider.orderPageEntered=false;
   }
 
   shopExit(event){
@@ -73,9 +74,15 @@ export class ShopTabsPage {
      console.log("shopOrder tab selected"); 
   }
 
+  ionViewDidLoad(){
+      console.log("shoptabs did enter");
+      this.storageProvider.shoptabsShown=true;
+  }
+
   ionViewWillUnload(){
        console.log("ionViewWillUnload-ShopTabsPage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
        this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
+       this.storageProvider.shoptabsShown=false;
   }
 
 }

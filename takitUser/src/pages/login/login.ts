@@ -67,7 +67,6 @@ export class LoginPage {
 
   }
  
-  //ionViewDidEnter() {
   ionViewDidLoad(){
         console.log("Login page did enter");
         Splashscreen.hide();

@@ -24,18 +24,18 @@ export class TutorialPage {
     },
     {
       title: "입금 확인/충전완료",
-      description: "법적고지에 <b>동의</b>하시고 <b>하단 버튼을 클릭</b>하시면 입금하신 금액만큼 캐쉬가 <b>충전</b>됩니다.",
+      description: "메시지를 클릭하시면 확인 화면이 나옵니다.<br>법적고지에 <b>동의</b>하시고 <b>하단 버튼을 클릭</b>하시면 입금하신 금액만큼 캐쉬가 <b>충전</b>됩니다.",
       image: "assets/cash/notification.jpg",
     },
     {
       title: "수동확인하기",
-      description: "캐쉬아이디입력을 잊으셨나요? <br>캐쉬의 충전하기 화면 오른쪽 하단 버튼을 클릭후 이체정보를 채워주세요. 받는 통장 표시내용은 본인의 실명입니다.<br><br><a href=\"http://www.takit.biz/branch.html\">거래지점확인방법</a>",
+      description: "캐쉬아이디입력을 잊으셨나요? <br>캐쉬의 충전하기 화면 하단 버튼을 클릭후 이체정보를 채워주세요. 받는 통장 표시내용은 본인의 실명입니다.<br><br><a href=\"http://www.takit.biz/branch.html\">거래지점확인방법</a>",
       image: "assets/cash/manual.png",
     },
     {
       title: "메시지를 못받으셨나요?",
-      description: "캐쉬화면의 거래내역에 이체 내역이 보이시나요? 확인버튼을 클릭해주세요.<br>거래내역에 이체 사항이 보이지 않으시면 고객센터로 연락바랍니다.",
-      image: "assets/cash/manual.png",
+      description: "거래내역에 확인버튼이 보이나요? 확인버튼을 클릭해주세요.<br> 확인버튼이 보이지 않으면 고객센터(0505-170-3636,help@takit.biz)로 연락바랍니다.",
+      image: "assets/cash/confirmInHistory.png",
     }
   ];
 

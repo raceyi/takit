@@ -40,7 +40,7 @@ export class ErrorPage{
         }
      }
 
-     ionViewDidEnter(){
+     ionViewDidLoad(){
         console.log("ErrorPage did enter");
         Splashscreen.hide();
      }

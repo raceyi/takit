@@ -40,21 +40,22 @@ export class ShopHomePage {
 
   todayMenuHideFlag=true;
   //minVersion:boolean=false;
-   
+
   constructor(private app:App, private platform: Platform, private navController: NavController
       ,private navParams: NavParams,private http:Http,private storageProvider:StorageProvider
       ,private alertController:AlertController,private serverProvider:ServerProvider) {
           console.log("ShopHomePage");
   }
 
-  ionViewDidEnter(){
-      console.log("shophomePage - ionViewDidEnter")
+  ionViewDidEnter(){ // Be careful that it should be DidEnter not Load 
+      console.log("shophomePage - ionViewDidEnter"); 
         if(this.takitId==undefined){
           this.takitId=this.storageProvider.takitId;
           this.loadShopInfo();
           this.segmentBarRef.resize();
           this.menusContentRef.resize();
         }
+        this.storageProvider.orderPageEntered=false;
   }
   
   configureShopInfo(){
@@ -184,7 +185,7 @@ export class ShopHomePage {
             this.todayMenuHideFlag=true;
         }
 
-        if(navigator.language.startsWith("ko") && this.shop.shopInfo.hasOwnProperty("notice")){
+        if(navigator.language.startsWith("ko") && this.shop.shopInfo.hasOwnProperty("notice") && this.shop.shopInfo.notice!=null){
             let alert = this.alertController.create({
                         title: this.shop.shopInfo.notice,
                         buttons: ['OK']
@@ -204,7 +205,7 @@ export class ShopHomePage {
 
         //var shop=this.storageProvider.shopResponse;
 
-//        console.log("[loadShopInfo]this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
+        console.log("[loadShopInfo]this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
 
         this.shop=this.storageProvider.shopResponse;
         this.shopname=this.shop.shopInfo.shopName;
@@ -258,6 +259,7 @@ export class ShopHomePage {
 
   categoryChange(category_no){
     console.log("[categoryChange] categorySelected:"+category_no+" previous:"+this.categorySelected);
+    console.log("this.categoryMenuRows.length:"+this.categoryMenuRows.length);
     if(this.categoryMenuRows.length>0){
         //console.log("change menus");
         this.menuRows=this.categoryMenuRows[category_no-1];
@@ -278,6 +280,10 @@ export class ShopHomePage {
   }
 
   menuSelected(category_no,menu_name){
+
+    if(this.storageProvider.orderPageEntered)
+        return;
+
     console.log("category:"+category_no+" menu:"+menu_name); 
     var menu;
     for(var i=0;i<this.categories[category_no-1].menus.length;i++){
@@ -289,6 +295,7 @@ export class ShopHomePage {
     }
     console.log("menu info:"+JSON.stringify(menu));
     this.app.getRootNav().push(OrderPage,{menu:JSON.stringify(menu), shopname:this.shopname});
+    this.storageProvider.orderPageEntered=true;
   }
 
   swipeCategory(event){

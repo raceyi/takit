@@ -24,7 +24,7 @@ declare var ImageResizer:any;
 
 export class HomePage{
    // @ViewChild("homeContent") contentRef: Content;
-
+     shopSelected=false;
      filename: string = '';
 
      constructor(private platform:Platform,private navController: NavController, private navParams: NavParams,
@@ -34,18 +34,13 @@ export class HomePage{
          console.log("cordova.file.dataDirectory:"+cordova.file.dataDirectory);
      }
 
-     ionViewDidEnter(){
+     ionViewDidLoad(){
         console.log("HomePage did enter");
         Splashscreen.hide();
-       /*
-            let dimensions=this.contentRef.getContentDimensions();
-            let height=this.contentRef.getNativeElement().parentElement.offsetHeight-dimensions.contentTop;
-            console.log("pageHeight:"+this.contentRef.getNativeElement().parentElement.offsetHeight+"top:"+dimensions.contentTop+"menusHeight:"+height);
-            this.contentRef.getScrollElement().setAttribute("style","height:"+height+"px;margin-top:0px;");
-        */    
     }
 
      ionViewWillEnter(){
+         this.shopSelected=false;
          console.log("homePage-ionViewWillEnter");
          console.log("home-shoplist:"+JSON.stringify(this.storageProvider.shoplist));
          /*
@@ -174,17 +169,34 @@ export class HomePage{
 
     removeSelected(takitId){
         console.log("removeSelected:"+takitId);
+        //this.storageProvider.shoplist.findIndex( );
     }
 
     getSelected(takitId){
          console.log("getSelected:"+takitId);
-         this.serverProvider.getShopInfo(takitId).then((res)=>{
-              this.storageProvider.shopResponse=res;
-              //console.log("this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
-              this.app.getRootNav().push(ShopTabsPage,{takitId:takitId}); 
-         },(err)=>{
 
-         });
+/*      below code doesn't work. 
+        var views=this.app.getRootNav().getViews();
+        for(var i=0;i<views.length;i++){
+            if(views[i] instanceof ShopTabsPage){
+                console.log("ShopTabs already is pushed");
+                return;
+            }
+        }
+*/      
+        if(!this.storageProvider.shopSelected){
+            this.storageProvider.shopSelected=true;
+            this.serverProvider.getShopInfo(takitId).then((res)=>{
+                this.storageProvider.shopResponse=res;
+                console.log("push ShopTabsPage at home.ts");
+                console.log("this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
+                this.app.getRootNav().push(ShopTabsPage,{takitId:takitId}); 
+            },(err)=>{
+
+            });
+        }else{
+            console.log("this.shopSelected works!");
+        }
     }    
 }
 

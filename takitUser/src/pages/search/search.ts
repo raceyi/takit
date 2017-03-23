@@ -39,7 +39,7 @@ export class SearchPage {
       console.log("this.platform.is('android'):"+this.platform.is('android'));
   }
 
-  ionViewDidEnter(){
+  ionViewDidLoad(){
     console.log("SearchPage did enter");
     Splashscreen.hide();
   }
@@ -178,19 +178,21 @@ export class SearchPage {
                     this.takitIds=res.shoplist;
                     this.services=[];
                     this.brands=[];
-                    this.takitIds.forEach((takitId)=>{ 
-                        console.log("takitId:"+takitId);
-                        let splits=takitId.split("@");
-                        let service=splits[0];
-                        let brand=splits[1];
+                    if(this.takitIds.length>0){
+                        this.takitIds.forEach((takitId)=>{ 
+                            console.log("takitId:"+takitId);
+                            let splits=takitId.split("@");
+                            let service=splits[0];
+                            let brand=splits[1];
 
-                        if(this.services.indexOf(service)<0){
-                            this.services.push(service);
-                        }
-                        if(this.brands.indexOf(brand)<0){
-                            this.brands.push(brand);
-                        }
-                    });
+                            if(this.services.indexOf(service)<0){
+                                this.services.push(service);
+                            }
+                            if(this.brands.indexOf(brand)<0){
+                                this.brands.push(brand);
+                            }
+                        });
+                    }
                     resolve();
             },(err)=>{
               console.log("takitIdAutocomplete err "+err);

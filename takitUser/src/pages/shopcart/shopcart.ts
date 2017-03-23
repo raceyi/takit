@@ -103,10 +103,6 @@ export class ShopCartPage{
         }
     }
 
-    ionViewDidEnter(){
-        //console.log("shopcartPage-ionViewDidEnter");
-    }
-
      emptyCart(){
         //console.log("return "+(this.cart.menus==undefined || this.cart.menus.length==0));
         return(this.cart.menus==undefined || this.cart.menus.length==0);

@@ -79,7 +79,7 @@ export class SignupSubmitPage {
       }
   }
  
-  ionViewDidEnter() {
+  ionViewDidLoad() {
        let dimensions = this.signupPageRef.getContentDimensions();
 
       console.log("SignupPage page did enter");
