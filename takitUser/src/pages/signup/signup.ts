@@ -1,15 +1,11 @@
 import {Component,EventEmitter,ViewChild} from "@angular/core";
 import {Content,NavController,NavParams,Platform,AlertController} from 'ionic-angular';
-//import {Splashscreen} from 'ionic-native';
 import{SignupSubmitPage} from "../signup_submit/signup_submit";
-
-//import {Focuser} from "../../components/focuser/focuser";
 
 import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
-
-import {Splashscreen} from 'ionic-native';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 declare var zxcvbn:any;
 
@@ -38,7 +34,7 @@ export class SignupPage {
   constructor(private navController: NavController, private navParams: NavParams,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
                 private kakaoProvider:KakaoProvider,private platform:Platform,
-                private alertController:AlertController){
+                private alertController:AlertController, private splashScreen: SplashScreen){
       console.log("SignupPage construtor");
       if(navParams.get("email")!=undefined){
           this.email=navParams.get("email");
@@ -47,7 +43,7 @@ export class SignupPage {
  
    ionViewDidLoad() {
         console.log("Login page did enter");
-        Splashscreen.hide();
+        this.splashScreen.hide();
         let dimensions = this.signupPageRef.getContentDimensions();
   }
 

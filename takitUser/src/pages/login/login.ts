@@ -7,7 +7,7 @@ import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {TabsPage} from '../tabs/tabs';
 
-import {Splashscreen} from 'ionic-native';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import {SignupPage} from '../signup/signup';
 import {SignupSubmitPage} from '../signup_submit/signup_submit';
 import {PasswordPage} from '../password/password';
@@ -18,6 +18,7 @@ import {Storage} from "@ionic/storage";
 import {Device} from 'ionic-native';
 import { TranslateService} from 'ng2-translate/ng2-translate';
 import {Http,Headers} from '@angular/http';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 @Component({
   selector:'page-login',
@@ -33,14 +34,16 @@ export class LoginPage {
     focusPassword =new EventEmitter();
     iphone5=false;
     isTestServer=false;
+    tourModeSignInProgress=false;
 
   constructor(private navController: NavController, private navParams: NavParams,
+                private fb:Facebook,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
                 private kakaoProvider:KakaoProvider, public storage:Storage,
                 private storageProvider:StorageProvider,private platform:Platform,
                 private alertController:AlertController,private ionicApp: IonicApp,
                 private menuCtrl: MenuController,private http:Http,public viewCtrl: ViewController,
-                private translateService:TranslateService){
+                private translateService:TranslateService, private splashScreen: SplashScreen){
                     
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
@@ -69,7 +72,7 @@ export class LoginPage {
  
   ionViewDidLoad(){
         console.log("Login page did enter");
-        Splashscreen.hide();
+        this.splashScreen.hide();
         let dimensions = this.loginPageRef.getContentDimensions();
         this.storageProvider.login=true;
         this.storageProvider.navController=this.navController;
@@ -176,7 +179,6 @@ export class LoginPage {
                                 //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                                 //this.navController.setRoot(ErrorPage); 
                     }); 
-
   }
 
   kakaoLogin(event){
@@ -320,91 +322,95 @@ export class LoginPage {
 
   tour(){
       console.log("tour");
+      if(!this.tourModeSignInProgress){
+            this.tourModeSignInProgress=true;
       
-      this.emailProvider.EmailServerLogin(this.storageProvider.tourEmail,this.storageProvider.tourPassword).then((res:any)=>{
-                console.log("emailLogin-login page:"+JSON.stringify(res));
-                if(res.version!=this.storageProvider.version){
-                        let alert = this.alertController.create({
-                                        title: '앱버전을 업데이트해주시기 바랍니다.',
-                                        subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
-                                        buttons: ['OK']
-                                    });
-                            alert.present();
-                }
-                if(res.result=="success"){
-                    this.storageProvider.tourMode=true;
-                    if(res.userInfo.hasOwnProperty("shopList")){
-                        console.log("shoplist:"+res.userInfo.shopList);
-                        this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
-                    }
-                    // show user cashId
-                    this.storageProvider.cashId=res.userInfo.cashId;
+            this.emailProvider.EmailServerLogin(this.storageProvider.tourEmail,this.storageProvider.tourPassword).then((res:any)=>{
+                        console.log("emailLogin-login page:"+JSON.stringify(res));
+                        if(res.version!=this.storageProvider.version){
+                                let alert = this.alertController.create({
+                                                title: '앱버전을 업데이트해주시기 바랍니다.',
+                                                subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                                                buttons: ['OK']
+                                            });
+                                    alert.present();
+                        }
+                        if(res.result=="success"){
+                            this.storageProvider.tourMode=true;
+                            if(res.userInfo.hasOwnProperty("shopList")){
+                                console.log("shoplist:"+res.userInfo.shopList);
+                                this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
+                            }
+                            // show user cashId
+                            this.storageProvider.cashId=res.userInfo.cashId;
 
-                    if(!navigator.language.startsWith("ko")){
-                        // please select food you avoid 
-                        // pork, beef, chicken
-                            let alert = this.alertController.create({
-                            title: "Please select food you avoid",
-                            inputs: [
-                                        {
-                                        name: 'pork',
-                                        label: 'Pork',
-                                        type: "checkbox",
-                                        value: "pork",
-                                        checked: false
-                                        },
-                                        {
-                                        name: 'beef',
-                                        label: 'Beef',
-                                        type: "checkbox",
-                                        value: "beef",
-                                        checked: false
-                                        },
-                                        {
-                                        name: 'chicken',
-                                        label: 'Chicken',
-                                        type: "checkbox",
-                                        value: "chicken",
-                                        checked: false
-                                        }/*,
-                                        {
-                                        name: 'fish',
-                                        label: 'Fish',
-                                        type: "checkbox",
-                                        value: "fish",
-                                        checked: false
-                                        }*/
-                                    ],
-                            buttons: [
-                                        {
-                                        text: 'OK',//'Ok',
-                                        handler: data => {
-                                            console.log("avoid foods"+data);
-                                            var splits:string[]=data.toString().split(",");
-                                            this.storageProvider.avoids=[];
-                                            splits.forEach(food=>{
-                                                this.storageProvider.avoids.push(food);
-                                            })
-                                            console.log("avoids:"+JSON.stringify(this.storageProvider.avoids));
-                                        }
-                                        }
-                                    ]
+                            if(!navigator.language.startsWith("ko")){
+                                // please select food you avoid 
+                                // pork, beef, chicken
+                                    let alert = this.alertController.create({
+                                    title: "Please select food you avoid",
+                                    inputs: [
+                                                {
+                                                name: 'pork',
+                                                label: 'Pork',
+                                                type: "checkbox",
+                                                value: "pork",
+                                                checked: false
+                                                },
+                                                {
+                                                name: 'beef',
+                                                label: 'Beef',
+                                                type: "checkbox",
+                                                value: "beef",
+                                                checked: false
+                                                },
+                                                {
+                                                name: 'chicken',
+                                                label: 'Chicken',
+                                                type: "checkbox",
+                                                value: "chicken",
+                                                checked: false
+                                                }/*,
+                                                {
+                                                name: 'fish',
+                                                label: 'Fish',
+                                                type: "checkbox",
+                                                value: "fish",
+                                                checked: false
+                                                }*/
+                                            ],
+                                    buttons: [
+                                                {
+                                                text: 'OK',//'Ok',
+                                                handler: data => {
+                                                    console.log("avoid foods"+data);
+                                                    var splits:string[]=data.toString().split(",");
+                                                    this.storageProvider.avoids=[];
+                                                    splits.forEach(food=>{
+                                                        this.storageProvider.avoids.push(food);
+                                                    })
+                                                    console.log("avoids:"+JSON.stringify(this.storageProvider.avoids));
+                                                }
+                                                }
+                                            ]
+                                });
+                                alert.present();
+
+                            }
+                            this.tourModeSignInProgress=false;
+                            this.navController.push(TabsPage);                    
+                        }else{
+                            this.tourModeSignInProgress=false;
+                            console.log("hum... tour id doesn't work.");
+                        }
+            },(err)=>{
+                        this.tourModeSignInProgress=false;
+                        let alert = this.alertController.create({
+                            title: '네트웍 상태를 확인하신후 다시 시도해 주시기 바랍니다.',
+                            buttons: ['OK']
                         });
                         alert.present();
-
-                    }
-
-                    this.navController.push(TabsPage);                    
-                }else{
-                    console.log("hum... tour id doesn't work.");
-                }
-      },(err)=>{
-                let alert = this.alertController.create({
-                    title: '네트웍 상태를 확인하신후 다시 시도해 주시기 바랍니다.',
-                    buttons: ['OK']
-                });
-                alert.present();
-      });
-      
+            });
+      }      
   }
 }

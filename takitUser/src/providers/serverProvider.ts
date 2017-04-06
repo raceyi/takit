@@ -13,9 +13,11 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ServerProvider{
-  constructor(private platform:Platform,private http:Http
+  constructor(private platform:Platform
+            ,private http:Http
             ,private storage:Storage
-            ,private fbProvider:FbProvider,private kakaoProvider:KakaoProvider
+            ,private fbProvider:FbProvider
+            ,private kakaoProvider:KakaoProvider
             ,private emailProvider:EmailProvider
             ,private storageProvider:StorageProvider) {
       console.log("ServerProvider constructor");

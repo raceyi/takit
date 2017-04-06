@@ -1,23 +1,22 @@
 
 import {Component,NgZone,EventEmitter,ViewChild,Inject} from "@angular/core";
 import {Platform,Content,NavController,NavParams,AlertController} from 'ionic-angular';
-//import {ErrorPage} from '../error/error';
 import {TabsPage} from '../tabs/tabs';
-//import {Sim} from 'ionic-native';
 import {StorageProvider} from '../../providers/storageProvider';
 import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
-//import {Focuser} from "../../components/focuser/focuser";
 import {Storage} from "@ionic/storage";
 import {Http,Headers} from '@angular/http';
 import {ServerProvider} from '../../providers/serverProvider';
+
+import { DeviceAccounts } from '@ionic-native/device-accounts';
+import { Sim } from '@ionic-native/sim';
 
 import 'rxjs/add/operator/map';
 
 declare var window:any;
 declare var plugins;
-declare var getemail:any;
 declare var cordova:any;
 
 @Component({
@@ -60,7 +59,8 @@ export class SignupSubmitPage {
                 private kakaoProvider:KakaoProvider,private alertController:AlertController,
                 private platform: Platform, private storageProvider:StorageProvider,
                 public storage:Storage,private http:Http, private ngZone:NgZone,
-                private serverProvider:ServerProvider){
+                private serverProvider:ServerProvider,private deviceAccounts: DeviceAccounts,
+                private sim: Sim){
       console.log("SignupPage construtor");
       if(navParams.get("id")!=undefined){
           this.id=navParams.get("id");
@@ -84,51 +84,49 @@ export class SignupSubmitPage {
 
       console.log("SignupPage page did enter");
         if(this.navParams.get("email")==undefined && this.platform.is("cordova") && this.platform.is('android')){
-            getemail.getEmail((result:any)=>{
-                console.log("GetEmail returns "+JSON.stringify(result));
-//                var type;
-                function findGoogleAccount(info){
-                    return info.type === "com.google";
-                }
-                this.email=result.find(findGoogleAccount).name;
-                console.log("google account:"+result.find(findGoogleAccount).name);
-            });
+
+            this.deviceAccounts.getEmail()
+                .then(account => {
+                    console.log("DeviceAccounts.getEmail():"+account);
+                    this.email=account;
+                }).catch(error => {console.error(error);});
         }
         // get phone number with sim plugin
 
         if(this.platform.is("android")){
             window.signupPage=this;
-            window.plugins.sim.hasReadPermission((result)=>{
-                console.log("result:"+JSON.stringify(result));
-                if(result){
-                    // Why Sim.getSimInfo doesn't work? Workaround solution.
-                    window.plugins.sim.getSimInfo(function(result){
-                        console.log("sim info:"+JSON.stringify(result));
-                        console.log("phone Number:"+result.phoneNumber);
-                        let page:SignupSubmitPage=window.signupPage;
-                        page.phone=result.phoneNumber;
-                    }, function(err){
-                        console.log("sim info not found:"+JSON.stringify(err));
-                    });
-                }else{            
-                    //request sim permission. Please check this code API level 23.
-                    window.plugins.sim.requestReadPermission((result)=>{
-                        if(result){
-                                window.plugins.sim.getSimInfo(function(result){
-                                let page:SignupSubmitPage=window.signupPage;
-                                page.phone=result.phoneNumber;
-                            }, function(err){
-                                console.log("sim info not found:"+JSON.stringify(err));
-                            });
-                        }
-                    },(error)=>{
-                        //console.log("error:"+JSON.stringify(error));
-                    })
-                }
-            }, (error)=>{
-                //console.log("error:"+JSON.stringify(error));
-            });
+            this.sim.hasReadPermission().then(
+            (info) =>{ 
+                    console.log('Has permission: ', info);
+                    this.sim.getSimInfo().then(
+                        (info) =>{ 
+                            console.log('Sim info: ', info);
+                            console.log("phone Number:"+info.phoneNumber);
+                            this.phone=info.phoneNumber;
+                        },(err) => {
+                            console.log('Unable to get sim info: ', err);
+                        });
+                },
+              (err)=>{
+                this.sim.requestReadPermission().then(
+                    () =>{ 
+                        console.log('Permission granted');
+                        this.sim.getSimInfo().then(
+                        (info) =>{ 
+                            console.log('Sim info: ', info);
+                            console.log("phone Number:"+info.phoneNumber);
+                            this.phone=info.phoneNumber;
+                        },(err) => {
+                            console.log('Unable to get sim info: ', err);
+                        });
+                    },() =>{ 
+                        console.log('Permission denied');
+                    }
+                );
+              }  
+            );
         }
+        
   }
 
   cancelBtn(event){

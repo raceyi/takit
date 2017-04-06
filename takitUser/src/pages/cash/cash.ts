@@ -4,7 +4,7 @@ import {Platform,Content,ModalController,AlertController,InfiniteScroll} from 'i
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ViewChild} from '@angular/core';
-import {Device,InAppBrowserEvent,InAppBrowser} from 'ionic-native';
+import {Device} from 'ionic-native';
 import {CashIdPage} from '../cashid/cashid';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
@@ -15,6 +15,8 @@ import {IOSAlertPage} from '../ios-alert/ios-alert';
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import {FaqPage} from '../faq/faq';
 import {TutorialPage} from '../tutorial/tutorial';
+import { Clipboard } from '@ionic-native/clipboard';
+import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
 
 declare var cordova:any;
 declare var moment:any;
@@ -28,7 +30,7 @@ export class CashPage {
   public infiniteScrollRef:any;
  // public cashMenu: string = "cashIn"; move into storageProvider
   public transactions=[];
-  public browserRef:InAppBrowser;
+  public browserRef;
   public infiniteScroll=false;
 
   public refundBank:string="";
@@ -38,10 +40,11 @@ export class CashPage {
   public verifiedAccount:string="";
 
   public refundEditable=true;
-  public transferDate;
+  public transferDate:string;
+  public transferHour:string;
 
   public depositAmount:number=undefined;
-  public depositBankInput;
+  //public depositBankInput;
   public depositMemo:string;
 
   public refundAmount:number=undefined;
@@ -62,17 +65,22 @@ export class CashPage {
         ,private navParams: NavParams,public http:Http ,private alertController:AlertController
         ,public storageProvider:StorageProvider,private serverProvider:ServerProvider
         ,public storage:Storage,public modalCtrl: ModalController,private ngZone:NgZone
-        ,public alertCtrl:AlertController,public translateService: TranslateService) {
+        ,public alertCtrl:AlertController,public translateService: TranslateService
+        ,private iab: InAppBrowser,private clipboard: Clipboard) {
 
     if(navigator.language.startsWith("ko"))        
         this.lang="ko";
     else
         this.lang="en";    
     var d = new Date();
+    console.log(" moment:"+moment().format("YYYY-MM-DDThh:mmZ"));
     var mm = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1); // getMonth() is zero-based
     var dd  = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
-    var dString=d.getFullYear()+'-'+(mm)+'-'+dd;
+    var hh = d.getHours() <10? "0"+d.getHours(): d.getHours();
+    var dString=d.getFullYear()+'-'+(mm)+'-'+dd+'T'+hh+":00"+moment().format("Z");
+    
     this.transferDate=dString;
+    this.transferHour=dString;
 
     this.depositMemo=this.storageProvider.name;
     //read cash info from local storage
@@ -333,81 +341,22 @@ ionViewDidEnter() {
                     );
             return;
       }
-
-      if(this.storageProvider.depositBank!="0" && this.storageProvider.depositBranch!="codeInput" && this.storageProvider.depositBank==undefined){
-            this.translateService.get('inputDepositBranch').subscribe(
-                        inputDepositBranch => {
-                            let alert = this.alertController.create({
-                                title: inputDepositBranch,
-                                buttons: ['OK']
-                            });
-                            alert.present();
-                        }
-                    );
-            return;
-      }
-
-      /*
-      if(this.storageProvider.depositBank=="0" && 
-            (this.depositBankInput==undefined ||  this.depositBankInput.trim().length!=3)){
-            let alert = this.alertController.create({
-                title: '입금 은행코드를 정확히 입력해주시기바랍니다.',
-                buttons: ['OK']
-            });
-            alert.present();
-            return;
-      }
-      */
-
-      if((this.storageProvider.depositBank=="0"|| this.storageProvider.depositBranch=="codeInput" ) && 
-        (this.storageProvider.depositBranchInput==undefined || this.storageProvider.depositBranchInput.trim().length!=7)){
-                        this.translateService.get('inputDepositBranchCode').subscribe(
-                        inputDepositBranchCode => {
-                            let alert = this.alertController.create({
-                                title: inputDepositBranchCode,
-                                buttons: ['OK']
-                            });
-                            alert.present();
-                        }
-                    );
-            return;
-      }
       
       if(this.depositMemo==undefined || this.depositMemo.length==0){
           this.depositMemo=this.storageProvider.name;
       }
       var transferDate=new Date(this.transferDate);
-
-//      var depositBank= this.storageProvider.depositBank=='0'?this.depositBankInput:this.storageProvider.depositBank;
-      var depositBranch= this.storageProvider.depositBranch=='codeInput'? this.storageProvider.depositBranchInput:this.storageProvider.depositBranch;
-
+      var transferHour=new Date(this.transferHour);
       let body;
-      if(this.storageProvider.depositBank=='0' || this.storageProvider.depositBranch=="codeInput"){
-            body = JSON.stringify({depositDate:transferDate.toISOString(),
-                                        amount: this.depositAmount,
-                                        bankCode: this.depositBankInput,
-                                        branchCode:depositBranch,
-                                        depositMemo:this.depositMemo,
-                                        cashId:this.storageProvider.cashId
-                                 });
-      }else{
-           // look for name of depositBank
-          var i;
-          for(i=0;i<this.storageProvider.banklist.length;i++){
-                if(this.storageProvider.banklist[i].value==this.storageProvider.depositBank){
-                    break;
-                }
-          }
-          console.log("bank name:"+this.storageProvider.banklist[i].name);
-            body = JSON.stringify({depositDate:transferDate.toISOString(),
-                                        amount: this.depositAmount,
-                                        bankName: this.storageProvider.banklist[i].name,
-                                        branchCode:depositBranch,
-                                        depositMemo:this.depositMemo,
-                                        cashId:this.storageProvider.cashId
-                                 });
-      }
-                                 
+      console.log("depositDate:"+transferDate.toISOString());
+
+      body = JSON.stringify({depositDate:transferDate.toISOString(),
+                            depositHour:transferHour.toISOString(),
+                            amount: this.depositAmount,
+                            bankCode: this.storageProvider.depositBank,
+                            depositMemo:this.depositMemo,
+                            cashId:this.storageProvider.cashId
+                            });
      console.log("body:"+JSON.stringify(body));                           
 
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashUserself",body).then((res:any)=>{
@@ -503,7 +452,7 @@ ionViewDidEnter() {
                                 });
                     });
                 }
-      });     
+      });  
   }
   
   configureCashId(){
@@ -584,10 +533,10 @@ ionViewDidEnter() {
     return new Promise((resolve,reject)=>{
       // move into CertPage and then 
       if(this.storageProvider.isAndroid){
-            this.browserRef=new InAppBrowser(this.storageProvider.certUrl,"_blank" ,'toolbar=no');
+            this.browserRef=this.iab.create(this.storageProvider.certUrl,"_blank" ,'toolbar=no');
       }else{ // ios
             console.log("ios");
-            this.browserRef=new InAppBrowser(this.storageProvider.certUrl,"_blank" ,'location=no,closebuttoncaption=종료');
+            this.browserRef=this.iab.create(this.storageProvider.certUrl,"_blank" ,'location=no,closebuttoncaption=종료');
       }
               this.browserRef.on("exit").subscribe((event)=>{
                   console.log("InAppBrowserEvent(exit):"+JSON.stringify(event)); 
@@ -1320,7 +1269,7 @@ checkDepositInLatestCashlist(cashList){
   copyAccountInfo(){
     console.log("copyAccountInfo");
     var account = "3012424363621";
-    cordova.plugins.clipboard.copy(account);
+    this.clipboard.copy(account);
     this.translateService.get('AccountNumberClipbaordCopy').subscribe(
         value => {
             let alert = this.alertController.create({
@@ -1380,27 +1329,27 @@ checkDepositInLatestCashlist(cashList){
     hrefCashIdInput(){
         console.log("hrefCashIdInput");
         if(this.storageProvider.isAndroid){
-            this.browserRef=new InAppBrowser("http://www.takit.biz/cashId.html","_blank" ,'toolbar=no');
+            this.browserRef=this.iab.create("http://www.takit.biz/cashId.html","_blank" ,'toolbar=no');
         }else{ // ios
-            this.browserRef=new InAppBrowser("http://www.takit.biz/cashId.html","_blank" ,'location=no,closebuttoncaption=종료');
+            this.browserRef=this.iab.create("http://www.takit.biz/cashId.html","_blank" ,'location=no,closebuttoncaption=종료');
         }
     }
 
     hrefCashIdProcess(){
         console.log("hrefCashIdProcess");
         if(this.storageProvider.isAndroid){
-            this.browserRef=new InAppBrowser("http://www.takit.biz/security.html","_blank" ,'toolbar=no');
+            this.browserRef=this.iab.create("http://www.takit.biz/security.html","_blank" ,'toolbar=no');
         }else{ // ios
-            this.browserRef=new InAppBrowser("http://www.takit.biz/security.html","_blank" ,'location=no,closebuttoncaption=종료');
+            this.browserRef=this.iab.create("http://www.takit.biz/security.html","_blank" ,'location=no,closebuttoncaption=종료');
         }
     }
 
     hrefBankBranch(){
         console.log("hrefBankBranch");
         if(this.storageProvider.isAndroid){
-            this.browserRef=new InAppBrowser("http://www.takit.biz/branch.html","_blank" ,'toolbar=no');
+            this.browserRef=this.iab.create("http://www.takit.biz/branch.html","_blank" ,'toolbar=no');
         }else{ // ios
-            this.browserRef=new InAppBrowser("http://www.takit.biz/branch.html","_blank" ,'location=no,closebuttoncaption=종료');
+            this.browserRef=this.iab.create("http://www.takit.biz/branch.html","_blank" ,'location=no,closebuttoncaption=종료');
         }         
     }
 

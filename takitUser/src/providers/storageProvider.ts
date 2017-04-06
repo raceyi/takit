@@ -1,6 +1,7 @@
 import {Injectable,EventEmitter} from '@angular/core';
 import {Platform,Tabs,NavController} from 'ionic-angular';
-import {SQLite} from 'ionic-native';
+
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import {Http,Headers} from '@angular/http';
 import {ConfigProvider} from './configProvider';
 import {Device} from 'ionic-native';
@@ -123,7 +124,8 @@ export class StorageProvider{
 //"이외 금융기관 => 직접 입력(숫자)"  
 //"지점 코드=>직접 입력(숫자)" http://www.kftc.or.kr/kftc/data/EgovBankList.do 금융회사명으로 조회하기 
 
-    constructor(private platform:Platform,private http:Http,private configProvider:ConfigProvider){
+    constructor(private sqlite: SQLite, private platform:Platform,
+                private http:Http,private configProvider:ConfigProvider){
         console.log("StorageProvider constructor"); 
         this.isAndroid = this.platform.is('android'); 
     }
@@ -134,18 +136,18 @@ export class StorageProvider{
                     name: "takit.db",
                     location:'default'
             };
-            this.db=new SQLite();
-            this.db.openDatabase(options).then(()=>{
-                this.db.executeSql("create table if not exists carts(takitId VARCHAR(100) primary key, cart VARCHAR(1024))").then(
-                (error)=>{
-                    console.log("fail to create cart table "+JSON.stringify(error));
-                    reject();
-                },()=>{
+            
+            this.sqlite.create(options)
+            .then((db: SQLiteObject) => {
+                this.db=db;
+                this.db.executeSql("create table if not exists carts(takitId VARCHAR(100) primary key, cart VARCHAR(1024))").then(()=>{
                     console.log("success to create cart table");
                     resolve();
-                },);
-            },(error)=>{
-                console.log("fail to open database");
+                }).catch(e => {
+                    resolve(); // just ignore it if it exists. hum.. How can I know the difference between error and no change?
+                });
+            }).catch(e =>{
+                console.log("fail to open database"+JSON.stringify(e));
                 reject();
             });
         });

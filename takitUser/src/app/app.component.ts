@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Platform ,App,AlertController,NavController} from 'ionic-angular';
-import { StatusBar,Network} from 'ionic-native';
 
 import {TabsPage} from '../pages/tabs/tabs';
 
@@ -17,9 +16,10 @@ import {EmailProvider} from '../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../providers/LoginProvider/kakao-provider';
 import {StorageProvider} from '../providers/storageProvider';
 import {TranslateService} from 'ng2-translate/ng2-translate';
-
-import {Storage} from '@ionic/storage';
+import { StatusBar } from '@ionic-native/status-bar';
+import { Storage } from '@ionic/storage';
 import { Device } from 'ionic-native';
+import { Network } from '@ionic-native/network';
 
 declare var cordova:any;
 
@@ -35,38 +35,18 @@ export class MyApp {
                 public storage:Storage,public app:App,
                 public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
                 public emailProvider:EmailProvider,public alertCtrl:AlertController,
-                public translateService: TranslateService) {
+                public translateService: TranslateService, private network: Network, 
+                private statusBar: StatusBar) {
     console.log("platform ready comes");
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-        StatusBar.styleDefault();
+        this.statusBar.styleDefault();
 
         console.log("platform ready comes uuid:"+Device.uuid);
-        if(Network.connection=="none"){
-            //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
-            //Please check current page and then move into ErrorPage!
-            //console.log("rootPage:"+JSON.stringify(this.rootPage));
-            if(!this.rootPage==undefined){
-                this.storage.get("id").then((value:string)=>{
-                    console.log("value:"+value);
-                    if(value==null){
-                        this.rootPage=LoginPage;
-                    }else{    
-                        this.rootPage=ErrorPage;
-                    }
-                },(err)=>{
-                    this.rootPage=LoginPage;
-                });
-            }else{
-                console.log("show alert");
-            }       
-        }else{
-            console.log('network connected!');
-        }
 
-            this.disconnectSubscription = Network.onDisconnect().subscribe(() => { 
+            this.disconnectSubscription = this.network.onDisconnect().subscribe(() => { 
                 console.log('network was disconnected :-( ');
                 console.log("rootPage:"+JSON.stringify(this.rootPage));
                 if(this.rootPage==undefined){

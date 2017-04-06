@@ -10,7 +10,8 @@ import {FbProvider} from '../providers/LoginProvider/fb-provider';
 import {EmailProvider} from '../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../providers/LoginProvider/kakao-provider';
 import {StorageProvider} from '../providers/storageProvider';
-import {Storage} from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage';
+
 import {ServerProvider} from '../providers/serverProvider';
 
 import {ConfigProvider} from '../providers/configProvider';
@@ -39,6 +40,18 @@ import {TranslateModule, TranslateLoader,TranslateStaticLoader} from 'ng2-transl
 import {Http,Headers} from '@angular/http';
 
 import {Focuser} from '../components/focuser/focuser';
+
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
+import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { Network } from '@ionic-native/network';
+import { StatusBar } from '@ionic-native/status-bar';
+import { DeviceAccounts } from '@ionic-native/device-accounts';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { Sim } from '@ionic-native/sim';
+import { AppAvailability } from '@ionic-native/app-availability';
+import { Clipboard } from '@ionic-native/clipboard';
 
 @NgModule({
   declarations: [
@@ -72,6 +85,7 @@ import {Focuser} from '../components/focuser/focuser';
   ],
   imports: [
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,
       useFactory: (createTranslateLoader),
@@ -109,13 +123,24 @@ import {Focuser} from '../components/focuser/focuser';
   ],
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
-              Storage,
+              Network, 
+              Facebook,
+              InAppBrowser,
+              Push,
+              SplashScreen,
+              StatusBar, 
+              DeviceAccounts,
+              SQLite,
+              Sim,
+              Clipboard,
+              AppAvailability,
               ConfigProvider,
               StorageProvider,
               FbProvider,
               EmailProvider,
               KakaoProvider,
-              ServerProvider]
+              ServerProvider
+             ]
 })
 
 export class AppModule {}

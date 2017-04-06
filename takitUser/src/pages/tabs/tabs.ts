@@ -9,18 +9,21 @@ import {LoginPage} from '../login/login';
 
 import {Platform,IonicApp,MenuController,Tabs} from 'ionic-angular';
 import {ViewController,App,NavController,AlertController,ModalController} from 'ionic-angular';
-import {Push,PushNotification,Device} from 'ionic-native';
+import {Device} from 'ionic-native';
 import {Http,Headers} from '@angular/http';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {Storage} from '@ionic/storage';
 import { TranslateService} from 'ng2-translate/ng2-translate';
 
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
+
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/map';
 
+import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
+
 declare var cordova:any;
-declare var window:any;
 
 @Component({
   templateUrl: 'tabs.html',
@@ -33,7 +36,7 @@ export class TabsPage {
   public tabHome: any;
   public tabSearch: any;
 
-  pushNotification:PushNotification;
+  pushNotification:PushObject;
   askExitAlert:any;
   
   public isTestServer=false;
@@ -44,7 +47,8 @@ export class TabsPage {
 
   constructor(translateService: TranslateService, public modalCtrl: ModalController,private navController: NavController,private app:App,private platform:Platform,public viewCtrl: ViewController,
     public storageProvider:StorageProvider,private http:Http, private alertController:AlertController,private ionicApp: IonicApp,
-    private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider,public storage:Storage) {
+    private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider,
+    public storage:Storage, private push: Push) {
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
         }    
@@ -197,7 +201,7 @@ export class TabsPage {
 
         this.storageProvider.tabMessageEmitter.subscribe((cmd)=>{
             if(cmd=="stopEnsureNoti"){
-                cordova.plugins.backgroundMode.disable();
+                cordova.plugins.backgroundMode.backgroundMode.disable();
                 this.ngZone.run(()=>{
                         this.storageProvider.run_in_background=false;
                         //change color of notification button
@@ -535,7 +539,7 @@ export class TabsPage {
   }
 
     registerPushService(){ // Please move this code into tabs.ts
-            this.pushNotification=Push.init({
+            this.pushNotification=this.push.init({
                 android: {
                     senderID: this.storageProvider.userSenderID,
                     sound: "true"
@@ -552,7 +556,7 @@ export class TabsPage {
                 windows: {}
             });
                         
-            this.pushNotification.on('registration',(response)=>{
+            this.pushNotification.on('registration').subscribe((response:any)=>{
 
               console.log("registration:"+JSON.stringify(response));
               console.log("registration..."+response.registrationId);
@@ -590,7 +594,7 @@ export class TabsPage {
                 });
             });
 
-            this.pushNotification.on('notification',(data)=>{
+            this.pushNotification.on('notification').subscribe((data:any)=>{
 /*                
 //                  let custom = {"cashTuno":"20170103075617278","cashId":"TAKIT02","transactionType":"deposit","amount":1,"transactionTime":"20170103","confirm":0,"bankName":"농협은행"}
                   let custom ={"depositMemo":"타킷 주식회사","amount":"100003","depositDate":"2017-01-06","branchName":"본점영업부","cashTuno":"20170106093158510","bankName":"농협"}
@@ -688,7 +692,7 @@ export class TabsPage {
                 }                
             });
 
-            this.pushNotification.on('error', (e)=>{
+            this.pushNotification.on('error').subscribe((e:any)=>{
                 console.log(e.message);
             });
     }

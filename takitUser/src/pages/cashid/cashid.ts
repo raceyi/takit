@@ -4,8 +4,11 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ServerProvider} from '../../providers/serverProvider';
-import {InAppBrowserEvent,InAppBrowser} from 'ionic-native';
+//import {InAppBrowserEvent,InAppBrowser} from 'ionic-native';
 import {TutorialPage} from '../tutorial/tutorial';
+
+import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
+
 
 declare var window:any;
 
@@ -24,7 +27,7 @@ export class CashIdPage {
     passwordComment=true;
     passwordMismatch=true;
 
-    public browserRef:InAppBrowser;
+    public browserRef;
 
     constructor(private app:App,private platform:Platform,private navController:NavController,
         private alertController:AlertController,private serverProvider:ServerProvider

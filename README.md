@@ -31,47 +31,50 @@ License: GPL
 
  $ionic resources
 
+ $npm install --save @ionic-native/core@latest 
+
+ $npm install --save @ionic-native/status-bar@latest 
+ $npm install --save @ionic-native/splash-screen@latest
+
  $ionic plugin add https://github.com/taejaehan/cordova-kakaotalk.git --variable KAKAO_APP_KEY={takitUser.kakao.appId}
 
   =>takitUser/platforms/android/cordova-plugin-htj-kakaotalk/user-kakao.gradle 파일에 sdk version수정
    현재 SDK버전: com.kakao.sdk:kakaotalk:1.1.21
 
  $ionic plugin add https://github.com/loicknuchel/cordova-device-accounts.git
+ $npm install --save @ionic-native/device-accounts
 
  $ionic plugin add cordova-plugin-facebook4 --save --variable APP_ID="{takitUser.facebook.appId}" --variable APP_NAME="takitUser"
+ $npm install --save @ionic-native/facebook
 
  $ionic plugin add cordova-plugin-network-information
-
- $ionic plugin add cordova-plugin-file-transfer
-
- $ionic plugin add cordova-plugin-camera
-
- $ionic plugin add cordova-plugin-filepath
-
- $ionic plugin add https://github.com/protonet/cordova-plugin-image-resizer.git
-
+ $npm install --save @ionic-native/network
+ 
  $ionic plugin add phonegap-plugin-push --variable SENDER_ID={takitUser.fcm.senderId}
+ $npm install --save @ionic-native/push
 
  $ionic plugin add cordova-sqlite-storage
+ $npm install --save @ionic-native/sqlite
 
  $ionic plugin add https://github.com/46cl/cordova-android-focus-plugin
 
  $ionic plugin add cordova-plugin-sim
+ $npm install --save @ionic-native/sim
 
  $ionic plugin add cordova-plugin-inappbrowser
+ $npm install --save @ionic-native/in-app-browser
 
  $ionic plugin add cordova-plugin-appavailability
-
- $ionic plugin add https://github.com/raceyi/GetEmail.git
+ $npm install --save @ionic-native/app-availability
 
  $ionic plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
 
- $ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git
+ $ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git#0.6.5
 
  $ionic plugin add https://github.com/VersoSolutions/CordovaClipboard 
+ $npm install --save @ionic-native/clipboard
 
  $npm install crypto-js
-
  $npm install @types/crypto-js --save
 
  $npm install ng2-translate --save

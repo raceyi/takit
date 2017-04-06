@@ -1,7 +1,8 @@
 import {Component,ViewChild} from '@angular/core';
 import {NavController,Platform,Tabs,AlertController,Content} from 'ionic-angular';
 //import {Camera} from 'ionic-native';
-import {Transfer,Splashscreen} from 'ionic-native';
+import {Transfer} from 'ionic-native';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ShopTabsPage} from '../shoptabs/shoptabs';
@@ -34,14 +35,15 @@ export class SearchPage {
   takitIds=[];
 
   constructor(private app:App, public storageProvider:StorageProvider, private navController: NavController,
-    private platform:Platform,private http:Http ,private alertController:AlertController,private serverProvider:ServerProvider) {
+    private platform:Platform,private http:Http ,private alertController:AlertController,private serverProvider:ServerProvider,
+    private splashScreen: SplashScreen) {
       console.log("SearchPage constructor");
       console.log("this.platform.is('android'):"+this.platform.is('android'));
   }
 
   ionViewDidLoad(){
     console.log("SearchPage did enter");
-    Splashscreen.hide();
+    this.splashScreen.hide();
   }
 
   keypad(){

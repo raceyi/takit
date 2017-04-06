@@ -29,7 +29,7 @@ export class TutorialPage {
     },
     {
       title: "수동확인하기",
-      description: "캐쉬아이디입력을 잊으셨나요? <br>캐쉬의 충전하기 화면 하단 버튼을 클릭후 이체정보를 채워주세요. 받는 통장 표시내용은 본인의 실명입니다.<br><br><a href=\"http://www.takit.biz/branch.html\">거래지점확인방법</a>",
+      description: "캐쉬아이디입력을 잊으셨나요? <br>캐쉬의 충전하기 화면 하단 버튼을 클릭후 이체정보를 채워주세요. 받는 통장 표시내용은 본인의 실명입니다.",
       image: "assets/cash/manual.png",
     },
     {

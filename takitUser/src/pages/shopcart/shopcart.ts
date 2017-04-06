@@ -5,7 +5,6 @@ import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ServerProvider} from '../../providers/serverProvider';
 import {Keyboard} from 'ionic-native';
-
 declare var cordova:any;
 
 @Component({
@@ -35,7 +34,7 @@ export class ShopCartPage{
      constructor(private app:App,private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,
             private alertController:AlertController,private serverProvider:ServerProvider,
-            private ngZone:NgZone,){
+            private ngZone:NgZone){
 	      console.log("ShopCartPage constructor");
         this.shopname=this.storageProvider.currentShopname();
         this.cart=this.storageProvider.cart;

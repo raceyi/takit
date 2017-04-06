@@ -15,11 +15,11 @@ import {ServerProvider} from '../../providers/serverProvider';
   templateUrl: 'shophome.html'
 })
 export class ShopHomePage {
-  @ViewChild('segmentBar') segmentBarRef: Content;
-  @ViewChild('menusContent') menusContentRef: Content;
-  @ViewChild('recommendation') recommendationRef: Content;
-  @ViewChild('categorySegment') categorySegmentRef: Segment;
-
+ // @ViewChild('segmentBar') segmentBarRef: Content;
+ // @ViewChild('menusContent') menusContentRef: Content;
+ // @ViewChild('recommendation') recommendationRef: Content;
+ // @ViewChild('categorySegment') categorySegmentRef: Segment;
+@ViewChild('shophomeContent') shophomeContentRef:Content;
   shopname:string;
   shopPhoneHref:string;
 
@@ -30,7 +30,8 @@ export class ShopHomePage {
   takitId:string;
 
   shop;
-  
+  categoryRows=[];
+
   menuRows=[];
   categoryMenuRows=[];
   dummyMenuRows:number=0; // Just for android version less than 5.0
@@ -52,13 +53,13 @@ export class ShopHomePage {
         if(this.takitId==undefined){
           this.takitId=this.storageProvider.takitId;
           this.loadShopInfo();
-          this.segmentBarRef.resize();
-          this.menusContentRef.resize();
+          this.shophomeContentRef.resize();
         }
         this.storageProvider.orderPageEntered=false;
   }
   
   configureShopInfo(){
+    // hum=> construct this.categoryRows
     this.shop.categories.forEach(category => {
         var menus=[];
         console.log("[configureShopInfo]this.shop:"+this.shop);
@@ -142,6 +143,16 @@ export class ShopHomePage {
         this.categoryMenuRows.push(menuRows);                        
         });
 
+        var rowNum:number=0;
+        for(rowNum=0;(rowNum+1)*3<=this.categories.length;rowNum++)
+            this.categoryRows.push([this.categories[rowNum*3],this.categories[rowNum*3+1],this.categories[rowNum*3+2]]);
+        if(this.categories.length%3==1){
+            this.categoryRows.push([this.categories[(rowNum)*3]]);
+        }    
+        if(this.categories.length%3==2){
+            this.categoryRows.push([this.categories[(rowNum)*3],this.categories[(rowNum)*3+1]]);
+        }    
+
         this.menuRows=this.categoryMenuRows[0];
         this.categorySelected=1; // hum...
         //console.log("menus for 0:"+JSON.stringify(this.menuRows));  
@@ -154,6 +165,7 @@ export class ShopHomePage {
         // Is it correct location? Just assume that the height of recommendation area.
         //console.log("segmentBar:"+JSON.stringify(this.segmentBarRef.getDimensions()));
         //console.log("recommendation:"+JSON.stringify(this.recommendationRef.getDimensions()));
+        /*
         let menusDimensions=this.menusContentRef.getContentDimensions();
         let menusHeight=this.menusContentRef.getNativeElement().parentElement.offsetHeight-menusDimensions.contentTop;
         if(this.shop.shopInfo.hasOwnProperty("todayMenu")){
@@ -162,29 +174,6 @@ export class ShopHomePage {
         console.log("pageHeight:"+this.menusContentRef.getNativeElement().parentElement.offsetHeight+"top:"+menusDimensions.contentTop+"menusHeight:"+menusHeight);
         this.menusContentRef.getScrollElement().setAttribute("style","height:"+menusHeight+"px;margin-top:0px;");
         /////////////////////////////////*/
-        if(this.shop.shopInfo.hasOwnProperty("todayMenus")){
-            //console.log("todayMenus num:"+ this.shop.shopInfo.todayMenus.length+"todayMenus:"+JSON.stringify(this.shop.shopInfo.todayMenus));
-            this.recommendMenuNum=this.shop.shopInfo.todayMenus.length;
-            this.todayMenuHideFlag=false;
-            this.shop.shopInfo.todayMenus.forEach(todaymenuString=>{
-                //console.log("todaymenu:"+todaymenuString);
-                var todayMenu=JSON.parse(todaymenuString);
-                var recommendMenu;
-                    //console.log("category:" +todayMenu.categoryNO+" menu name:"+ todayMenu.menu_name);
-                    for(var i=0;i<this.categories[todayMenu.categoryNO-1].menus.length;i++){
-                        //console.log("menu:"+this.categories[todayMenu.categoryNO-1].menus[i].name);
-                        if(this.categories[todayMenu.categoryNO-1].menus[i].name==todayMenu.menu_name){
-                            recommendMenu=this.categories[todayMenu.categoryNO-1].menus[i];
-                        break;
-                    }
-                }
-                //console.log("recommendMenu:"+JSON.stringify(recommendMenu));
-                this.recommendMenu.push(recommendMenu);
-            });
-        }else{
-            this.todayMenuHideFlag=true;
-        }
-
         if(navigator.language.startsWith("ko") && this.shop.shopInfo.hasOwnProperty("notice") && this.shop.shopInfo.notice!=null){
             let alert = this.alertController.create({
                         title: this.shop.shopInfo.notice,
@@ -265,8 +254,9 @@ export class ShopHomePage {
         this.menuRows=this.categoryMenuRows[category_no-1];
         this.categorySelected=category_no; //Please check if this code is correct.
     }
-    this.menusContentRef.resize();
-
+    this.shophomeContentRef.resize();
+/*
+        this.shophomeContentRef.getScrollElement().setAttribute("style","height:"+menusHeight+"px;margin-top:0px;margin-bottom:0px");
     console.log("this.menuRows:"+JSON.stringify(this.menuRows));
     console.log("row num :"+this.menuRows.length+" menus:"+JSON.stringify(this.menuRows));
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -276,7 +266,7 @@ export class ShopHomePage {
     let menusHeight=this.menusContentRef.getNativeElement().parentElement.offsetHeight-menusDimensions.contentTop+100;
     console.log("pageHeight:"+this.menusContentRef.getNativeElement().parentElement.offsetHeight+"top:"+menusDimensions.contentTop+"menusHeight:"+menusHeight);
     this.menusContentRef.getScrollElement().setAttribute("style","height:"+menusHeight+"px;margin-top:0px;margin-bottom:0px");
-    //////////////////////////////////////////////////////////*/
+    //////////////////////////////////////////////////////////*/    
   }
 
   menuSelected(category_no,menu_name){
@@ -300,6 +290,7 @@ export class ShopHomePage {
 
   swipeCategory(event){
         console.log("event.direction:"+event.direction+ "categories.length:"+this.categories.length);
+        /*
         if(this.categories.length>3){
             let dimensions=this.segmentBarRef.getContentDimensions();
             if(this.categorySelected>=3 && event.direction==2){ // increase this.categorySelected
@@ -310,6 +301,7 @@ export class ShopHomePage {
                  this.segmentBarRef.scrollTo((dimensions.contentWidth/3)*(this.categorySelected-3),0,500);
             }    
         }
+        */
         if(event.direction==4){ //DIRECTION_LEFT = 2
             if(this.categorySelected>1){
                 this.categoryChange(this.categorySelected-1);

@@ -4,7 +4,7 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {TabsPage} from '../tabs/tabs';
 import {LoginPage} from  '../login/login';
-import {Splashscreen} from 'ionic-native';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import {Storage} from "@ionic/storage";
 import {Device} from 'ionic-native';
 
@@ -22,14 +22,14 @@ export class MultiloginPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   public storageProvider:StorageProvider,private serverProvider:ServerProvider,
-  private app:App,private platform:Platform,public storage:Storage) {
+  private app:App,private platform:Platform,public storage:Storage, private splashScreen: SplashScreen) {
     this.navParams.get("id");
     this.navParams.get("password");
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MultiloginPage');
-    Splashscreen.hide();
+    this.splashScreen.hide();
   }
 
   login(){

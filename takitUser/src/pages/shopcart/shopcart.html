@@ -11,7 +11,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding #shopcartPage class="shopcart">
+<ion-content #shopcartPage class="shopcart">
   <!--
   <ion-row>    
     <ion-label></ion-label>
@@ -26,12 +26,12 @@
   <ion-item class="order5" *ngFor="let menu of cart.menus">
     <ion-label class="orderInfo">
     <ion-row class="order2">
-    <ion-item ion-col class="orderDelete">
+    <ion-item ion-col col-3 class="orderDelete">
       <button ion-button outline (click)="deleteMenu(menu)">
         <span style="color:black">삭제</span>
       </button>
     </ion-item>
-    <ion-col class="textSet">
+    <ion-col col-9 class="textSet">
       <ion-row>
         <ion-col>
         {{menu.menuName}}

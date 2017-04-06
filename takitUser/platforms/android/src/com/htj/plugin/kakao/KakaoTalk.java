@@ -359,12 +359,6 @@ public class KakaoTalk extends CordovaPlugin {
 				public boolean isSaveFormData() {
 					return true;
 				}
-				/////////kalen.lee-begin///////////
-                                @Override
-                                public boolean isSecureMode() {
-                                        return false;
-                                }       
-                                ////////kalen.lee-end/////////////
 			};
 		}
 

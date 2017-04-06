@@ -1,25 +1,12 @@
 page-shophome{
-    ion-header {
-         position: relative !important; 
-     }
-
+    /*
     .segmentBar>.scroll-content{
         overflow-x:scroll !important;
         overflow-y:hidden !important;
         position:relative !important;
     }
-    
-    ion-content.segmentBar{
-         height:auto !important;
-         position:relative !important; 
-         ion-col {
-            padding: 0px !important; 
-         }
-         .scroll-content {
-             margin:0px !important;
-         }
-    }
-
+    */
+/*    
     .menus>.scroll-content{
         overflow-x:hidden !important;
         overflow-y:scroll !important;
@@ -51,7 +38,7 @@ page-shophome{
             border-color:white !important;
         } 
     }
-
+*/
     .menuImgButton{
             height:27vw !important;
             width :100% !important;
@@ -78,6 +65,9 @@ page-shophome{
         border-style: solid !important;
         border-color: #3474e1 !important;
         padding:0px !important;
+
+        height: 3rem;
+        line-height: 2.5rem;
     }
 
     .segment-md>.segment-activated {
@@ -85,8 +75,23 @@ page-shophome{
         color: white !important;
     }
 
+    ion-col.segmentButton{
+        padding:0px !important;
+    }
+
+    .segment-ios .segment-button:last-of-type {
+        margin-left: 0;
+        border-left-width: 1px !important;
+        border-radius: 0; 
+    }
+    .segment-ios .segment-button:first-of-type {
+        margin-right: 0;
+        border-radius: 0; 
+        border-left-width: 1px;
+    }
+    
     .Dummy{
-        height:30vh;
+        height:20vh;
     }
 
     .card-md {

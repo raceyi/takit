@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {Platform} from 'ionic-angular';
 import {NavController,NavParams,App} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
-import {Splashscreen} from 'ionic-native';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
@@ -25,7 +25,7 @@ export class ErrorPage{
         private platform:Platform,public storageProvider:StorageProvider,
         public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
         public emailProvider:EmailProvider,public storage:Storage,private app:App,
-        private translateService:TranslateService){
+        private translateService:TranslateService, private splashScreen: SplashScreen){
 
          console.log("ErrorPage constructor");
          //this.android_platform=this.platform.is('android');
@@ -42,7 +42,7 @@ export class ErrorPage{
 
      ionViewDidLoad(){
         console.log("ErrorPage did enter");
-        Splashscreen.hide();
+        this.splashScreen.hide();
      }
 
      terminate(event){

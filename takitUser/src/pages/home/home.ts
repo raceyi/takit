@@ -1,7 +1,7 @@
 import {Component,ViewChild} from "@angular/core";
 import {App, MenuController,Platform,NavController,NavParams,Tabs,Content} from 'ionic-angular';
-import {Splashscreen,Transfer,File} from 'ionic-native';
-
+import {Transfer,File} from 'ionic-native';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 
@@ -13,9 +13,9 @@ import 'rxjs/add/operator/map';
 import {ShopTabsPage} from '../shoptabs/shoptabs';
 import {Device} from 'ionic-native';
 
-declare var moment:any;
-declare var cordova:any;
-declare var ImageResizer:any;
+//declare var moment:any;
+//declare var cordova:any;
+//declare var ImageResizer:any;
 
 @Component({
    selector: 'page-home',  
@@ -29,14 +29,14 @@ export class HomePage{
 
      constructor(private platform:Platform,private navController: NavController, private navParams: NavParams,
         private app: App, menu:MenuController,public storageProvider:StorageProvider,
-        private http:Http,private serverProvider:ServerProvider){
+        private http:Http,private serverProvider:ServerProvider, private splashScreen: SplashScreen){
          console.log("homePage constructor screen:"+ window.screen.availWidth+" "+window.screen.width+" "+window.screen.availHeight+ " "+window.screen.height);
-         console.log("cordova.file.dataDirectory:"+cordova.file.dataDirectory);
+         //console.log("cordova.file.dataDirectory:"+cordova.file.dataDirectory);
      }
 
      ionViewDidLoad(){
         console.log("HomePage did enter");
-        Splashscreen.hide();
+        this.splashScreen.hide();
     }
 
      ionViewWillEnter(){
@@ -71,7 +71,7 @@ export class HomePage{
                 });
          });
      }
-
+/*
     insertShop(takitId,s3key,filenamefullpath){
          var filename=filenamefullpath.substr(cordova.file.dataDirectory.length);
          var queryString="INSERT INTO shoplist (takitId, s3key,filename) VALUES (?,?,?)";
@@ -137,7 +137,8 @@ export class HomePage{
                                 .then(result=>{
                                             console.log("removeFile("+filename+") success reducedfilename:"+reducedfilename);
                                             console.log("prevdir:"+foldername+dirname+"prevfile:"+reducedfilename+" nextdir:"+foldername+"next filename:"+filename);
-                                            File.moveFile(reduceddirname/*foldername+dirname*/,reducedfilename,foldername,filename) // Humm... how about iphone? Please check platform and directory 
+                                            File.moveFile(reduceddirname//foldername+dirname
+                                            ,reducedfilename,foldername,filename) // Humm... how about iphone? Please check platform and directory 
                                                 .then(result=>{
                                                         console.log("moveFile success:"+filename);
                                                         resolve(foldername+filename);
@@ -166,7 +167,7 @@ export class HomePage{
                 });
             });
     }
-
+*/
     removeSelected(takitId){
         console.log("removeSelected:"+takitId);
         //this.storageProvider.shoplist.findIndex( );
@@ -185,6 +186,7 @@ export class HomePage{
         }
 */      
         if(!this.storageProvider.shopSelected){
+            console.log("this.shopSelected true");
             this.storageProvider.shopSelected=true;
             this.serverProvider.getShopInfo(takitId).then((res)=>{
                 this.storageProvider.shopResponse=res;
@@ -192,7 +194,8 @@ export class HomePage{
                 console.log("this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
                 this.app.getRootNav().push(ShopTabsPage,{takitId:takitId}); 
             },(err)=>{
-
+                console.log("error:"+JSON.stringify(err));
+                 this.storageProvider.shopSelected=false;
             });
         }else{
             console.log("this.shopSelected works!");

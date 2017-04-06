@@ -1,22 +1,26 @@
 import {Injectable} from '@angular/core';
 import {Http,Headers} from '@angular/http';
-import {AppAvailability,InAppBrowserEvent,InAppBrowser} from 'ionic-native';
+import { AppAvailability } from '@ionic-native/app-availability';
 import {Platform} from 'ionic-angular';
 import {StorageProvider} from '../storageProvider';
 import { Device } from 'ionic-native';
 import 'rxjs/add/operator/map';
+import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
+
+
 declare var KakaoTalk:any;
 
 @Injectable()
 export class KakaoProvider {
-  browserRef:InAppBrowser;
+  browserRef;
   email:string;
   phone:string;
   country:string;
   name:string;
 
   constructor(private platform:Platform,private http:Http
-    ,private storageProvider:StorageProvider) {
+    ,private storageProvider:StorageProvider, private iab: InAppBrowser,
+    private appAvailability: AppAvailability) {
       console.log("KakaoProvider");
   }
 
@@ -42,7 +46,7 @@ export class KakaoProvider {
           console.log("unknown platform");
       }
       
-      AppAvailability.check(scheme).then(
+      this.appAvailability.check(scheme).then(
           ()=> {  // Success callback
               console.log(scheme + ' is available. call KakaoTalk.login ');
               KakaoTalk.login(
@@ -76,10 +80,12 @@ export class KakaoProvider {
           },
           ()=>{  // Error callback
               console.log(scheme + ' is not available');
-              this.browserRef=new InAppBrowser("https://kauth.kakao.com/oauth/authorize?client_id="+this.storageProvider.kakaoTakitUser+"&redirect_uri="+this.storageProvider.kakaoOauthUrl+"&response_type=code","_blank");
+              this.browserRef=this.iab.create("https://kauth.kakao.com/oauth/authorize?client_id="+this.storageProvider.kakaoTakitUser+"&redirect_uri="+this.storageProvider.kakaoOauthUrl+"&response_type=code","_blank");
               this.browserRef.on("exit").subscribe((event)=>{
                   console.log("InAppBrowserEvent(exit):"+JSON.stringify(event)); 
                   this.browserRef.close();
+                  let reason={stage:"login_err",msg:"no input"}; 
+                  reject(reason);
               });
               this.browserRef.on("loadstart").subscribe((event:InAppBrowserEvent)=>{
                   console.log("InAppBrowserEvent(loadstart):"+String(event.url)); 
@@ -115,6 +121,8 @@ export class KakaoProvider {
                           },
                           (err)=>{
                               console.log("getKakaoToken err "+JSON.stringify(err));
+                              let reason={stage:"login_err",msg:"getKakaoToken err "}; 
+                              reject(err);
                           });
                   }
                   // Please add code for login failure here!
@@ -223,7 +231,7 @@ export class KakaoProvider {
                     console.log("unknown platform");
                     resolve();
                 }
-                AppAvailability.check(scheme).then(()=> {  // Success callback
+                this.appAvailability.check(scheme).then(()=> {  // Success callback
                         console.log("call KakaoTalk.logout");
                         KakaoTalk.logout(()=>{
                             resolve();
@@ -258,7 +266,7 @@ export class KakaoProvider {
         console.log("server: "+ this.storageProvider.serverAddress);
 
         this.http.post(this.storageProvider.serverAddress+"/unregister",JSON.stringify({version:this.storageProvider.version}),{headers: headers}).map(res=>res.json()).subscribe((res)=>{
-            AppAvailability.check(scheme).then(
+            this.appAvailability.check(scheme).then(
                 ()=> {  // Success callback
                     KakaoTalk.logout();
                 });
