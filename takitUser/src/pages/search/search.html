@@ -7,7 +7,7 @@
 <ion-content padding class="ocr" (swipe)="swipeSearch($event)">
   -->
 <ion-content #searchContent class="ocr">
-
+<!--
 <ion-segment  [(ngModel)]="inputType"  *ngIf="storageProvider.isAndroid" >
  <ion-segment-button color="primary" value="keypad" (ionSelect)="keypad()">
    <ion-icon name="keypad"></ion-icon>
@@ -19,50 +19,77 @@
   <ion-icon name="camera"></ion-icon>
   </ion-segment-button>
 </ion-segment>
+-->
+<ion-segment [(ngModel)]="searchMode" >
+ <ion-segment-button color="primary" value="allStores">
+   모든상점
+  </ion-segment-button>
+  <ion-segment-button color="primary" value="idSearch">
+   아이디검색 
+  </ion-segment-button>
+</ion-segment>
 
-<ion-list>
-<ion-item>
-
-<ion-row>
-  <ion-col width-45>
-  <ion-searchbar [(ngModel)]="serviceQuery" autocomplete="on" [placeholder]="'Service' | translate" (ionBlur)="serviceBlur()" (ionClear)="serviceClear($event)" (ionFocus)="getFocusServices($event)" (ionInput)="getServices($event)" ></ion-searchbar>
-  <ion-list>
-    <ion-item class="searchBarItems" *ngFor="let item of servicesShown">
-     <ion-row (click)="selectTakitService(item)">
-      {{ item }}
-    </ion-row>
+<div [ngSwitch]="searchMode">
+  <ion-list *ngSwitchCase="'allStores'">
+    <br>
+    <ion-item class="region">
+      세종대 
     </ion-item>
-  </ion-list>
-  </ion-col>
-
-  <ion-col  width-10>
-   @
-  </ion-col>
-
-  <ion-col width-45>
-  <ion-searchbar class="searchBarItems" [(ngModel)]="brandQuery"  autocomplete="on" [placeholder]="'Brand' | translate" (ionBlur)="brandBlur()" (ionClear)="brandClear($event)" (ionFocus)="getFocusBrands($event)" (ionInput)="getBrands($event)"></ion-searchbar>
-  <ion-list>
-    <ion-item *ngFor="let item of brandsShown">
-     <ion-row (click)="selectTakitBrand(item)">
-      {{ item }}
-    </ion-row>
+    <div class="shops">
+    <ion-item class="shops">
+    <button ion-button   class="shop" color="primary" (click)="goToShopButton('세종대@더큰도시락')"># 세종대@더큰도시락 #</button>
+    </ion-item>    
+    <ion-item class="shops">
+    <button ion-button   class="shop" color="darkgray"  (click)="goToShopButton('세종대@HandelandGretel')"># 세종대@HandelandGretel #</button>
     </ion-item>
+    <ion-item class="shops">
+    <button ion-button class="shop" color="darkgray"  (click)="goToShopButton('세종대기숙사@Pandorothy')"># 세종대기숙사@Pandorothy #</button>
+    </ion-item>
+    </div>
   </ion-list>
-  </ion-col>
-</ion-row>
-<ion-row>
-<button ion-button full (click)="goToShop()">{{ 'VisitTheStore' | translate }}</button>
-</ion-row>
-</ion-item>
-</ion-list>
+  <ion-list *ngSwitchCase="'idSearch'">
+  <ion-item>
+  <ion-row>
+    <ion-col width-45>
+    <ion-searchbar [(ngModel)]="serviceQuery" autocomplete="on" [placeholder]="'Service' | translate" (ionBlur)="serviceBlur()" (ionClear)="serviceClear($event)" (ionFocus)="getFocusServices($event)" (ionInput)="getServices($event)" ></ion-searchbar>
+    <ion-list>
+      <ion-item class="searchBarItems" *ngFor="let item of servicesShown">
+      <ion-row (click)="selectTakitService(item)">
+        {{ item }}
+      </ion-row>
+      </ion-item>
+    </ion-list>
+    </ion-col>
 
+    <ion-col  width-10>
+    @
+    </ion-col>
+
+    <ion-col width-45>
+    <ion-searchbar class="searchBarItems" [(ngModel)]="brandQuery"  autocomplete="on" [placeholder]="'Brand' | translate" (ionBlur)="brandBlur()" (ionClear)="brandClear($event)" (ionFocus)="getFocusBrands($event)" (ionInput)="getBrands($event)"></ion-searchbar>
+    <ion-list>
+      <ion-item *ngFor="let item of brandsShown">
+      <ion-row (click)="selectTakitBrand(item)">
+        {{ item }}
+      </ion-row>
+      </ion-item>
+    </ion-list>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+  <button ion-button full (click)="goToShop()">{{ 'VisitTheStore' | translate }}</button>
+  </ion-row>
+  </ion-item>
+  </ion-list>
+</div>
+<!-- workaround for bug
 <div *ngIf="!storageProvider.isAndroid">
   <button class="dummy" color="white" ion-button full></button>
 </div>    
 
 <div class="dummy" *ngIf="storageProvider.isAndroid">
 </div>    
-
+-->
 </ion-content>
 
 

@@ -29,6 +29,14 @@
                     </ion-col>
                 </ion-row>
                 <ion-row center>
+                    <ion-col>거래시간</ion-col>
+                    <ion-col>
+                    <ion-item>
+                    <ion-input #input class="cashIn-check-inputBox" [(ngModel)]="depositHour" type="text" disabled ></ion-input>
+                    </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row center>
                     <ion-col>입금액</ion-col>
                     <ion-col>
                     <ion-item>
@@ -44,6 +52,7 @@
                     </ion-item>
                     </ion-col>
                 </ion-row>
+                <!--
                 <ion-row center>
                     <ion-col>거래지점</ion-col> 
                     <ion-col>
@@ -52,6 +61,7 @@
                     </ion-item>
                     </ion-col>
                 </ion-row>
+                -->
                 <ion-row center>
                     <ion-col>캐쉬아이디</ion-col>
                     <ion-col>

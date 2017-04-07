@@ -77,4 +77,39 @@ page-search{
             margin: 0px 0px 0px 0; 
         }
     }
+
+    /////////////////////////////////////////////////////////
+   .list-md .item-block .item-inner {
+        border-bottom: 0px solid #dedede;
+    }
+
+    .list-ios .item-block .item-inner {
+        border-bottom: 0px solid #c8c7cc;
+    }
+
+    .list-ios > .item-block:last-child, .list-ios > .item-wrapper:last-child .item-block {
+        border-bottom: 0px solid #c8c7cc;
+    }
+
+    .shop{
+        width:50vw;
+    }
+
+    .region{
+        text-align: center;
+    }
+
+    .shops.item-ios {
+        background-color: #f4f4f4;//#ebebeb;
+    }
+
+    .shops.item-md {
+        background-color: #f4f4f4;//#ebebeb;
+    }
+
+    div.shops{
+        padding-left:  20vw;
+        padding-right: 20vw;
+    }
+    ////////////////////////////////////////////////////
 }

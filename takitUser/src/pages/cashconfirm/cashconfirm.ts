@@ -15,10 +15,12 @@ export class CashConfirmPage{
   depositBank;
   depositMemo;
   depositDate;
-  depositBranch;
+  //depositBranch;
+  depositHour;
   tuno;
   userAgree=false;
-  
+  inProgress=false;
+
   constructor(params: NavParams,public viewCtrl: ViewController
       ,private alertController:AlertController,public storageProvider:StorageProvider,
       private serverProvider:ServerProvider,private ngZone:NgZone,
@@ -35,12 +37,6 @@ export class CashConfirmPage{
       this.depositBank=custom.bankName;
       console.log("depositBank:"+this.depositBank);
 
-      if(custom.hasOwnProperty("branchName")){
-          this.depositBranch=custom.branchName;
-      }else{
-          this.depositBranch=custom.branchCode;
-      }
-
       if(custom.hasOwnProperty("depositMemo")){
             this.depositMemo=custom.depositMemo;
       }else{
@@ -50,20 +46,13 @@ export class CashConfirmPage{
       console.log("depositBank:"+this.depositMemo);
 
       if(custom.hasOwnProperty("depositDate")){
-          this.depositDate=custom.depositDate;     
-      }else{
-        var date:string=custom.transactionTime;
-        if(date.includes("-")){
-        console.log("date:"+date);
-        this.depositDate=date.substr(0,4)+"."+date.substr(5,2)+"."+date.substr(8,2);     
-        }else{
-        console.log("date:"+date);
-        this.depositDate=date.substr(0,4)+"."+date.substr(4,2)+"."+date.substr(6,2);     
-        }
+            this.depositDate=custom.depositDate.substr(0,4)+"."+custom.depositDate.substr(5,2)+"."+custom.depositDate.substr(8,2);
+            if(custom.hasOwnProperty("depositHour")){
+                this.depositHour=custom.depositHour;        
+            }               
       }
 
       console.log("depositDate:"+this.depositDate);
-
       this.tuno=custom.cashTuno;
       
       console.log("tuno:"+this.tuno);
@@ -86,10 +75,9 @@ export class CashConfirmPage{
   }
 
   cashInComplete(){
-      if(this.userAgree){
-          //let body = JSON.stringify({cashId:this.depositMemo, amount:this.depositAmount, cashTuno:this.tuno});
-          let body = JSON.stringify({cashId:this.storageProvider.cashId, amount:this.depositAmount, cashTuno:this.tuno});
-          
+      if(this.userAgree && !this.inProgress){
+          this.inProgress=true;
+          let body = JSON.stringify({cashId:this.storageProvider.cashId, amount:this.depositAmount, cashTuno:this.tuno});          
           console.log("cashInComplete:"+body);
           this.serverProvider.post(this.storageProvider.serverAddress+"/addCash",body).then((res:any)=>{
                     console.log("addCash:"+JSON.stringify(res));
@@ -111,6 +99,7 @@ export class CashConfirmPage{
                             alert.present();
                           }
                     }
+                    this.inProgress=false;
           },(err)=>{
                    if(err=="NetworkFailure"){
                         let alert = this.alertController.create({
@@ -125,6 +114,7 @@ export class CashConfirmPage{
                             });
                             alert.present();
                     }
+                    this.inProgress=false;
           });         
       }else{
             let alert = this.alertController.create({

@@ -34,6 +34,10 @@ export class SearchPage {
 
   takitIds=[];
 
+  searchMode="allStores"; //allStores or idSearch
+
+  inProgress=false;
+
   constructor(private app:App, public storageProvider:StorageProvider, private navController: NavController,
     private platform:Platform,private http:Http ,private alertController:AlertController,private serverProvider:ServerProvider,
     private splashScreen: SplashScreen) {
@@ -403,17 +407,43 @@ export class SearchPage {
 
       goToShop(){
           console.log("[goToShop]  "+this.serviceQuery.trim()+"@"+this.brandQuery.trim());
-          if(this.serviceQuery.trim().length>0 &&this.brandQuery.trim().length>0){
+          
+          if(!this.inProgress && this.serviceQuery.trim().length>0 &&this.brandQuery.trim().length>0){
                 console.log("call getShopInfo");
+                this.inProgress=true;
                 this.serverProvider.getShopInfo(this.serviceQuery.trim()+"@"+this.brandQuery.trim()).then((res)=>{
                     console.log("getShopInfo success");
                     this.storageProvider.shopResponse=res;
-                    this.app.getRootNav().push(ShopTabsPage,{takitId:this.serviceQuery.trim()+"@"+this.brandQuery.trim()}); 
+                    this.app.getRootNav().push(ShopTabsPage,{takitId:this.serviceQuery.trim()+"@"+this.brandQuery.trim()}).then(()=>{
+                        console.log("set inProgress false");
+                        this.inProgress=false;
+                        var t: Tabs = this.navController.parent;
+                        t.select(0);
+                    }); 
                 },(err)=>{
-
+                    this.inProgress=false;
                 });
           }
       }
+
+     goToShopButton(takitId){
+         console.log("[goToShopButton] "+takitId);
+         if(!this.inProgress){
+                this.inProgress=true;
+                this.serverProvider.getShopInfo(takitId).then((res)=>{
+                    console.log("getShopInfo success");
+                    this.storageProvider.shopResponse=res;
+                    this.app.getRootNav().push(ShopTabsPage,{takitId:takitId}).then(()=>{
+                        console.log("set inProgress false");
+                        this.inProgress=false;
+                         var t: Tabs = this.navController.parent;
+                         t.select(0);
+                    }); 
+                },(err)=>{
+                    this.inProgress=false;
+                });
+         }
+     }
 
       brandClear(event){
           console.log("brandClear");

@@ -1,13 +1,15 @@
 <ion-header class="shopMyPage">
   <ion-navbar>
+    <ion-title>
     <ion-row>
       <ion-col width-80>
-    <ion-title>{{shopname}}</ion-title>
+        {{shopname}}
       </ion-col>
       <ion-col *ngIf="storageProvider.shopResponse.shopInfo.contactPhone!=null">
         <a [href]="shopPhoneHref"><ion-icon width-20 color="black" name="call"></ion-icon></a>
       </ion-col>
-    </ion-row>  
+    </ion-row>
+    </ion-title>
     </ion-navbar>
 </ion-header>
 

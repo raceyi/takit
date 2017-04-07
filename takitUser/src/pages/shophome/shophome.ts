@@ -217,7 +217,7 @@ export class ShopHomePage {
         this.storageProvider.shoplistCandidate=this.storageProvider.shoplist;
         this.storageProvider.shoplistCandidateUpdate(thisShop);
         let body = JSON.stringify({shopList:JSON.stringify(this.storageProvider.shoplistCandidate)});
-        console.log("body:",body);
+        console.log("!!shopEnter-body:",body);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         if(this.storageProvider.tourMode==false){    

@@ -44,6 +44,8 @@ export class OrderPage {
   
   lang;
 
+  orderInProgress=false;
+
   @ViewChild('quantityNum') inputNumRef: TextInput;
 
   constructor(private app:App,private navController: NavController,private http:Http,private navParams: NavParams,
@@ -117,6 +119,7 @@ export class OrderPage {
           Keyboard.disableScroll(true);
       }
       */
+      /*
        if(!this.storageProvider.isAndroid){ //ios
             Keyboard.onKeyboardShow().subscribe((e)=>{
                 console.log("keyboard show");
@@ -133,6 +136,7 @@ export class OrderPage {
                   }, 1000); 
             });
        }
+       */
  }
 
   sendSaveOrder(cart,menuName){
@@ -202,6 +206,7 @@ export class OrderPage {
                             price: this.amount});
            cart.total=this.amount;
            this.sendSaveOrder(cart,menuName).then((res:any)=>{
+                 this.orderInProgress=false;
                  this.cashPassword="";
                  console.log(JSON.stringify(res)); 
                  var result:string=res.result;
@@ -223,6 +228,7 @@ export class OrderPage {
                                     // report it to tabs page
                                     this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti"); 
                                     this.app.getRootNav().pop();
+                                    this.storageProvider.shopTabRef.select(3);
                                     return;
                                 }
                             },
@@ -231,6 +237,7 @@ export class OrderPage {
                                 handler: () => {
                                     this.storageProvider.tabMessageEmitter.emit("wakeupNoti");
                                     this.app.getRootNav().pop();
+                                    this.storageProvider.shopTabRef.select(3);
                                     return;
                                 }
                             }
@@ -246,6 +253,7 @@ export class OrderPage {
                         });
                         alert.present().then(()=>{
                             this.app.getRootNav().pop();
+                            this.storageProvider.shopTabRef.select(3);
                         });  
                     }
                  }else{
@@ -257,6 +265,7 @@ export class OrderPage {
                     alert.present();
                  }
            },(error)=>{
+                 this.orderInProgress=false;
                  this.cashPassword="";
                  console.log("saveOrder err "+error);
                  if(error=="NetworkFailure"){
@@ -308,86 +317,95 @@ export class OrderPage {
  }
 
   order(){
-    if(this.storageProvider.tourMode){
-        let alert = this.alertController.create({
-            title: '둘러보기 모드에서는 주문이 불가능합니다.',
-            subTitle: '로그인후 사용해주시기 바랍니다.',
-            buttons: ['OK']
-        });
-        alert.present();
-            return;
-        }
-
-    console.log("order comes... "); 
-    if(this.storageProvider.cashId==undefined ||
-                this.storageProvider.cashId.length<5){
-        let alert = this.alertController.create({
-            title:'캐쉬아이디를 설정해 주시기 바랍니다.',
-            subTitle: '캐쉬 충전 화면으로 이동하시겠습니까?',
-            buttons:
-            [{
-            text: '아니오',
-            handler: () => {
-                console.log('Disagree clicked');
-                return;
-            }
-            },
-            {
-            text: '네',
-            handler: () => {
-                //['OK']
-                 this.app.getRootNav().pop(); // pop order page
-                 this.app.getRootNav().pop(); // pop shop tab page
-                 // move into cash page
-                 this.storageProvider.tabMessageEmitter.emit("moveCashConfiguration");
-                 return;
-                }
-            }]
-        });
-        alert.present();
-        return;               
-    }
-    if(this.cashPassword.length<6){
-        let alert = this.alertController.create({
-            subTitle: '캐쉬비밀번호(6자리)를 입력해 주시기 바랍니다.',
-            buttons: ['OK']
-        });
-        alert.present();
-        return;               
-    }
-
-    if(this.quantity==undefined){
-        let alert = this.alertController.create({
-            subTitle: '수량을 입력해주시기 바랍니다',
-            buttons: ['OK']
-        });
-        console.log("hum...");
-        alert.present().then(()=>{
-            console.log("alert done");
-        });
-        return;
-    }
-    // check options
-    this.checkOptionValidity().then(()=>{
-        if(this.storageProvider.cashAmount >= this.amount){
-            this.sendOrder();
-        }else{
+    if(!this.orderInProgress){
+        this.orderInProgress=true;
+        if(this.storageProvider.tourMode){
             let alert = this.alertController.create({
-                subTitle: '캐쉬잔액이 부족합니다.',
+                title: '둘러보기 모드에서는 주문이 불가능합니다.',
+                subTitle: '로그인후 사용해주시기 바랍니다.',
                 buttons: ['OK']
             });
             alert.present();
+            this.orderInProgress=false;
             return;
         }
-    },(name)=>{
-        console.log("option.select is undefined");
-        let alert = this.alertController.create({
-            subTitle: name+'을 선택해주십시오',
-            buttons: ['OK']
+
+        console.log("order comes... "); 
+        if(this.storageProvider.cashId==undefined ||
+                    this.storageProvider.cashId.length<5){
+            let alert = this.alertController.create({
+                title:'캐쉬아이디를 설정해 주시기 바랍니다.',
+                subTitle: '캐쉬 충전 화면으로 이동하시겠습니까?',
+                buttons:
+                [{
+                text: '아니오',
+                handler: () => {
+                    console.log('Disagree clicked');
+                    return;
+                }
+                },
+                {
+                text: '네',
+                handler: () => {
+                    //['OK']
+                    this.app.getRootNav().pop(); // pop order page
+                    this.app.getRootNav().pop(); // pop shop tab page
+                    // move into cash page
+                    this.storageProvider.tabMessageEmitter.emit("moveCashConfiguration");
+                    return;
+                    }
+                }]
+            });
+            alert.present();
+            this.orderInProgress=false;
+            return;               
+        }
+        if(this.cashPassword.length<6){
+            let alert = this.alertController.create({
+                subTitle: '캐쉬비밀번호(6자리)를 입력해 주시기 바랍니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+            this.orderInProgress=false;
+            return;               
+        }
+
+        if(this.quantity==undefined){
+            let alert = this.alertController.create({
+                subTitle: '수량을 입력해주시기 바랍니다',
+                buttons: ['OK']
+            });
+            console.log("hum...");
+            alert.present().then(()=>{
+                console.log("alert done");
+            });
+            this.orderInProgress=false;
+            return;
+        }
+        // check options
+        this.checkOptionValidity().then(()=>{
+            if(this.storageProvider.cashAmount >= this.amount){
+                this.sendOrder();
+            }else{
+                let alert = this.alertController.create({
+                    subTitle: '캐쉬잔액이 부족합니다.',
+                    buttons: ['OK']
+                });
+                this.orderInProgress=false;
+                alert.present();
+                return;
+            }
+        },(name)=>{
+            console.log("option.select is undefined");
+            let alert = this.alertController.create({
+                subTitle: name+'을 선택해주십시오',
+                buttons: ['OK']
+            });
+            this.orderInProgress=false;
+            alert.present();
+            return;
         });
-        alert.present();
-        return;
-    });
+    }
   }
 
   shopcart(){

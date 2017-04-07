@@ -348,10 +348,13 @@ ionViewDidEnter() {
       var transferDate=new Date(this.transferDate);
       var transferHour=new Date(this.transferHour);
       let body;
+      console.log("this.transferDate:"+this.transferDate);
+      console.log("this.transferHour:"+this.transferHour);
+      
       console.log("depositDate:"+transferDate.toISOString());
 
-      body = JSON.stringify({depositDate:transferDate.toISOString(),
-                            depositHour:transferHour.toISOString(),
+      body = JSON.stringify({
+                            depositTime:transferHour.toISOString(),
                             amount: this.depositAmount,
                             bankCode: this.storageProvider.depositBank,
                             depositMemo:this.depositMemo,
