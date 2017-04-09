@@ -5,6 +5,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import {Http,Headers} from '@angular/http';
 import {ConfigProvider} from './configProvider';
 import {Device} from 'ionic-native';
+import {Storage} from '@ionic/storage';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
@@ -121,13 +122,25 @@ export class StorageProvider{
 
     public certUrl=this.configProvider.getCertUrl();
     
+    ///////////////////////////////////////////////////////////////////
+    public tutorialShownFlag=true; // If tutorial is shown or not,initialized as true. 
+    public orderDoneFlag=false;
+
 //"이외 금융기관 => 직접 입력(숫자)"  
 //"지점 코드=>직접 입력(숫자)" http://www.kftc.or.kr/kftc/data/EgovBankList.do 금융회사명으로 조회하기 
 
     constructor(private sqlite: SQLite, private platform:Platform,
+                private storage:Storage,
                 private http:Http,private configProvider:ConfigProvider){
         console.log("StorageProvider constructor"); 
         this.isAndroid = this.platform.is('android'); 
+        //read orderDoneFlag.... for tabs;
+        this.storage.get("orderDoneFlag").then((value:string)=>{
+            console.log("value:"+value);
+            if(value!=null){
+                this.orderDoneFlag=true;
+            }
+        });        
     }
 
     open(){

@@ -257,7 +257,7 @@ export class SignupSubmitPage {
                         this.storageProvider.shoplist=[];
                         this.storageProvider.userInfoSet(this.email,this.name,this.phone,
                                         this.receiptIssue,this.receiptId,this.receiptType);
-                        this.navController.setRoot(TabsPage);
+                        this.navController.setRoot(TabsPage,{guidePage:true});
                     }else if(serverCode=="duplication"){ // result.result=="exist"
                         let alert = this.alertController.create({
                             title: '이미존재하는 아이디입니다.',

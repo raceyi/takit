@@ -29,6 +29,7 @@
   <ion-tab [root]="tabHome" [tabTitle]="homeTitle" (ionSelect)="home($event)" tabIcon="home"></ion-tab>
   <ion-tab [root]="tabSearch" [tabTitle]="searchTitle" (ionSelect)="search($event)" tabIcon="search"></ion-tab>
   <ion-tab [root]="tabCash" [tabTitle]="cashTitle" (ionSelect)="cash($event)" tabIcon="cash"></ion-tab>
+  <ion-tab *ngIf="!storageProvider.orderDoneFlag ||storageProvider.tourMode" [root]="tabTutorial" tabTitle="가이드" tabIcon="information-circle"></ion-tab>
 
     <!--
   <ion-tab *ngIf="lang=='ko-KR' || lang=='ko-kr'" [root]="tabHome" tabTitle="홈" (ionSelect)="home($event)" tabIcon="home"></ion-tab>

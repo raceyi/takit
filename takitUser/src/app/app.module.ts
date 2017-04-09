@@ -36,6 +36,10 @@ import {CashDepositDeletePage} from '../pages/cash-deposit-delete/cash-deposit-d
 import {MultiloginPage} from '../pages/multilogin/multilogin';
 import {FaqPage} from '../pages/faq/faq';
 import {TutorialPage} from '../pages/tutorial/tutorial';
+import { ConfigureCashTutorialPage } from '../pages/configure-cash-tutorial/configure-cash-tutorial';
+import { DepositCashTutorialPage } from '../pages/deposit-cash-tutorial/deposit-cash-tutorial';
+import { OrderTutorialPage } from '../pages/order-tutorial/order-tutorial';
+
 import {TranslateModule, TranslateLoader,TranslateStaticLoader} from 'ng2-translate/ng2-translate';
 import {Http,Headers} from '@angular/http';
 
@@ -81,7 +85,10 @@ import { Clipboard } from '@ionic-native/clipboard';
     CashDepositDeletePage,
     MultiloginPage,
     FaqPage,
-    TutorialPage
+    TutorialPage,
+    ConfigureCashTutorialPage,
+    DepositCashTutorialPage,
+    OrderTutorialPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -119,7 +126,10 @@ import { Clipboard } from '@ionic-native/clipboard';
     CashDepositDeletePage,
     MultiloginPage,
     FaqPage,
-    TutorialPage  
+    TutorialPage,
+    ConfigureCashTutorialPage,
+    DepositCashTutorialPage,
+    OrderTutorialPage  
   ],
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},

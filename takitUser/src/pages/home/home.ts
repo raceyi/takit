@@ -23,7 +23,7 @@ import {Device} from 'ionic-native';
 })
 
 export class HomePage{
-   // @ViewChild("homeContent") contentRef: Content;
+     @ViewChild("homeContent") contentRef: Content;
      shopSelected=false;
      filename: string = '';
 
@@ -43,6 +43,7 @@ export class HomePage{
          this.shopSelected=false;
          console.log("homePage-ionViewWillEnter");
          console.log("home-shoplist:"+JSON.stringify(this.storageProvider.shoplist));
+         this.contentRef.resize();
          /*
          if(this.storageProvider.shoplist==null || this.storageProvider.shoplist.length==0){
              //move into search page

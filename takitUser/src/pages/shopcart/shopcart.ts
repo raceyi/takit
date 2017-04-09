@@ -31,6 +31,8 @@ export class ShopCartPage{
 
     shopPhoneHref:string;
 
+    orderInProgress=false;
+
      constructor(private app:App,private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,
             private alertController:AlertController,private serverProvider:ServerProvider,
@@ -112,188 +114,197 @@ export class ShopCartPage{
      }
 
      order(){
-         if(this.storageProvider.tourMode){
-            let alert = this.alertController.create({
-                title: '둘러보기 모드에서는 주문이 불가능합니다.',
-                subTitle: '로그인후 사용해주시기 바랍니다.',
-                buttons: ['OK']
-            });
-            alert.present();
-             return;
-         }
-
-        if(this.storageProvider.cashId==undefined ||
-                    this.storageProvider.cashId.length<5){
-            let alert = this.alertController.create({
-                title:'캐쉬아이디를 설정해 주시기 바랍니다.',
-                subTitle: '캐쉬 충전 화면으로 이동하시겠습니까?',
-                buttons:
-                [{
-                text: '아니오',
-                handler: () => {
-                    console.log('Disagree clicked');
-                    return;
-                }
-                },
-                {
-                text: '네',
-                handler: () => {
-                    //['OK']
-                    this.app.getRootNav().pop(); // pop shop tab page
-                    // move into cash page
-                    this.storageProvider.tabMessageEmitter.emit("moveCashConfiguration");
-                    return;
-                    }
-                }]
-            });
-            alert.present();
-            return;               
-        }
-        if(this.cashPassword.length<6){
-            let alert = this.alertController.create({
-                subTitle: '캐쉬비밀번호(6자리)를 입력해 주시기 바랍니다.',
-                buttons: ['OK']
-            });
-            alert.present();
-            return;               
-        }         
-         if(this.storageProvider.cashAmount<this.amount){
-             let alert = this.alertController.create({
-                subTitle: '캐쉬잔액이 부족합니다.',
-                buttons: ['OK']
-            });
-            alert.present();
-            return;
-         }
-       if(this.storageProvider.tourMode==false){  
-            console.log("order ");
-             ////////////////////////////////////////////////////
-             var takeout;
-             if(this.takeout==true){
-                 takeout=1;
-             }else
-                 takeout=0;
-             let receiptIssueVal;
-              if(this.storageProvider.receiptIssue){
-                    receiptIssueVal=1;
-              }else{
-                    receiptIssueVal=0;
-              }    
-              let body = JSON.stringify({paymethod:"cash",
-                                        takitId:this.storageProvider.takitId,
-                                        orderList:JSON.stringify(this.cart), 
-                                        orderName:this.cart.menus[0].menuName+"이외"+ this.cart.menus.length+"종",
-                                        amount:this.amount,
-                                        takeout: takeout,
-                                        orderedTime:new Date().toISOString(),
-                                        cashId:this.storageProvider.cashId,
-                                        password:this.cashPassword,
-                                        receiptIssu:receiptIssueVal,
-                                        receiptId:this.storageProvider.receiptId,
-                                        receiptType:this.storageProvider.receiptType});
-
-              console.log("order:"+JSON.stringify(body));
-
-              let headers = new Headers();
-              headers.append('Content-Type', 'application/json');
-              console.log("server:"+ this.storageProvider.serverAddress);
-                 this.serverProvider.saveOrder(body).then((res:any)=>{
-                 console.log(res); 
-                 this.cashPassword="";  
-                 var result:string=res.result;
-                  if(result=="success"){
-                    this.storageProvider.messageEmitter.emit(res.order);
-                    this.storageProvider.cashInfoUpdateEmitter.emit("all");
-                    var cart={menus:[],total:0};
-                    this.storageProvider.saveCartInfo(this.storageProvider.takitId,JSON.stringify(cart)).then(()=>{
-                        
-                    },()=>{
-                            //move into shophome
-                            let alert = this.alertController.create({
-                                    title: '장바구니 정보 업데이트에 실패했습니다',
-                                    buttons: ['OK']
-                                });
-                                alert.present();
-                    });
-                    console.log("storageProvider.run_in_background: "+this.storageProvider.run_in_background);
-                    if(this.storageProvider.run_in_background==false){
-                        let confirm = this.alertController.create({
-                            title: '주문에 성공하였습니다.'+'주문번호['+res.order.orderNO+']',
-                            message: '[주의]앱을 종료하시면 주문알림을 못받을수 있습니다. 주문알림을 받기 위해 앱을 계속 실행하시겠습니까?',
-                            buttons: [
-                            {
-                                text: '아니오',
-                                handler: () => {
-                                    console.log('Disagree clicked');
-                                    // report it to tabs page
-                                    this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti"); 
-                                    //move into shophome
-        +                           this.storageProvider.shopTabRef.select(3);
-                                    return;
-                                }
-                            },
-                            {
-                                text: '네',
-                                handler: () => {
-                                    console.log('cordova.plugins.backgroundMode.enable');
-                                    this.storageProvider.tabMessageEmitter.emit("backgroundEnable");
-                                    cordova.plugins.backgroundMode.enable(); 
-        +                           this.storageProvider.shopTabRef.select(3);
-                                    return;
-                                }
-                            }
-                            ]
-                        });
-                        confirm.present();
-                    }else{
-                        let alert = this.alertController.create({
-                                title: '주문에 성공하였습니다.'+'주문번호['+res.order.orderNO+']',
-                                subTitle: '[주의]앱을 종료하시면 주문알림을 못받을수 있습니다.' ,
-                                buttons: ['OK']
-                        });
-                        alert.present().then(()=>{
-                            this.storageProvider.shopTabRef.select(3);
-                        });  
-                    }
-                 }else{
+         if(!this.orderInProgress){
+                this.orderInProgress=true;
+                if(this.storageProvider.tourMode){
                     let alert = this.alertController.create({
-                        title: '주문에 실패하였습니다.',
-                        subTitle: '다시 주문해주시기 바랍니다.',
+                        title: '둘러보기 모드에서는 주문이 불가능합니다.',
+                        subTitle: '로그인후 사용해주시기 바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present();
-                 }
-             },(error)=>{
-                  console.log("saveOrder err "+error);
-                  this.cashPassword="";                  
-                 if(error=="NetworkFailure"){
+                    this.orderInProgress=false;
+                    return;
+                }
+
+                if(this.storageProvider.cashId==undefined ||
+                            this.storageProvider.cashId.length<5){
                     let alert = this.alertController.create({
-                            title: '서버와 통신에 문제가 있습니다',
-                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                            buttons: ['OK']
-                        });
-                        alert.present();
-                 }else if(error=="shop's off"){
+                        title:'캐쉬아이디를 설정해 주시기 바랍니다.',
+                        subTitle: '캐쉬 충전 화면으로 이동하시겠습니까?',
+                        buttons:
+                        [{
+                        text: '아니오',
+                        handler: () => {
+                            console.log('Disagree clicked');
+                            return;
+                        }
+                        },
+                        {
+                        text: '네',
+                        handler: () => {
+                            //['OK']
+                            this.app.getRootNav().pop(); // pop shop tab page
+                            // move into cash page
+                            this.storageProvider.tabMessageEmitter.emit("moveCashConfiguration");
+                            return;
+                            }
+                        }]
+                    });
+                    alert.present();
+                    this.orderInProgress=false;
+                    return;               
+                }
+                if(this.cashPassword.length<6){
                     let alert = this.alertController.create({
-                            title: '상점이 문을 열지 않았습니다.',
-                            buttons: ['OK']
-                        });
-                        alert.present();
-                 }else if(error=="invalid cash password"){
+                        subTitle: '캐쉬비밀번호(6자리)를 입력해 주시기 바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                    this.orderInProgress=false;
+                    return;               
+                }         
+                if(this.storageProvider.cashAmount<this.amount){
                     let alert = this.alertController.create({
-                            title: '비밀번호가 일치하지 않습니다.',
-                            buttons: ['OK']
-                        });
-                        alert.present();
-                 }else{
-                    let alert = this.alertController.create({
-                            title: '주문에 실패했습니다.',
-                            buttons: ['OK']
-                        });
-                        alert.present();                     
-                 }
-             });
-       }
+                        subTitle: '캐쉬잔액이 부족합니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                    this.orderInProgress=false;
+                    return;
+                }
+            if(this.storageProvider.tourMode==false){  
+                    console.log("order ");
+                    ////////////////////////////////////////////////////
+                    var takeout;
+                    if(this.takeout==true){
+                        takeout=1;
+                    }else
+                        takeout=0;
+                    let receiptIssueVal;
+                    if(this.storageProvider.receiptIssue){
+                            receiptIssueVal=1;
+                    }else{
+                            receiptIssueVal=0;
+                    }    
+                    let body = JSON.stringify({paymethod:"cash",
+                                                takitId:this.storageProvider.takitId,
+                                                orderList:JSON.stringify(this.cart), 
+                                                orderName:this.cart.menus[0].menuName+"이외"+ this.cart.menus.length+"종",
+                                                amount:this.amount,
+                                                takeout: takeout,
+                                                orderedTime:new Date().toISOString(),
+                                                cashId:this.storageProvider.cashId,
+                                                password:this.cashPassword,
+                                                receiptIssu:receiptIssueVal,
+                                                receiptId:this.storageProvider.receiptId,
+                                                receiptType:this.storageProvider.receiptType});
+
+                    console.log("order:"+JSON.stringify(body));
+
+                    let headers = new Headers();
+                    headers.append('Content-Type', 'application/json');
+                    console.log("server:"+ this.storageProvider.serverAddress);
+                        this.serverProvider.saveOrder(body).then((res:any)=>{
+                        this.orderInProgress=false;
+                        console.log(res); 
+                        this.cashPassword="";  
+                        var result:string=res.result;
+                        if(result=="success"){
+                            this.storageProvider.messageEmitter.emit(res.order);
+                            this.storageProvider.cashInfoUpdateEmitter.emit("all");
+                            var cart={menus:[],total:0};
+                            this.storageProvider.saveCartInfo(this.storageProvider.takitId,JSON.stringify(cart)).then(()=>{
+                                
+                            },()=>{
+                                    //move into shophome
+                                    let alert = this.alertController.create({
+                                            title: '장바구니 정보 업데이트에 실패했습니다',
+                                            buttons: ['OK']
+                                        });
+                                        alert.present();
+                            });
+                            console.log("storageProvider.run_in_background: "+this.storageProvider.run_in_background);
+                            if(this.storageProvider.run_in_background==false){
+                                let confirm = this.alertController.create({
+                                    title: '주문에 성공하였습니다.'+'주문번호['+res.order.orderNO+']',
+                                    message: '[주의]앱을 종료하시면 주문알림을 못받을수 있습니다. 주문알림을 받기 위해 앱을 계속 실행하시겠습니까?',
+                                    buttons: [
+                                    {
+                                        text: '아니오',
+                                        handler: () => {
+                                            console.log('Disagree clicked');
+                                            // report it to tabs page
+                                            this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti"); 
+                                            //move into shophome
+                +                           this.storageProvider.shopTabRef.select(3);
+                                            return;
+                                        }
+                                    },
+                                    {
+                                        text: '네',
+                                        handler: () => {
+                                            console.log('cordova.plugins.backgroundMode.enable');
+                                            this.storageProvider.tabMessageEmitter.emit("backgroundEnable");
+                                            cordova.plugins.backgroundMode.enable(); 
+                +                           this.storageProvider.shopTabRef.select(3);
+                                            return;
+                                        }
+                                    }
+                                    ]
+                                });
+                                confirm.present();
+                            }else{
+                                let alert = this.alertController.create({
+                                        title: '주문에 성공하였습니다.'+'주문번호['+res.order.orderNO+']',
+                                        subTitle: '[주의]앱을 종료하시면 주문알림을 못받을수 있습니다.' ,
+                                        buttons: ['OK']
+                                });
+                                alert.present().then(()=>{
+                                    this.storageProvider.shopTabRef.select(3);
+                                });  
+                            }
+                        }else{
+                            let alert = this.alertController.create({
+                                title: '주문에 실패하였습니다.',
+                                subTitle: '다시 주문해주시기 바랍니다.',
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    },(error)=>{
+                        this.orderInProgress=false;
+                        console.log("saveOrder err "+error);
+                        this.cashPassword="";                  
+                        if(error=="NetworkFailure"){
+                            let alert = this.alertController.create({
+                                    title: '서버와 통신에 문제가 있습니다',
+                                    subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                                    buttons: ['OK']
+                                });
+                                alert.present();
+                        }else if(error=="shop's off"){
+                            let alert = this.alertController.create({
+                                    title: '상점이 문을 열지 않았습니다.',
+                                    buttons: ['OK']
+                                });
+                                alert.present();
+                        }else if(error=="invalid cash password"){
+                            let alert = this.alertController.create({
+                                    title: '비밀번호가 일치하지 않습니다.',
+                                    buttons: ['OK']
+                                });
+                                alert.present();
+                        }else{
+                            let alert = this.alertController.create({
+                                    title: '주문에 실패했습니다.',
+                                    buttons: ['OK']
+                                });
+                                alert.present();                     
+                        }
+                    });
+            }
+        }
      }
 
      collapse($event){

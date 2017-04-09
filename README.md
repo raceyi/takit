@@ -220,6 +220,7 @@ $ionic plugin add https://github.com/taejaehan/cordova-kakaotalk.git --variable 
 $ionic plugin add cordova-plugin-facebook4 --save --variable APP_ID="{takitShop.facebook.appId}" --variable APP_NAME="takitShop"
 
 $ionic plugin add cordova-plugin-network-information
+$npm install --save @ionic-native/network
 
 $ionic plugin add cordova-plugin-file-transfer
 

@@ -113,30 +113,6 @@ export class OrderPage {
       console.log("hum....--2");
 
       this.quantityInputType="select";
-
-      /* It doesn't work in ios 
-      if(!this.storageProvider.isAndroid){
-          Keyboard.disableScroll(true);
-      }
-      */
-      /*
-       if(!this.storageProvider.isAndroid){ //ios
-            Keyboard.onKeyboardShow().subscribe((e)=>{
-                console.log("keyboard show");
-                this.ngZone.run(()=>{
-                    this.iOSOrderButtonHide=false;
-                });
-            });
-            Keyboard.onKeyboardHide().subscribe((e)=>{
-                console.log("keyboard hide");
-                setTimeout(() => {
-                    this.ngZone.run(()=>{
-                        this.iOSOrderButtonHide=true;
-                    });
-                  }, 1000); 
-            });
-       }
-       */
  }
 
   sendSaveOrder(cart,menuName){
@@ -471,7 +447,8 @@ export class OrderPage {
         cart.total=cart.total+this.price;
         console.log("cart:"+JSON.stringify(cart));
         this.storageProvider.saveCartInfo(this.takitId,JSON.stringify(cart)).then(()=>{
-            this.navController.pop(); 
+            this.storageProvider.shopTabRef.select(2);
+            this.navController.pop()
         });
     },(err)=>{
         console.log("getCartInfo error");

@@ -154,6 +154,7 @@ export class ServerProvider{
             },(err)=>{
                 reject(err);  
             });
+            this.storage.set("orderDoneFlag","true");
       });
   }
 /*

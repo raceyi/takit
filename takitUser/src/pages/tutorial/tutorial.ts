@@ -1,7 +1,12 @@
 import { Component ,ViewChild} from '@angular/core';
-import { NavController, NavParams,Slides } from 'ionic-angular';
-import {StorageProvider} from '../../providers/storageProvider';
-
+import { App,NavController, NavParams,Slides ,Content} from 'ionic-angular';
+import { StorageProvider} from '../../providers/storageProvider';
+import { Storage } from '@ionic/storage';
+import { ConfigureCashTutorialPage } from '../configure-cash-tutorial/configure-cash-tutorial';
+import { DepositCashTutorialPage } from '../deposit-cash-tutorial/deposit-cash-tutorial';
+import { OrderTutorialPage } from '../order-tutorial/order-tutorial';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import {LoginPage} from '../login/login';
 /*
   Generated class for the Tutorial page.
 
@@ -13,55 +18,45 @@ import {StorageProvider} from '../../providers/storageProvider';
   templateUrl: 'tutorial.html'
 })
 export class TutorialPage {
- @ViewChild("slides") slides: Slides;
-  cashId:string;
+  @ViewChild('tutorialContent') tutorialContentRef: Content;
 
-  slidesContent = [
-    {
-      title: "캐쉬 입금 메시지 수신",
-      description: "30초내로 <b>메시지</b>가 고객님께 전달됩니다.<br>메시지를 클릭해주세요.<br><br>단 00:00~00:30 ,매달 3주 월요일 23:55~04:00에는 이용제한시간 이후 메시지가 전달됩니다.",
-      image: "assets/cash/pushMsg.jpg",
-    },
-    {
-      title: "입금 확인/충전완료",
-      description: "메시지를 클릭하시면 확인 화면이 나옵니다.<br>법적고지에 <b>동의</b>하시고 <b>하단 버튼을 클릭</b>하시면 입금하신 금액만큼 캐쉬가 <b>충전</b>됩니다.",
-      image: "assets/cash/notification.jpg",
-    },
-    {
-      title: "수동확인하기",
-      description: "캐쉬아이디입력을 잊으셨나요? <br>캐쉬의 충전하기 화면 하단 버튼을 클릭후 이체정보를 채워주세요. 받는 통장 표시내용은 본인의 실명입니다.",
-      image: "assets/cash/manual.png",
-    },
-    {
-      title: "메시지를 못받으셨나요?",
-      description: "거래내역에 확인버튼이 보이나요? 확인버튼을 클릭해주세요.<br> 확인버튼이 보이지 않으면 고객센터(0505-170-3636,help@takit.biz)로 연락바랍니다.",
-      image: "assets/cash/confirmInHistory.png",
+  stage="configureCash";
+  
+  constructor(public navCtrl: NavController, public storage:Storage,
+      public storageProvider:StorageProvider,private app: App,private splashScreen: SplashScreen) {
+    console.log("tutorialPage constructor tutorialShownFlag:"+this.storageProvider.tutorialShownFlag);
+    //read each stage from storage.
+    this.storage.set('tutorialShownFlag',"true");
+  }
+ 
+  ionViewDidLoad(){
+        console.log("TutorialPage did enter");
+        this.splashScreen.hide();
+        this.tutorialContentRef.resize();
     }
-  ];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,public storageProvider:StorageProvider) {
-      if(storageProvider.tourMode){
-        this.cashId="캐쉬아이디";
-      }else if(storageProvider.cashId!=undefined && storageProvider.cashId.length>=5){
-        this.cashId=storageProvider.cashId;
-      }else{
-        this.cashId="캐쉬아이디";
-      }
+ startTakit(){
+    console.log("startTakit");
+    this.storageProvider.tutorialShownFlag=true;
+    if(this.navCtrl.canGoBack())
+        this.navCtrl.pop();
+    else
+        this.app.getRootNav().setRoot(LoginPage);    
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad TutorialPage');
+  configureCash(){
+      this.navCtrl.push(ConfigureCashTutorialPage);
+      this.stage="despoitCash";
   }
 
-  next(){
-     this.slides.slideNext();
+  depositCash(){
+      this.navCtrl.push(DepositCashTutorialPage);
+      this.stage="order";
   }
 
-  prev(){
-     this.slides.slidePrev();
-  }
-
-  dismiss(){
-    this.navCtrl.pop();
+  order(){
+    //save each stage into storage
+      this.navCtrl.push(OrderTutorialPage);
+      this.stage="startTakit";
   }
 }

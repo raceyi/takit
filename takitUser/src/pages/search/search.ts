@@ -417,8 +417,9 @@ export class SearchPage {
                     this.app.getRootNav().push(ShopTabsPage,{takitId:this.serviceQuery.trim()+"@"+this.brandQuery.trim()}).then(()=>{
                         console.log("set inProgress false");
                         this.inProgress=false;
-                        var t: Tabs = this.navController.parent;
-                        t.select(0);
+                        ///////////////////////////////////////
+                        //var t: Tabs = this.navController.parent;
+                        //t.select(0);
                     }); 
                 },(err)=>{
                     this.inProgress=false;
@@ -436,8 +437,9 @@ export class SearchPage {
                     this.app.getRootNav().push(ShopTabsPage,{takitId:takitId}).then(()=>{
                         console.log("set inProgress false");
                         this.inProgress=false;
-                         var t: Tabs = this.navController.parent;
-                         t.select(0);
+                        /////////////////////////////////////////
+                        // var t: Tabs = this.navController.parent;
+                        // t.select(0);
                     }); 
                 },(err)=>{
                     this.inProgress=false;

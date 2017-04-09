@@ -1,45 +1,107 @@
-<!--
-  Generated template for the Tutorial page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-  <ion-navbar hideBackButton>
-    <ion-title>캐쉬 충전 방법</ion-title>
+  <ion-navbar>
+        <ion-title>
+      자주가는 상점에서도<br> 
+      온라인 주문하세요
+       </ion-title>
   </ion-navbar>
 
 </ion-header>
+<ion-content #tutorialContent>
+  <ion-grid>
+    <ion-row>
+          &nbsp;&nbsp;
+    </ion-row>
+    <ion-row *ngIf="!storageProvider.tutorialShownFlag" >
+      <ion-col col-3>
+      </ion-col>
+      <ion-col col-6 style="text-align:center;">
+          <button ion-button disabled full large> 회원가입</button>
+      </ion-col>
+      <ion-col col-3>
+      </ion-col>
+    </ion-row>
 
-
-<ion-content padding>
-<ion-slides #slides [options]="{pager:true}">
-  <ion-slide>
-      <h2 class="slide-title">온라인 계좌이체수행!</h2>
-      <img src="assets/cash/toss.png" class="slide-image"/>
-      <p>온라인 계좌이체시 고객님의 <b>{{this.cashId}}</b>를 잊지말고 입력해주세요. 캐쉬아이디는 <b>대소문자</b>를 <b>구분하지않습니다</b>
-       <br>1회 <b>10만원 이하의 금액</b>만 충전가능합니다.
-        <br><br><a href="http://www.takit.biz/cashId.html">토스/주요은행 캐쉬아이디 입력방법</a>
-      </p>
-    </ion-slide>
-
-    <ion-slide *ngFor="let slide of slidesContent">
-      <h2 class="slide-title" [innerHTML]="slide.title"></h2>
-      <img [src]="slide.image" class="slide-image"/>
-      <p [innerHTML]="slide.description"></p>
-    </ion-slide>
-    <ion-slide>
-      <ion-toolbar>
-      </ion-toolbar>
-     <img src="assets/logo.png" class="slide-image"/>
-      <h2 class="slide-title">이제 타킷으로 주문하세요</h2>
-      <p>고객님의 캐쉬아이디 입력으로 저비용 온라인 주문/결제서비스가 가능해집니다.<br><a href="http://www.takit.biz/index.html#price">타킷 수수료</a></p>
-      <p> <a href="http://www.takit.biz/security.html">캐쉬충전 안전성</a></p>
-      <br>
-      <button ion-button large clear icon-right (click)="dismiss()" color="primary">
-         캐쉬 충전 시작하기  
-        <ion-icon name="arrow-forward"></ion-icon>
-      </button>
-    </ion-slide>
-  </ion-slides>
+  <ion-row *ngIf="!storageProvider.tutorialShownFlag" >
+    <ion-col col-5>
+    </ion-col>
+    <ion-col col-2 style="text-align:center;">
+      <!--
+      <img style="height:15vw;" src="assets/arrow_gray.png"/>
+      -->
+      <ion-icon style="font-size: xx-large;padding-top: 15px;" name="md-arrow-round-down"></ion-icon>
+    </ion-col>
+    <ion-col col-4>
+    </ion-col>
+  </ion-row>
+    <ion-row>
+    <ion-col col-3>
+    </ion-col>
+    <ion-col col-6 style="text-align:center;">
+    <button ion-button outline *ngIf="stage=='configureCash' && !storageProvider.tutorialShownFlag" (click)="configureCash()">캐쉬아이디설정</button>
+     <button ion-button full *ngIf="stage!='configureCash' || storageProvider.tutorialShownFlag" (click)="configureCash()">캐쉬아이디설정</button>
+    </ion-col>
+    <ion-col col-3>
+      <img *ngIf="stage=='configureCash' && !storageProvider.tutorialShownFlag" style="height:10vw;" src="assets/icon_siteclick.png"/>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col col-5>
+    </ion-col>
+    <ion-col col-2 style="text-align:center;">
+      <ion-icon style="font-size: xx-large;padding-top: 15px;" name="md-arrow-round-down"></ion-icon>
+    </ion-col>
+    <ion-col col-4>
+    </ion-col>
+  </ion-row>
+    <ion-row>
+          <ion-col col-3>
+          </ion-col>
+          <ion-col col-6 style="text-align:center;">
+          <button ion-button outline *ngIf="stage=='despoitCash' && !storageProvider.tutorialShownFlag" (click)="depositCash()">캐쉬충전</button>
+          <button ion-button full *ngIf="stage!='despoitCash' || storageProvider.tutorialShownFlag" (click)="depositCash()">캐쉬충전</button>
+          </ion-col>
+          <ion-col col-3>
+            <img *ngIf="stage=='despoitCash' && !storageProvider.tutorialShownFlag" style="height:10vw;" src="assets/icon_siteclick.png"/>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-5>
+          </ion-col>
+          <ion-col col-2 style="text-align:center;">
+      <ion-icon style="font-size: xx-large;padding-top: 15px;" name="md-arrow-round-down"></ion-icon>
+          </ion-col>
+          <ion-col col-4>
+          </ion-col>
+        </ion-row>
+    <ion-row>
+          <ion-col col-3>
+          </ion-col>
+          <ion-col col-6 style="text-align:center;">
+          <button ion-button outline *ngIf="stage=='order' && !storageProvider.tutorialShownFlag" (click)="order()">주문</button>
+          <button ion-button full *ngIf="stage!='order' || storageProvider.tutorialShownFlag" (click)="order()">주문</button>
+          </ion-col>
+          <ion-col col-3>
+            <img *ngIf="stage=='order'  && !storageProvider.tutorialShownFlag" style="height:10vw;" src="assets/icon_siteclick.png"/>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          &nbsp;&nbsp;
+        </ion-row> 
+        <ion-row *ngIf="!storageProvider.tutorialShownFlag"> 
+          <ion-col col-3>
+          </ion-col>
+          <ion-col col-6 style="text-align:center;">
+            <button ion-button large clear icon-right (click)="startTakit()" color="primary">
+              타킷 주문 시작하기  
+              <ion-icon name="ios-arrow-forward-outline"></ion-icon>
+            </button>
+          </ion-col>
+          <ion-col col-3>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          &nbsp;&nbsp;
+        </ion-row>
+  </ion-grid>
 </ion-content>

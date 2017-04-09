@@ -7,6 +7,7 @@ import {LoginPage} from '../pages/login/login';
 import {ErrorPage} from '../pages/error/error';
 import {MultiloginPage} from '../pages/multilogin/multilogin';
 import {FaqPage} from '../pages/faq/faq';
+import {TutorialPage} from '../pages/tutorial/tutorial';
 
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
@@ -69,9 +70,21 @@ export class MyApp {
                 console.log("value:"+value);
                 if(value==null){
                     console.log("id doesn't exist");
-                    this.rootPage=LoginPage;
-                    return;
-                }
+                    this.storage.get("tutorialShownFlag").then((value:string)=>{
+                        console.log("value of tutorialShownFlag:"+value);
+                        if(value==null){
+                            this.storageProvider.tutorialShownFlag=false;
+                            console.log("move into TutorialPage");
+                            this.rootPage=TutorialPage;
+                        }else{
+                            this.rootPage=LoginPage;
+                        }
+                    },(err)=>{ //expReadFlag doesn't exist because of the first launch of takitUser.
+                            console.log("read error "+JSON.stringify(err));
+                            this.storageProvider.tutorialShownFlag=false;
+                            this.rootPage=TutorialPage;
+                    });
+               }else{
                 console.log("decodeURI(value):"+decodeURI(value));
                 var id=this.storageProvider.decryptValue("id",decodeURI(value));
                 if(id=="facebook"){
@@ -163,9 +176,15 @@ export class MyApp {
                                 this.rootPage=LoginPage;
                         });
                 }
+               }
             },(error)=>{
                 console.log("id doesn't exist");
-                this.rootPage=LoginPage;
+                this.storage.get("tutorialShownFlag").then((value:string)=>{
+                    this.rootPage=LoginPage;
+                },(err)=>{ //expReadFlag doesn't exist because of the first launch of takitUser.
+                        this.storageProvider.tutorialShownFlag=false;
+                        this.rootPage=TutorialPage;
+                });
             });
     });
   }
@@ -185,6 +204,11 @@ export class MyApp {
     //call push function 
      this.app.getRootNav().push(UserInfoPage);
   }
+
+ openTutorial(){
+    console.log("openTutorial");
+    this.app.getRootNav().push(TutorialPage);
+ }
 
   removeStoredInfo(){
         this.storage.clear(); 

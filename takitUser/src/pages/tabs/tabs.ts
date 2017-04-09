@@ -6,9 +6,10 @@ import {SearchPage} from '../search/search';
 import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {ErrorPage} from '../error/error';
 import {LoginPage} from '../login/login';
+import {TutorialPage} from '../tutorial/tutorial';
 
 import {Platform,IonicApp,MenuController,Tabs} from 'ionic-angular';
-import {ViewController,App,NavController,AlertController,ModalController} from 'ionic-angular';
+import {NavParams,ViewController,App,NavController,AlertController,ModalController} from 'ionic-angular';
 import {Device} from 'ionic-native';
 import {Http,Headers} from '@angular/http';
 import {StorageProvider} from '../../providers/storageProvider';
@@ -35,6 +36,7 @@ export class TabsPage {
   public tabCash: any;
   public tabHome: any;
   public tabSearch: any;
+  public tabTutorial:any;
 
   pushNotification:PushObject;
   askExitAlert:any;
@@ -48,7 +50,7 @@ export class TabsPage {
   constructor(translateService: TranslateService, public modalCtrl: ModalController,private navController: NavController,private app:App,private platform:Platform,public viewCtrl: ViewController,
     public storageProvider:StorageProvider,private http:Http, private alertController:AlertController,private ionicApp: IonicApp,
     private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider,
-    public storage:Storage, private push: Push) {
+    public storage:Storage, private push: Push,private navParams: NavParams) {
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
         }    
@@ -64,11 +66,15 @@ export class TabsPage {
         translateService.use('ko');
     }
     
+    if(this.navParams.get("guidePage")==true){
+        console.log("tabs constructor,guidePage is true");
+    }
     // this tells the tabs component which Pages
     // should be each tab's root Page
     this.tabHome = HomePage;
     this.tabSearch = SearchPage;
     this.tabCash = CashPage;
+    this.tabTutorial=TutorialPage;
 
     if(!this.storageProvider.isAndroid){
         console.log("device.model:"+Device.model);
@@ -432,6 +438,7 @@ export class TabsPage {
             alert.present();
 
         });
+        //this.tabRef.select(3); //move into tutorial page. Why page scroll doesn't work correctly?
         //backbutton handler(?) 장바구니 나가기 모드가 있어야 한다. back button이 정상 동작하는지 보면 된다.
         //ionViewWillUnload가 정상 동작하는지 보자.
  }
