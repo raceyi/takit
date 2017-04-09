@@ -153,6 +153,12 @@
                     </ion-item>
                     </ion-col>
                 </ion-row>
+                <ion-row>
+                <p class="explain">
+                *이용제한시간(00:00~00:30,3주월요일23:55~04:00)의 입금 확인시 제한 시간 이후의 시간을 입력해주시기바랍니다.<br>
+                *입금 시간이 59분일 경우 입금 하신 시간과 다음 시간으로 모두 확인바랍니다.
+                </p>    
+                </ion-row>
                 <ion-row center>
                     <ion-col>
                         <ion-item>
@@ -176,6 +182,9 @@
                     <ion-label></ion-label>
                     <ion-select class="depositBankSelect" [(ngModel)]="storageProvider.depositBank">
                       <ion-option *ngFor="let bank of storageProvider.banklist" value="{{bank.value}}">{{bank.name}}</ion-option>
+                      <!--
+                      <ion-option value="0" >은행코드직접입력</ion-option>
+                      -->
                     </ion-select>
                 </ion-item>
               </ion-col>
