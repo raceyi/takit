@@ -16,7 +16,7 @@
       <ion-col col-3>
       </ion-col>
       <ion-col col-6 style="text-align:center;">
-          <button ion-button disabled full large> 회원가입</button>
+          <button ion-button disabled full> 회원가입</button>
       </ion-col>
       <ion-col col-3>
       </ion-col>
@@ -29,7 +29,7 @@
       <!--
       <img style="height:15vw;" src="assets/arrow_gray.png"/>
       -->
-      <ion-icon style="font-size: xx-large;padding-top: 15px;" name="md-arrow-round-down"></ion-icon>
+      <ion-icon style="font-size: xx-large;" name="md-arrow-round-down"></ion-icon>
     </ion-col>
     <ion-col col-4>
     </ion-col>
@@ -49,7 +49,7 @@
     <ion-col col-5>
     </ion-col>
     <ion-col col-2 style="text-align:center;">
-      <ion-icon style="font-size: xx-large;padding-top: 15px;" name="md-arrow-round-down"></ion-icon>
+      <ion-icon style="font-size: xx-large;" name="md-arrow-round-down"></ion-icon>
     </ion-col>
     <ion-col col-4>
     </ion-col>
@@ -69,7 +69,7 @@
           <ion-col col-5>
           </ion-col>
           <ion-col col-2 style="text-align:center;">
-      <ion-icon style="font-size: xx-large;padding-top: 15px;" name="md-arrow-round-down"></ion-icon>
+      <ion-icon style="font-size: xx-large;" name="md-arrow-round-down"></ion-icon>
           </ion-col>
           <ion-col col-4>
           </ion-col>
@@ -83,6 +83,26 @@
           </ion-col>
           <ion-col col-3>
             <img *ngIf="stage=='order'  && !storageProvider.tutorialShownFlag" style="height:10vw;" src="assets/icon_siteclick.png"/>
+          </ion-col>
+        </ion-row>
+      <ion-row>
+          <ion-col col-5>
+          </ion-col>
+          <ion-col col-2 style="text-align:center;">
+      <ion-icon style="font-size: xx-large;" name="md-arrow-round-down"></ion-icon>
+          </ion-col>
+          <ion-col col-4>
+          </ion-col>
+        </ion-row>
+    <ion-row>
+          <ion-col col-3>
+          </ion-col>
+          <ion-col col-6 style="text-align:center;">
+          <button ion-button outline *ngIf="stage=='notifier' && !storageProvider.tutorialShownFlag" (click)="notifier()">알림수신</button>
+          <button ion-button full *ngIf="stage!='notifier' || storageProvider.tutorialShownFlag" (click)="notifier()">알림수신</button>
+          </ion-col>
+          <ion-col col-3>
+            <img *ngIf="stage=='notifier'  && !storageProvider.tutorialShownFlag" style="height:10vw;" src="assets/icon_siteclick.png"/>
           </ion-col>
         </ion-row>
         <ion-row>

@@ -1,8 +1,10 @@
 <ion-header>
-  <ion-navbar hideBackButton>
+  <ion-navbar *ngIf="!storageProvider.tutorialShownFlag">
     <ion-title>캐쉬 충전 방법</ion-title>
   </ion-navbar>
-
+  <ion-navbar *ngIf="storageProvider.tutorialShownFlag" hideBackButton>
+    <ion-title>캐쉬 충전 방법</ion-title>
+  </ion-navbar>
 </ion-header>
 
 

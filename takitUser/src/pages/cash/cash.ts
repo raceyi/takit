@@ -14,9 +14,10 @@ import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {IOSAlertPage} from '../ios-alert/ios-alert';
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import {FaqPage} from '../faq/faq';
-import {TutorialPage} from '../tutorial/tutorial';
+//import {TutorialPage} from '../tutorial/tutorial';
 import { Clipboard } from '@ionic-native/clipboard';
 import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
+import { DepositCashTutorialPage } from '../deposit-cash-tutorial/deposit-cash-tutorial';
 
 declare var cordova:any;
 declare var moment:any;
@@ -1361,6 +1362,6 @@ checkDepositInLatestCashlist(cashList){
     }
 
     moveTutorial(){
-        this.app.getRootNav().push(TutorialPage);
+        this.app.getRootNav().push(DepositCashTutorialPage);
     }
 }

@@ -5,6 +5,8 @@ import { Storage } from '@ionic/storage';
 import { ConfigureCashTutorialPage } from '../configure-cash-tutorial/configure-cash-tutorial';
 import { DepositCashTutorialPage } from '../deposit-cash-tutorial/deposit-cash-tutorial';
 import { OrderTutorialPage } from '../order-tutorial/order-tutorial';
+import { NotifierTutorialPage } from '../notifier-tutorial/notifier-tutorial';
+
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {LoginPage} from '../login/login';
 /*
@@ -54,9 +56,15 @@ export class TutorialPage {
       this.stage="order";
   }
 
-  order(){
+ order(){
     //save each stage into storage
       this.navCtrl.push(OrderTutorialPage);
+      this.stage="notifier";
+  }
+
+notifier(){
+    //save each stage into storage
+      this.navCtrl.push(NotifierTutorialPage);
       this.stage="startTakit";
   }
 }

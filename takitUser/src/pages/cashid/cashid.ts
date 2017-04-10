@@ -4,9 +4,7 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ServerProvider} from '../../providers/serverProvider';
-//import {InAppBrowserEvent,InAppBrowser} from 'ionic-native';
-import {TutorialPage} from '../tutorial/tutorial';
-
+import { DepositCashTutorialPage } from '../deposit-cash-tutorial/deposit-cash-tutorial';
 import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
 
 
@@ -90,7 +88,7 @@ export class CashIdPage {
                                             //    this.app.getRootNav().pop().then(()=>{
                                             //        this.app.getRootNav().push(TutorialPage);
                                             //    });
-                                            this.navController.push(TutorialPage).then(()=>{
+                                            this.navController.push(DepositCashTutorialPage).then(()=>{
                                                 const index = this.navController.getActive().index;
                                                 this.navController.remove(index-1);
                                             });

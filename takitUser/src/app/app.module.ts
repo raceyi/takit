@@ -39,6 +39,7 @@ import {TutorialPage} from '../pages/tutorial/tutorial';
 import { ConfigureCashTutorialPage } from '../pages/configure-cash-tutorial/configure-cash-tutorial';
 import { DepositCashTutorialPage } from '../pages/deposit-cash-tutorial/deposit-cash-tutorial';
 import { OrderTutorialPage } from '../pages/order-tutorial/order-tutorial';
+import { NotifierTutorialPage } from '../pages/notifier-tutorial/notifier-tutorial';
 
 import {TranslateModule, TranslateLoader,TranslateStaticLoader} from 'ng2-translate/ng2-translate';
 import {Http,Headers} from '@angular/http';
@@ -88,7 +89,8 @@ import { Clipboard } from '@ionic-native/clipboard';
     TutorialPage,
     ConfigureCashTutorialPage,
     DepositCashTutorialPage,
-    OrderTutorialPage
+    OrderTutorialPage,
+    NotifierTutorialPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -129,7 +131,8 @@ import { Clipboard } from '@ionic-native/clipboard';
     TutorialPage,
     ConfigureCashTutorialPage,
     DepositCashTutorialPage,
-    OrderTutorialPage  
+    OrderTutorialPage,
+    NotifierTutorialPage  
   ],
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
