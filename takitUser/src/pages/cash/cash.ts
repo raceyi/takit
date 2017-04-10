@@ -42,7 +42,7 @@ export class CashPage {
 
   public refundEditable=true;
   public transferDate:string;
-  public transferHour:string;
+  //public transferHour:string;
 
   public depositAmount:number=undefined;
   //public depositBankInput;
@@ -81,7 +81,7 @@ export class CashPage {
     var dString=d.getFullYear()+'-'+(mm)+'-'+dd+'T'+hh+":00"+moment().format("Z");
     
     this.transferDate=dString;
-    this.transferHour=dString;
+   // this.transferHour=dString;
 
     this.depositMemo=this.storageProvider.name;
     //read cash info from local storage
@@ -346,13 +346,13 @@ ionViewDidEnter() {
       if(this.depositMemo==undefined || this.depositMemo.length==0){
           this.depositMemo=this.storageProvider.name;
       }
-      var transferDate=new Date(this.transferDate);
-      var transferHour=new Date(this.transferHour);
+      //var transferDate=new Date(this.transferDate);
+      var transferHour=new Date(this.transferDate);
       let body;
       console.log("this.transferDate:"+this.transferDate);
-      console.log("this.transferHour:"+this.transferHour);
+     // console.log("this.transferHour:"+this.transferHour);
       
-      console.log("depositDate:"+transferDate.toISOString());
+      console.log("depositDate:"+transferHour.toISOString());
 
       body = JSON.stringify({
                             depositTime:transferHour.toISOString(),
