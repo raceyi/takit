@@ -46,7 +46,7 @@ export class ServerProvider{
                          //this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).map(res=>res.json()).subscribe((res)=>{
                         this.http.post(request,body,{headers: headers}).timeout(this.storageProvider.timeout).subscribe((res)=>{
                             console.log("post version:"+res.json().version+" version:"+this.storageProvider.version);
-                            if(res.json().version!=this.storageProvider.version){
+                            if(parseFloat(res.json().version)>parseFloat(this.storageProvider.version)){
                                 console.log("post invalid version");
                                 this.storageProvider.tabMessageEmitter.emit("invalidVersion");
                             }
@@ -70,7 +70,7 @@ export class ServerProvider{
                 if(this.storageProvider.id=="facebook"){
                     this.fbProvider.login().then((res:any)=>{
                                 if(res.result=="success"){
-                                    if(res.version!=this.storageProvider.version){
+                                    if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                                         console.log("post invalid version");
                                         this.storageProvider.tabMessageEmitter.emit("invalidVersion");
                                     }
@@ -85,7 +85,7 @@ export class ServerProvider{
                         this.kakaoProvider.login().then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));
                                 if(res.result=="success"){
-                                    if(res.version!=this.storageProvider.version){
+                                    if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                                         console.log("post invalid version");
                                         this.storageProvider.tabMessageEmitter.emit("invalidVersion");
                                     }
@@ -103,7 +103,7 @@ export class ServerProvider{
                         this.emailProvider.EmailServerLogin(this.storageProvider.id,password).then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));
                                 if(res.result=="success"){
-                                    if(res.version!=this.storageProvider.version){
+                                    if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                                         console.log("post invalid version");
                                         this.storageProvider.tabMessageEmitter.emit("invalidVersion");
                                     }

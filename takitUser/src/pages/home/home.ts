@@ -65,9 +65,9 @@ export class HomePage{
                         param.item=resp.res.rows.item(0);
                     }
                     resolve(JSON.stringify(param));
-                },(error)=>{
+                }).catch(e => {
                     console.log("loadShopInfo query err");
-                    //console.log(JSON.stringify(error));
+                    //console.log(JSON.stringify(e));
                     reject();
                 });
          });

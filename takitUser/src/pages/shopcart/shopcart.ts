@@ -4,7 +4,7 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ServerProvider} from '../../providers/serverProvider';
-import {Keyboard} from 'ionic-native';
+import { Keyboard } from '@ionic-native/keyboard';
 declare var cordova:any;
 
 @Component({
@@ -36,7 +36,7 @@ export class ShopCartPage{
      constructor(private app:App,private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,
             private alertController:AlertController,private serverProvider:ServerProvider,
-            private ngZone:NgZone){
+            private ngZone:NgZone,private keyboard:Keyboard){
 	      console.log("ShopCartPage constructor");
         this.shopname=this.storageProvider.currentShopname();
         this.cart=this.storageProvider.cart;
@@ -53,14 +53,16 @@ export class ShopCartPage{
             this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
             this.amount=this.price-this.amount;
         }
-        if(!this.storageProvider.isAndroid){ //ios
-            Keyboard.onKeyboardShow().subscribe((e)=>{
+        /*
+        if(!this.storageProvider.isAndroid && !this.storageProvider.keyboardHandlerRegistered){ //ios
+            this.storageProvider.keyboardHandlerRegistered=true;
+            this.keyboard.onKeyboardShow().subscribe((e)=>{
                 console.log("keyboard show");
                 this.ngZone.run(()=>{
                     this.iOSOrderButtonHide=false;
                 });
             });
-            Keyboard.onKeyboardHide().subscribe((e)=>{
+            this.keyboard.onKeyboardHide().subscribe((e)=>{
                 console.log("keyboard hide");
                  setTimeout(() => {
                     this.ngZone.run(()=>{
@@ -69,8 +71,30 @@ export class ShopCartPage{
                   }, 1000); 
             });
         }
+        */
      }
 
+    cashPasswordFocus(){
+        console.log("cashPasswordFocus-dimensions:"+JSON.stringify(this.orderPageRef.getContentDimensions()));
+        this.orderPageRef.scrollToBottom();
+        if(!this.storageProvider.isAndroid){ 
+            this.ngZone.run(()=>{
+                this.iOSOrderButtonHide=false;       
+            });
+        }
+    }
+
+    cashPasswordBlur(){
+        console.log("cashPasswordBlur- Why it happens?");
+        if(!this.storageProvider.isAndroid){ 
+            setTimeout(() => {
+                        this.ngZone.run(()=>{
+                            this.iOSOrderButtonHide=true;   
+                        });
+                    }, 1000);
+        }
+    }
+    
     checkTakeoutAvailable(){
         console.log("checkTakeoutAvailable-begin");
         if(this.cart.hasOwnProperty("menus")){
@@ -143,10 +167,11 @@ export class ShopCartPage{
                         {
                         text: '네',
                         handler: () => {
-                            //['OK']
+                            console.log("move into cash tab");
+                            this.storageProvider.tabRef.select(2);
+                            this.storageProvider.cashMenu="cashIn";
+                            this.app.getRootNav().pop(); // pop order page
                             this.app.getRootNav().pop(); // pop shop tab page
-                            // move into cash page
-                            this.storageProvider.tabMessageEmitter.emit("moveCashConfiguration");
                             return;
                             }
                         }]

@@ -20,6 +20,7 @@ export class CashConfirmPage{
   tuno;
   userAgree=false;
   inProgress=false;
+  customStr;
 
   constructor(params: NavParams,public viewCtrl: ViewController
       ,private alertController:AlertController,public storageProvider:StorageProvider,
@@ -27,9 +28,7 @@ export class CashConfirmPage{
       private navController: NavController,public app:App) {
       console.log('CashConfirmPage -constructor custom:'+ JSON.stringify(params.get('custom')));
       let custom=params.get('custom');
-      
-      //let custom=JSON.parse("{\"depositMemo\":\"이경주\",\"amount\":\"2\",\"depositDate\":\"2017-01-06\",\"branchCode\":\"0110013\",\"cashTuno\":\"20170106093158510\",\"bankName\":\"농협\"}");
-      //let custom:any={"depositMemo":"이경주","amount":"2","depositDate":"2017-01-06","branchCode":"0110013","cashTuno":"20170106093158510","bankName":"농협"};
+      this.customStr=JSON.stringify(custom); 
 
       this.depositAmount=parseInt(custom.amount);
       console.log("depositAmount:"+this.depositAmount);
@@ -56,14 +55,18 @@ export class CashConfirmPage{
       this.tuno=custom.cashTuno;
       
       console.log("tuno:"+this.tuno);
+
+      this.storageProvider.cashAddInProgress(this.customStr,viewCtrl);      
   }
 
   dismiss() {
+    this.removeDuplicate();
     this.viewCtrl.dismiss();
     this.storageProvider.cashInfoUpdateEmitter.emit("listOnly");
   }
 
   confirmDismiss(){
+    this.removeDuplicate();
      this.viewCtrl.dismiss();
   }
 
@@ -83,18 +86,34 @@ export class CashConfirmPage{
                     console.log("addCash:"+JSON.stringify(res));
                     if(res.result=="success"){
                       this.storageProvider.cashInfoUpdateEmitter.emit("all");
+                      this.removeDuplicate();
                       this.viewCtrl.dismiss();
                     }else{ 
                           if(res.error=="already checked cash"){
                               let alert = this.alertController.create({
                                   title: "이미 확인된 입금입니다.",
-                                  buttons: ['OK']
+                                  buttons: [
+                                      {
+                                          text:'OK',
+                                          handler:()=>{
+                                                console.log("이미 확인된 입금입니다.");
+                                                this.removeDuplicate();
+                                                this.viewCtrl.dismiss(); 
+                                          }
+                                       }]
                               });
                               alert.present();
                           }else{
                             let alert = this.alertController.create({
                                 title: "캐쉬입금에 실패했습니다. 전체내역에서 입금 확인이 가능합니다.",
-                                buttons: ['OK']
+                                buttons: [
+                                      {
+                                          text:'OK',
+                                          handler:()=>{
+                                                this.removeDuplicate();
+                                                this.viewCtrl.dismiss(); 
+                                          }
+                                       }]
                             });
                             alert.present();
                           }
@@ -127,8 +146,26 @@ export class CashConfirmPage{
 
   deleteDeposit(){
        var param:any={tuno:this.tuno};
+       this.removeDuplicate();      
        this.viewCtrl.dismiss();
        this.app.getRootNav().push(CashDepositDeletePage,param);
+  }
+
+  removeDuplicate(){
+       this.storageProvider.cashRemoveInProgress(this.customStr,this.viewCtrl);
+       //hum... just remove one? yes. Workaround code 
+       for(var i=0;i<this.storageProvider.cashInProgress.length;i++){
+            console.log("removeDuplicate "+i);
+            if(this.storageProvider.cashInProgress[i].cashStr==this.customStr){
+                //console.log("0.removeView-hum..."+this.app.getRootNav().getViews().length);
+                //console.log("1.removeView-hum..."+this.navController.getViews().length);
+                //console.log("removeView "+this.customStr);
+                this.navController.removeView(this.storageProvider.cashInProgress[i].viewController);
+                this.storageProvider.cashInProgress.splice(i,1);
+                 console.log("call splice with "+i);
+                break;                                            
+           }
+       }
   }
 }
 

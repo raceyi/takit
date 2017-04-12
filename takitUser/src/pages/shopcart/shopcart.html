@@ -106,7 +106,7 @@
       <ion-col class="password">캐쉬 비밀번호(6자리)</ion-col>
       <ion-col class="password0">
         <ion-item class="cashPassword">
-        <ion-input maxlength="6" type="password" pattern="[0-9]{6}" [(ngModel)]="cashPassword" class="passwordinput"></ion-input>
+        <ion-input maxlength="6" type="password" pattern="[0-9]{6}" [(ngModel)]="cashPassword" (blur)="cashPasswordBlur()" (focus)="cashPasswordFocus()" class="passwordinput"></ion-input>
         </ion-item>
       </ion-col>
       </ion-row>
@@ -123,9 +123,6 @@
       <ion-col class="cash">{{receiptIdMask}}</ion-col>
       <ion-col class="cash" *ngIf="storageProvider.receiptType=='IncomeDeduction'">소득공제</ion-col>
       <ion-col class="cash" *ngIf="storageProvider.receiptType=='ExpenseProof'">지출증빙</ion-col>
-
-
-
     </ion-row>
     <ion-row [hidden]="storageProvider.receiptIssue">
       <ion-col class="cash">현금영수증 발행을 원하시면 회원정보에서 설정해주시기 바랍니다</ion-col>

@@ -124,7 +124,7 @@ export class LoginPage {
       console.log('facebookLogin comes');
       this.fbProvider.login().then((res:any)=>{
                                 console.log("facebookLogin-login page:"+JSON.stringify(res));
-                                if(res.version!=this.storageProvider.version){
+                                if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                                         let alert = this.alertController.create({
                                                         title: '앱버전을 업데이트해주시기 바랍니다.',
                                                         subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
@@ -186,7 +186,7 @@ export class LoginPage {
       this.kakaoProvider.login().then((res:any)=>{
                                 console.log("kakaoProvider-login page:"+JSON.stringify(res));
                                 if(res.result=="success"){
-                                    if(res.version!=this.storageProvider.version){
+                                    if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                                         let alert = this.alertController.create({
                                                         title: '앱버전을 업데이트해주시기 바랍니다.',
                                                         subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
@@ -264,7 +264,7 @@ export class LoginPage {
       }
       this.emailProvider.EmailServerLogin(this.email,this.password).then((res:any)=>{
                                 console.log("emailLogin-login page:"+JSON.stringify(res));
-                                if(res.version!=this.storageProvider.version){
+                                if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                                         let alert = this.alertController.create({
                                                         title: '앱버전을 업데이트해주시기 바랍니다.',
                                                         subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
@@ -327,7 +327,7 @@ export class LoginPage {
       
             this.emailProvider.EmailServerLogin(this.storageProvider.tourEmail,this.storageProvider.tourPassword).then((res:any)=>{
                         console.log("emailLogin-login page:"+JSON.stringify(res));
-                        if(res.version!=this.storageProvider.version){
+                        if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                                 let alert = this.alertController.create({
                                                 title: '앱버전을 업데이트해주시기 바랍니다.',
                                                 subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',

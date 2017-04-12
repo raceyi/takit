@@ -54,6 +54,7 @@ export class TabsPage {
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
         }    
+
     console.log("navigator.language:"+navigator.language);   
     if(!navigator.language.startsWith("ko")){
         translateService.setDefaultLang('en');
@@ -167,6 +168,7 @@ export class TabsPage {
 
  ionViewDidLoad(){ 
   //get discount rate of each shoptab
+  this.storageProvider.tabRef=this.tabRef;
   this.storageProvider.shoplist.forEach(shop=>{
       let body = JSON.stringify({takitId:shop.takitId});
       console.log("request discount rate of "+shop.takitId);
@@ -362,17 +364,21 @@ export class TabsPage {
         /////////////////////////////////////// 
         this.platform.pause.subscribe(()=>{
             console.log("pause event comes");
+            this.storageProvider.backgroundMode=true;
         }); //How about reporting it to server?
         this.platform.resume.subscribe(()=>{
             console.log("resume event comes");
+            this.storageProvider.backgroundMode=false;
         }); //How about reporting it to server?
 
         cordova.plugins.backgroundMode.onactivate(()=>{
             console.log("background mode has been activated");
+            this.storageProvider.backgroundMode=true;
         });
 
         cordova.plugins.backgroundMode.ondeactivate (()=> {
         console.log("background mode has been deactivated");
+        this.storageProvider.backgroundMode=false;
         });
 
         cordova.plugins.backgroundMode.setDefaults({
@@ -479,6 +485,7 @@ export class TabsPage {
 
   cash(event){
      console.log("cash tab selected"); 
+     /*
      if(this.storageProvider.cashId==undefined || this.storageProvider.cashId.length==0){
          this.storage.get("cashDetailAlert").then((value)=>{
             console.log("cashDetailAlert:"+value);
@@ -542,7 +549,8 @@ export class TabsPage {
                     });
                     alert.present();
          });
-     }
+         
+    }*/
   }
 
     registerPushService(){ // Please move this code into tabs.ts
@@ -553,8 +561,8 @@ export class TabsPage {
                 },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    //"gcmSandbox": "false", //code for production mode
-                    "gcmSandbox": "true",  //code for development mode
+                    "gcmSandbox": "false", //code for production mode
+                    //"gcmSandbox": "true",  //code for development mode
                     "alert": "true",
                     "sound": "true",
                     "badge": "true",
@@ -656,16 +664,17 @@ export class TabsPage {
                     });
                 }else if(additionalData.GCMType==="cash"){
                   console.log("additionalData.custom:"+additionalData.custom);
-
-                  let cashConfirmModal;
-                  if(typeof additionalData.custom === 'string'){ 
-                      cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: JSON.parse(additionalData.custom) });
-                  }else{ // object 
-                      cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: additionalData.custom });
+                  if(!this.storageProvider.backgroundMode){
+                        let cashConfirmModal;
+                        if(typeof additionalData.custom === 'string'){ 
+                            cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: JSON.parse(additionalData.custom) });
+                        }else{ // object 
+                            cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: additionalData.custom });
+                        }
+                        console.log("GCMCashUpdateEmitter");
+                        this.storageProvider.GCMCashUpdateEmitter.emit();
+                        cashConfirmModal.present();
                   }
-                  console.log("GCMCashUpdateEmitter");
-                  this.storageProvider.GCMCashUpdateEmitter.emit();
-                  cashConfirmModal.present();
                 }else if(additionalData.GCMType==="multiLogin"){
                     // logout and move into login page
                     this.storage.clear(); 

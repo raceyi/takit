@@ -243,7 +243,7 @@ export class SignupSubmitPage {
               this.kakaoProvider.kakaoServerSignup(this.id,this.country,phone,this.email,this.name,this.receiptIssue,this.receiptId,this.receiptType).then(
                 (result:any)=>{
                     var serverCode:string=result.result;
-                    if(result.version!=this.storageProvider.version){
+                    if(parseFloat(result.version)>parseFloat(this.storageProvider.version)){
                             let alert = this.alertController.create({
                                             title: '앱버전을 업데이트해주시기 바랍니다.',
                                             subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
@@ -280,7 +280,7 @@ export class SignupSubmitPage {
                     // move into home page.  
                     console.log("result..:"+JSON.stringify(result));
                     var serverCode:string=result.result;
-                    if(result.version!=this.storageProvider.version){
+                    if(parseFloat(result.version)>parseFloat(this.storageProvider.version)){
                             let alert = this.alertController.create({
                                             title: '앱버전을 업데이트해주시기 바랍니다.',
                                             subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
@@ -315,7 +315,7 @@ export class SignupSubmitPage {
         }else{
            this.emailProvider.emailServerSignup(this.password,this.name,this.email,this.country,phone,this.receiptIssue,this.receiptId,this.receiptType).then( 
             (result:any)=>{
-                    if(result.version!=this.storageProvider.version){
+                    if(parseFloat(result.version)>parseFloat(this.storageProvider.version)){
                             let alert = this.alertController.create({
                                             title: '앱버전을 업데이트해주시기 바랍니다.',
                                             subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',

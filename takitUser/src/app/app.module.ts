@@ -57,6 +57,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Sim } from '@ionic-native/sim';
 import { AppAvailability } from '@ionic-native/app-availability';
 import { Clipboard } from '@ionic-native/clipboard';
+import { Keyboard } from '@ionic-native/keyboard';
 
 @NgModule({
   declarations: [
@@ -147,6 +148,7 @@ import { Clipboard } from '@ionic-native/clipboard';
               Sim,
               Clipboard,
               AppAvailability,
+              Keyboard,
               ConfigProvider,
               StorageProvider,
               FbProvider,

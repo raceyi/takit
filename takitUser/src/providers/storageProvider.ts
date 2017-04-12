@@ -28,6 +28,7 @@ export class StorageProvider{
     public GCMCashUpdateEmitter= new EventEmitter();
     //public versionChecker= new EventEmitter();
     public shopTabRef:Tabs;
+    public tabRef:Tabs;
     public login:boolean=false;
     public navController:NavController;
     public email:string="";
@@ -42,6 +43,8 @@ export class StorageProvider{
     public cashId="";
     public cashAmount:number;
 
+    public backgroundMode=false; // true in background mode
+
     public refundBank:string="";
     public refundAccount:string="";
     
@@ -51,6 +54,7 @@ export class StorageProvider{
     public orderPageEntered:boolean=false; //used by order.ts and shoptabs.ts
     public shoptabsShown:boolean=false; // used by shoptabs.ts and app.html
 
+    public keyboardHandlerRegistered=false;
     /////////////////////////////////////
     public avoids=[]; // So far, just for tour mode
     /////////////////////////////////////
@@ -67,6 +71,8 @@ export class StorageProvider{
     public iphone5=false;
 
     public loginViewCtrl;
+
+    public cashInProgress=[];
 
     /* 농협 계좌 이체가능 은행 */
     banklist=[  {name:"국민",value:"004"},
@@ -235,7 +241,7 @@ export class StorageProvider{
                         reject("invalid DB status");
                     }
                     resolve(output);
-                },(error)=>{
+                }).catch(e => {
                      reject("DB error");
                 });
          });
@@ -258,8 +264,8 @@ export class StorageProvider{
                 console.log("[saveCartInfo]cart:"+JSON.stringify(this.cart));
                 console.log("[saveCartInfo]cart.menus:"+JSON.stringify(this.cart.menus));
                 resolve();
-            },(error)=>{
-                console.log("saveCartInfo insert error:"+JSON.stringify(error));
+            }).catch(e => {
+                console.log("saveCartInfo insert error:"+JSON.stringify(e));
                 reject("DB error");
             },);
          },()=>{
@@ -271,13 +277,13 @@ export class StorageProvider{
    dropCartInfo(){
        return new Promise((resolve,reject)=>{
            this.db.executeSql("drop table if exists carts").timeout(1000/* 1 second */).then(
-                (error)=>{
-                    console.log("fail to drop cart table "+JSON.stringify(error));
-                    reject();
-                },()=>{
+               ()=>{
                     console.log("success to drop cart table");
                     resolve();
-           });
+           }).catch(e => {
+                    console.log("fail to drop cart table "+JSON.stringify(e));
+                    reject();
+                },);
        });
    }
 
@@ -416,6 +422,47 @@ export class StorageProvider{
         console.log("[userInfoSetFromServer]cashId:"+this.cashId);
         this.tourMode=false;
     }
+
+    cashExistInProgress(cash,viewController){
+        var cashStr;
+        if(typeof cash !== 'string'){  
+            cashStr=JSON.stringify(cash);
+        }else
+            cashStr=cash;
+        for(var i=0;i<this.cashAddInProgress.length;i++){
+            if(this.cashAddInProgress[i].cashStr===cash){
+                return true;
+            }
+        }    
+        return false;
+    }
+
+    cashAddInProgress(cashStr,viewController){
+        this.cashInProgress.push({cashStr:cashStr,viewController:viewController});
+        /////////////////////////////////////////////
+        for(var i=0;i<this.cashInProgress.length;i++)
+            console.log("Add-cashInProgress["+i+"]:"+this.cashInProgress[i].cashStr);
+    }
+
+    cashRemoveInProgress(cash,viewController){
+        var cashStr;
+        var idx=-1;
+        for(var i=0;i<this.cashInProgress.length;i++){
+            if(this.cashInProgress[i].cashStr==cash 
+                && this.cashInProgress[i].viewController==viewController){
+                    console.log("i:"+i);
+                    idx=i;
+                    break;
+                }
+        }
+        if(idx>=0){
+            console.log("call splice with "+idx);
+            this.cashInProgress.splice(idx,1);
+        }
+        /////////////////////////////////////////////    
+        for(var i=0;i<this.cashInProgress.length;i++)
+            console.log("Remove-cashInProgress["+i+"]:"+this.cashInProgress[i].cashStr);
+    }    
 }
 
 

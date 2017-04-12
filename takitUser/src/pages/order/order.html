@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content #orderPage class="orderPage" > 
-   
+
  <ion-row>
    <ion-col width-30>
           <img [src] = "menu.filename" id="MenuImg">
@@ -98,7 +98,6 @@
 
 <div id = "payDiv">
    <div id ="grayDiv">
-
     <ion-row class="textrow">
       <ion-col width-33 class="center"> {{'orderAmount'|translate}} </ion-col>
       <ion-col width-33 class="center"> {{'discountAmount'|translate}}({{storageProvider.shopInfo.discountRate}})</ion-col>
@@ -116,24 +115,20 @@
       <ion-col class="cash">{{storageProvider.cashAmount}}</ion-col>
     </ion-row>
 
-    <ion-row class="textrow" *ngIf="storageProvider.isAndroid">
+    <ion-row class="textrow">
       <ion-col class="password">{{'cashPincode'|translate}}</ion-col>
       <ion-col class="password0">
         <ion-item class="cashPassword">
-        <ion-input maxlength="6" type="password" pattern="[0-9]{6}" [(ngModel)]="cashPassword" class="passwordinput"></ion-input>
+        <ion-input maxlength="6" type="password" pattern="[0-9]{6}" [(ngModel)]="cashPassword" (blur)="cashPasswordBlur()" (focus)="cashPasswordFocus()" class="passwordinput"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
 
-    <ion-row class="textrow" *ngIf="!storageProvider.isAndroid">
-      <ion-col class="password">{{'cashPincode'|translate}}</ion-col>
-      <ion-col class="password0">
-        <ion-item class="cashPassword">
-        <ion-input maxlength="6" type="password" pattern="[0-9]{6}" [(ngModel)]="cashPassword" class="passwordinput"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
   </div>    
+    <ion-segment [hidden]="iOSOrderButtonHide">
+    <ion-segment-button value="shopcart" (click)="shopcart()">장바구니 담기</ion-segment-button>
+    <ion-segment-button value="order" [disabled]="storageProvider.tourMode==true" (click)="order()">주문결제하기</ion-segment-button>
+    </ion-segment>
 
     <ion-row [hidden]="!storageProvider.receiptIssue">
       <ion-col class="cash">현금영수증 발행 </ion-col>
@@ -145,25 +140,19 @@
       <ion-col class="cash">현금영수증 발행을 원하시면 회원정보에서 설정해주시기 바랍니다</ion-col>
     </ion-row>
     <br>
-
-    <ion-segment [hidden]="iOSOrderButtonHide">
-    <ion-segment-button value="shopcart" (click)="shopcart()">장바구니 담기</ion-segment-button>
-    <ion-segment-button value="order" (click)="order()">주문결제하기</ion-segment-button>
-    </ion-segment>
     <div class="orderInfo cancelNoti">
       주문접수전에는 MyPage에서 주문 취소가 가능합니다. <br>
     </div>
    <div>
     <ion-row>
       <ion-col width-10 class="collapse">
-      <ion-icon name="add-circle" [hidden]="!userNotiHidden" (click)="expand($event)"></ion-icon>
-      <ion-icon name="remove-circle" [hidden]="userNotiHidden" (click)="collapse($event)"></ion-icon>
+      <ion-icon name="ios-information-circle" (click)="expand($event)"></ion-icon>
       </ion-col>
       <ion-col class="orderInfo title" width-90>
       원활한 주문을 위해 판매자에게 주문정보가 제공됩니다.
       </ion-col>
     </ion-row>
-    <div [hidden]="userNotiHidden">
+    <div>
         <ion-row>
           <ion-col width-33 class="orderInfo">제공받는자</ion-col>
           <ion-col width-66 class="orderInfo1">{{shopname}}</ion-col>
@@ -184,8 +173,9 @@
   </div>
 
 </div>
+
 </ion-content>
-<ion-footer class="orderPage">
+<ion-footer class="orderPage" [hidden]="!iOSOrderButtonHide">
     <ion-segment [hidden]="!iOSOrderButtonHide">
     <ion-segment-button value="shopcart" (click)="shopcart()">{{'shoppingCart'|translate}}</ion-segment-button>
     <ion-segment-button value="order" (click)="order()">{{'orderIt'|translate}}</ion-segment-button>
