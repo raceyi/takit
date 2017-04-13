@@ -1,6 +1,6 @@
 page-shoptable {
     ion-header {
-         position: relative !important; 
+         //position: relative !important; 
 
          .title{
             margin-top: auto !important;
@@ -24,7 +24,7 @@ page-shoptable {
             box-shadow: inherit;
         }
      }
-
+/*
     ion-content.segmentButton{
         position:relative !important;
         height:min-content !important;
@@ -33,13 +33,14 @@ page-shoptable {
              overflow-y: hidden;
         }
     }
-
+*/
+/*
     ion-content{
         position:relative !important;
         height: 100% !important;
         width: 100% !important;
     }
-
+*/
     ion-content.infiniteScroll{
         position: relative !important; 
         ion-label {

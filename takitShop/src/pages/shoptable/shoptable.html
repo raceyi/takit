@@ -66,9 +66,7 @@
   </ion-row>
     <button ion-button full (click)="searchPeriod()">검색</button>
  </div> 
-</ion-content>
 
-<ion-content padding class="infiniteScroll">
   <ion-list>
   <ion-item class="orderManagement" *ngFor="let order of orders">
                 <ion-row (click)="toggleOrder(order)">  
