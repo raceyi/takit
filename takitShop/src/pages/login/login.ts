@@ -11,7 +11,7 @@ import{ShopTablePage} from '../shoptable/shoptable';
 import{SelectorPage} from '../selector/selector';
 import {UserSecretPage} from '../usersecret/usersecret';
 import {StorageProvider} from '../../providers/storageProvider';
-import {Storage} from '@ionic/storage';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-login',  

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Platform ,NavController} from 'ionic-angular';
 import {SQLite} from 'ionic-native';
-import {Storage} from '@ionic/storage';
+import { Storage } from '@ionic/storage';
 //import * as CryptoJS from 'crypto-js';
 declare var CryptoJS:any;
 import {ConfigProvider} from './configProvider';

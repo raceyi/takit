@@ -104,6 +104,8 @@ License: GPL
 
     Capabilities->Push Notifications -> ON
 
+ General-> Deployment Info->Devices를 iPhone으로 설정 
+
  $cd ..
 
  $git checkout takitUser
@@ -207,52 +209,60 @@ $cd takitShop => config.xml의 id,name 수정
      ...
      <preference name="AutoHideSplashScreen" value="false" /> 
 
-$ionic platform add android@latest
+$ionic platform add android
 
 $ionic resources
 
 $ionic plugin add https://github.com/taejaehan/cordova-kakaotalk.git --variable KAKAO_APP_KEY={takitShop.kakao.appId} 
 
-=>takitShop/platforms/android/cordova-plugin-htj-kakaotalk/shop-kakao.gradle 파일에 sdk version수정 
+=>platforms/android/cordova-plugin-htj-kakaotalk/shop-kakao.gradle 파일에 sdk version수정 
 
   현재SDK버전: com.kakao.sdk:kakaotalk:1.1.21 (KakaoTalk.java파일 수정=>git checkout takitShop이수행함)
 
 $ionic plugin add cordova-plugin-facebook4 --save --variable APP_ID="{takitShop.facebook.appId}" --variable APP_NAME="takitShop"
 
+$npm install --save @ionic-native/facebook
+
 $ionic plugin add cordova-plugin-network-information
 $npm install --save @ionic-native/network
 
 $ionic plugin add cordova-plugin-file-transfer
+$npm install --save @ionic-native/transfer
 
 $ionic plugin add cordova-plugin-camera
+$npm install --save @ionic-native/camera
 
 $ionic plugin add cordova-plugin-file
+$npm install --save @ionic-native/file
 
 $ionic plugin add cordova-plugin-filepath
+$npm install --save @ionic-native/file-path
 
 $ionic plugin add phonegap-plugin-push --variable SENDER_ID={takitShop.fcm.senderId}
+$npm install --save @ionic-native/push
 
-$ionic plugin add cordova-sqlite-storage
-
-$ionic plugin add cordova-plugin-inappbrowser
+$ionic plugin add cordova-plugin-inappbrowser 
+$npm install --save @ionic-native/in-app-browser
 
 $ionic plugin add cordova-plugin-appavailability
+$npm install --save @ionic-native/app-availability
 
 $ionic plugin add https://github.com/srehanuddin/Cordova-Plugin-Bluetooth-Printer.git
 
 $ionic plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
 
-$ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git
+$ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git#0.6.5
 
 $ionic plugin add cordova-plugin-media
+$npm install --save @ionic-native/media
+
+$ionic g directive focuser
 
 $npm install crypto-js
 
 $npm install @types/crypto-js --save
 
-$ionic g directive focuser
-
-$git checkout platforms/ios/타킷/Classes/AppDelegate.m 
+$git checkout platforms/ios/타킷운영자/Classes/AppDelegate.m 
 
 $ionic build ios
 
@@ -352,10 +362,6 @@ $git checkout takitShop
  $ionic run ios
 
 Schedule
-
-12월31일 안드로이드 앱완료 
-
-1월12일 아이폰앱 승인 완료
 
 Ionic2 무료 강의
 

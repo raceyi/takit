@@ -3,12 +3,13 @@ import {NavController,App,AlertController,Platform,MenuController,IonicApp,ViewC
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
 import {StorageProvider} from '../../providers/storageProvider';
-import {Push,PushNotification} from 'ionic-native';
+import {MediaProvider} from '../../providers/mediaProvider';
 import {Http,Headers} from '@angular/http';
 import {ErrorPage} from '../../pages/error/error';
 import {Splashscreen} from 'ionic-native';
 import {PrinterProvider} from '../../providers/printerProvider';
 import {ServerProvider} from '../../providers/serverProvider';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
 declare var cordova:any;
 
@@ -23,7 +24,7 @@ export class ShopTablePage {
   endDate;
  // currTime;
   orders=[];
-  pushNotification:PushNotification;
+  pushNotification:PushObject;
   infiniteScroll:any=undefined;
   smsInboxPlugin;
   isAndroid;
@@ -43,7 +44,8 @@ export class ShopTablePage {
   constructor(public navController: NavController,private app:App,private storageProvider:StorageProvider,
       private http:Http,private alertController:AlertController,private ngZone:NgZone,private ionicApp: IonicApp,
       private printerProvider:PrinterProvider,private platform:Platform,private menuCtrl: MenuController,
-      public viewCtrl: ViewController,private serverProvider:ServerProvider) {
+      public viewCtrl: ViewController,private serverProvider:ServerProvider,private push: Push,
+      private mediaProvider:MediaProvider) {
     console.log("ShopTablePage constructor");
     this.isAndroid=this.platform.is("android");
   
@@ -601,7 +603,7 @@ export class ShopTablePage {
       }
 
       registerPushService(){ // Please move this code into tabs.ts
-            this.pushNotification=Push.init({
+            this.pushNotification=this.push.init({
                 android: {
                     //forceShow: true, // Is it necessary?vibration
                     senderID: this.storageProvider.userSenderID                },
@@ -616,7 +618,7 @@ export class ShopTablePage {
                 windows: {}
             });
                         
-            this.pushNotification.on('registration',(response)=>{
+             this.pushNotification.on('registration').subscribe((response:any)=>{
               console.log("registration..."+response.registrationId);
               var platform;
               if(this.platform.is("android")){
@@ -644,13 +646,14 @@ export class ShopTablePage {
                 });
             });
 
-            this.pushNotification.on('notification',(data:any)=>{
+            this.pushNotification.on('notification').subscribe((data:any)=>{
               console.log("!!! shoporder-data:"+JSON.stringify(data));
               console.log("!!! shoporder-data.custom:"+JSON.stringify(data.additionalData.custom));
               
                 if(this.Option!="period" ||(this.Option=="period" && this.hasItToday() )){
                      //Please check if order is new or existing one and then add it or modify it into orders.
                     var additionalData:any=data.additionalData;
+                    var playback=false;
                     console.log("!!! additionalData.GCMType:"+additionalData.GCMType);
                     if(additionalData.GCMType==="order"){
                       console.log("order is comming "+data.additionalData.custom);
@@ -674,6 +677,7 @@ export class ShopTablePage {
                             this.orders.unshift(newOrder);
                             if(newOrder.orderStatus=="paid"){
                                   this.printOrder(newOrder);
+                                  playback=true;
                             }
                         }else{
                            this.orders[i]=this.convertOrderInfo(incommingOrder);   
@@ -701,6 +705,10 @@ export class ShopTablePage {
                        }
                      });
                     }
+
+                if(playback){
+                    this.mediaProvider.play(); //Please playback after confirmMsg delivered. Playing sound causes error of confirmMsgDelivery due to unknown reasons.
+                }
                 this.confirmMsgDelivery(additionalData.notId).then(()=>{
                       console.log("confirmMsgDelivery success");
                 },(err)=>{
@@ -730,12 +738,13 @@ export class ShopTablePage {
                 }
             });
 
-            this.pushNotification.on('error', (e)=>{
+             this.pushNotification.on('error').subscribe((e:any)=>{
                 console.log(e.message);
             });
     }
 
     updateOrder(order){
+        this.mediaProvider.stop();
         if(order.orderStatus=="paid"){
                this.updateStatus(order,"checkOrder").then(()=>{
                  order.orderStatus="checked";
@@ -782,6 +791,7 @@ export class ShopTablePage {
     }
 
     cancelOrder(order,cancelReason:string){
+      this.mediaProvider.stop();
       return new Promise((resolve,reject)=>{
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');

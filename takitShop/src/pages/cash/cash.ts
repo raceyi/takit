@@ -5,7 +5,7 @@ import {Splashscreen} from 'ionic-native';
 import {PrinterProvider} from '../../providers/printerProvider';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
-import {Storage} from '@ionic/storage';
+import { Storage } from '@ionic/storage';
 
 declare var moment:any;
 

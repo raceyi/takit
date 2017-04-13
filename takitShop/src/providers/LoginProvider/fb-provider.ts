@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Http,Headers} from '@angular/http';
-import {Facebook} from 'ionic-native';
 import {Platform} from 'ionic-angular';
-import {StorageProvider} from '../StorageProvider';
+import {StorageProvider} from '../storageProvider';
 import 'rxjs/add/operator/map';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
+
 
 @Injectable()
 export class FbProvider {
@@ -12,7 +13,8 @@ export class FbProvider {
   country:string;
   name:string;
 
-  constructor(private platform:Platform,private http:Http,private storageProvider:StorageProvider) {
+  constructor(private platform:Platform,private http:Http
+        ,public storageProvider:StorageProvider, public fb: Facebook) {
       console.log("FbProvider");
   }
 
@@ -29,12 +31,12 @@ export class FbProvider {
   fblogin(handler,fbProvider){    
       return new Promise((resolve,reject)=>{
                if(this.platform.is('cordova')) {
-                    Facebook.getLoginStatus().then((status_response) => { 
+                    fbProvider.fb.getLoginStatus().then((status_response) => { 
                     console.log(JSON.stringify(status_response));
                     if(status_response.status=='connected'){
                        console.log("conneted status");
                        //console.log(status_response.userId); //please save facebook id 
-                       Facebook.api("me/?fields=id,email,last_name,first_name", ["public_profile","email"]).then((api_response) =>{
+                       fbProvider.fb.api("me/?fields=id,email,last_name,first_name", ["public_profile","email"]).then((api_response) =>{
                             console.log(JSON.stringify(api_response));
                             console.log("call server facebook login!!! referenceId:"+api_response.id);
                             handler(api_response.id,fbProvider,status_response.authResponse.accessToken)
@@ -63,12 +65,12 @@ export class FbProvider {
                         }); 
                     }else{ // try login
                        console.log("Not connected status");
-                       Facebook.login(["public_profile","email"]).then((login_response:any) => {
+                       fbProvider.fb.login(["public_profile","email"]).then((login_response:any) => {
                             console.log(JSON.stringify(login_response));
                             //console.log(login_response.userId);
-                            Facebook.api("me/?fields=id,email,last_name,first_name", ["public_profile","email"]).then((api_response) =>{
+                            fbProvider.fb.api("me/?fields=id,email,last_name,first_name", ["public_profile","email"]).then((api_response) =>{
                                 console.log(JSON.stringify(api_response));
-                                Facebook.getAccessToken().then(accessToken=>{ 
+                                fbProvider.fb.getAccessToken().then(accessToken=>{ 
                                        console.log("accessToken:"+accessToken);
                                        console.log("call server facebook login!!!");
                                        handler(api_response.id,fbProvider,accessToken)
@@ -129,7 +131,7 @@ export class FbProvider {
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ fbProvider.storageProvider.serverAddress);
 
-             fbProvider.http.post(fbProvider.storageProvider.serverAddress+"/shop/facebooklogin",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{
+              fbProvider.http.post(fbProvider.storageProvider.serverAddress+"/shop/facebooklogin",body,{headers: headers}).map(res=>res.json()).subscribe((res)=>{              
                  console.log("facebook login res:"+JSON.stringify(res));
                  resolve(res); // 'success'(move into home page) or 'invalidId'(move into signup page)
              },(err)=>{
@@ -139,9 +141,9 @@ export class FbProvider {
          });
   }
 
-  logout(){
+   logout(){
       return new Promise((resolve,reject)=>{
-            Facebook.logout().then((result)=>{
+            this.fb.logout().then((result)=>{
                 console.log("facebook logout success");
                     console.log("logout");
                     let headers = new Headers();
@@ -161,5 +163,6 @@ export class FbProvider {
             });
       });
   }
+
 }
 

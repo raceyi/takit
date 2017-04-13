@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 import { Platform,App,AlertController } from 'ionic-angular';
-import { StatusBar,Splashscreen ,Network} from 'ionic-native';
 
 import {PrinterProvider} from '../providers/printerProvider';
 import {StorageProvider} from '../providers/storageProvider';
 import {FbProvider} from '../providers/LoginProvider/fb-provider';
 import {KakaoProvider} from '../providers/LoginProvider/kakao-provider';
 import {EmailProvider} from '../providers/LoginProvider/email-provider';
-import {Storage} from '@ionic/storage';
 import {LoginPage} from '../pages/login/login';
 import {ErrorPage} from '../pages/error/error';
 import {ShopTablePage} from '../pages/shoptable/shoptable';
@@ -17,6 +15,12 @@ import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {CashPage} from '../pages/cash/cash';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
 import {SalesPage} from '../pages/sales-page/sales-page';
+
+import { StatusBar } from '@ionic-native/status-bar';
+import { Storage } from '@ionic/storage';
+import { Network } from '@ionic-native/network';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import {MediaProvider} from '../providers/mediaProvider';
 
 declare var cordova:any;
 
@@ -33,7 +37,9 @@ export class MyApp {
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
                 private kakaoProvider:KakaoProvider,public storageProvider:StorageProvider,
                 public storage:Storage,public printerProvider:PrinterProvider,
-                public alertCtrl:AlertController) {
+                public alertCtrl:AlertController,private network: Network, 
+                private statusBar: StatusBar,private splashScreen:SplashScreen,
+                private mediaProvider:MediaProvider) {
     
     this.platform=platform;
     ////////////Test-begin//////////
@@ -44,22 +50,10 @@ export class MyApp {
     ////////////Test-end///////////
     
     platform.ready().then(() => {
-        console.log("platform ready comes");
-        //this.storageProvider.open(); So far, DB is not necessary.
+            console.log("platform ready comes");
+            //this.storageProvider.open(); So far, DB is not necessary.
 
-        if(Network.connection=="none"){
-            //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
-            //Please check current page and then move into ErrorPage!
-            console.log("rootPage:"+JSON.stringify(this.rootPage));
-            if(!this.rootPage){
-                this.rootPage=ErrorPage;
-                 Splashscreen.hide();
-            }else{
-                console.log("show alert");
-            }       
-        }else{
-            console.log('network connected!');
-            this.disconnectSubscription = Network.onDisconnect().subscribe(() => { // Why it doesn't work?
+            this.disconnectSubscription = this.network.onDisconnect().subscribe(() => { // Why it doesn't work?
                 console.log('network was disconnected :-(');
                 //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
                 //Please check current page and then move into ErrorPage!
@@ -70,6 +64,7 @@ export class MyApp {
                     return;
                 }   
             });
+            this.mediaProvider.init();
             //Please login if login info exists or move into login page
             this.storage.get("id").then((value:string)=>{
                 console.log("value:"+value);
@@ -148,15 +143,13 @@ export class MyApp {
                 console.log("id doesn't exist. move into LoginPage");
                 this.rootPage=LoginPage;
             });
-        }
-
         //this.connectSubscription = Network.onConnect().subscribe(() => { 
         //    console.log('network connected!');
         //});
 
         // Okay, so the platform is ready and our plugins are available.
         // Here you can do any higher level native things you might need.
-        StatusBar.styleDefault();
+        this.statusBar.styleDefault();
     });
   }
 

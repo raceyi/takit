@@ -8,7 +8,7 @@ import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import {PrinterProvider} from '../../providers/printerProvider';
 
-import {Storage} from '@ionic/storage';
+import { Storage } from '@ionic/storage';
 
 import {LoginPage} from '../login/login';
 import {ShopTablePage} from '../shoptable/shoptable';
