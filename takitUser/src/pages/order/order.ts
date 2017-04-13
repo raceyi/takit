@@ -47,6 +47,9 @@ export class OrderPage {
 
   @ViewChild('quantityNum') inputNumRef: TextInput;
 
+  keyboardHeight;
+  scrollHeight=0;
+
   constructor(private app:App,private navController: NavController,private http:Http,private navParams: NavParams,
         private alertController:AlertController, 
         private platform:Platform,public storageProvider:StorageProvider,
@@ -136,12 +139,24 @@ export class OrderPage {
             });
        }
        */
+        this.keyboard.onKeyboardShow().subscribe((e)=>{
+            console.log("keyboard height:"+e.keyboardHeight);
+            this.keyboardHeight=e.keyboardHeight;
+            if(this.storageProvider.isAndroid){  // workaround solution
+                if(this.scrollHeight==0){
+                    this.scrollHeight=this.orderPageRef.getContentDimensions().scrollHeight-this.keyboardHeight-20;
+                }
+                console.log("dimensions:"+JSON.stringify(this.orderPageRef.getContentDimensions()));
+                console.log("scrollTo:"+this.scrollHeight);
+                this.orderPageRef.scrollTo(0,this.scrollHeight);
+            }
+        });
+
  }
 
 cashPasswordFocus(){
-    console.log("cashPasswordFocus-dimensions:"+JSON.stringify(this.orderPageRef.getContentDimensions()));
-    this.orderPageRef.scrollToBottom();
-    if(!this.storageProvider.isAndroid){ 
+    if(!this.storageProvider.isAndroid){  // workaround solution
+        this.orderPageRef.scrollToBottom();
         this.ngZone.run(()=>{
             this.iOSOrderButtonHide=false;       
         });
