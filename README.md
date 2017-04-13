@@ -262,11 +262,13 @@ $npm install crypto-js
 
 $npm install @types/crypto-js --save
 
+$npm install ionic-native
+
 $git checkout platforms/ios/타킷운영자/Classes/AppDelegate.m 
 
 $ionic build ios
 
-$git checkout takitShop/platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
+$git checkout platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
 
 $ionic build android
 
