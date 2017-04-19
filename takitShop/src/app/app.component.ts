@@ -15,6 +15,9 @@ import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {CashPage} from '../pages/cash/cash';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
 import {SalesPage} from '../pages/sales-page/sales-page';
+import { EditMenuPage } from '../pages/edit-menu-page/edit-menu-page';
+
+
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { Storage } from '@ionic/storage';
@@ -202,6 +205,10 @@ export class MyApp {
 
     openSales(){
         this.app.getRootNav().push(SalesPage);
+    }
+
+    openEditMenu(){
+        this.app.getRootNav().push(EditMenuPage)
     }
    openLogout(){
       let confirm = this.alertCtrl.create({

@@ -23,6 +23,8 @@ import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {CashPage} from '../pages/cash/cash';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
 import {SalesPage} from '../pages/sales-page/sales-page';
+import { EditMenuPage } from '../pages/edit-menu-page/edit-menu-page';
+import { MenuModalPage} from '../pages/menu-modal-page/menu-modal-page';
 
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
@@ -49,6 +51,8 @@ import { HttpModule } from '@angular/http';
     CashPage,
     UserInfoPage,
     SalesPage,
+    EditMenuPage,
+    MenuModalPage,
     Focuser,
   ],
   imports: [
@@ -69,7 +73,9 @@ import { HttpModule } from '@angular/http';
     ServiceInfoPage,
     CashPage,
     UserInfoPage,
-    SalesPage
+    SalesPage,
+    EditMenuPage,
+    MenuModalPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
     Network, 

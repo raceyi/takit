@@ -126,6 +126,24 @@ export class ServerProvider{
       });
   }
 
+  addCategory(category){
+      category.takitId = this.storageProvider.shopInfo.takitId;
+      return new Promise((resolve,reject)=>{
+           let body = JSON.stringify(category);
+           console.log("/shop/addCategory "+body);
+           this.post("/shop/addCategory",body).then((res:any)=>{
+                console.log("res:"+JSON.stringify(res));
+                if(res.result=="success"){
+                    resolve();
+                }else{
+                    reject("새 카테고리 추가에 실패했습니다.");
+                }
+           },(err)=>{
+                    reject(err);
+           });
+      });
+  }
+
 /*
     getShopInfo(takitId){
         return new Promise((resolve,reject)=>{

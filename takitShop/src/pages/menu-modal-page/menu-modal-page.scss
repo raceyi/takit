@@ -1,0 +1,40 @@
+page-menu-modal-page {
+       ion-item{
+     
+    }
+
+    ion-label{
+        width: 85px;
+        //text-align: center;
+        font-weight: 600;
+    }
+
+    ion-input{
+        //border-bottom: 1px !important;
+        //border-style: solid !important;
+    }
+    .completeWrap{
+        padding-top:20px;
+        text-align: center;
+    }
+
+    .completeWrap .item-inner .input-wrapper .label > button {
+        width: 100px;
+        height: 30px;
+        background-color: #387ef5 !important;
+        color: white !important;
+        font-size: 17px;
+    }
+    .addOption{
+        text-align: right !important;
+    }
+
+    .addOption .item-inner .input-wrapper .label > button{
+        
+        height: 20px;
+        background-color: #387ef5 !important;
+        color: white !important;
+        font-size: 12px;
+    }
+
+}
