@@ -1,0 +1,97 @@
+<!--
+  Generated template for the MenuMoalPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      메뉴 수정
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+<form #form="ngForm" (ngSubmit)="menuModalForm(form)" novalidate>
+<ion-row>
+  <ion-item>
+      <ion-label stacked>메뉴명</ion-label>
+      <ion-input [value]="menu.menuName" required></ion-input>
+  </ion-item>
+</ion-row>
+<ion-row>
+  <ion-item>
+      <ion-label stacked>메뉴명(영문)</ion-label>
+      <ion-input [value]="menu.menuNameEn"></ion-input>
+  </ion-item>
+</ion-row>
+<ion-row>
+  <ion-item>
+      <ion-label stacked>가격</ion-label>
+      <ion-input [value]="menu.price" required></ion-input>
+  </ion-item>
+  <ion-item>
+      <ion-label>포장가능</ion-label>
+      <ion-checkbox [checked]="menu.takeout"></ion-checkbox>
+  </ion-item>
+</ion-row>
+
+<ion-row>
+  <ion-item>
+      <ion-label stacked>설명</ion-label>
+      <ion-input [value]="menu.explanation"></ion-input>
+  </ion-item>
+</ion-row>
+<ion-row>
+  <ion-item>
+      <ion-label stacked>설명(영문)</ion-label>
+      <ion-input [value]="menu.explanationEn"></ion-input>
+  </ion-item>
+</ion-row>
+<ion-row>
+  <ion-item>
+      <ion-label stacked>재료</ion-label>
+      <ion-input></ion-input>
+  </ion-item>
+</ion-row>
+<ion-row>
+  <ion-item>
+      <ion-label stacked>재료(영문)</ion-label>
+      <ion-input></ion-input>
+  </ion-item>
+</ion-row>
+
+<ion-row *ngFor="let option of menu.options">
+  <ion-item>
+      <ion-label stacked>옵션명</ion-label>
+      <ion-input [value]="option.name"></ion-input>
+  </ion-item>
+  <ion-item>
+      <ion-label stacked>옵션가격</ion-label>
+      <ion-input [value]="option.price"></ion-input>
+  </ion-item>
+</ion-row>
+  <ion-row *ngFor="let optionEn of menu.optionsEn">
+  <ion-item>
+      <ion-label stacked>옵션명</ion-label>
+      <ion-input [value]="optionEn.name"></ion-input>
+  </ion-item>
+  <ion-item>
+      <ion-label stacked>옵션가격</ion-label>
+      <ion-input [value]="optionEn.price"></ion-input>
+  </ion-item>
+</ion-row>
+<ion-row>
+    <ion-item  no-lines class="addOption">
+        <button  (click)="addOption()">옵션 추가</button>
+    </ion-item>
+</ion-row>
+
+  <ion-item no-lines class="completeWrap">
+    <button (click)="close()">취소</button>
+    <button [hidden]="addFlag" (click)="modifyMenuInfo()">수정</button>
+    <button [hidden]="!addFlag" (click)="addMenuInfo()">추가</button>
+  </ion-item>
+</form>
+</ion-content>

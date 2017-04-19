@@ -93,6 +93,7 @@ export class ShopTablePage {
           this.serverProvider.getShopInfo(this.storageProvider.myshop.takitId).then((res:any)=>{
               console.log("shopInfo:"+JSON.stringify(res));
               this.storageProvider.shopInfoSet(res.shopInfo);
+              this.storageProvider.shop = res;
           });
 
    if(this.platform.is("android")){

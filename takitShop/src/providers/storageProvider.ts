@@ -12,6 +12,7 @@ export class StorageProvider{
     public myshoplist=[];
     public myshop:any={}; // manager, takitId, ???
     public shopInfo:any;   // current shopInfo. shopname:shopInfo.shopName
+    public shop:any;
     public errorReason:string;
     public id:string;
     public printerName; // printerName saved
