@@ -561,8 +561,8 @@ export class TabsPage {
                 },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    "gcmSandbox": "false", //code for production mode
-                    //"gcmSandbox": "true",  //code for development mode
+                    //"gcmSandbox": "false", //code for production mode
+                    "gcmSandbox": "true",  //code for development mode
                     "alert": "true",
                     "sound": "true",
                     "badge": "true",
@@ -627,6 +627,7 @@ export class TabsPage {
                 console.log("[home.ts]pushNotification.on-data.title:"+JSON.stringify(data.title));
                 
                 var additionalData:any=data.additionalData;
+                console.log("addiontalData.GCMType:"+additionalData.GCMType);
                 //Please check if type of custom is object or string. I have no idea why this happens.
                 if(additionalData.GCMType==="order"){
                     if(typeof additionalData.custom === 'string'){ 
@@ -663,12 +664,14 @@ export class TabsPage {
                         alert.present();
                     });
                 }else if(additionalData.GCMType==="cash"){
-                  console.log("additionalData.custom:"+additionalData.custom);
-                  if(!this.storageProvider.backgroundMode){
+                  console.log("cash-additionalData.custom:"+additionalData.custom);
+                  if((!this.storageProvider.isAndroid && !this.storageProvider.backgroundMode) //ios resume event comes before notification.
+                        ||this.storageProvider.isAndroid){ // android resume event comes late.
                         let cashConfirmModal;
                         if(typeof additionalData.custom === 'string'){ 
                             cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: JSON.parse(additionalData.custom) });
                         }else{ // object 
+                            console.log("obj comes");
                             cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: additionalData.custom });
                         }
                         console.log("GCMCashUpdateEmitter");

@@ -644,6 +644,11 @@ ionViewDidEnter() {
       custom.transactionTime=transaction.transactionTime;
       custom.cashTuno=transaction.cashTuno;
       custom.bankName=transaction.bankName;
+      if(transaction.hasOwnProperty("depositDate") && transaction.depositDate!=null){
+          console.log("addCash-depositDate, depositHour");
+          custom.depositDate=transaction.depositDate;
+          custom.depositHour=transaction.depositHour;
+      }
       if(transaction.branchName!=undefined)
           custom.branchName=transaction.branchName;
       else
