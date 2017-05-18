@@ -8,16 +8,23 @@ page-edit-menu-page {
         border-style: solid !important;
         border-color: #3474e1 !important;
         padding:0px !important;
-
         height: 3rem;
         line-height: 2.5rem;
     }
 
-    .segment-md>.segment-activated, button {
-        background-color: #387ef5 !important;
-        color: white !important;
-        height : 20px;
-        font-size: 13px;
+    // .segment-md>.segment-activated, button {
+    //     background-color: #387ef5 !important;
+    //     color: white !important;
+    //     height : 20px;
+    //     font-size: 13px;
+    // }
+
+    .item-ios{
+        padding-left: 5px;
+    }
+
+    .nonColorBtn{
+        float: left;
     }
 
     ion-col.segmentButton{
@@ -71,7 +78,12 @@ page-edit-menu-page {
     .menuItemInfo{
         padding-right: 0;
         overflow: hidden;
-        margin-right: 0;
+        //margin-right: 0;
+    }
+
+    .MenuSubject{
+        font-weight: 900;
+        font-size: 110%;
     }
 
 }

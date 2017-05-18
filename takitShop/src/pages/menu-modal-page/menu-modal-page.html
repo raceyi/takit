@@ -6,92 +6,230 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      메뉴 수정
-    </ion-title>
+      <button class="backBtn" (click)="cancell()"> 취소 </button>
+            <ion-title>
+                메뉴
+            </ion-title>
+        <button class="completeBtn" [hidden]="!flags.add" (click)="addMenuInfo()">추가</button>
+        <button class="completeBtn" [hidden]="flags.add" (click)="modifyMenuInfo()">수정</button>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-<form #form="ngForm" (ngSubmit)="menuModalForm(form)" novalidate>
-<ion-row>
-  <ion-item>
-      <ion-label stacked>메뉴명</ion-label>
-      <ion-input [value]="menu.menuName" required></ion-input>
-  </ion-item>
-</ion-row>
-<ion-row>
-  <ion-item>
-      <ion-label stacked>메뉴명(영문)</ion-label>
-      <ion-input [value]="menu.menuNameEn"></ion-input>
-  </ion-item>
-</ion-row>
-<ion-row>
-  <ion-item>
-      <ion-label stacked>가격</ion-label>
-      <ion-input [value]="menu.price" required></ion-input>
-  </ion-item>
-  <ion-item>
-      <ion-label>포장가능</ion-label>
-      <ion-checkbox [checked]="menu.takeout"></ion-checkbox>
-  </ion-item>
-</ion-row>
+<ion-content class="menuContent" >
+    <!--<form #form="ngForm" (ngSubmit)="menuSubmit()" novalidate>-->
+    <ion-item-divider>기본 정보</ion-item-divider>
+    <ion-row>
+        <ion-col>
+            <ion-item>
+                <ion-label stacked>메뉴명</ion-label>
+                <ion-input  [(ngModel)]="menu.menuName"  required></ion-input>
+            </ion-item>
+        </ion-col>
+        <!--<ion-col>
+            <ion-item>
+                <ion-label stacked>메뉴명(영문)</ion-label>
+                <ion-input [(ngModel)]="menu.menuNameEn"></ion-input>
+            </ion-item>
+        </ion-col>-->
+    </ion-row>
 
-<ion-row>
-  <ion-item>
-      <ion-label stacked>설명</ion-label>
-      <ion-input [value]="menu.explanation"></ion-input>
-  </ion-item>
-</ion-row>
-<ion-row>
-  <ion-item>
-      <ion-label stacked>설명(영문)</ion-label>
-      <ion-input [value]="menu.explanationEn"></ion-input>
-  </ion-item>
-</ion-row>
-<ion-row>
-  <ion-item>
-      <ion-label stacked>재료</ion-label>
-      <ion-input></ion-input>
-  </ion-item>
-</ion-row>
-<ion-row>
-  <ion-item>
-      <ion-label stacked>재료(영문)</ion-label>
-      <ion-input></ion-input>
-  </ion-item>
-</ion-row>
+    <ion-row>
+        <ion-col>
+            <ion-item>
+                <ion-label stacked>가격</ion-label>
+                <ion-input [(ngModel)]="menu.price" required></ion-input>
+            </ion-item>
+        </ion-col>
+        <ion-col>
+            <ion-item no-ilnes>
+                <ion-label >포장가능</ion-label>
+                <ion-checkbox style="border:0;" [(ngModel)]="menu.takeout"  no-ilnes></ion-checkbox>
+            </ion-item>
+        </ion-col>
+    </ion-row>
 
-<ion-row *ngFor="let option of menu.options">
-  <ion-item>
-      <ion-label stacked>옵션명</ion-label>
-      <ion-input [value]="option.name"></ion-input>
-  </ion-item>
-  <ion-item>
-      <ion-label stacked>옵션가격</ion-label>
-      <ion-input [value]="option.price"></ion-input>
-  </ion-item>
-</ion-row>
-  <ion-row *ngFor="let optionEn of menu.optionsEn">
-  <ion-item>
-      <ion-label stacked>옵션명</ion-label>
-      <ion-input [value]="optionEn.name"></ion-input>
-  </ion-item>
-  <ion-item>
-      <ion-label stacked>옵션가격</ion-label>
-      <ion-input [value]="optionEn.price"></ion-input>
-  </ion-item>
-</ion-row>
-<ion-row>
-    <ion-item  no-lines class="addOption">
-        <button  (click)="addOption()">옵션 추가</button>
-    </ion-item>
-</ion-row>
 
-  <ion-item no-lines class="completeWrap">
-    <button (click)="close()">취소</button>
-    <button [hidden]="addFlag" (click)="modifyMenuInfo()">수정</button>
-    <button [hidden]="!addFlag" (click)="addMenuInfo()">추가</button>
-  </ion-item>
-</form>
+    <ion-row>
+        <ion-item style="width:58%;">
+            <ion-label stacked>사진</ion-label>
+            <ion-input [(ngModel)]="menu.imagePath"></ion-input>
+        </ion-item>
+        <button class="imageBtn" ion-button icon-only (click)="takePicture()" small><ion-icon name="camera"></ion-icon></button>
+        <button class="imageBtn" ion-button icon-only (click)="pickPicture()" small><ion-icon name="image"></ion-icon></button>
+        <!--메뉴추가(수정)에서 동시 리퀘스트 할 경우에는 안됨file upload 에러 발생 (이름 중복 이라던지) 됐을 시 처리 불가,
+            업로드 리퀘스트 후 추가(수정) 리퀘스트 발생 시킬 수 있으나,
+            매번 사진업로드 작업이 필요하므로 업로드 버튼을 만드는 것이 나은 것 같다 
+        -->
+        <button (click)="serverProvider.fileTransferFunc(imageURI)" ion-button small>업로드</button>  
+    </ion-row>
+
+    <ion-item-divider>추가 정보</ion-item-divider>
+    <ion-row>
+        <ion-item>
+            <ion-label stacked>설명</ion-label>
+            <ion-input [(ngModel)]="menu.explanation" ></ion-input>
+        </ion-item>
+    </ion-row>
+    <!--<ion-row>
+        <ion-item>
+            <ion-label stacked>설명(영문)</ion-label>
+            <ion-input [(ngModel)]="menu.explanationEn" ></ion-input>
+        </ion-item>
+    </ion-row>-->
+
+    <ion-row>
+        <ion-item>
+            <ion-label stacked>재료</ion-label>
+            <ion-input [(ngModel)]="menu.ingredient" ></ion-input>
+        </ion-item>
+    </ion-row>
+    <!--<ion-row>
+        <ion-item>
+            <ion-label stacked>재료(영문)</ion-label>
+            <ion-input [(ngModel)]="menu.ingredientEn" ></ion-input>
+        </ion-item>
+    </ion-row>-->
+
+ 
+    <div *ngFor="let option of menu.options; let i=index">
+        <ion-item-divider>옵션 {{i+1}} 
+            <button style="float:right" (click)="removeOption(i)" ion-button color="light">
+                <ion-icon name="md-trash"></ion-icon></button>
+        </ion-item-divider>
+        <ion-row>
+            <ion-col>
+                <ion-item>
+                    <ion-label stacked>옵션명</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].name" ></ion-input>
+                </ion-item>
+            </ion-col>
+            <ion-col>
+                <ion-item>
+                    <ion-label stacked>옵션가격</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].price" ></ion-input>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+        <div *ngIf="option.choice !== undefined">
+        <ion-row >
+            <ion-col>
+                <!--<ion-item  *ngFor ="let choice of menu.options[i].choice; let j=index">-->
+                <ion-item *ngIf="option.choice[0] !== undefined">
+                    <ion-label stacked>선택항목1</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].choice[0]" ></ion-input>
+                </ion-item>
+            </ion-col>
+            <button *ngIf="option.choice[0] !== undefined" style="float:right;" (click)="removeSelectMenu(i,0)" ion-button icon-only color="white">
+                <ion-icon name="md-trash"></ion-icon></button>
+            <ion-col >
+                <!--<ion-item  *ngFor ="let choice of menu.options[i].choice; let j=index">-->
+                <ion-item *ngIf="option.choice[1] !== undefined"> 
+                    <ion-label stacked>선택항목2</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].choice[1]" ></ion-input>
+                </ion-item>
+            </ion-col>
+            <button *ngIf="option.choice[1] !== undefined" style="float:right;" (click)="removeSelectMenu(i,1)" ion-button icon-only color="white">
+            <ion-icon name="md-trash"></ion-icon></button>
+        </ion-row>
+        <ion-row>
+            <ion-col >
+                <ion-item *ngIf="option.choice[2] !== undefined">
+                    <ion-label stacked>선택항목3</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].choice[2]" ></ion-input>
+                </ion-item>
+            </ion-col>
+            <button *ngIf="option.choice[2] !== undefined" style="float:right;" (click)="removeSelectMenu(i,2)" ion-button icon-only color="white">
+                    <ion-icon name="md-trash"></ion-icon></button>
+            <ion-col>
+                <ion-item *ngIf="option.choice[3] !== undefined">
+                    <ion-label stacked>선택항목4</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].choice[3]" ></ion-input>
+                </ion-item>
+            </ion-col>
+            <button *ngIf="option.choice[3] !== undefined" style="float:right;" (click)="removeSelectMenu(i,3)" ion-button icon-only color="white">
+                <ion-icon name="md-trash"></ion-icon></button>
+        </ion-row>
+        </div>
+
+        <ion-row >
+            <ion-item  no-lines class="addOption">
+                <button (click)="addSelectMenu(i)" ion-button icon-left color="white" >
+                    <ion-icon name="md-add"></ion-icon>선택항목</button>
+            </ion-item>
+        </ion-row>
+    </div>
+       <!--<ion-row>
+
+            <!--why not operate 'let j=index' in ngFor  ??????-->
+<!--        
+            <div *ngIf="option.choice !== undefined" class="selectOptionItems">
+                <ion-item>
+                    <ion-label stacked>선택항목</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].choice[0]" ></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label stacked>선택항목</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].choice[1]" ></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label stacked>선택항목</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].choice[2]" ></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label stacked>선택항목</ion-label>
+                    <ion-input [(ngModel)]="menu.options[i].choice[3]" ></ion-input>
+                </ion-item>
+            </div>
+                <ion-item  no-lines class="addOption">
+                    <button  (click)="removeOption(i)" >옵션삭제</button>
+                </ion-item>
+            </div>
+    </ion-row>-->
+    <!--<ion-row *ngFor="let optionEn of menu.optionsEn; let i=index" class="optionInfo">
+        <ion-item>
+            <ion-label stacked>옵션명(영문)</ion-label>
+            <ion-input [(ngModel)]="menu.optionsEn[i].name"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label stacked>옵션가격</ion-label>
+            <ion-input [(ngModel)]="menu.optionsEn[i].price"></ion-input>
+        </ion-item>
+
+        <div *ngIf="optionEn.choice !== undefined" class="selectOptionItems">
+          -->
+            <!--not operate nomally let j=index .. ㅜㅜ-->
+            <!--<ion-item *ngFor = "let choice of optionEn.choice; let j=index" >
+                <ion-label stacked>선택항목</ion-label>
+                <ion-input [(ngModel)]="menu.optionsEn[i].choice[j]" ></ion-input>
+            </ion-item>-->
+          
+            <!--<ion-item>
+                <ion-label stacked>선택항목</ion-label>
+                <ion-input [(ngModel)]="menu.optionsEn[i].choice[0]" ></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label stacked>선택항목</ion-label>
+                <ion-input [(ngModel)]="menu.optionsEn[i].choice[1]" ></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label stacked>선택항목</ion-label>
+                <ion-input [(ngModel)]="menu.optionsEn[i].choice[2]" ></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label stacked>선택항목</ion-label>
+                <ion-input [(ngModel)]="menu.optionsEn[i].choice[3]" ></ion-input>
+            </ion-item>
+        </div>
+        <ion-item  no-lines class="addOption">
+            <button (click)="removeOptionEn(i)" ion-button small >옵션삭제</button>
+        </ion-item>
+    </ion-row>  -->
+        
+    <ion-row>
+        <ion-item  no-lines class="addOption">
+        <button color="white" (click)="addOption()" ion-button icon-left>
+            <ion-icon name="md-add"></ion-icon>옵션</button>
+        </ion-item>
+    </ion-row>
+    <!--</form>-->
 </ion-content>

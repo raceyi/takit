@@ -18,7 +18,6 @@ import {SalesPage} from '../pages/sales-page/sales-page';
 import { EditMenuPage } from '../pages/edit-menu-page/edit-menu-page';
 
 
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { Storage } from '@ionic/storage';
 import { Network } from '@ionic-native/network';

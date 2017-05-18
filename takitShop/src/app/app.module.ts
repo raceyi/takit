@@ -34,6 +34,9 @@ import { Network } from '@ionic-native/network';
 import { StatusBar } from '@ionic-native/status-bar';
 import { AppAvailability } from '@ionic-native/app-availability';
 import {Focuser} from '../components/focuser/focuser';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
+import { File } from '@ionic-native/file';
 
 import { MediaPlugin, MediaObject } from '@ionic-native/media';
 import { HttpModule } from '@angular/http';
@@ -58,7 +61,7 @@ import { HttpModule } from '@angular/http';
   imports: [
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp,{mode:'ios'}),
     IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
@@ -87,6 +90,9 @@ import { HttpModule } from '@angular/http';
     AppAvailability,
     MediaPlugin,
     FbProvider,
+    Camera,
+    Transfer,
+    File,
     EmailProvider,
     KakaoProvider,
     ConfigProvider,

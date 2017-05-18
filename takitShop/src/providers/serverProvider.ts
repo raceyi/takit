@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Platform} from 'ionic-angular';
+import { AlertController, Platform} from 'ionic-angular';
 import {Http,Headers} from '@angular/http';
 import {Storage} from '@ionic/storage';
+import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
+import { File } from '@ionic-native/file';
 
 import {FbProvider} from './LoginProvider/fb-provider';
 import {KakaoProvider} from './LoginProvider/kakao-provider';
@@ -13,11 +15,16 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ServerProvider{
-  constructor(private platform:Platform,private http:Http
-            ,private storage:Storage
-            ,private fbProvider:FbProvider,private kakaoProvider:KakaoProvider
-            ,private emailProvider:EmailProvider
-            ,private storageProvider:StorageProvider) {
+    fileTransfer: TransferObject = this.transfer.create();
+    //fileTransfer: TransferObject;
+    private loading:any;
+
+  constructor(private platform:Platform,private http:Http,
+            private storage:Storage,private transfer: Transfer,
+            private alertController:AlertController,
+            private fbProvider:FbProvider,private kakaoProvider:KakaoProvider,
+            private emailProvider:EmailProvider,
+            private storageProvider:StorageProvider) {
 
       console.log("ServerProvider constructor");
   }
@@ -126,6 +133,8 @@ export class ServerProvider{
       });
   }
 
+
+
   addCategory(category){
       category.takitId = this.storageProvider.shopInfo.takitId;
       return new Promise((resolve,reject)=>{
@@ -136,12 +145,30 @@ export class ServerProvider{
                 if(res.result=="success"){
                     resolve();
                 }else{
-                    reject("새 카테고리 추가에 실패했습니다.");
+                    reject("카테고리 추가에 실패했습니다.");
                 }
            },(err)=>{
                     reject(err);
            });
       });
+  }
+
+  modifyCategory(category){
+    category.takitId = this.storageProvider.shopInfo.takitId;
+        return new Promise((resolve,reject)=>{
+            let body = JSON.stringify(category);
+            console.log("/shop/modifyCategory "+body);
+            this.post("/shop/modifyCategory",body).then((res:any)=>{
+                console.log("res:"+JSON.stringify(res));
+                if(res.result=="success"){
+                    resolve();
+                }else{
+                    reject("카테고리 수정에 실패했습니다.");
+                }
+            },(err)=>{
+                    reject(err);
+            });
+        });
   }
 
 /*
@@ -207,23 +234,114 @@ export class ServerProvider{
         });   
     }
 */
-getShopInfo(takitId){
+    getShopInfo(takitId){
         return new Promise((resolve,reject)=>{
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
             console.log("takitId:"+takitId);
             console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
+            // this.post('/cafe/shopHome',{takitId:takitId})
+            // .then(res=>{
+            //     resolve(res);
+            // },(err)=>{
+            //     reject("http error"); 
+            // })
             this.get(encodeURI(this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId)).then((res)=>{
                     console.log("res:"+JSON.stringify(res));
                     resolve(res);
                 },(err)=>{
                 reject("http error");  
-                });
+            });
         });   
     }
 
+    addMenuInfo(menu){
+        return new Promise((resolve,reject)=>{
+            let body = JSON.stringify(menu);
+            this.post("/shop/addMenu",body).then((res:any)=>{
+                console.log(res);
+                resolve(res);
+            },(err)=>{
+                reject("serverProvider addMenuInfo error");
+            });
+        });
+    }
+
+
+  onProgress(progressEvent: ProgressEvent){
+      let progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+      console.log("progress:"+progress);
+      if(progress==100){
+      }
+  }
+
+  fileTransferFunc(imageURI){
+    return new Promise((resolve,reject)=>{
+        if(imageURI !== undefined){
+            let filename= imageURI.substr(imageURI.lastIndexOf('/') + 1); 
+            console.log("imageURI:"+imageURI);
+            console.log("filename:"+filename);
+            let options :FileUploadOptions = {
+                fileKey: 'file',
+                fileName: filename,
+                mimeType: 'image/jpeg',
+                params: {
+                    fileName: this.storageProvider.myshop.takitId+"_"+filename,
+                    takitId:this.storageProvider.myshop.takitId
+                }
+            }; 
+            this.fileTransfer.onProgress(this.onProgress);
+
+                ///////////////////////////////
+            this.loading=this.alertController.create({
+                    title:"사진을 업로드하고 있습니다"
+                    });
+            this.loading.present();
+                ///////////////////////////////
+            console.log("fileTransfer.upload");
+
+            this.fileTransfer.upload(imageURI, this.storageProvider.serverAddress+"/shop/uploadMenuImage", options, false)
+            .then((response: any) => {
+                console.log("upload:"+JSON.stringify(response));
+                let result=JSON.parse(response.response);
+                console.log("result.result:"+result.result);
+                resolve(result);
+                this.loading.dismiss();
+            },err=>{
+                reject(err);
+            });
+        }else{
+            let alert = this.alertController.create({
+                title : "사진을 선택해주세요.",
+                buttons : ['확인']
+            });
+            alert.present();
+        }
+    });
+
+  }
+
+    modifyMenuInfo(menu){
+        return new Promise((resolve,reject)=>{
+            let body = JSON.stringify(menu);
+            this.post("/shop/modifyMenu",body).then((res:any)=>{
+                console.log(res);
+                resolve(res);
+            },(err)=>{
+                reject(err);
+            });
+        });
+    }
+
+    removeMenu(menu){
+        return new Promise((resolve,reject)=>{
+            this.post('/shop/removeMenu',JSON.stringify(menu)).then((res:any)=>{
+                console.log(res);
+                let result = JSON.stringify(res);
+                resolve(result);
+            },(err)=>{
+                reject(err);
+            });
+        });
+    }
 }
-
-
-
-

@@ -36,9 +36,18 @@ export class EditMenuPage {
     options;
     optionsEn;
 
-    flags ={"categoryName":true, "addCategory":true}
+    flags ={"categoryName":true, "addCategory":true, "removeMenu":true}
 
-    inputCategory={"sequence":"","categoryName":"","categoryNameEn":""};
+    inputAddCategory={"sequence":null,
+                        "categoryName":null,
+                        "categoryNameEn":null,
+                        "categoryNO":null};
+
+    inputModifyCategory={"oldSequence":"",
+                        "newSequence":"",
+                        "categoryName":"",
+                        "categoryNameEn":"",
+                        "categoryNO":0};
 
   constructor(public navCtrl: NavController,private alertController:AlertController,
               public modalCtrl: ModalController, public serverProvider:ServerProvider,
@@ -48,28 +57,34 @@ export class EditMenuPage {
   }
 
   ionViewDidEnter(){ // Be careful that it should be DidEnter not Load 
-      console.log("add menu page - ionViewDidEnter"); 
-      
-          this.loadShopInfo();
-          this.addMenuContentRef.resize();
+    console.log("add menu page - ionViewWillEnter"); 
+        
+
+    this.loadShopInfo();
+    this.addMenuContentRef.resize();
        // this.storageProvider.orderPageEntered=false;
   }
 
-  categoryChange(categoryNO){
-    console.log("[categoryChange] categorySelected:"+categoryNO+" previous:"+this.categorySelected);
+  categoryChange(categoryNO,sequence){
+
+    console.log("[categoryChange] "+JSON.stringify(this.categories));
+
+    console.log("[categoryChange] categorySelected:"+sequence+" previous:"+this.categorySelected);
     console.log("this.categoryMenuRows.length:"+this.categoryMenuRows.length);
+    this.flags.addCategory=true;
+    this.flags.categoryName=true;
+
     if(this.categoryMenuRows.length>0){
         //console.log("change menus");
-        this.menuRows=this.categoryMenuRows[categoryNO-1];
-        this.categorySelected=categoryNO; //Please check if this code is correct.
-        this.nowCategory=this.categories[categoryNO-1];
+        this.menuRows=this.categoryMenuRows[sequence-1];
+        this.categorySelected=sequence; //Please check if this code is correct.
+        this.nowCategory=this.categories[sequence-1];
     }
     this.addMenuContentRef.resize();
 
   }
 
-  loadShopInfo()
-  {
+  loadShopInfo(){
         this.categorySelected=1;
         this.categories=[];
         this.menuRows=[];
@@ -80,9 +95,15 @@ export class EditMenuPage {
 
         //console.log("[loadShopInfo]this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
 
+        this.serverProvider.getShopInfo(this.storageProvider.myshop.takitId).then((res:any)=>{
+              console.log("shopInfo:"+JSON.stringify(res));
+              this.storageProvider.shopInfoSet(res.shopInfo);
+              this.storageProvider.shop = res;
+              
+          });
         this.shop=this.storageProvider.shop;
         
-        console.log(this.shop);
+        console.log("edit-menu-page:"+this.shop);
         //this.storageProvider.shopInfoSet(this.shop.shopInfo);
         this.configureShopInfo();
         /////////////////////////////////
@@ -92,13 +113,13 @@ export class EditMenuPage {
     configureShopInfo(){
     // hum=> construct this.categoryRows
     this.shop.categories.forEach(category => {
-        var menus=[];
+        let menus=[];
         let options;
         let optionsEn;
         console.log("[configureShopInfo]this.shop:"+this.shop);
             this.shop.menus.forEach(menu=>{
                 //console.log("menu.no:"+menu.menuNO+" index:"+menu.menuNO.indexOf(';'));
-                var no:string=menu.menuNO.substr(menu.menuNO.indexOf(';')+1);
+                let no:string=menu.menuNO.substr(menu.menuNO.indexOf(';')+1);
                 //console.log("category.category_no:"+category.categoryNO+" no:"+no);
                 if(no==category.categoryNO){
                     menu.filename=encodeURI(this.storageProvider.awsS3+menu.imagePath);
@@ -131,7 +152,12 @@ export class EditMenuPage {
             });
 
         
-        this.categories.push({categoryNO:parseInt(category.categoryNO), categoryName:category.categoryName,categoryNameEn:category.categoryNameEn,menus:menus});
+        this.categories.push({categoryNO:parseInt(category.categoryNO), 
+                              categoryName:category.categoryName,
+                              categoryNameEn:category.categoryNameEn,
+                              sequence:parseInt(category.sequence),
+                              menus:menus
+                              });
 
 
         //console.log("[categories]:"+JSON.stringify(this.categories));
@@ -141,10 +167,10 @@ export class EditMenuPage {
         console.log("category:"+this.categories[0].menus.length);
         this.categories.forEach(category => {
         
-            var menuRows=[];
-            for(var i=0;i<category.menus.length;){
-                var menus=[];
-                for(var j=0;j<2 && i<category.menus.length;j++,i++){
+            let menuRows=[];
+            for(let i=0;i<category.menus.length;){
+                let menus=[];
+                for(let j=0;j<2 && i<category.menus.length;j++,i++){
                     //console.log("menus[i]:"+JSON.stringify(category.menus[i]));
                     var menu=category.menus[i];
                         
@@ -157,7 +183,7 @@ export class EditMenuPage {
 
         //console.log(JSON.stringify(this.categoryMenuRows));
 
-        var rowNum:number=0;
+        let rowNum:number=0;
         for(rowNum=0;(rowNum+1)*3<=this.categories.length; rowNum++)
             this.categoryRows.push([this.categories[rowNum*3],this.categories[rowNum*3+1],this.categories[rowNum*3+2]]);
 
@@ -177,41 +203,112 @@ export class EditMenuPage {
     }
 
     addCategoryComplete(){
-        // this.serverProvider.addCategory(this.inputCategory)
-        // .then(()=>{
-        //     let alert = this.alertController.create({
-        //                     title: "새 카테고리가 추가 되었습니다.",
-        //                     subTitle: '다시 로드 하면 화면에 보여집니다.',
-        //                     buttons: ['OK']
-        //                 });
-        //     alert.present();
-        //     this.flags.addCategory=true;
-        // },(err)=>{
-        //     let alert = this.alertController.create({
-        //                     title: '카테고리 추가에 실패하였습니다.',
-        //                     subTitle: '다시 시도 하시거나 문의 해주세요.',
-        //                     buttons: ['OK']
-        //                 });
-        //     alert.present();
-        //     this.flags.addCategory=true;
-        // });
+        if(this.inputAddCategory.sequence === null){
+            this.inputAddCategory.sequence = this.categories.length+1;
+        }
+        console.log("addCategoryComplete start");
+         console.log("inputAddCategory:"+JSON.stringify(this.inputAddCategory));
+        if(this.inputAddCategory.sequence !== null && this.inputAddCategory.categoryName !== null){
+                this.inputAddCategory.categoryNO = this.categories.length+1;
+                console.log("inputAddCategory:"+JSON.stringify(this.inputAddCategory));
+                this.serverProvider.addCategory(this.inputAddCategory)
+                .then(()=>{
+                    let alert = this.alertController.create({
+                                    title: "새 카테고리가 추가 되었습니다.",
+                                    subTitle: '다시 로드 하면 화면에 보여집니다.',
+                                    buttons: ['OK']
+                                });
+                    alert.present();
+                    this.flags.addCategory=true;
+                },(err)=>{
+                    let alert = this.alertController.create({
+                                    title: '카테고리 추가에 실패하였습니다.',
+                                    subTitle: '다시 시도 하시거나 문의 해주세요.',
+                                    buttons: ['OK']
+                                });
+                    alert.present();
+                    this.flags.addCategory=true;
+                });
+        }else{
+           let alert = this.alertController.create({
+                            title: "카테고리 정보를 모두 입력 해주세요.",
+                            subTitle: "올바른 정보를 입력하세요.",
+                            buttons: ['OK']
+                        });
+                        alert.present();
+        }
+       
     }
 
-    editCategory(){
+    modifyCategory(){
         this.flags.categoryName=false;
-
+        console.log("[categoryChange] "+JSON.stringify(this.categories));
+        console.log("modifyCategory flag:"+this.flags.categoryName);
+        console.log("modifyCategory select value:"+this.categorySelected);
     }
 
-    completeEditCategory(){
-        this.flags.categoryName=true;
-        //서버에 전송?!
+    modifyCategoryComplete(){
+        console.log("modifyCategoryComplete flag:"+this.flags.categoryName);
+        console.log("modifyCategoryComplete select value:"+this.categorySelected);
+
+ 
+        this.inputModifyCategory.oldSequence = this.categories[this.categorySelected-1].sequence;
+        this.inputModifyCategory.categoryNO = this.categories[this.categorySelected-1].categoryNO;
+
+        if(this.inputModifyCategory.newSequence === null){
+            this.inputModifyCategory.newSequence = this.inputModifyCategory.oldSequence;
+        }
+
+        this.serverProvider.modifyCategory(this.inputModifyCategory)
+        .then(()=>{
+            let alert = this.alertController.create({
+                            title: "카테고리가 수정되었습니다.",
+                            subTitle: '다시 로드 하면 화면에 보여집니다.',
+                            buttons: ['OK']
+                        });
+            alert.present();
+            this.flags.categoryName=true;
+        },(err)=>{
+            let alert = this.alertController.create({
+                            title: '카테고리 수정에 실패하였습니다.',
+                            subTitle: '다시 시도 하시거나 문의 해주세요.',
+                            buttons: ['OK']
+                        });
+            alert.present();
+            this.flags.categoryName=true;
+        });
         
     }
 
-    removeMenu(){
+    removeMenu(menu){
+        this.flags.removeMenu = false;
+
         let alert = this.alertController.create({
                         title: "해당 메뉴를 삭제 하시겠습니까?",
-                        buttons: ['취소','확인']
+                        buttons: [{ text: '아니오'},
+                                  { text:'예',
+                                    handler : ()=>{
+                                        this.serverProvider.removeMenu(menu)
+                                        .then((result:any)=>{
+                                            if(result.result==="success"){
+                                                let alert = this.alertController.create({
+                                                                title: "메뉴가 삭제 되었습니다.",
+                                                                subTitle: '새로고침 하면 화면에 보여집니다.',
+                                                                buttons: ['OK']
+                                                            });
+                                                alert.present();
+                                            }else{
+                                                let alert = this.alertController.create({
+                                                                title: "메뉴가 삭제에 실패 하였습니다.",
+                                                                subTitle: '다시 시도해 주세요.',
+                                                                buttons: ['OK']
+                                                            });
+                                                alert.present();
+                                            }
+                                            
+                                        });
+                                    }
+                                  }]
                     });
         alert.present();
     }
@@ -221,15 +318,20 @@ export class EditMenuPage {
         contactModal.present();
     }
 
-    menuModal(categoryNO,menuName) {
-        var menu;
-            for(var i=0;i<this.categories[categoryNO-1].menus.length;i++){
+    menuModal(menuName) {
+        console.log("menuModal function");
+        let menu;
+            for(let i=0;i<this.categories[this.categorySelected-1].menus.length;i++){
+                console.log(this.categories[this.categorySelected-1].menus[i]);
                 //console.log("menu:"+this.categories[category_no-1].menus[i].menuName);
-                if(this.categories[categoryNO-1].menus[i].menuName==menuName){
-                    menu=this.categories[categoryNO-1].menus[i];
+                if(this.categories[this.categorySelected-1].menus[i].menuName===menuName){
+                    menu=this.categories[this.categorySelected-1].menus[i];
+                    console.log(menu);
                 break;
             }
         }
+
+         console.log("menu:"+menu);
 
         if(menu.takeout==="1"){
             menu.takeout=true;
@@ -237,7 +339,11 @@ export class EditMenuPage {
             menu.takeout=false;
         }
 
+        console.log("menu:"+menu);
+
+        menu.menuNO = this.storageProvider.myshop.takitId+";"+this.categories[this.categorySelected-1].categoryNO;
         let menuModal = this.modalCtrl.create(MenuModalPage,{menu:menu});
+
         menuModal.onDidDismiss(data => {
             console.log(data);
         });
@@ -245,7 +351,9 @@ export class EditMenuPage {
     }
 
     addMenu(){
-        let menuModal = this.modalCtrl.create(MenuModalPage,{menu:[]});
+        let menuNO = this.storageProvider.myshop.takitId+";"+this.categories[this.categorySelected-1].categoryNO;
+        console.log("addMenu menuNO : "+menuNO);
+        let menuModal = this.modalCtrl.create(MenuModalPage,{menu:{"menuNO":menuNO}});
         menuModal.onDidDismiss(data => {
             console.log(data);
         });

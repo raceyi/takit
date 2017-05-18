@@ -13,6 +13,7 @@ export class StorageProvider{
     public myshop:any={}; // manager, takitId, ???
     public shopInfo:any;   // current shopInfo. shopname:shopInfo.shopName
     public shop:any;
+    public nowMenuNO:string; // current selected menuNO. 메뉴 추가 같은 화면에서 두번 진행 시 이상한 값 들어오기 때문에 저장.
     public errorReason:string;
     public id:string;
     public printerName; // printerName saved

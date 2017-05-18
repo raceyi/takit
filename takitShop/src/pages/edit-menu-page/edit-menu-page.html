@@ -4,14 +4,13 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header class="shophomeHeader">
+<ion-header>
   <ion-navbar>
     <ion-title>
         메뉴
     </ion-title>
   </ion-navbar>
 </ion-header>
-
 
 <!--shop's menu insert-->
 <ion-content #addMenuContent>
@@ -22,7 +21,7 @@
     <ion-row *ngFor="let categories of categoryRows">
         <ion-col width-33  class="segmentButton" *ngFor="let category of categories">
             <ion-segment #categorySegment [(ngModel)]="categorySelected">
-                    <ion-segment-button [value]="category.categoryNO" (click)="categoryChange(category.categoryNO)">
+                    <ion-segment-button [value]="category.sequence" (click)="categoryChange(category.categoryNO,category.sequence)">
                     {{category.categoryName}}
                     </ion-segment-button>
             </ion-segment>        
@@ -34,23 +33,23 @@
 
         <!--카테고리 추가/삭제버튼 (삭제기능 모든 메뉴 삭제해야 가능하도록 함)-->
         <ion-row>
-            <ion-item [(ngModel)]="inputCategory.sequence" [hidden]="flags.addCategory">
-                    <ion-label stacked>카테고리순서</ion-label>
-                    <ion-input></ion-input>
+            <ion-item  [hidden]="flags.addCategory">
+                <ion-label stacked>카테고리순서</ion-label>
+                <ion-input [(ngModel)]="inputAddCategory.sequence" [value]="categories.length+1" required></ion-input>
             </ion-item>
-            <ion-item [(ngModel)]="inputCategory.categoryNanme" [hidden]="flags.addCategory">
-                    <ion-label stacked>카테고리명</ion-label>
-                    <ion-input></ion-input>
+            <ion-item  [hidden]="flags.addCategory">
+                <ion-label stacked>카테고리명</ion-label>
+                <ion-input [(ngModel)]="inputAddCategory.categoryName" required></ion-input>
             </ion-item>
-            <ion-item [(ngModel)]="inputCategory.categoryNameEn" [hidden]="flags.addCategory">
+            <ion-item  [hidden]="flags.addCategory">
                 <ion-label stacked>카테고리명(영문)</ion-label>
-                <ion-input></ion-input>
+                <ion-input [(ngModel)]="inputAddCategory.categoryNameEn" required></ion-input>
             </ion-item>
         </ion-row>
     <ion-item no-lines>
         <!--<button>카테고리 삭제</button> -->
-        <button (click)="addCategory()" [hidden]="!flags.addCategory">카테고리 추가</button>
-        <button (click)="addCategoryComplete()" [hidden]="flags.addCategory">완료</button>
+        <button (click)="addCategory()" [hidden]="!flags.addCategory" ion-button small>카테고리 추가</button>
+        <button (click)="addCategoryComplete()" [hidden]="flags.addCategory" ion-button small>완료</button>
     </ion-item>
 
 </div>
@@ -64,18 +63,18 @@
             <ion-col>
                 <ion-item [hidden]="!flags.categoryName">
                     <ion-label stacked>카테고리순서</ion-label>
-                    <ion-input [value]="nowCategory.categoryNO" readonly ></ion-input>
+                    <ion-input [value]="nowCategory.sequence" readonly ></ion-input>
                 </ion-item>
                 <ion-item [hidden]="flags.categoryName">
                     <ion-label stacked>카테고리순서</ion-label>
-                    <ion-input [value]="nowCategory.categoryNO" ></ion-input>
+                    <ion-input [(ngModel)]="inputModifyCategory.newSequence" [value]="nowCategory.sequence" ></ion-input>
                 </ion-item>
             </ion-col>
             <ion-col width-30>
                 <ion-item no-lines class="categoryBtn">
                 <!--2-2편집버튼-->
-                    <button (click)="editCategory()" [hidden]="!flags.categoryName">편집</button>
-                    <button (click)="completeEditCategory()" [hidden]="flags.categoryName">완료</button>
+                    <button (click)="modifyCategory()" [hidden]="!flags.categoryName" ion-button small>편집</button>
+                    <button (click)="modifyCategoryComplete()" [hidden]="flags.categoryName" ion-button small>완료</button>
                 </ion-item>
             </ion-col>
         </ion-row>
@@ -88,7 +87,7 @@
                 </ion-item>
                 <ion-item [hidden]="flags.categoryName">
                     <ion-label stacked>카테고리명</ion-label>
-                    <ion-input [value]="nowCategory.categoryName" ></ion-input>
+                    <ion-input [(ngModel)]="inputModifyCategory.categoryName"  [value]="nowCategory.categoryName" ></ion-input>
                 </ion-item>
                 <!--<p [hidden]=!flags.categoryName>{{nowCategoryName}}</p>-->
             </ion-col>
@@ -100,16 +99,16 @@
                 </ion-item>
                 <ion-item [hidden]="flags.categoryName">
                     <ion-label stacked>카테고리 영문명</ion-label>
-                    <ion-input [value]="nowCategory.categoryNameEn" ></ion-input>
+                    <ion-input [(ngModel)]="inputModifyCategory.categoryNameEn" [value]="nowCategory.categoryNameEn" ></ion-input>
                 </ion-item>
             </ion-col>
         </ion-row>
     </div>
     <!--3. 카테고리별 메뉴들-->
         <!--3-1. 메뉴 추가 버튼-->
-<div class="selecteMenus">
+<div class="selectMenus">
     <ion-item>
-        <button (click)="addMenu()">메뉴 추가</button>
+        <button (click)="addMenu()" ion-button small>메뉴 추가</button>
     </ion-item>
         <!--3-1.메뉴사진 -->
         <!--3-2.메뉴 편집 버튼-->
@@ -119,37 +118,38 @@
                 <ion-row> 
                     <ion-col *ngFor="let menu of row.menus">
                     <!--<button ion-button clear (click)="menuSelected(menu.category_no,menu.menuName)" class="menuImgButton">-->
-                        <img [src]="menu.filename"  class="menuImg" >
+                        <ion-item> 
+                            <ion-thumbnail>
+                                <img [src]="menu.filename"  class="menuImg" >
+                            </ion-thumbnail>
+                        </ion-item> 
                         <!--</button>-->
                     </ion-col>  
                 </ion-row>
                 <ion-row>
-                    <ion-col class="menuItemInfo"  *ngFor="let menu of row.menus"> 
-                    <p class="MenuText">{{menu.menuName}}</p>
-                    <p class="MenuText">{{menu.menuNameEn}}</p>
-                    <p class="MenuText">{{menu.price}}</p>
-                    <p class="MenuText">포장:{{menu.takeout}}</p>
-                    <p class="MenuText">{{menu.explanation}}</p>
-                    <p class="MenuText">{{menu.explanationEn}}</p>
-                    <p class="MenuText" *ngFor="let option of menu.options">{{option.name}}:{{option.price}}</p>
-                    <p class="MenuText" *ngFor="let optionEn of menu.optionsEn">{{optionEn.name}}:{{optionEn.price}}</p>
-                    <!--<p class="MenuText">{{menu.description}}</p>-->
-                    
-                    <button (click)="menuModal(menu.categoryNO,menu.menuName)">편집</button> 
+                    <ion-col class="menuItemInfo"  *ngFor="let menu of row.menus">
+                        <ion-item> 
+                            <p class="MenuSubject">{{menu.menuName}}</p>
+                            <p class="MenuText">{{menu.menuNameEn}}</p>
+                            <p class="MenuText">{{menu.price}}</p>
+                            <p class="MenuText">포장:{{menu.takeout}}</p>
+                            <p class="MenuText">{{menu.explanation}}</p>
+                            <p class="MenuText">{{menu.explanationEn}}</p>
+                            <p class="MenuText" *ngFor="let option of menu.options">{{option.name}}:{{option.price}}</p>
+                            <p class="MenuText" *ngFor="let optionEn of menu.optionsEn">{{optionEn.name}}:{{optionEn.price}}</p>
+                        <!--<p class="MenuText">{{menu.description}}</p>-->           
+                        </ion-item>
                     </ion-col>
                 </ion-row>
-
+                <ion-row>
+                    <ion-col *ngFor="let menu of row.menus">
+                            <button class="nonColorBtn" (click)="menuModal(menu.menuName)" ion-button icon-left color="white" small ><ion-icon name="md-create"></ion-icon>편집</button> 
+                            <button class="nonColorBtn" (click)="removeMenu(menu)" ion-button icon-left color="white" small><ion-icon name="md-trash"></ion-icon>삭제</button>
+                    </ion-col>
+                </ion-row>
                 </div>
           </ion-item>
         </ion-list>            
-
- 
-    
-        <!--3-3.메뉴 삭제 버튼-->
-
-        <ion-item no-lines>
-            <button>삭제</button> 
-        </ion-item>        
     </div>
 </div>
 

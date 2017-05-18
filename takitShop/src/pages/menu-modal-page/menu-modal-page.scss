@@ -1,40 +1,78 @@
 page-menu-modal-page {
-       ion-item{
-     
+    .menuContent{
+        margin: 3px;
+        //margin: 0;
+    }
+
+    .item-ios{
+        padding-left: 5px;
     }
 
     ion-label{
-        width: 85px;
+        //width: 85px;
         //text-align: center;
-        font-weight: 600;
+        font-weight: 900;
     }
 
     ion-input{
         //border-bottom: 1px !important;
         //border-style: solid !important;
     }
-    .completeWrap{
-        padding-top:20px;
-        text-align: center;
+
+    .backBtn{
+        //background-color: #f4f4f4;
+        color:  #387ef5 !important;
+        padding: 0;
+        //margin-left:1px;
+        float: left;
+        font-size: 21px;
+        margin-left: 3px;
+        //height: 30px;
     }
 
-    .completeWrap .item-inner .input-wrapper .label > button {
-        width: 100px;
-        height: 30px;
-        background-color: #387ef5 !important;
-        color: white !important;
-        font-size: 17px;
+    .completeBtn{
+        //background-color: #f4f4f4;
+        padding: 0;
+        margin-right: 3px;
+        float: right;
+        color:  #387ef5 !important;
+        font-size: 21px;
+        //height: 30px;
+        
     }
+
+    // .completeWrap .item-inner .input-wrapper .label > button{
+    //     width: 100px;
+    //     height: 30px;
+    //     background-color: #387ef5 !important;
+    //     color: white !important;
+    //     font-size: 17px;
+    // }
+
     .addOption{
         text-align: right !important;
     }
 
     .addOption .item-inner .input-wrapper .label > button{
         
-        height: 20px;
-        background-color: #387ef5 !important;
-        color: white !important;
-        font-size: 12px;
+        height: 30px;
+        //background-color: #387ef5 !important;
+        //color: white !important;
+        font-size: 15px;
+    }
+
+    .selectOptionItems > ion-item > ion-input{
+        width : 30px;
+
+    }
+    .item-ios.item-block.item-checkbox{
+        padding-left : 0px;
+    }
+
+    .item-ios.item-block.item-checkbox .item-inner {
+        border-bottom: 0px;
+        padding-left : 0px;
+        padding-right: 0px;
     }
 
 }
