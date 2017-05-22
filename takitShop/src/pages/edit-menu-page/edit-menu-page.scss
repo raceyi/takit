@@ -27,10 +27,6 @@ page-edit-menu-page {
         float: left;
     }
 
-    ion-col.segmentButton{
-        //padding:0px !important;
-        //padding-top: 100px;
-    }
 
     .segment-ios .segment-button:last-of-type {
         margin-left: 0;
@@ -50,15 +46,15 @@ page-edit-menu-page {
         margin-left: 0;
     }
 
-    .categoryInfo > ion-row > ion-col > .categoryBtn{
-        text-align: right;
-        //width: 20px;
-    }
+    // .categoryInfo > ion-row > ion-col > .categoryBtn{
+    //     text-align: right;
+    //     //width: 20px;
+    // }
 
-    .selectCategory > ion-item, .selecteMenus > ion-item {
-        text-align: right;
-        font-size : 1.0vw !important;
-    }
+    // .selectCategory > ion-item, .selecteMenus > ion-item {
+    //     text-align: right;
+    //     font-size : 1.0vw !important;
+    // }
 
     .selecteMenus{
         padding:10px;

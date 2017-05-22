@@ -275,18 +275,19 @@ export class ServerProvider{
       }
   }
 
-  fileTransferFunc(imageURI){
+  fileTransferFunc(imageURI,imagePath){
+      //사용자가 이미지 이름 변경했을 수도 있으므로 입력된 imagePath값으로 함
     return new Promise((resolve,reject)=>{
         if(imageURI !== undefined){
-            let filename= imageURI.substr(imageURI.lastIndexOf('/') + 1); 
+            //let filename= imageURI.substr(imageURI.lastIndexOf('/') + 1); 
             console.log("imageURI:"+imageURI);
-            console.log("filename:"+filename);
+            console.log("filename:"+imagePath);
             let options :FileUploadOptions = {
                 fileKey: 'file',
-                fileName: filename,
+                fileName: imagePath,
                 mimeType: 'image/jpeg',
                 params: {
-                    fileName: this.storageProvider.myshop.takitId+"_"+filename,
+                    fileName: this.storageProvider.myshop.takitId+"_"+imagePath,
                     takitId:this.storageProvider.myshop.takitId
                 }
             }; 
@@ -323,8 +324,7 @@ export class ServerProvider{
 
     modifyMenuInfo(menu){
         return new Promise((resolve,reject)=>{
-            let body = JSON.stringify(menu);
-            this.post("/shop/modifyMenu",body).then((res:any)=>{
+            this.post("/shop/modifyMenu",JSON.stringify(menu)).then((res:any)=>{
                 console.log(res);
                 resolve(res);
             },(err)=>{
@@ -337,8 +337,23 @@ export class ServerProvider{
         return new Promise((resolve,reject)=>{
             this.post('/shop/removeMenu',JSON.stringify(menu)).then((res:any)=>{
                 console.log(res);
-                let result = JSON.stringify(res);
-                resolve(result);
+                resolve(res);
+            },(err)=>{
+                reject(err);
+            });
+        });
+    }
+
+    removeCategory(category){
+        console.log(category);
+        let body ={"categoryNO":category.categoryNO,
+                    "sequence":category.sequence,
+                    "takitId":this.storageProvider.myshop.takitId}
+        return new Promise((resolve,reject)=>{
+            this.post('/shop/removeCategory',JSON.stringify(body))
+            .then((res:any)=>{
+                console.log(res);
+                resolve(res);
             },(err)=>{
                 reject(err);
             });

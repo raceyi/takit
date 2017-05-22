@@ -15,8 +15,12 @@
   </ion-navbar>
 </ion-header>
 
+
 <ion-content class="menuContent" >
     <!--<form #form="ngForm" (ngSubmit)="menuSubmit()" novalidate>-->
+        <ion-tabs>
+ <ion-tab  tabTitle="Chat" tabIcon="chat"></ion-tab>
+</ion-tabs>
     <ion-item-divider>기본 정보</ion-item-divider>
     <ion-row>
         <ion-col>
@@ -40,15 +44,7 @@
                 <ion-input [(ngModel)]="menu.price" required></ion-input>
             </ion-item>
         </ion-col>
-        <ion-col>
-            <ion-item no-ilnes>
-                <ion-label >포장가능</ion-label>
-                <ion-checkbox style="border:0;" [(ngModel)]="menu.takeout"  no-ilnes></ion-checkbox>
-            </ion-item>
-        </ion-col>
     </ion-row>
-
-
     <ion-row>
         <ion-item style="width:58%;">
             <ion-label stacked>사진</ion-label>
@@ -60,8 +56,25 @@
             업로드 리퀘스트 후 추가(수정) 리퀘스트 발생 시킬 수 있으나,
             매번 사진업로드 작업이 필요하므로 업로드 버튼을 만드는 것이 나은 것 같다 
         -->
-        <button (click)="serverProvider.fileTransferFunc(imageURI)" ion-button small>업로드</button>  
+        <button (click)="uploadMenuImage(imageURI)" ion-button small>업로드</button>  
     </ion-row>
+    <ion-row>
+        <ion-col>
+            <ion-item no-ilnes>
+                <ion-label >포장가능</ion-label>
+                <ion-checkbox style="border:0;" [(ngModel)]="menu.takeout"  no-ilnes></ion-checkbox>
+            </ion-item>
+        </ion-col>
+        <ion-col>
+            <ion-item no-ilnes>
+                <ion-label >배달가능</ion-label>
+                <ion-checkbox style="border:0;" [(ngModel)]="menu.delivery" no-ilnes></ion-checkbox>
+            </ion-item>
+        </ion-col>
+    </ion-row>
+
+
+    
 
     <ion-item-divider>추가 정보</ion-item-divider>
     <ion-row>

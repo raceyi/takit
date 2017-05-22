@@ -281,7 +281,7 @@ export class ShopHomePage {
          //console.log("menu:"+this.categories[category_no-1].menus[i].menuName);
          if(this.categories[category_no-1].menus[i].menuName==menu_name){
              menu=this.categories[category_no-1].menus[i];
-             console.log(this.categories[category_no-1].menus[i].options);
+             //console.log(this.categories[category_no-1].menus[i].options);
             break;
         }
     }

@@ -52,53 +52,67 @@ export class MenuModalPage {
         this.menu=params.get('menu');
         this.menu.oldMenuName = this.menu.menuName;
       }
+
+      if(params.get('menu').imagePath === undefined || params.get('menu').imagePath === null){
+          this.flags.imageUpload = false;
+      }else{
+          this.flags.imageUpload = true;
+          this.menu.imagePath= this.menu.imagePath.substr(this.menu.imagePath.indexOf('_') + 1);
+      }
       console.log("construct menu:"+JSON.stringify(this.menu));
       console.log("flags"+JSON.stringify(this.flags));
+
+      if(params.get('menu').takeout!==undefined && params.get('menu').takeout === '2'){
+          this.menu.delivery = true;
+      }
 
 
   }
 
   ionViewDidEnter(){
-      this.menuContentRef.resize(); //scroll resize
+      //this.menuContentRef.resize(); //scroll resize
   }
 
 
   takePicture(){
    let cameraOptions = {
       quality: 100,
-      targetWidth :100,
-      targetHeight :100,
+      targetWidth :500,
+      targetHeight :500,
+      saveToPhotoAlbum : true,
+      allowEdit:true,
       destinationType: this.camera.DestinationType.FILE_URI,
       sourceType: this.camera.PictureSourceType.CAMERA,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
+      
     }
 
     this.camera.getPicture(cameraOptions).then((imageURI) => {
         this.imageURI = imageURI;
         let tmpURI = imageURI.split('/')
-        this.menu.imagePath = this.storageProvider.myshop.takitId+"_"+tmpURI[tmpURI.length-1];
+        this.menu.imagePath = tmpURI[tmpURI.length-1];
 
       //this.serverProvider.fileTransferFunc(imageURI);
     }, (err) => {
     // Handle error
+        console.log("err:"+JSON.stringify(err)); 
     });
   }
 
   pickPicture(){
     let options = {
       quality: 100,
-      targetWidth :100,
-      targetHeight :100,
+      targetWidth :500,
+      targetHeight :500,
+      allowEdit:true,
       destinationType: this.camera.DestinationType.FILE_URI,
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
-      
-
     };
     this.camera.getPicture(options).then((imageURI) => {
         this.imageURI = imageURI;
         let tmpURI = imageURI.split('/')
-        this.menu.imagePath = this.storageProvider.myshop.takitId+"_"+tmpURI[tmpURI.length-1];
+        this.menu.imagePath = tmpURI[tmpURI.length-1];
         //this.serverProvider.fileTransferFunc(imageURI);
        }, (err) => {
            console.log("err:"+JSON.stringify(err)); 
@@ -109,92 +123,163 @@ export class MenuModalPage {
 
       //set upload flag
     console.log(this.imageURI)
-    this.serverProvider.fileTransferFunc(this.imageURI).then((res:any)=>{
+    this.serverProvider.fileTransferFunc(this.imageURI,this.menu.imagePath).then((res:any)=>{
         console.log("uploadMenuImage:"+res);
         if(res.result === "success"){
             this.flags.imageUpload =true;
             console.log(this.flags.imageUpload);
             let alert = this.alertController.create({
                         title : "사진 업로드를 완료 하였습니다.",
-                        buttons : [{text:'확인',
-                                    handler : ()=>{
-                                        this.flags.imageUpload =true;
-                                        console.log(this.flags.imageUpload);
-                                    }}]
+                        buttons : ['확인']
                     });
             alert.present();
         }else if(res.result === "failure"){
-            console.log(res.error);
-            let alert = this.alertController.create({
-                title : "사진 업로드에 실패하였습니다.",
-                buttons : ['확인']
-            });
-            alert.present();
+            if(res.error === "exist same image"){
+                let alert = this.alertController.create({
+                    title : "다른 메뉴에서 같은 이름의 사진을 사용중입니다.",
+                    subTitle : "사진 이름을 변경하세요.",
+                    buttons : ['확인']
+                });
+                alert.present();
+            }else{
+                console.log(res.error);
+                let alert = this.alertController.create({
+                    title : "사진 업로드에 실패하였습니다.",
+                    buttons : ['확인']
+                });
+                alert.present();
+            }            
         }
         
     },err=>{
-        if(err==="exist same image"){
-            let alert = this.alertController.create({
-                title : "다른 메뉴에서 같은 이름의 사진을 사용중입니다.",
-                subTitle : "사진 이름을 변경하세요.",
-                buttons : ['확인']
-            });
-            alert.present();
-        }else{
-            console.log(err);
-            let alert = this.alertController.create({
-                title : "사진 업로드에 실패하였습니다.",
-                buttons : ['확인']
-            });
-            alert.present();
-        }
+        console.log(err);
+        let alert = this.alertController.create({
+            title : "사진 업로드에 실패하였습니다.",
+            buttons : ['확인']
+        });
+        alert.present();
     });
   }
 
   modifyMenuInfo(){
-    console.log(this.menu);
+    console.log("modifyMenuInfo"+this.menu);
+    console.log(this.flags.imageUpload);
+    //필수 정보 확인
+    if(!this.isNull(this.menu.menuName) && 
+        !this.isNull(this.menu.price)){
+    
+        if(!this.isNull(this.menu.imagePath) && !this.flags.imageUpload){
+            let alert = this.alertController.create({
+                        title: "사진을 업로드 해주세요.",
+                        buttons: ['확인']
+                    });
+            alert.present();
+        }else{
+            let optionFlags = true;
 
-    if(this.menu.options !== undefined){
-        for(let i=0; i<this.menu.options.length; i++){
-            this.menu.options[i]= JSON.stringify(this.menu.options[i]);
+            if(this.menu.options !== undefined && this.menu.options !== null){
+                console.log("options not undefined");
+                for(let i=0; i<this.menu.options.length; i++){
+                    if(this.isNull(this.menu.options[i].name) || this.isNull(this.menu.options[i].price)){
+                        // console.log("i:"+i)
+                        // console.log("flags:"+optionFlags);
+                        // console.log("options"+this.menu.options[i].name+ " "+this.menu.options[i].price);
+                        optionFlags=false;
+                        //console.log("flags:"+optionFlags);
+                        break;
+                    }
+                    if(this.menu.options[i].choice !== undefined){
+                        for(let j=0; i<this.menu.options[i].choice; j++){
+                            if(this.isNull(this.menu.options[i].choice[j])){
+                                // console.log("j:"+j)
+                                // console.log("flags:"+optionFlags);
+                                // console.log("options"+this.menu.options[i].choice[j]);
+
+                                optionFlags=false;
+                                //console.log("flags:"+optionFlags);
+                                break;
+                            }
+                        }
+                    }
+                    
+                }
+                //console.log("after for :"+this.menu.options);
+            }
+
+            console.log("flags:"+optionFlags);
+
+            if(optionFlags === true){
+
+                if(this.menu.options !== undefined){
+                    this.menu.options= JSON.stringify(this.menu.options);
+                }
+
+                if(this.menu.takeout ===null || this.menu.takeout === false){
+                    this.menu.takeout = 0;
+                }else if(this.menu.takeout === true){
+                    this.menu.takeout = 1;
+                }
+
+                if(this.menu.delivery === true){
+                    this.menu.takeout = 2;
+                }
+
+                this.serverProvider.modifyMenuInfo(this.menu)
+                .then((res:any)=>{
+                    if(res.result === "success"){
+                        let alert = this.alertController.create({
+                                        title: "메뉴가 수정 되었습니다.",
+                                        subTitle: '다시 로드 하면 화면에 보여집니다.',
+                                        buttons: [ {text: '확인',
+                                                    handler: ()=>{
+                                                        this.viewCtrl.dismiss();
+                                                    }
+                                                }]
+                                    });
+                        alert.present();
+                    }else{
+                        console.log("modifyMenuInfo failure:"+JSON.stringify(res.error));
+                        let alert = this.alertController.create({
+                                    title: "메뉴 수정에 실패 하였습니다.",
+                                    subTitle: '다시 시도해주세요.',
+                                    buttons: [ {text: '확인',
+                                                handler: ()=>{
+                                                    this.viewCtrl.dismiss();
+                                                }
+                                            }]
+                                });
+                        alert.present();
+                    }
+                },(err)=>{
+                    console.log("modifyMenuInfo failure:"+JSON.stringify(err));
+                    let alert = this.alertController.create({
+                                    title: "메뉴 수정에 실패 하였습니다.",
+                                    subTitle: '다시 시도해주세요.',
+                                    buttons: [ {text: '확인',
+                                                handler: ()=>{
+                                                    this.viewCtrl.dismiss();
+                                                }
+                                            }]
+                                });
+                    alert.present();
+                });
+            }else{
+                let alert = this.alertController.create({
+                                title: "옵션을 정확히 입력해주세요.",
+                                buttons: ['OK']
+                            });
+                alert.present();
+            }
         }
     }else{
-        
-    }
-    // if(this.menu.optionsEn !== undefined){
-    //     for(let i=0; i<this.menu.options.length; i++){
-    //         this.menu.optionsEn[i]= JSON.stringify(this.menu.optionsEn[i]);
-    //     }
-    // }
-
-    if(!this.isNull(this.menu.menuName) && 
-        !this.isNull(this.menu.price) && 
-        !this.isNull(this.menu.imagePath)){
-        this.serverProvider.modifyMenuInfo(this.menu)
-        .then((res)=>{
-            let alert = this.alertController.create({
-                            title: "메뉴가 수정 되었습니다.",
-                            subTitle: '다시 로드 하면 화면에 보여집니다.',
-                            buttons: ['OK']
-                        });
-            alert.present();
-                    
-        },(err)=>{
-            let alert = this.alertController.create({
-                            title: "메뉴 수정에 실패 하였습니다.",
-                            subTitle: '다시 시도해주세요.',
-                            buttons: ['OK']
-                        });
-            alert.present();
-        });
-    }else{
         let alert = this.alertController.create({
-                        title: "메뉴 정보를 정확히 입력해주세요.",
-                        subTitle: '메뉴 이름,가격,사진은 필수입니다.',
-                        buttons: ['OK']
-                    });
-        alert.present();
+                                title: "메뉴 정보를 정확히 입력해주세요.",
+                                subTitle: '메뉴 이름,가격은 필수입니다.',
+                                buttons: ['OK']
+                            });
+                alert.present();
     }
+    
   }
 
   addMenuInfo(){
@@ -215,42 +300,86 @@ export class MenuModalPage {
             let optionFlags = true;
 
             if(this.menu.options !== undefined){
-                for(let i=0; i<this.menu.options.length-1; i++){
-                    if(this.menu.options[i].name === null || this.menu.options[i].price === null){
+                console.log("options not undefined");
+                for(let i=0; i<this.menu.options.length; i++){
+                    if(this.isNull(this.menu.options[i].name) || this.isNull(this.menu.options[i].price)){
+                        console.log("i:"+i)
+                        console.log("flags:"+optionFlags);
+                        console.log("options"+this.menu.options[i].name+ " "+this.menu.options[i].price);
                         optionFlags=false;
+                        console.log("flags:"+optionFlags);
                         break;
                     }
                     if(this.menu.options[i].choice !== undefined){
-                        for(let j=0; i<this.menu.options[i].choice-1; j++){
-                            if(this.menu.options[i].choice[j]===null){
+                        for(let j=0; i<this.menu.options[i].choice; j++){
+                            if(this.isNull(this.menu.options[i].choice[j])){
+                                console.log("j:"+j)
+                                console.log("flags:"+optionFlags);
+                                console.log("options"+this.menu.options[i].choice[j]);
+
                                 optionFlags=false;
+                                console.log("flags:"+optionFlags);
                                 break;
                             }
                         }
                     }
-                    this.menu.options[i]= JSON.stringify(this.menu.options[i]);
+                    
                 }
+                console.log("after for :"+this.menu.options);
             }
 
+            console.log("flags:"+optionFlags);
+
             if(optionFlags === true){
-                let nowThis = this;
-                this.serverProvider.addMenuInfo(this.menu)
-                .then((res)=>{
-                    let alert = this.alertController.create({
-                                    title: "메뉴가 추가 되었습니다.",
-                                    subTitle: '화면을 새로고침 해주세요',
-                                    buttons: [ {text: '예',
-                                                handler: ()=>{
-                                                    this.viewCtrl.dismiss();
-                                                }
-                                            }]
-                                });
-                    alert.present();
+
+                if(this.menu.options !== undefined){
+                    this.menu.options= JSON.stringify(this.menu.options);
+                }
                 
+                if(this.menu.takeout ===null || this.menu.takeout === false){
+                    this.menu.takeout = 0;
+                }else if(this.menu.takeout === true){
+                    this.menu.takeout = 1;
+                }
+
+                if(this.menu.delivery === true){
+                    this.menu.takeout = 2;
+                }
+
+                this.serverProvider.addMenuInfo(this.menu)
+                .then((res:any)=>{
+                    if(res.result === "success"){
+                        let alert = this.alertController.create({
+                                        title: "메뉴가 추가 되었습니다.",
+                                        subTitle: '화면을 새로고침 해주세요',
+                                        buttons: [ {text: '확인',
+                                                    handler: ()=>{
+                                                        this.viewCtrl.dismiss();
+                                                    }
+                                                }]
+                                    });
+                        alert.present();
+                    }else{
+                        console.log("addMenuInfo failure:"+JSON.stringify(res.error));
+                        let alert = this.alertController.create({
+                                    title: "메뉴 추가에 실패 하였습니다.",
+                                    buttons: [ {text: '확인',
+                                                    handler: ()=>{
+                                                        this.viewCtrl.dismiss();
+                                                    }
+                                                }]
+                                });
+                        alert.present();
+                    }
                 },(err)=>{
+                    console.log("addMenuInfo failure:"+JSON.stringify(err));
                     let alert = this.alertController.create({
                                     title: "메뉴 추가에 실패 하였습니다.",
-                                    buttons: ['확인']
+                                    buttons: [ {text: '확인',
+                                                    handler: ()=>{
+                                                        this.viewCtrl.dismiss();
+                                                    }
+                                                }]
                                 });
                     alert.present();
                     
@@ -391,7 +520,7 @@ export class MenuModalPage {
                 });
             alert.present();
         }else{
-            this.menu.options[optionIdx].choice.push("");
+            this.menu.options[optionIdx].choice.push(null);
         }
     }
     this.menuContentRef.resize();

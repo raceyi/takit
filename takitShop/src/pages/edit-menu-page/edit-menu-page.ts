@@ -33,8 +33,6 @@ export class EditMenuPage {
     categoryRows=[];
     categoryMenuRows=[];
 
-    options;
-    optionsEn;
 
     flags ={"categoryName":true, "addCategory":true, "removeMenu":true}
 
@@ -57,7 +55,7 @@ export class EditMenuPage {
   }
 
   ionViewDidEnter(){ // Be careful that it should be DidEnter not Load 
-    console.log("add menu page - ionViewWillEnter"); 
+    console.log("add menu page - ionViewWillEnter:"+new Date()); 
         
 
     this.loadShopInfo();
@@ -89,23 +87,30 @@ export class EditMenuPage {
         this.categories=[];
         this.menuRows=[];
         this.categoryMenuRows=[];
+        this.shop = {};
+        this.nowCategory = {};
+        this.categoryRows = [];
+
         //this.recommendMenu=[];
 
         //var shop=this.storageProvider.shopResponse;
 
         //console.log("[loadShopInfo]this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
+        let globalThis = this;
 
         this.serverProvider.getShopInfo(this.storageProvider.myshop.takitId).then((res:any)=>{
               console.log("shopInfo:"+JSON.stringify(res));
               this.storageProvider.shopInfoSet(res.shopInfo);
               this.storageProvider.shop = res;
+
+              globalThis.shop=this.storageProvider.shop;
+        
+                console.log("edit-menu-page loadShopInfo");
+                //this.storageProvider.shopInfoSet(this.shop.shopInfo);
+                globalThis.configureShopInfo();
               
           });
-        this.shop=this.storageProvider.shop;
         
-        console.log("edit-menu-page:"+this.shop);
-        //this.storageProvider.shopInfoSet(this.shop.shopInfo);
-        this.configureShopInfo();
         /////////////////////////////////
       //this.isAndroid = this.platform.is('android');                        
   }
@@ -125,8 +130,11 @@ export class EditMenuPage {
                     menu.filename=encodeURI(this.storageProvider.awsS3+menu.imagePath);
                     menu.categoryNO=no;
 
-                    if(menu.options!==null)
+                    if(menu.options!== null){
                         menu.options=JSON.parse(menu.options);
+                        console.log("options parse:");
+                        console.log(menu.options);
+                    }
 
                     if(menu.optionsEn!==null)
                         menu.optionsEn=JSON.parse(menu.optionsEn);
@@ -136,7 +144,7 @@ export class EditMenuPage {
 
                     //let menu_name=menu.menuName.toString();
                     //console.log("menu.name:"+menu_name);
-                    console.log("name has:"+menu.optionsEn);
+                    //console.log("name has:"+menu.optionsEn);
                     //if(menu_name.indexOf("(")>0){
                     //menu.menuName = menu_name.substr(0,menu_name.indexOf('('));
                     //console.log("menu.name:"+menu.name);
@@ -199,45 +207,64 @@ export class EditMenuPage {
 
   }
     addCategory(){
+        this.inputAddCategory.sequence = this.categories.length+1;
         this.flags.addCategory=false;
     }
 
     addCategoryComplete(){
-        if(this.inputAddCategory.sequence === null){
-            this.inputAddCategory.sequence = this.categories.length+1;
-        }
+        // if(this.inputAddCategory.sequence === null){
+        //     this.inputAddCategory.sequence = this.categories.length+1;
+        // }
+
+        //categoryNO 가장 큰 수 계산
+        
+
         console.log("addCategoryComplete start");
          console.log("inputAddCategory:"+JSON.stringify(this.inputAddCategory));
         if(this.inputAddCategory.sequence !== null && this.inputAddCategory.categoryName !== null){
-                this.inputAddCategory.categoryNO = this.categories.length+1;
-                console.log("inputAddCategory:"+JSON.stringify(this.inputAddCategory));
-                this.serverProvider.addCategory(this.inputAddCategory)
-                .then(()=>{
-                    let alert = this.alertController.create({
-                                    title: "새 카테고리가 추가 되었습니다.",
-                                    subTitle: '다시 로드 하면 화면에 보여집니다.',
-                                    buttons: ['OK']
-                                });
-                    alert.present();
-                    this.flags.addCategory=true;
-                },(err)=>{
-                    let alert = this.alertController.create({
-                                    title: '카테고리 추가에 실패하였습니다.',
-                                    subTitle: '다시 시도 하시거나 문의 해주세요.',
-                                    buttons: ['OK']
-                                });
-                    alert.present();
-                    this.flags.addCategory=true;
-                });
+            
+            this.inputAddCategory.categoryNO = this.categories[0].categoryNO;
+            for(let i=0; i<this.categories.length-1; i++){
+            if(this.inputAddCategory.categoryNO < this.categories[i+1].categoryNO)
+                this.inputAddCategory.categoryNO = this.categories[i+1].categoryNO+1;
+            }
+
+            console.log("this.inputAddCategory.categoryNO:"+this.inputAddCategory.categoryNO);
+
+            console.log("inputAddCategory:"+JSON.stringify(this.inputAddCategory));
+            this.serverProvider.addCategory(this.inputAddCategory)
+            .then(()=>{
+                let alert = this.alertController.create({
+                                title: "새 카테고리가 추가 되었습니다.",
+                                subTitle: '다시 로드 하면 화면에 보여집니다.',
+                                buttons: [{text:'확인',
+                                            handler:()=>{
+                                                this.loadShopInfo();
+                                            }}]
+                            });
+                alert.present();
+                this.flags.addCategory=true;
+            },(err)=>{
+                let alert = this.alertController.create({
+                                title: '카테고리 추가에 실패하였습니다.',
+                                subTitle: '다시 시도 하시거나 문의 해주세요.',
+                                buttons: ['확인']
+                            });
+                alert.present();
+                this.flags.addCategory=true;
+            });
         }else{
            let alert = this.alertController.create({
-                            title: "카테고리 정보를 모두 입력 해주세요.",
-                            subTitle: "올바른 정보를 입력하세요.",
-                            buttons: ['OK']
+                            title: "카테고리 이름을 입력 해주세요.",
+                            buttons: ['확인']
                         });
                         alert.present();
         }
        
+    }
+
+    cancelCategoryComplete(){
+        this.flags.addCategory=true;
     }
 
     modifyCategory(){
@@ -264,7 +291,10 @@ export class EditMenuPage {
             let alert = this.alertController.create({
                             title: "카테고리가 수정되었습니다.",
                             subTitle: '다시 로드 하면 화면에 보여집니다.',
-                            buttons: ['OK']
+                            buttons: [{text:'확인',
+                                        handler:()=>{
+                                            this.loadShopInfo();
+                                        }}]
                         });
             alert.present();
             this.flags.categoryName=true;
@@ -272,12 +302,54 @@ export class EditMenuPage {
             let alert = this.alertController.create({
                             title: '카테고리 수정에 실패하였습니다.',
                             subTitle: '다시 시도 하시거나 문의 해주세요.',
-                            buttons: ['OK']
+                            buttons: ['확인']
                         });
             alert.present();
             this.flags.categoryName=true;
         });
         
+    }
+
+    removeCategory(){
+        console.log("removeCategory start");
+
+        //excute after when all menu is deleted
+
+        if(this.categories[this.categorySelected-1].menus.length === 0){
+            let alert = this.alertController.create({
+                            title: '해당 카테고리를 삭제 하시겠습니까?',
+                            buttons: [{text:"아니오"},
+                                        {text:"예",
+                                          handler:()=>{
+                                              this.serverProvider.removeCategory(this.categories[this.categorySelected-1])
+                                              .then((res:any)=>{
+                                                  if(res.result === "success"){
+                                                    let alert = this.alertController.create({
+                                                                    title: '카테고리가 삭제 되었습니다.',
+                                                                    buttons: [{text:'확인',
+                                                                                handler:()=>{
+                                                                                    this.loadShopInfo();
+                                                                                }}]
+                                                                });
+                                                    alert.present();
+                                                  }else{
+                                                    let alert = this.alertController.create({
+                                                                    title: '카테고리 삭제에 실패 하였습니다.',
+                                                                    buttons: ['확인']
+                                                                });
+                                                    alert.present();
+                                                  }
+                                              })
+                                          }}]
+                        });
+            alert.present();
+        }else{
+            let alert = this.alertController.create({
+                            title: '해당 카테고리의 메뉴를 모두 삭제해주세요.',
+                            buttons: ['확인']
+                        });
+            alert.present();
+        }
     }
 
     removeMenu(menu){
@@ -294,7 +366,10 @@ export class EditMenuPage {
                                                 let alert = this.alertController.create({
                                                                 title: "메뉴가 삭제 되었습니다.",
                                                                 subTitle: '새로고침 하면 화면에 보여집니다.',
-                                                                buttons: ['OK']
+                                                                buttons: [{text:'OK',
+                                                                            handler:()=>{
+                                                                                this.loadShopInfo();
+                                                                            }}]
                                                             });
                                                 alert.present();
                                             }else{
@@ -311,11 +386,6 @@ export class EditMenuPage {
                                   }]
                     });
         alert.present();
-    }
-
-    presentContactModal() {
-        let contactModal = this.modalCtrl.create(MenuModalPage);
-        contactModal.present();
     }
 
     menuModal(menuName) {
@@ -344,9 +414,11 @@ export class EditMenuPage {
         menu.menuNO = this.storageProvider.myshop.takitId+";"+this.categories[this.categorySelected-1].categoryNO;
         let menuModal = this.modalCtrl.create(MenuModalPage,{menu:menu});
 
-        menuModal.onDidDismiss(data => {
-            console.log(data);
+        menuModal.onDidDismiss(() => {
+            console.log("menuModal.onDidDismiss");
+            this.loadShopInfo();
         });
+
         menuModal.present();
     }
 
@@ -354,8 +426,8 @@ export class EditMenuPage {
         let menuNO = this.storageProvider.myshop.takitId+";"+this.categories[this.categorySelected-1].categoryNO;
         console.log("addMenu menuNO : "+menuNO);
         let menuModal = this.modalCtrl.create(MenuModalPage,{menu:{"menuNO":menuNO}});
-        menuModal.onDidDismiss(data => {
-            console.log(data);
+        menuModal.onDidDismiss(() => {
+            this.loadShopInfo();
         });
         menuModal.present();
     }
