@@ -8,22 +8,25 @@ page-edit-menu-page {
         border-style: solid !important;
         border-color: #3474e1 !important;
         padding:0px !important;
-
         height: 3rem;
         line-height: 2.5rem;
     }
 
-    .segment-md>.segment-activated, button {
-        background-color: #387ef5 !important;
-        color: white !important;
-        height : 20px;
-        font-size: 13px;
+    // .segment-md>.segment-activated, button {
+    //     background-color: #387ef5 !important;
+    //     color: white !important;
+    //     height : 20px;
+    //     font-size: 13px;
+    // }
+
+    .item-ios{
+        padding-left: 5px;
     }
 
-    ion-col.segmentButton{
-        //padding:0px !important;
-        //padding-top: 100px;
+    .nonColorBtn{
+        float: left;
     }
+
 
     .segment-ios .segment-button:last-of-type {
         margin-left: 0;
@@ -43,15 +46,15 @@ page-edit-menu-page {
         margin-left: 0;
     }
 
-    .categoryInfo > ion-row > ion-col > .categoryBtn{
-        text-align: right;
-        //width: 20px;
-    }
+    // .categoryInfo > ion-row > ion-col > .categoryBtn{
+    //     text-align: right;
+    //     //width: 20px;
+    // }
 
-    .selectCategory > ion-item, .selecteMenus > ion-item {
-        text-align: right;
-        font-size : 1.0vw !important;
-    }
+    // .selectCategory > ion-item, .selecteMenus > ion-item {
+    //     text-align: right;
+    //     font-size : 1.0vw !important;
+    // }
 
     .selecteMenus{
         padding:10px;
@@ -71,7 +74,12 @@ page-edit-menu-page {
     .menuItemInfo{
         padding-right: 0;
         overflow: hidden;
-        margin-right: 0;
+        //margin-right: 0;
+    }
+
+    .MenuSubject{
+        font-weight: 900;
+        font-size: 110%;
     }
 
 }

@@ -275,11 +275,13 @@ export class ShopHomePage {
         return;
 
     console.log("category:"+category_no+" menu:"+menu_name); 
+
     var menu;
     for(var i=0;i<this.categories[category_no-1].menus.length;i++){
          //console.log("menu:"+this.categories[category_no-1].menus[i].menuName);
          if(this.categories[category_no-1].menus[i].menuName==menu_name){
              menu=this.categories[category_no-1].menus[i];
+             //console.log(this.categories[category_no-1].menus[i].options);
             break;
         }
     }
