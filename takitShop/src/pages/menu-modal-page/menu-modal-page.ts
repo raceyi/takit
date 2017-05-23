@@ -23,15 +23,10 @@ export class MenuModalPage {
 @ViewChild('menuContent') menuContentRef:Content;
 
     menu;
- 
-    options=[];
-    optionsEn=[];
-    //addFlag=true;
-    flags = {"add":false, "options":true, "imageUpload":false};
-    //choice = [null,null,null,null];
+    flags = {"add":false, "options":true, "imageUpload":true, "segment": false};
     imageURI;
+    menuSelected:number=1;
 
-    choices;
 
   constructor(public params:NavParams, public viewCtrl: ViewController, 
               public navCtrl: NavController, private alertController:AlertController,
@@ -39,40 +34,50 @@ export class MenuModalPage {
               public serverProvider:ServerProvider, public storageProvider:StorageProvider) {
       console.log("menu modal constructor:"+params.get('menu'));
 
-      if(params.get('menu').menuName === undefined ){
-        console.log("menu add modal");
-        this.flags.add=true;
-        // this.menu = {"menuName":null,"menuNameEn":null,"price":null,"imagePath":"",
-        //     "takeout":true,"explanation":null,"explanationEn":null,"ingredient":null,
-        //     "ingredientEn":null,"options":[{"name":null,"price":null,"choice":[null,null,null,null]}],
-        //     "optionsEn":[{"name":null,"price":null,"choice":[null,null,null,null]}]};
-        this.menu=params.get('menu');
-
-      }else{
+      if(params.get('menu').hasOwnProperty('menuName')){
         this.menu=params.get('menu');
         this.menu.oldMenuName = this.menu.menuName;
+      }else{
+         console.log("menu add modal");
+        this.flags.add=true;
+        this.menu=params.get('menu');
       }
 
-      if(params.get('menu').imagePath === undefined || params.get('menu').imagePath === null){
-          this.flags.imageUpload = false;
-      }else{
-          this.flags.imageUpload = true;
+    //   if(params.get('menu').imagePath === undefined || params.get('menu').imagePath === null){
+    //     //   this.flags.imageUpload = false;
+    //   }else{
+        //   this.flags.imageUpload = true;
+      if(params.get('menu').hasOwnProperty('imagePath') && params.get('menu').imagePath !== null){
+          console.log(this.menu.imagePath);
           this.menu.imagePath= this.menu.imagePath.substr(this.menu.imagePath.indexOf('_') + 1);
+      }
+      
+
+      if(params.get('menu').hasOwnProperty('takeout') && params.get('menu').takeout === '1'){
+        this.menu.takeout = true;
+      }else if(params.get('menu').hasOwnProperty('takeout') && params.get('menu').takeout === '2'){
+          this.menu.takeout = true;
+          this.menu.delivery = true;
       }
       console.log("construct menu:"+JSON.stringify(this.menu));
       console.log("flags"+JSON.stringify(this.flags));
-
-      if(params.get('menu').takeout!==undefined && params.get('menu').takeout === '2'){
-          this.menu.delivery = true;
-      }
-
-
   }
 
   ionViewDidEnter(){
       //this.menuContentRef.resize(); //scroll resize
   }
 
+
+  segmentChange(){
+      console.log("segmentChange");
+      console.log("menuSelected:"+this.menuSelected);
+      if(this.menuSelected === 1){
+        this.flags.segment = false;
+      }else if(this.menuSelected === 2){
+        this.flags.segment = true;
+      }
+      console.log(this.flags.segment);
+  }
 
   takePicture(){
    let cameraOptions = {
@@ -122,8 +127,8 @@ export class MenuModalPage {
   uploadMenuImage(){
 
       //set upload flag
-    console.log(this.imageURI)
-    this.serverProvider.fileTransferFunc(this.imageURI,this.menu.imagePath).then((res:any)=>{
+    console.log(this.imageURI);
+    this.serverProvider.fileTransferFunc(this.imageURI,this.menu).then((res:any)=>{
         console.log("uploadMenuImage:"+res);
         if(res.result === "success"){
             this.flags.imageUpload =true;
@@ -165,6 +170,7 @@ export class MenuModalPage {
     console.log("modifyMenuInfo"+this.menu);
     console.log(this.flags.imageUpload);
     //필수 정보 확인
+
     if(!this.isNull(this.menu.menuName) && 
         !this.isNull(this.menu.price)){
     
@@ -206,13 +212,43 @@ export class MenuModalPage {
                 //console.log("after for :"+this.menu.options);
             }
 
+            if(this.menu.optionsEn!== undefined && this.menu.optionsEn !== null){
+                console.log("options not undefined");
+                for(let i=0; i<this.menu.optionsEn.length; i++){
+                    if(this.isNull(this.menu.optionsEn[i].name) || this.isNull(this.menu.optionsEn[i].price)){
+                        console.log("i:"+i)
+                        console.log("flags:"+optionFlags);
+                        console.log("options"+this.menu.optionsEn[i].name+ " "+this.menu.optionsEn[i].price);
+                        optionFlags=false;
+                        console.log("flags:"+optionFlags);
+                        break;
+                    }
+                    if(this.menu.optionsEn[i].choice !== undefined){
+                        for(let j=0; i<this.menu.optionsEn[i].choice; j++){
+                            if(this.isNull(this.menu.optionsEn[i].choice[j])){
+                                console.log("j:"+j)
+                                console.log("flags:"+optionFlags);
+                                console.log("options"+this.menu.optionsEn[i].choice[j]);
+
+                                optionFlags=false;
+                                console.log("flags:"+optionFlags);
+                                break;
+                            }
+                        }
+                    }
+                    
+                }
+                console.log("after for :"+this.menu.options);
+            }
+
             console.log("flags:"+optionFlags);
 
             if(optionFlags === true){
 
-                if(this.menu.options !== undefined){
-                    this.menu.options= JSON.stringify(this.menu.options);
-                }
+                // stringify 하면 이 순간에 error!!!!!!!!! 
+                // if(this.menu.options !== undefined){
+                //     this.menu.options= JSON.stringify(this.menu.options);
+                // }
 
                 if(this.menu.takeout ===null || this.menu.takeout === false){
                     this.menu.takeout = 0;
@@ -222,6 +258,10 @@ export class MenuModalPage {
 
                 if(this.menu.delivery === true){
                     this.menu.takeout = 2;
+                }
+
+                if(!this.isNull(this.menu.imagePath)){
+                    this.menu.imagePath = this.storageProvider.myshop.takitId+"_"+this.menu.imagePath;
                 }
 
                 this.serverProvider.modifyMenuInfo(this.menu)
@@ -286,11 +326,13 @@ export class MenuModalPage {
 
     console.log(this.menu);
     console.log(this.flags.imageUpload);
+
     //필수 정보 확인
     if(!this.isNull(this.menu.menuName) && 
         !this.isNull(this.menu.price)){
     
-        if(!this.isNull(this.menu.imagePath) && !this.flags.imageUpload){
+        if(!this.flags.imageUpload){
+        // if(!this.isNull(this.menu.imagePath) && !this.flags.imageUpload){
             let alert = this.alertController.create({
                         title: "사진을 업로드 해주세요.",
                         buttons: ['확인']
@@ -303,8 +345,6 @@ export class MenuModalPage {
                 console.log("options not undefined");
                 for(let i=0; i<this.menu.options.length; i++){
                     if(this.isNull(this.menu.options[i].name) || this.isNull(this.menu.options[i].price)){
-                        console.log("i:"+i)
-                        console.log("flags:"+optionFlags);
                         console.log("options"+this.menu.options[i].name+ " "+this.menu.options[i].price);
                         optionFlags=false;
                         console.log("flags:"+optionFlags);
@@ -313,8 +353,6 @@ export class MenuModalPage {
                     if(this.menu.options[i].choice !== undefined){
                         for(let j=0; i<this.menu.options[i].choice; j++){
                             if(this.isNull(this.menu.options[i].choice[j])){
-                                console.log("j:"+j)
-                                console.log("flags:"+optionFlags);
                                 console.log("options"+this.menu.options[i].choice[j]);
 
                                 optionFlags=false;
@@ -328,13 +366,39 @@ export class MenuModalPage {
                 console.log("after for :"+this.menu.options);
             }
 
+            if(this.menu.optionsEn !== undefined){
+                console.log("optionsEn not undefined");
+                for(let i=0; i<this.menu.optionsEn.length; i++){
+                    if(this.isNull(this.menu.optionsEn[i].name) || this.isNull(this.menu.optionsEn[i].price)){
+                        console.log("options"+this.menu.optionsEn[i].name+ " "+this.menu.optionsEn[i].price);
+                        optionFlags=false;
+                        console.log("flags:"+optionFlags);
+                        break;
+                    }
+                    if(this.menu.optionsEn[i].choice !== undefined){
+                        for(let j=0; i<this.menu.optionsEn[i].choice; j++){
+                            if(this.isNull(this.menu.optionsEn[i].choice[j])){
+                                console.log("options"+this.menu.optionsEn[i].choice[j]);
+
+                                optionFlags=false;
+                                console.log("flags:"+optionFlags);
+                                break;
+                            }
+                        }
+                    }
+                    
+                }
+                console.log("after for :"+this.menu.optionsEn);
+            }
+
             console.log("flags:"+optionFlags);
 
             if(optionFlags === true){
 
-                if(this.menu.options !== undefined){
-                    this.menu.options= JSON.stringify(this.menu.options);
-                }
+                // stringify 하면 이 순간에 error!!!!!!!!! 
+                // if(this.menu.options !== undefined){
+                //     this.menu.options= JSON.stringify(this.menu.options);
+                // }
                 
                 if(this.menu.takeout ===null || this.menu.takeout === false){
                     this.menu.takeout = 0;
@@ -344,6 +408,10 @@ export class MenuModalPage {
 
                 if(this.menu.delivery === true){
                     this.menu.takeout = 2;
+                }
+
+                if(!this.isNull(this.menu.imagePath)){
+                    this.menu.imagePath = this.storageProvider.myshop.takitId+"_"+this.menu.imagePath;
                 }
 
                 this.serverProvider.addMenuInfo(this.menu)
@@ -432,17 +500,26 @@ export class MenuModalPage {
     }
   }
 
+  deliveryClick(){
+      this.menu.takeout = true;
+  }
+
+  imageInput(ev){
+      if(this.menu.imagePath !== null && this.menu.imagePath !==""){
+        console.log("imageInput event");
+        this.flags.imageUpload = false;
+      }else{ //이미지 url이 입력되지 않은 상태로 업로드 할 필요 없음.
+          this.flags.imageUpload=true;
+      }
+  }
+
   addOption(){
      //this.flags.options = false;
      //console.log(option.choice);
      //console.log("addOption menu:"+JSON.stringify(this.menu));
      
-     if(this.menu.options === undefined){
+     if(this.menu.options === undefined || this.menu.options === null){
          this.menu.options = [];
-     }
-
-     for(let option of this.menu.options){
-        this.options.push(option);
      }
 
      this.menu.options.push({"name":null,"price":null});
@@ -459,8 +536,38 @@ export class MenuModalPage {
     //     this.menu.options[this.menu.options.length-1].choice.push(null);
     //    // this.menu.optionsEn[this.menu.options.length-1].choice.push(null);
     //  }
-     console.log(this.menu.options);
+     console.log("options type"+ typeof this.menu.options);
      console.log(JSON.stringify(this.menu.options));
+     console.log(this.menu);
+     this.menuContentRef.resize();
+  }
+
+  addOptionEn(){
+     //this.flags.options = false;
+     //console.log(option.choice);
+     //console.log("addOption menu:"+JSON.stringify(this.menu));
+     
+     if(this.menu.optionsEn === undefined || this.menu.optionsEn === null){
+         this.menu.optionsEn = [];
+     }
+
+     this.menu.optionsEn.push({"name":null,"price":null});
+     //this.menu.options.push({"name":"","price":"","choice":[]});
+     //this.menu.optionsEn.push({"name":"","price":"","choice":[]});
+
+    //  console.log(this.menu.options.length-1);
+    // // this.menu.options[this.menu.options.length-1].choice=this.choice;
+    //  console.log(this.menu.options[0].choice);
+    //  let selectCount = 4;
+    //  for(let i=0; i<selectCount; i++){
+    //     console.log(i);
+    //     //console.log(typeof this.menu.options.choice);
+    //     this.menu.options[this.menu.options.length-1].choice.push(null);
+    //    // this.menu.optionsEn[this.menu.options.length-1].choice.push(null);
+    //  }
+     console.log("options type"+ typeof this.menu.optionsEn);
+     console.log(JSON.stringify(this.menu.optionsEn));
+     console.log(this.menu);
      this.menuContentRef.resize();
   }
 
@@ -526,6 +633,24 @@ export class MenuModalPage {
     this.menuContentRef.resize();
   }
 
+  addSelectMenuEn(optionEn){
+    if(optionEn.choice === undefined){
+        optionEn.choice =[];
+        optionEn.choice.push(null);
+    }else{
+        if(optionEn.choice.length === 4){
+            let alert = this.alertController.create({
+                        title: "선택항목은 4개까지만 추가 가능합니다.",
+                        buttons: ['확인']
+                });
+            alert.present();
+        }else{
+            optionEn.choice.push(null);
+        }
+    }
+    this.menuContentRef.resize();
+  }
+
   removeSelectMenu(optionIdx,choiceIdx){
     //선택항목이 하나일 경우 choice 완전히 삭제
     console.log("optionIdx"+optionIdx);
@@ -546,6 +671,25 @@ export class MenuModalPage {
     // this.menu.options[optionIdx].choice[choiceIdx];
     this.menuContentRef.resize();
 
+  }
+
+  removeSelectMenuEn(optionEn, choiceIdx){
+    //선택항목이 하나일 경우 choice 완전히 삭제
+    console.log("optionIdx"+optionEn);
+    //console.log("choiceIdx"+choiceIdx);
+    console.log("choice"+optionEn.choice[choiceIdx]);
+
+    if(optionEn.choice.length===1){
+        delete optionEn.choice;   
+    }else{    
+        for(let i=choiceIdx; i<optionEn.choice.length-1; i++){
+          optionEn.choice[i]=optionEn.choice[i+1];          
+        }
+        //last option pop
+        optionEn.choice.pop();
+    }
+    // this.menu.options[optionIdx].choice[choiceIdx];
+    this.menuContentRef.resize();
   }
 
 

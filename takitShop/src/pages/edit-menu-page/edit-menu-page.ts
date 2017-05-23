@@ -1,5 +1,5 @@
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Component,ViewChild } from '@angular/core';
+import { Component,ViewChild,NgZone } from '@angular/core';
 import { AlertController, Content} from 'ionic-angular';
 import { ModalController, ViewController } from 'ionic-angular';
 import {Http,Headers} from '@angular/http';
@@ -36,10 +36,11 @@ export class EditMenuPage {
 
     flags ={"categoryName":true, "addCategory":true, "removeMenu":true}
 
-    inputAddCategory={"sequence":null,
-                        "categoryName":null,
-                        "categoryNameEn":null,
-                        "categoryNO":null};
+    // inputAddCategory={"sequence":null,
+    //                     "categoryName":null,
+    //                     "categoryNameEn":null,
+    //                     "categoryNO":null};
+    inputAddCategory:any={};
 
     inputModifyCategory={"oldSequence":"",
                         "newSequence":"",
@@ -49,7 +50,7 @@ export class EditMenuPage {
 
   constructor(public navCtrl: NavController,private alertController:AlertController,
               public modalCtrl: ModalController, public serverProvider:ServerProvider,
-              private http:Http, public storageProvider:StorageProvider) {
+              private http:Http, public storageProvider:StorageProvider,private ngZone:NgZone) {
                 console.log("addMenu page"); 
                 //this.loadShopInfo();
   }
@@ -60,7 +61,9 @@ export class EditMenuPage {
 
     this.loadShopInfo();
     this.addMenuContentRef.resize();
+    console.log("!!!!categoryRows- "+JSON.stringify(this.categoryRows));
        // this.storageProvider.orderPageEntered=false;
+
   }
 
   categoryChange(categoryNO,sequence){
@@ -83,32 +86,34 @@ export class EditMenuPage {
   }
 
   loadShopInfo(){
-        this.categorySelected=1;
+        console.log(this.categorySelected);
+        //this.categorySelected=1;
         this.categories=[];
         this.menuRows=[];
         this.categoryMenuRows=[];
         this.shop = {};
-        this.nowCategory = {};
+        //this.nowCategory = {};
         this.categoryRows = [];
+        this.inputAddCategory = {};
 
         //this.recommendMenu=[];
 
         //var shop=this.storageProvider.shopResponse;
 
         //console.log("[loadShopInfo]this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
-        let globalThis = this;
+        //let globalThis = this;
 
         this.serverProvider.getShopInfo(this.storageProvider.myshop.takitId).then((res:any)=>{
               console.log("shopInfo:"+JSON.stringify(res));
               this.storageProvider.shopInfoSet(res.shopInfo);
               this.storageProvider.shop = res;
 
-              globalThis.shop=this.storageProvider.shop;
+              //this.shop=this.storageProvider.shop;
         
+              this.shop = res;
                 console.log("edit-menu-page loadShopInfo");
                 //this.storageProvider.shopInfoSet(this.shop.shopInfo);
-                globalThis.configureShopInfo();
-              
+                this.configureShopInfo();
           });
         
         /////////////////////////////////
@@ -120,7 +125,7 @@ export class EditMenuPage {
     this.shop.categories.forEach(category => {
         let menus=[];
         let options;
-        let optionsEn;
+
         console.log("[configureShopInfo]this.shop:"+this.shop);
             this.shop.menus.forEach(menu=>{
                 //console.log("menu.no:"+menu.menuNO+" index:"+menu.menuNO.indexOf(';'));
@@ -130,14 +135,34 @@ export class EditMenuPage {
                     menu.filename=encodeURI(this.storageProvider.awsS3+menu.imagePath);
                     menu.categoryNO=no;
 
+                    //delete menu.options;
+
                     if(menu.options!== null){
-                        menu.options=JSON.parse(menu.options);
-                        console.log("options parse:");
+                        //console.log("json type:"+menu.options.json());
+                        //console.log("text type:"+menu.options.text());
+                       menu.options = JSON.parse(menu.options);
+                       
+                        //console.log("options parse:");
+                        console.log("menu.options type:"+typeof menu.options);
                         console.log(menu.options);
+                        
+                           
                     }
 
-                    if(menu.optionsEn!==null)
-                        menu.optionsEn=JSON.parse(menu.optionsEn);
+                    if(menu.optionsEn!== null){
+                        //console.log("json type:"+menu.options.json());
+                        //console.log("text type:"+menu.options.text());
+                        menu.optionsEn = JSON.parse(menu.optionsEn);
+                        //console.log("options parse:");
+                        console.log("menu.options type:"+typeof menu.optionsEn);
+                        console.log(menu.optionsEn);
+                        
+                           
+                    }
+
+                    // if(menu.optionsEn!==null)
+                    //     menu.optionsEn=JSON.parse(menu.optionsEn);
+
                     //menu.options=options[0];
                     //menu.optionsEn=optionsEn[0];
                     //console.log("menu.filename:"+menu.filename);
@@ -145,27 +170,19 @@ export class EditMenuPage {
                     //let menu_name=menu.menuName.toString();
                     //console.log("menu.name:"+menu_name);
                     //console.log("name has:"+menu.optionsEn);
-                    //if(menu_name.indexOf("(")>0){
-                    //menu.menuName = menu_name.substr(0,menu_name.indexOf('('));
-                    //console.log("menu.name:"+menu.name);
-                    //menu.description = menu_name.substr(menu_name.indexOf('('));
-                    //menu.descriptionHide=false;
-                    //}
-                    //else{
-                        //menu.descriptionHide=true;
-                    //}
+                    
                     console.log("menu:"+JSON.stringify(menu));
                     menus.push(menu);
                 }
             });
 
         
-        this.categories.push({categoryNO:parseInt(category.categoryNO), 
-                              categoryName:category.categoryName,
-                              categoryNameEn:category.categoryNameEn,
-                              sequence:parseInt(category.sequence),
-                              menus:menus
-                              });
+            this.categories.push({categoryNO:parseInt(category.categoryNO), 
+                                categoryName:category.categoryName,
+                                categoryNameEn:category.categoryNameEn,
+                                sequence:parseInt(category.sequence),
+                                menus:menus
+                                });
 
 
         //console.log("[categories]:"+JSON.stringify(this.categories));
@@ -180,7 +197,7 @@ export class EditMenuPage {
                 let menus=[];
                 for(let j=0;j<2 && i<category.menus.length;j++,i++){
                     //console.log("menus[i]:"+JSON.stringify(category.menus[i]));
-                    var menu=category.menus[i];
+                    let menu=category.menus[i];
                         
                     menus.push(menu);
                 }
@@ -201,14 +218,16 @@ export class EditMenuPage {
         if(this.categories.length%3==2){
             this.categoryRows.push([this.categories[(rowNum)*3],this.categories[(rowNum)*3+1]]);
         }    
+        
 
-        this.menuRows=this.categoryMenuRows[0];
-        this.nowCategory=this.categories[0];
+        this.menuRows=this.categoryMenuRows[this.categorySelected-1];
+        this.nowCategory=this.categories[this.categorySelected-1];
 
   }
     addCategory(){
-        this.inputAddCategory.sequence = this.categories.length+1;
+        
         this.flags.addCategory=false;
+        this.inputAddCategory.sequence = this.categories.length+1;
     }
 
     addCategoryComplete(){
@@ -224,10 +243,16 @@ export class EditMenuPage {
         if(this.inputAddCategory.sequence !== null && this.inputAddCategory.categoryName !== null){
             
             this.inputAddCategory.categoryNO = this.categories[0].categoryNO;
-            for(let i=0; i<this.categories.length-1; i++){
-            if(this.inputAddCategory.categoryNO < this.categories[i+1].categoryNO)
-                this.inputAddCategory.categoryNO = this.categories[i+1].categoryNO+1;
+            for(let i=1; i<this.categories.length; i++){
+                console.log("i:"+i);
+                console.log("categoryNO:"+this.categories[i].categoryNO);
+                if(this.inputAddCategory.categoryNO < this.categories[i].categoryNO){
+                    console.log("now categoryNO"+this.inputAddCategory.categoryNO);
+                    this.inputAddCategory.categoryNO = this.categories[i].categoryNO;
+                }
             }
+
+            this.inputAddCategory.categoryNO += 1;
 
             console.log("this.inputAddCategory.categoryNO:"+this.inputAddCategory.categoryNO);
 
@@ -328,6 +353,9 @@ export class EditMenuPage {
                                                                     title: '카테고리가 삭제 되었습니다.',
                                                                     buttons: [{text:'확인',
                                                                                 handler:()=>{
+                                                                                    //카테고리 삭제했으므로 선택된 카테고리 1번으로 초기화.
+                                                                                    this.categorySelected=1;
+                                                                                    this.nowCategory = {};
                                                                                     this.loadShopInfo();
                                                                                 }}]
                                                                 });
@@ -401,13 +429,13 @@ export class EditMenuPage {
             }
         }
 
-         console.log("menu:"+menu);
+        //  console.log("menu:"+menu);
 
-        if(menu.takeout==="1"){
-            menu.takeout=true;
-        }else{
-            menu.takeout=false;
-        }
+        // if(menu.takeout==="1"){
+        //     menu.takeout=true;
+        // }else{
+        //     menu.takeout=false;
+        // }
 
         console.log("menu:"+menu);
 
@@ -427,7 +455,9 @@ export class EditMenuPage {
         console.log("addMenu menuNO : "+menuNO);
         let menuModal = this.modalCtrl.create(MenuModalPage,{menu:{"menuNO":menuNO}});
         menuModal.onDidDismiss(() => {
-            this.loadShopInfo();
+            this.ngZone.run(()=>{
+                this.loadShopInfo();
+            });            
         });
         menuModal.present();
     }

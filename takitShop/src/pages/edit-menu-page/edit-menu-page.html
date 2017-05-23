@@ -21,7 +21,7 @@
     <ion-row *ngFor="let categories of categoryRows">
         <ion-col width-33  class="segmentButton" *ngFor="let category of categories" style="max-width: 33.3333%;">
             <ion-segment #categorySegment [(ngModel)]="categorySelected">
-                    <ion-segment-button [value]="category.sequence" (click)="categoryChange(category.categoryNO,category.sequence)">
+                    <ion-segment-button [value]="category.sequence" (ionSelect)="categoryChange(category.categoryNO,category.sequence)">
                     {{category.categoryName}}
                     </ion-segment-button>
             </ion-segment>        
@@ -44,13 +44,13 @@
         </ion-item>
     </ion-row>
     <ion-row>
-    <!--<ion-item no-lines>-->
+    <ion-col>
         <button (click)="addCategory()" [hidden]="!flags.addCategory" ion-button icon-left small style="float:right"><ion-icon name="md-add"></ion-icon>카테고리</button>
         <button (click)="removeCategory()" [hidden]="!flags.addCategory" ion-button icon-left small style="float:right"><ion-icon name="md-trash"></ion-icon>카테고리</button>
 
         <button (click)="addCategoryComplete()" [hidden]="flags.addCategory" ion-button small style="float:right">완료</button>
         <button (click)="cancelCategoryComplete()" [hidden]="flags.addCategory" ion-button small style="float:right">취소</button>
-    <!--</ion-item>-->
+    </ion-col>
     </ion-row>
 </div>
 
@@ -106,8 +106,8 @@
     </div>
     <!--3. 카테고리별 메뉴들-->
         <!--3-1. 메뉴 추가 버튼-->
-<ion-item-divider color="white"></ion-item-divider>
-<div class="selectMenus">
+    <ion-item-divider color="white"></ion-item-divider>
+    <div class="selectMenus">
         <button (click)="addMenu()" ion-button icon-left small style="float:right"><ion-icon name="md-add"></ion-icon>메뉴</button>
         <!--3-1.메뉴사진 -->
         <!--3-2.메뉴 편집 버튼-->

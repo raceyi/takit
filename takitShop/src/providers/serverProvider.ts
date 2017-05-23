@@ -275,20 +275,22 @@ export class ServerProvider{
       }
   }
 
-  fileTransferFunc(imageURI,imagePath){
+  fileTransferFunc(imageURI,menu){
       //사용자가 이미지 이름 변경했을 수도 있으므로 입력된 imagePath값으로 함
     return new Promise((resolve,reject)=>{
         if(imageURI !== undefined){
             //let filename= imageURI.substr(imageURI.lastIndexOf('/') + 1); 
             console.log("imageURI:"+imageURI);
-            console.log("filename:"+imagePath);
+            console.log("filename:"+menu.imagePath);
             let options :FileUploadOptions = {
                 fileKey: 'file',
-                fileName: imagePath,
+                fileName: menu.imagePath,
                 mimeType: 'image/jpeg',
                 params: {
-                    fileName: this.storageProvider.myshop.takitId+"_"+imagePath,
-                    takitId:this.storageProvider.myshop.takitId
+                    fileName: this.storageProvider.myshop.takitId+"_"+menu.imagePath,
+                    takitId:this.storageProvider.myshop.takitId,
+                    menuNO :menu.menuNO,
+                    menuName:menu.menuName
                 }
             }; 
             this.fileTransfer.onProgress(this.onProgress);
@@ -323,6 +325,7 @@ export class ServerProvider{
   }
 
     modifyMenuInfo(menu){
+        
         return new Promise((resolve,reject)=>{
             this.post("/shop/modifyMenu",JSON.stringify(menu)).then((res:any)=>{
                 console.log(res);
