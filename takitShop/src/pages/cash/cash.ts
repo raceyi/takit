@@ -183,7 +183,8 @@ export class CashPage {
   }
    
   addLocalTime(trans){
-        var trTime:Date=moment.utc(trans.transactionTime).toDate();
+        console.log("trans.withdrawalTime:"+trans.withdrawalTime);
+        var trTime:Date=moment.utc(trans.withdrawalTime).toDate();
         var mm = trTime.getMonth() < 9 ? "0" + (trTime.getMonth() + 1) : (trTime.getMonth() + 1); // getMonth() is zero-based
         var dd  = trTime.getDate() < 10 ? "0" + trTime.getDate() : trTime.getDate();
         var dString=trTime.getFullYear()+'-'+(mm)+'-'+dd;
@@ -194,7 +195,8 @@ export class CashPage {
      //takitId, bankCode(은행코드 3자리) , withdrawalAmount(인출금액),fee
         let body = JSON.stringify({takitId:this.storageProvider.myshop.takitId,
                                 bankCode:this.storageProvider.bankCode ,
-                                withdrawalAmount:this.withdrawAmount,
+                                //withdrawalAmount:this.withdrawAmount,
+                                withdrawalAmount:this.storageProvider.cashAvailable,
                                 fee:this.withrawFree});
       console.log("doWithraw"+body);                      
       this.serverProvider.post("/shop/withdrawCash",body).then((res:any)=>{

@@ -81,8 +81,14 @@
                 <div [hidden]="order.hidden">
                 <ion-row [hidden]="order.takeout=='0'"> 
                   <ion-col col-2></ion-col>
-                  <ion-col col-10>Takeout</ion-col>
+                  <ion-col col-10 [hidden]="order.takeout=='2'">포장</ion-col>
+                  <ion-col col-10 [hidden]="order.takeout=='1'">배달</ion-col>
                 </ion-row>
+                <ion-row [hidden]="order.takeout=='1'||order.takeout=='0'">
+                  <ion-col col-2></ion-col>   
+                  <ion-col col-10 [hidden]="order.deliveryAddress==undefined || order.deliveryAddress==null"><p class="option">{{order.deliveryAddress}}</p></ion-col>
+                </ion-row>
+
                 <div *ngFor="let menu of order.orderListObj.menus">
                 <ion-row>
                           <ion-col col-2></ion-col>

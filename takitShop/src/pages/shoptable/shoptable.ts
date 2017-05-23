@@ -498,9 +498,13 @@ export class ShopTablePage {
       var title,message="";
       console.log("order:"+JSON.stringify(order));
       if(order.orderStatus=="paid" ||order.orderStatus=="checked"){
-          title="주문["+order.orderNO+"]";
-          if(order.takeout!='0')          
-            title+="Takeout";
+          title="타킷주문["+order.orderNO+"]";
+          if(order.takeout=='1')          
+            title+="포장";
+          else if(order.takeout=='2'){
+            title+="배달"; 
+            message=order.deliveryAddress+"\n";
+          }
           order.orderListObj.menus.forEach((menu)=>{
               message+="-------------\n";
               message+=" "+menu.menuName+"("+menu.quantity+")\n"; 
@@ -610,8 +614,8 @@ export class ShopTablePage {
                     senderID: this.storageProvider.userSenderID                },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    //"gcmSandbox": "true",
-                    "gcmSandbox": "false",
+                    //"gcmSandbox": "true", development mode
+                    "gcmSandbox": "false",//production mode
                     "alert": "true",
                     "badge": "true",
                     "sound": "true"
@@ -1100,49 +1104,79 @@ export class ShopTablePage {
   configureStore(){
     console.log("click-configureStore(storeOpen):"+this.storageProvider.storeOpen);
     if(this.storageProvider.storeOpen===false){
-        this.openStore().then(()=>{
-            console.log("open shop successfully");
-            this.storeColor="primary";
-            this.storageProvider.storeOpen=true;
-        },(err)=>{
-            if(err=="NetworkFailure"){
-              let alert = this.alertController.create({
-                                title: '서버와 통신에 문제가 있습니다',
-                                subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                                buttons: ['OK']
-                            });
-              alert.present();
-            }else{
-              let alert = this.alertController.create({
-                                title: '샵을 오픈하는데 실패했습니다.',
-                                subTitle: '고객센터(0505-170-3636)에 문의바랍니다.',
-                                buttons: ['OK']
-                            });
-              alert.present();
-            }
-        });
+      let alert = this.alertController.create({
+                        title: '상점문을 여시겠습니까?',
+                        buttons: [{
+                            text:'아니오',
+                            handler:()=>{
+                              console.log("Disagree clicked");
+                            }
+                          },
+                          {
+                            text:'네',
+                            handler:()=>{
+                              this.openStore().then(()=>{
+                                  console.log("open shop successfully");
+                                  this.storeColor="primary";
+                                  this.storageProvider.storeOpen=true;
+                              },(err)=>{
+                                  if(err=="NetworkFailure"){
+                                    let alert = this.alertController.create({
+                                                      title: '서버와 통신에 문제가 있습니다',
+                                                      subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                                                      buttons: ['OK']
+                                                  });
+                                    alert.present();
+                                  }else{
+                                    let alert = this.alertController.create({
+                                                      title: '샵을 오픈하는데 실패했습니다.',
+                                                      subTitle: '고객센터(0505-170-3636)에 문의바랍니다.',
+                                                      buttons: ['OK']
+                                                  });
+                                    alert.present();
+                                  }
+                              });
+                            }}]
+                          });
+                          alert.present();
     }else{
-        this.closeStore().then(()=>{
-            console.log("close shop successfully");
-            this.storeColor="gray";
-            this.storageProvider.storeOpen=false;
-        },(err)=>{
-            if(err=="NetworkFailure"){
-              let alert = this.alertController.create({
-                                title: '서버와 통신에 문제가 있습니다',
-                                subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                                buttons: ['OK']
-                            });
-              alert.present();
-            }else{
-              let alert = this.alertController.create({
-                                title: '샵을 종료하는데 실패했습니다.',
-                                subTitle: '고객센터(0505-170-3636)에 문의바랍니다.',
-                                buttons: ['OK']
-                            });
-              alert.present();
-            }
-        });
+      let alert = this.alertController.create({
+                        title: '상점문을 닫으시겠습니까?',
+                        buttons: [{
+                            text:'아니오',
+                            handler:()=>{
+                              console.log("Disagree clicked");
+                            }
+                          },
+                          {
+                            text:'네',
+                            handler:()=>{
+                                this.closeStore().then(()=>{
+                                    console.log("close shop successfully");
+                                    this.storeColor="gray";
+                                    this.storageProvider.storeOpen=false;
+                                },(err)=>{
+                                    if(err=="NetworkFailure"){
+                                      let alert = this.alertController.create({
+                                                        title: '서버와 통신에 문제가 있습니다',
+                                                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                                                        buttons: ['OK']
+                                                    });
+                                      alert.present();
+                                    }else{
+                                      let alert = this.alertController.create({
+                                                        title: '샵을 종료하는데 실패했습니다.',
+                                                        subTitle: '고객센터(0505-170-3636)에 문의바랍니다.',
+                                                        buttons: ['OK']
+                                                    });
+                                      alert.present();
+                                    }
+                                });
+                            }
+                          }
+                        ]
+                    });
+                    alert.present();
     }
   }
 
