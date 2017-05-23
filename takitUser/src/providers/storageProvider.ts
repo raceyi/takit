@@ -73,6 +73,7 @@ export class StorageProvider{
     public loginViewCtrl;
 
     public cashInProgress=[];
+    public orderInProgress=[];
 
     /* 농협 계좌 이체가능 은행 */
     banklist=[  {name:"국민",value:"004"},
@@ -423,14 +424,54 @@ export class StorageProvider{
         this.tourMode=false;
     }
 
-    cashExistInProgress(cash,viewController){
+    orderExistInProgress(orderId){
+        console.log("orderInProgress.length:"+this.orderInProgress.length);    
+        for(var i=0;i<this.orderInProgress.length;i++){
+            console.log("orderInProgress["+i+"]:"+JSON.stringify(this.orderInProgress[i]));
+            if(this.orderInProgress[i]!=undefined && this.orderInProgress[i].order.orderId==orderId){
+                return true;
+            }
+        }    
+        return false;
+
+    }
+
+    orderAddInProgress(order,viewController){
+        this.orderInProgress.push({order:order,viewController:viewController});
+        /////////////////////////////////////////////
+        for(var i=0;i<this.orderInProgress.length;i++)
+            console.log("Add-orderInProgress["+i+"]:"+JSON.stringify(this.orderInProgress[i].order));
+    }
+
+    orderRemoveInProgress(orderId,viewController){
+        var idx=-1;
+        for(var i=0;i<this.orderInProgress.length;i++){
+            if(this.orderInProgress[i].order.orderId==orderId 
+                && this.orderInProgress[i].viewController==viewController){
+                    console.log("i:"+i);
+                    idx=i;
+                    break;
+                }
+        }
+        if(idx>=0){
+            console.log("call splice with "+idx);
+            this.orderInProgress.splice(idx,1);
+        }
+        /////////////////////////////////////////////    
+        for(var i=0;i<this.orderInProgress.length;i++)
+            console.log("Remove-orderInProgress["+i+"]:"+JSON.stringify(this.orderInProgress[i].order));
+    }
+
+    cashExistInProgress(cash){
         var cashStr;
         if(typeof cash !== 'string'){  
             cashStr=JSON.stringify(cash);
         }else
             cashStr=cash;
+        console.log("cashAddInProgress.length:"+this.cashAddInProgress.length);    
         for(var i=0;i<this.cashAddInProgress.length;i++){
-            if(this.cashAddInProgress[i].cashStr===cash){
+            console.log("cashAddInProgress["+i+"]:"+JSON.stringify(this.cashAddInProgress[i]));
+            if(this.cashAddInProgress[i]!=undefined && this.cashAddInProgress[i].cashStr==cashStr){
                 return true;
             }
         }    

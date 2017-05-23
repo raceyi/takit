@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import { Keyboard } from '@ionic-native/keyboard';
+import {CashPassword} from '../cash-password/cash-password';
 
 declare var cordova:any;
 
@@ -26,6 +27,11 @@ export class OrderPage {
 
   takeoutAvailable:boolean=false;
   takeout:boolean=false;
+
+  delivery:boolean=false;
+  deliveryAddress:string="";
+  here:boolean=true;
+
   hasOptions:boolean=false;
 
   quantity:number=1;
@@ -55,6 +61,11 @@ export class OrderPage {
         private platform:Platform,public storageProvider:StorageProvider,
         private ngZone:NgZone,private serverProvider:ServerProvider,private keyboard:Keyboard) {
       
+        //Just for testing
+        //this.storageProvider.shopInfo.freeDelivery="0";
+        //this.storageProvider.shopInfo.deliveryArea="세종대학교내 예)00관 101호";
+        ///////////////////////////////
+
       if(!navigator.language.startsWith("ko")){
           this.lang="en";
       }else{
@@ -139,6 +150,8 @@ export class OrderPage {
             });
        }
        */
+      // kalen's test 2017.05.17
+      /*
         this.keyboard.onKeyboardShow().subscribe((e)=>{
             console.log("keyboard height:"+e.keyboardHeight);
             this.keyboardHeight=e.keyboardHeight;
@@ -151,7 +164,7 @@ export class OrderPage {
                 this.orderPageRef.scrollTo(0,this.scrollHeight);
             }
         });
-
+        */
  }
 
 cashPasswordFocus(){
@@ -175,45 +188,96 @@ cashPasswordBlur(){
 }
   sendSaveOrder(cart,menuName){
       if(this.storageProvider.tourMode==false){
-       return new Promise((resolve, reject)=>{
              //check if cash and cashpassword exist             
              var takeout;
              if(this.takeout==true){
                  takeout=1;
+             }else if(this.delivery==true){
+                 takeout=2;
              }else
-                 takeout=0;
+                takeout=0;
              let receiptIssueVal;
               if(this.storageProvider.receiptIssue){
                     receiptIssueVal=1;
               }else{
                     receiptIssueVal=0;
               }
+              /*
               let body = JSON.stringify({paymethod:"cash",
                                         takitId:this.takitId,
                                         orderList:JSON.stringify(cart), 
                                         orderName:menuName+"("+this.quantity+")",
                                         amount:this.amount,
-                                        takeout: takeout,
+                                        takeout: takeout, // takeout:0(inStore) , 1(takeout), 2(delivery) 
                                         orderedTime:new Date().toISOString(),
                                         cashId: this.storageProvider.cashId,
-                                        password:this.cashPassword,
+                                        //password:this.cashPassword,
                                         receiptIssu:receiptIssueVal,
                                         receiptId:this.storageProvider.receiptId,
                                         receiptType:this.storageProvider.receiptType
-                                        });
+                                    });
+             */
+              let body = {              paymethod:"cash",
+                                        takitId:this.takitId,
+                                        orderList:JSON.stringify(cart), 
+                                        orderName:menuName+"("+this.quantity+")",
+                                        amount:this.amount,
+                                        takeout: takeout, // takeout:0(inStore) , 1(takeout), 2(delivery) 
+                                        deliveryAddress: this.deliveryAddress,
+                                        orderedTime:new Date().toISOString(),
+                                        cashId: this.storageProvider.cashId,
+                                        //password:this.cashPassword,
+                                        receiptIssu:receiptIssueVal,
+                                        receiptId:this.storageProvider.receiptId,
+                                        receiptType:this.storageProvider.receiptType
+                         };
               console.log("sendOrder:"+JSON.stringify(body));                          
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ this.storageProvider.serverAddress);
-
+              this.navController.push(CashPassword, {body:body,trigger:"order"});
+              this.orderInProgress=false;
+              this.cashPassword="";
+/*
              this.serverProvider.saveOrder(body).then((res)=>{    
                  resolve(res);
              },(err)=>{
                  reject(err);
-             });                 
-       });
+             });                
+  */            
       }
   }
+
+ changeTakeout(takeoutOption:number){
+     console.log("changeTakeout:"+takeoutOption);
+     console.log("here:"+this.here+"takeout:"+this.takeout+"delivery:"+this.delivery);
+     if(this.here==false && this.takeout==false && this.delivery==false){
+         //give user an alert. Please choose other one.
+         this.ngZone.run(()=>{
+             console.log("set here true");
+             this.here=true;
+         });
+         return;
+     }
+    if(takeoutOption==0){
+        if(this.here==true){ //here become true
+            this.takeout=false;
+            this.delivery=false;
+        }
+    }else if(takeoutOption==1){
+        if(this.takeout==true){
+            this.here=false;
+            this.delivery=false;
+        }
+    }else if(takeoutOption==2){
+        if(this.delivery==true){
+            this.here=false;
+            this.takeout=false;
+        }
+    }else{
+        console.log("changeTakeout: unknown value "+takeoutOption);
+    }
+ }
 
   sendOrder(){
     // check cash password
@@ -239,96 +303,8 @@ cashPasswordBlur(){
                             options: options,
                             price: this.amount});
            cart.total=this.amount;
-           this.sendSaveOrder(cart,menuName).then((res:any)=>{
-                 this.orderInProgress=false;
-                 this.cashPassword="";
-                 console.log(JSON.stringify(res)); 
-                 var result:string=res.result;
-                 if(result=="success"){
-                    this.storageProvider.order_in_progress_24hours=true;
-                    this.storageProvider.messageEmitter.emit(res.order);
-                    console.log("storageProvider.run_in_background: "+this.storageProvider.run_in_background);
-                    this.storageProvider.cashInfoUpdateEmitter.emit("all");
-                    if(this.storageProvider.run_in_background==false){
-                        //refresh cashAmount
-                        let confirm = this.alertController.create({
-                            title: '주문완료['+res.order.orderNO+']'+' 앱을 계속 실행하여 주문알림을 받으시겠습니까?',
-                            message: '앱이 중지되면 주문알림을 못받을수 있습니다.',
-                            buttons: [
-                            {
-                                text: '아니오',
-                                handler: () => {
-                                    console.log('Disagree clicked');
-                                    // report it to tabs page
-                                    this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti"); 
-                                    this.app.getRootNav().pop();
-                                    this.storageProvider.shopTabRef.select(3);
-                                    return;
-                                }
-                            },
-                            {
-                                text: '네',
-                                handler: () => {
-                                    this.storageProvider.tabMessageEmitter.emit("wakeupNoti");
-                                    this.app.getRootNav().pop();
-                                    this.storageProvider.shopTabRef.select(3);
-                                    return;
-                                }
-                            }
-                            ]
-                        });
-                        confirm.present();
-                    }else{
-                        console.log("give alert on order success");
-                        let alert = this.alertController.create({
-                                title: '주문에 성공하였습니다.'+'주문번호['+res.order.orderNO+']',
-                                subTitle: '[주의]앱을 종료하시면 주문알림을 못받을수 있습니다.' ,
-                                buttons: ['OK']
-                        });
-                        alert.present().then(()=>{
-                            this.app.getRootNav().pop();
-                            this.storageProvider.shopTabRef.select(3);
-                        });  
-                    }
-                 }else{
-                    let alert = this.alertController.create({
-                        title: '주문에 실패하였습니다.',
-                        subTitle: '다시 주문해주시기 바랍니다.',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-                 }
-           },(error)=>{
-                 this.orderInProgress=false;
-                 this.cashPassword="";
-                 console.log("saveOrder err "+error);
-                 if(error=="NetworkFailure"){
-                    let alert = this.alertController.create({
-                            title: '서버와 통신에 문제가 있습니다',
-                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                            buttons: ['OK']
-                        });
-                        alert.present();
-                 }else if(error=="shop's off"){
-                    let alert = this.alertController.create({
-                            title: '상점이 문을 열지 않았습니다.',
-                            buttons: ['OK']
-                        });
-                        alert.present();
-                 }else if(error=="invalid cash password"){
-                    let alert = this.alertController.create({
-                            title: '비밀번호가 일치하지 않습니다.',
-                            buttons: ['OK']
-                        });
-                        alert.present();
-                 }else{
-                    let alert = this.alertController.create({
-                            title: '주문에 실패했습니다.',
-                            buttons: ['OK']
-                        });
-                        alert.present();                     
-                 }
-           })        
+           
+           this.sendSaveOrder(cart,menuName);         
   }  
 
  checkOptionValidity(){
@@ -397,6 +373,7 @@ cashPasswordBlur(){
             this.orderInProgress=false;
             return;               
         }
+        /*
         if(this.cashPassword.length<6){
             let alert = this.alertController.create({
                 subTitle: '캐쉬비밀번호(6자리)를 입력해 주시기 바랍니다.',
@@ -406,10 +383,22 @@ cashPasswordBlur(){
             this.orderInProgress=false;
             return;               
         }
-
+        */
         if(this.quantity==undefined){
             let alert = this.alertController.create({
                 subTitle: '수량을 입력해주시기 바랍니다',
+                buttons: ['OK']
+            });
+            console.log("hum...");
+            alert.present().then(()=>{
+                console.log("alert done");
+            });
+            this.orderInProgress=false;
+            return;
+        }
+        if(this.delivery==true && this.deliveryAddress.trim().length==0){
+            let alert = this.alertController.create({
+                subTitle: '배달주소를 입력해주시기 바랍니다',
                 buttons: ['OK']
             });
             console.log("hum...");

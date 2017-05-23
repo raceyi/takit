@@ -19,6 +19,7 @@
    </ion-col>
  </ion-row>
 
+<ion-list>
 <div class="box">
     <ion-item [hidden]="quantityInput(true)" class="orderSelect">
       <ion-label class="orderQuantity"> {{'quantity'|translate}}  </ion-label>
@@ -89,11 +90,38 @@
      </div>
   </div>
 
-  <div class="box" #takeoutDiv [hidden]="!takeoutAvailable">
-    <ion-item class="orderToggle">
+  <div class="box" #takeoutDiv [hidden]="!(takeoutAvailable 
+                                           && (storageProvider.shopInfo.freeDelivery==null || storageProvider.shopInfo.freeDelivery==undefined 
+                                               || storageProvider.shopInfo.freeDelivery > amount))">
+   <ion-row>  
+    <ion-item class="orderToggle" ion-col>
       <ion-label class="orderOption">{{'takeout'|translate}}</ion-label>
-      <ion-toggle class="onOff" [(ngModel)]="takeout"></ion-toggle>
+      <ion-toggle class="onOff" [(ngModel)]="takeout" (ionChange)="changeTakeout(1)"></ion-toggle>
     </ion-item>
+   </ion-row>
+  </div>
+
+  <div class="box" #takeoutDiv [hidden]="!(takeoutAvailable && storageProvider.shopInfo.freeDelivery<=amount
+                                           && (storageProvider.shopInfo.freeDelivery!=null  && storageProvider.shopInfo.freeDelivery!=undefined))">
+   <ion-row style="padding:0px !important;border:1px;"> 
+    <ion-item class="orderToggle" ion-col width-50>
+      <ion-label class="pickupLabel">{{'takeout'|translate}}</ion-label>
+      <ion-toggle class="onOff" [(ngModel)]="takeout" (ionChange)="changeTakeout(1)"></ion-toggle>
+    </ion-item>
+    <ion-item class="orderToggle" ion-col width-50>
+      <ion-label class="pickupLabel">{{'delivery'|translate}}</ion-label>
+      <ion-toggle class="onOff" [(ngModel)]="delivery" (ionChange)="changeTakeout(2)"></ion-toggle>
+    </ion-item>
+   </ion-row>
+   <ion-row [hidden]="!delivery">
+    <ion-col padding width-25> 배달지역 </ion-col>
+    <ion-col padding width-75>{{storageProvider.shopInfo.deliveryArea}}</ion-col> 
+   </ion-row>
+   <ion-row [hidden]="!delivery">    
+     <ion-item>
+     <ion-textarea maxlength="60" type="text" [(ngModel)]="deliveryAddress" placeholder="배달 주소를 입력해 주세요." ></ion-textarea>
+     </ion-item>
+   </ion-row>
   </div>
 
 <div id = "payDiv">
@@ -101,7 +129,7 @@
     <ion-row class="textrow">
       <ion-col width-33 class="center"> {{'orderAmount'|translate}} </ion-col>
       <ion-col width-33 class="center"> {{'discountAmount'|translate}}({{storageProvider.shopInfo.discountRate}})</ion-col>
-      <ion-col width-33 class="center"> {{'totalAmount'|translate}} 최종결제금액</ion-col>
+      <ion-col width-33 class="center"> {{'totalAmount'|translate}}</ion-col>
     </ion-row>
 
     <ion-row class="textrow">
@@ -115,6 +143,7 @@
       <ion-col class="cash">{{storageProvider.cashAmount}}</ion-col>
     </ion-row>
 
+<!--
     <ion-row class="textrow">
       <ion-col class="password">{{'cashPincode'|translate}}</ion-col>
       <ion-col class="password0">
@@ -123,13 +152,14 @@
         </ion-item>
       </ion-col>
     </ion-row>
-
-  </div>    
+ -->   
+  </div>
+  <!--   
     <ion-segment [hidden]="iOSOrderButtonHide">
     <ion-segment-button value="shopcart" (click)="shopcart()">장바구니 담기</ion-segment-button>
     <ion-segment-button value="order" [disabled]="storageProvider.tourMode==true" (click)="order()">주문결제하기</ion-segment-button>
     </ion-segment>
-
+  -->
     <ion-row [hidden]="!storageProvider.receiptIssue">
       <ion-col class="cash">현금영수증 발행 </ion-col>
       <ion-col class="cash">{{receiptIdMask}}</ion-col>
@@ -173,7 +203,7 @@
   </div>
 
 </div>
-
+</ion-list>
 </ion-content>
 <ion-footer class="orderPage" [hidden]="!iOSOrderButtonHide">
     <ion-segment [hidden]="!iOSOrderButtonHide">

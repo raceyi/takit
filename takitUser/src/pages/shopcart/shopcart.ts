@@ -5,6 +5,8 @@ import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {ServerProvider} from '../../providers/serverProvider';
 import { Keyboard } from '@ionic-native/keyboard';
+import {CashPassword} from '../cash-password/cash-password';
+
 declare var cordova:any;
 
 @Component({
@@ -24,6 +26,13 @@ export class ShopCartPage{
     cart:any={};
     takeoutAvailable:boolean=false;
     takeout:boolean=false;
+
+    delivery:boolean=false;
+    deliveryAddress:string="";
+    here:boolean=true;
+
+    hasOptions:boolean=false;
+
     cashPassword="";
     receiptIdMask:string;
 
@@ -33,11 +42,18 @@ export class ShopCartPage{
 
     orderInProgress=false;
 
+
      constructor(private app:App,private navController: NavController,private http:Http,
             private navParams: NavParams,public storageProvider:StorageProvider,
             private alertController:AlertController,private serverProvider:ServerProvider,
             private ngZone:NgZone,private keyboard:Keyboard){
 	      console.log("ShopCartPage constructor");
+
+        //Just for testing
+        //this.storageProvider.shopInfo.freeDelivery="0";
+        //this.storageProvider.shopInfo.deliveryArea="세종대학교내 예)00관 101호";
+        ///////////////////////////////
+
         this.shopname=this.storageProvider.currentShopname();
         this.cart=this.storageProvider.cart;
 
@@ -180,6 +196,7 @@ export class ShopCartPage{
                     this.orderInProgress=false;
                     return;               
                 }
+                /*
                 if(this.cashPassword.length<6){
                     let alert = this.alertController.create({
                         subTitle: '캐쉬비밀번호(6자리)를 입력해 주시기 바랍니다.',
@@ -188,7 +205,7 @@ export class ShopCartPage{
                     alert.present();
                     this.orderInProgress=false;
                     return;               
-                }         
+                } */        
                 if(this.storageProvider.cashAmount<this.amount){
                     let alert = this.alertController.create({
                         subTitle: '캐쉬잔액이 부족합니다.',
@@ -204,29 +221,36 @@ export class ShopCartPage{
                     var takeout;
                     if(this.takeout==true){
                         takeout=1;
+                    }else if(this.delivery==true){
+                        takeout=2;
                     }else
                         takeout=0;
+
                     let receiptIssueVal;
                     if(this.storageProvider.receiptIssue){
                             receiptIssueVal=1;
                     }else{
                             receiptIssueVal=0;
                     }    
-                    let body = JSON.stringify({paymethod:"cash",
+                    let body = {paymethod:"cash",
                                                 takitId:this.storageProvider.takitId,
                                                 orderList:JSON.stringify(this.cart), 
                                                 orderName:this.cart.menus[0].menuName+"이외"+ this.cart.menus.length+"종",
                                                 amount:this.amount,
-                                                takeout: takeout,
+                                                takeout: takeout, // takeout:0(inStore) , 1(takeout), 2(delivery) 
+                                                deliveryAddress: this.deliveryAddress,
                                                 orderedTime:new Date().toISOString(),
                                                 cashId:this.storageProvider.cashId,
-                                                password:this.cashPassword,
+                                                //password:this.cashPassword,
                                                 receiptIssu:receiptIssueVal,
                                                 receiptId:this.storageProvider.receiptId,
-                                                receiptType:this.storageProvider.receiptType});
+                                                receiptType:this.storageProvider.receiptType};
 
                     console.log("order:"+JSON.stringify(body));
-
+                    this.navController.push(CashPassword, {body:body,trigger:"cart"});
+                    this.orderInProgress=false;
+                    this.cashPassword="";
+/*
                     let headers = new Headers();
                     headers.append('Content-Type', 'application/json');
                     console.log("server:"+ this.storageProvider.serverAddress);
@@ -327,7 +351,7 @@ export class ShopCartPage{
                                 });
                                 alert.present();                     
                         }
-                    });
+                    });*/
             }
         }
      }
@@ -377,5 +401,36 @@ export class ShopCartPage{
             this.orderPageRef.scrollTo(0, dimensions.contentHeight);
          }
     }
+
+changeTakeout(takeoutOption:number){
+     console.log("changeTakeout:"+takeoutOption);
+     console.log("here:"+this.here+"takeout:"+this.takeout+"delivery:"+this.delivery);
+     if(this.here==false && this.takeout==false && this.delivery==false){
+         //give user an alert. Please choose other one.
+         this.ngZone.run(()=>{
+             console.log("set here true");
+             this.here=true;
+         });
+         return;
+     }
+    if(takeoutOption==0){
+        if(this.here==true){ //here become true
+            this.takeout=false;
+            this.delivery=false;
+        }
+    }else if(takeoutOption==1){
+        if(this.takeout==true){
+            this.here=false;
+            this.delivery=false;
+        }
+    }else if(takeoutOption==2){
+        if(this.delivery==true){
+            this.here=false;
+            this.takeout=false;
+        }
+    }else{
+        console.log("changeTakeout: unknown value "+takeoutOption);
+    }
+ }
 
 }

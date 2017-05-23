@@ -40,7 +40,8 @@ import { ConfigureCashTutorialPage } from '../pages/configure-cash-tutorial/conf
 import { DepositCashTutorialPage } from '../pages/deposit-cash-tutorial/deposit-cash-tutorial';
 import { OrderTutorialPage } from '../pages/order-tutorial/order-tutorial';
 import { NotifierTutorialPage } from '../pages/notifier-tutorial/notifier-tutorial';
-
+import { OrderDonePage } from '../pages/order-done/order-done';
+import {CashPassword} from '../pages/cash-password/cash-password';
 import {TranslateModule, TranslateLoader,TranslateStaticLoader} from 'ng2-translate/ng2-translate';
 import {Http,Headers} from '@angular/http';
 
@@ -91,10 +92,12 @@ import { Keyboard } from '@ionic-native/keyboard';
     ConfigureCashTutorialPage,
     DepositCashTutorialPage,
     OrderTutorialPage,
-    NotifierTutorialPage
+    NotifierTutorialPage,
+    OrderDonePage,
+    CashPassword
   ],
   imports: [
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp,{mode:'ios'}),
     IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,
@@ -133,7 +136,9 @@ import { Keyboard } from '@ionic-native/keyboard';
     ConfigureCashTutorialPage,
     DepositCashTutorialPage,
     OrderTutorialPage,
-    NotifierTutorialPage  
+    NotifierTutorialPage,
+    OrderDonePage,
+    CashPassword  
   ],
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},

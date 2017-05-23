@@ -7,6 +7,7 @@ import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {ErrorPage} from '../error/error';
 import {LoginPage} from '../login/login';
 import {TutorialPage} from '../tutorial/tutorial';
+import { OrderDonePage } from '../order-done/order-done';
 
 import {Platform,IonicApp,MenuController,Tabs} from 'ionic-angular';
 import {NavParams,ViewController,App,NavController,AlertController,ModalController} from 'ionic-angular';
@@ -175,7 +176,11 @@ export class TabsPage {
         this.serverProvider.post(this.storageProvider.serverAddress+"/getDiscountRate",body).then((res:any)=>{
             console.log("getDiscountRate-res:"+JSON.stringify(res));
             if(res.result=="success"){
-                console.log("tab discountRate:"+shop.discountRate);
+                console.log("res.discountRate:"+res.discountRate);
+                this.ngZone.run(()=>{
+                    shop.discountRate=res.discountRate;    
+                });
+                console.log("tab takitId:"+ shop.takitId +"discountRate:"+shop.discountRate);
                 //console.log("shopinfo:"+JSON.stringify(this.storageProvider.shoplist));
             }else{
                 console.log("couldn't get discount rate of "+shop.takitId+" due to unknwn reason");
@@ -635,6 +640,8 @@ export class TabsPage {
                     }else{ //object
                         this.storageProvider.messageEmitter.emit(additionalData.custom);
                     }
+                    ////////////////////////////////////////////////////////////////
+                    /*
                     console.log("show alert");
                     let alert = this.alertController.create({
                         title: data.title,
@@ -642,6 +649,20 @@ export class TabsPage {
                         buttons: ['OK']
                     });
                     alert.present();
+                    */
+                    if((!this.storageProvider.isAndroid && !this.storageProvider.backgroundMode) //ios resume event comes before notification.
+                        ||(this.storageProvider.isAndroid && !this.storageProvider.orderExistInProgress(additionalData.custom))){ // android resume event comes late.
+                        let orderDoneModal;
+                        if(typeof additionalData.custom === 'string'){ 
+                            orderDoneModal= this.modalCtrl.create(OrderDonePage, { title:data.title,message:data.message,custom: JSON.parse(additionalData.custom) });
+                        }else{ // object 
+                            console.log("obj comes");
+                            orderDoneModal= this.modalCtrl.create(OrderDonePage, {  title:data.title,message:data.message,custom: additionalData.custom });
+                        }
+                        orderDoneModal.present();
+                    }
+                    
+                    //////////////////////////////////////////////////////////////
                     // check if order in progress exists or not
                     this.serverProvider.orderNoti().then((orders:any)=>{
                           if(orders==undefined || orders==null || orders.length==0){
@@ -666,7 +687,7 @@ export class TabsPage {
                 }else if(additionalData.GCMType==="cash"){
                   console.log("cash-additionalData.custom:"+additionalData.custom);
                   if((!this.storageProvider.isAndroid && !this.storageProvider.backgroundMode) //ios resume event comes before notification.
-                        ||this.storageProvider.isAndroid){ // android resume event comes late.
+                        ||(this.storageProvider.isAndroid && !this.storageProvider.cashExistInProgress(additionalData.custom))){ // android resume event comes late.
                         let cashConfirmModal;
                         if(typeof additionalData.custom === 'string'){ 
                             cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: JSON.parse(additionalData.custom) });
