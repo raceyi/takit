@@ -25,7 +25,7 @@ export class MenuModalPage {
     menu;
     flags = {"add":false, "options":true, "imageUpload":true, "segment": false};
     imageURI;
-    menuSelected:number=1;
+    menuSelected=1;
 
 
   constructor(public params:NavParams, public viewCtrl: ViewController, 

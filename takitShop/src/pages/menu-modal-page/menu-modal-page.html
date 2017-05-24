@@ -21,8 +21,8 @@
 <ion-content class="menuContent" >
     <!--<form #form="ngForm" (ngSubmit)="menuSubmit()" novalidate>-->
     <ion-segment [(ngModel)]="menuSelected">
-            <ion-segment-button [value]="1" (ionSelect)="segmentChange()">한글</ion-segment-button>
-            <ion-segment-button [value]="2" (ionSelect)="segmentChange()">영문</ion-segment-button>
+            <ion-segment-button [value]="1" (click)="segmentChange()">한글</ion-segment-button>
+            <ion-segment-button [value]="2" (click)="segmentChange()">영문</ion-segment-button>
     </ion-segment>        
 
     <ion-item-divider>기본 정보</ion-item-divider>
