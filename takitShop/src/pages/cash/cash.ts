@@ -17,7 +17,7 @@ declare var moment:any;
 export class CashPage {
     transactions=[];
     infiniteScroll;
-    withdrawAmount;
+   // withdrawAmount;
     bankAccountHidden=false;
     withrawFree;
     withrawTrAtATime=10;
@@ -285,7 +285,7 @@ export class CashPage {
 
   withdrawCash(){
      console.log("withdrawCash");
-           if(this.withdrawAmount==undefined || this.withdrawAmount<=0){
+           if(this.storageProvider.cashAvailable==undefined || this.storageProvider.cashAvailable<=0){
             let alert = this.alertController.create({
                 title: '인출 금액은 0보다 커야 합니다.',
                 buttons: ['OK']
