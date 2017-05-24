@@ -36,7 +36,7 @@ export class StorageProvider{
     public bankName;
     public bankCode;
     public depositor;
-    public isTestServer;
+    public isTestServer:boolean;
     public printer;
 
     public serverAddress:string=this.configProvider.getServerAddress();
@@ -60,7 +60,10 @@ export class StorageProvider{
     constructor(private platform:Platform,private storage:Storage,private configProvider:ConfigProvider){
         console.log("StorageProvider constructor");  
         if(this.serverAddress.endsWith('8000')){
+            console.log("test server 8000");
             this.isTestServer = true;     
+        }else{
+            this.isTestServer = false;
         }
         this.storage.get("printOn").then((value:string)=>{
             console.log("printOn is "+value+" in storage");

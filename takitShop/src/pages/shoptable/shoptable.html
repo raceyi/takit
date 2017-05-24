@@ -4,8 +4,11 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-row>
-       <ion-col width-20 class="title">
+       <ion-col [hidden]="storageProvider.isTestServer" width-20 class="title">
         타킷
+       </ion-col>
+       <ion-col [hidden]="!storageProvider.isTestServer" width-20 class="title">
+        검증 
        </ion-col>
        <ion-col width-20>
             <ion-icon [color]="storeColor" name="bulb" (click)="configureStore()"></ion-icon>
