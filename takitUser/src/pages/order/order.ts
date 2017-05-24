@@ -88,6 +88,11 @@ export class OrderPage {
       this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
 
       this.amount=this.price-this.discount;
+      if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+            this.delivery=false;
+            this.takeout=false;
+            this.here=true;
+      }
       console.log(" ["+this.menu.hasOwnProperty("takeout")+"][ "+(this.menu.takeout!=null) +"] ["+ (this.menu.takeout!=false)+"]");
       if(this.menu.hasOwnProperty("takeout") && (this.menu.takeout!=null) && (this.menu.takeout!=false)){ // humm... please add takeout field into all menus...
          this.takeoutAvailable=true;
@@ -534,6 +539,11 @@ cashPasswordBlur(){
           this.price=this.menu.price*quantity;
           this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
           this.amount=this.price-this.discount;
+          if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+            this.delivery=false;
+            this.takeout=false;
+            this.here=true;
+         }
       }
   }
 
@@ -556,6 +566,11 @@ cashPasswordBlur(){
       }
       this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
       this.amount=this.price-this.discount;
+      if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+            this.delivery=false;
+            this.takeout=false;
+            this.here=true;
+      }
   }
 
     choiceChange(option,idx,flag){
@@ -607,6 +622,12 @@ cashPasswordBlur(){
       }
       this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
       this.amount=this.price-this.discount;
+      if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+            this.delivery=false;
+            this.takeout=false;
+            this.here=true;
+      }
+
   }
 
   quantityInput(flag){
@@ -650,6 +671,11 @@ cashPasswordBlur(){
           this.price=unitPrice*this.quantity;
           this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
           this.amount=this.price-this.discount;
+        if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+                this.delivery=false;
+                this.takeout=false;
+                this.here=true;
+        }
     }      
   }
 

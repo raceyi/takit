@@ -3,7 +3,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-row  *ngIf="!isAndroid">
+    <ion-row>
        <ion-col width-20 class="title">
         타킷
        </ion-col>
@@ -20,6 +20,7 @@
             <ion-icon name="refresh" (click)="update()"></ion-icon>
       </ion-col>
     </ion-row>
+    <!--
     <ion-row *ngIf="isAndroid">
     <ion-title> 타킷 </ion-title>
     <button ion-button class="buttonsInHeader"  (click)="configureStore()">
@@ -35,6 +36,7 @@
       <ion-icon name="refresh"></ion-icon>
     </button>
     </ion-row>
+    -->
   </ion-navbar>
 </ion-header>
 

@@ -68,6 +68,11 @@ export class ShopCartPage{
             this.price=this.cart.total;
             this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
             this.amount=this.price-this.amount;
+            if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+                this.delivery=false;
+                this.takeout=false;
+                this.here=true;
+            }
         }
         /*
         if(!this.storageProvider.isAndroid && !this.storageProvider.keyboardHandlerRegistered){ //ios
@@ -136,6 +141,11 @@ export class ShopCartPage{
         this.price=this.cart.total;
         this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
         this.amount=this.price-this.discount;
+        if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+            this.delivery=false;
+            this.takeout=false;
+            this.here=true;
+        }
         this.checkTakeoutAvailable();
         //console.log("takeoutAvailable:"+this.takeoutAvailable);
         if(this.takeoutAvailable==false){
@@ -379,6 +389,11 @@ export class ShopCartPage{
           this.price=this.cart.total;
           this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
           this.amount=this.price-this.discount;
+          if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+                this.delivery=false;
+                this.takeout=false;
+                this.here=true;
+          }
       });
       this.checkTakeoutAvailable();
     }
@@ -390,6 +405,11 @@ export class ShopCartPage{
           this.price=this.cart.total;
           this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
           this.amount=this.price-this.discount;
+          if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+                this.delivery=false;
+                this.takeout=false;
+                this.here=true;
+          }
       });
     }
 
