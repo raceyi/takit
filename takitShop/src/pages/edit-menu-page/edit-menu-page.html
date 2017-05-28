@@ -21,7 +21,7 @@
     <ion-row *ngFor="let categories of categoryRows">
         <ion-col width-33  class="segmentButton" *ngFor="let category of categories" style="max-width: 33.3333%;">
             <ion-segment #categorySegment [(ngModel)]="categorySelected">
-                    <ion-segment-button [value]="category.sequence" (ionSelect)="categoryChange(category.categoryNO,category.sequence)">
+                    <ion-segment-button [value]="category.sequence" (click)="categoryChange(category.categoryNO,category.sequence)">
                     {{category.categoryName}}
                     </ion-segment-button>
             </ion-segment>        
@@ -135,8 +135,8 @@
                             <p *ngIf="menu.takeout==2" class="MenuText">배달가능</p>
                             <p *ngIf="menu.explanation!==null" class="MenuText">{{menu.explanation}}</p>
                             <p *ngIf="menu.explanationEn!==null" class="MenuText">{{menu.explanationEn}}</p>
-                            <p class="MenuText" *ngFor="let option of menu.options">{{option.name}}:{{option.price}}</p>
-                            <p class="MenuText" *ngFor="let optionEn of menu.optionsEn">{{optionEn.name}}:{{optionEn.price}}</p>
+                            <!--<p class="MenuText" *ngFor="let option of menu.options">{{option.name}}:{{option.price}}</p>-->
+                            <!--<p class="MenuText" *ngFor="let optionEn of menu.optionsEn">{{optionEn.name}}:{{optionEn.price}}</p>-->
                         <!--<p class="MenuText">{{menu.description}}</p>-->           
                         </ion-item>
                     </ion-col>

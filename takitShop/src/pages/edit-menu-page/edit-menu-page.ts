@@ -126,7 +126,7 @@ export class EditMenuPage {
         let menus=[];
         let options;
 
-        console.log("[configureShopInfo]this.shop:"+this.shop);
+        console.log("[configureShopInfo]this.shop:");
             this.shop.menus.forEach(menu=>{
                 //console.log("menu.no:"+menu.menuNO+" index:"+menu.menuNO.indexOf(';'));
                 let no:string=menu.menuNO.substr(menu.menuNO.indexOf(';')+1);

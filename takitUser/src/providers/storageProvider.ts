@@ -42,6 +42,7 @@ export class StorageProvider{
     public isAndroid;
     public cashId="";
     public cashAmount:number;
+    //public cashConfirmInfo={depositTime:null,amount:null,bankCode:null,depositMemo:null};
 
     public backgroundMode=false; // true in background mode
 

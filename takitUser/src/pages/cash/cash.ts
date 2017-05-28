@@ -61,6 +61,8 @@ export class CashPage {
   manualCheckHidden=true;
 
   lang;
+  
+  cashInEnable = true;
 
   constructor(private app:App,private platform:Platform, private navController: NavController
         ,private navParams: NavParams,public http:Http ,private alertController:AlertController
@@ -244,6 +246,9 @@ ionViewDidEnter() {
                     );
                     return;
       }
+
+
+
       let body = JSON.stringify({});
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashInstantly",body).then((res:any)=>{
           console.log("checkCashInstantly res:"+JSON.stringify(res));
@@ -316,6 +321,16 @@ ionViewDidEnter() {
   }
 
   cashInComplete(){
+      if(!this.cashInEnable){
+        this.depositAmount=undefined;
+        this.storageProvider.depositBank =undefined;
+        this.depositMemo==undefined;
+        return;  
+      }else{
+          this.cashInEnable = false;
+      }
+
+      console.log("cashInEnable falg:"+this.cashInEnable);
       console.log("cashInComplete");
       if(this.depositAmount==undefined){
                     this.translateService.get('inputDepositAmount').subscribe(
@@ -325,6 +340,7 @@ ionViewDidEnter() {
                                 buttons: ['OK']
                             });
                             alert.present();
+                            this.cashInEnable = true;
                         }
                     );
           return;
@@ -338,6 +354,7 @@ ionViewDidEnter() {
                                 buttons: ['OK']
                             });
                             alert.present();
+                            this.cashInEnable = true;
                         }
                     );
             return;
@@ -353,110 +370,244 @@ ionViewDidEnter() {
      // console.log("this.transferHour:"+this.transferHour);
       
       console.log("depositDate:"+transferHour.toISOString());
+      
+      body = {
+                depositTime:transferHour.toISOString(),
+                amount: this.depositAmount,
+                bankCode: this.storageProvider.depositBank,
+                depositMemo:this.depositMemo,
+                cashId:this.storageProvider.cashId
+            };
 
-      body = JSON.stringify({
-                            depositTime:transferHour.toISOString(),
-                            amount: this.depositAmount,
-                            bankCode: this.storageProvider.depositBank,
-                            depositMemo:this.depositMemo,
-                            cashId:this.storageProvider.cashId
-                            });
-     console.log("body:"+JSON.stringify(body));                           
+    console.log(this.storageProvider.cashConfirmInfo);
 
-      this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashUserself",body).then((res:any)=>{
-          console.log("res:"+JSON.stringify(res));
-                   
-          if(res.result=="success"){
-                  this.manualCheckHidden=true;                   
-                  let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
-                  iOSAlertPage.present();
-          }else if(res.result=="failure" && res.error=="gcm:400"){
-                    this.manualCheckHidden=true; 
-                    this.translateService.get('confirmDepositInHistory').subscribe(
-                        confirmDepositInHistory => {
-                            let alert = this.alertController.create({
-                                title: confirmDepositInHistory,
-                                buttons: ['OK']
-                            });
-                            alert.present();
-                        }
-                    );
-          }else if(res.result=="failure" && res.error=="incorrect depositor"){
-                    this.translateService.get('checkDepositInput').subscribe( checkDepositInput=>{
-                    this.translateService.get('LimitedThreeTrials').subscribe(
-                                LimitedThreeTrials => {
-                                    let alert = this.alertController.create({
-                                        title: checkDepositInput,
-                                        subTitle:LimitedThreeTrials,
-                                        buttons: ['OK']
-                                    });
-                                    alert.present();
-                                });
-                });
-          }else if(res.result=="failure" && res.error=="no service time"){
-                this.translateService.get('serviceUnavailableInspectionPeriod').subscribe( serviceUnavailableInspectionPeriod=>{
-                    this.translateService.get('tryAgainAfterLimit').subscribe(
-                                tryAgainAfterLimit => {
-                                    let alert = this.alertController.create({
-                                        title: serviceUnavailableInspectionPeriod,
-                                        subTitle:tryAgainAfterLimit,
-                                        buttons: ['OK']
-                                    });
-                                    alert.present();
-                                });
-                });
-          }else{
-              let alert;
-              if(res.error=="count excess"){
-                    this.manualCheckHidden=true; 
-                    alert = this.alertController.create({
-                        title: '3회 연속 오류로 수동확인이 불가능합니다.',
-                        subTitle: '고객센터(help@takit.biz,0505-170-3636)에 연락하여 주시기바랍니다.',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-              }else{
-                this.translateService.get('failedRequest').subscribe( failedRequest=>{
-                    this.translateService.get('TryItAgainLater').subscribe(
-                                TryItAgainLater => {
-                                    let alert = this.alertController.create({
-                                        title: failedRequest,
-                                        subTitle:TryItAgainLater,
-                                        buttons: ['OK']
-                                    });
-                                    alert.present();
-                                });
-                });
-              }
-          }
-      },(err)=>{
-                if(err=="NetworkFailure"){
-                    this.translateService.get('NetworkProblem').subscribe(
-                        NetworkProblem => {
-                                this.translateService.get('checkNetwork').subscribe(
-                                checkNetwork => {
-                                    let alert = this.alertCtrl.create({
-                                        title: NetworkProblem,
-                                        subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
-                                        buttons: ['OK']
-                                    });
-                                    alert.present();
-                                });
-                    });
-                }else{
-                    this.translateService.get('failedRequest').subscribe( failedRequest=>{
-                    this.translateService.get('TryItAgainLater').subscribe(
-                                TryItAgainLater => {
-                                    let alert = this.alertController.create({
-                                        title: failedRequest,
-                                        subTitle:TryItAgainLater,
-                                        buttons: ['OK']
-                                    });
-                                    alert.present();
-                                });
-                    });
-                }
-      });  
+    this.depositAmount=undefined;
+    this.storageProvider.depositBank =undefined;
+    this.depositMemo==undefined;
+
+    //   if(this.storageProvider.cashConfirmInfo.depositTime === body.depositTime &&
+    //      this.storageProvider.cashConfirmInfo.amount === body.amount &&
+    //      this.storageProvider.cashConfirmInfo.bankCode === body.bankCode &&
+    //      this.storageProvider.cashConfirmInfo.depositMemo === body.depositMemo){
+    //         let alert = this.alertController.create({
+    //             title: "동일 내용으로 입금 확인한 기록이 있습니다. 다시 확인 하시게습니까?",
+    //             buttons: [{text:"아니오",
+    //                         handler:()=>{
+    //                             return;
+    //                         }},
+    //                         {text:"예",
+    //                           handler:()=>{
+                                this.storageProvider.cashConfirmInfo = body;
+                                console.log("body:"+JSON.stringify(body));                           
+
+                                this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashUserself",JSON.stringify(body)).then((res:any)=>{
+                                    console.log("res:"+JSON.stringify(res));
+                                            
+                                    if(res.result=="success"){
+                                            this.manualCheckHidden=true;                   
+                                            let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
+                                            iOSAlertPage.present();
+                                            this.cashInEnable = true;
+                                    }else if(res.result=="failure" && res.error=="gcm:400"){
+                                                this.manualCheckHidden=true; 
+                                                this.translateService.get('confirmDepositInHistory').subscribe(
+                                                    confirmDepositInHistory => {
+                                                        let alert = this.alertController.create({
+                                                            title: confirmDepositInHistory,
+                                                            buttons: ['OK']
+                                                        });
+                                                        alert.present();
+                                                        this.cashInEnable = true;
+                                                    }
+                                                );
+                                    }else if(res.result=="failure" && res.error=="incorrect depositor"){
+                                                this.translateService.get('checkDepositInput').subscribe( checkDepositInput=>{
+                                                this.translateService.get('LimitedThreeTrials').subscribe(
+                                                            LimitedThreeTrials => {
+                                                                let alert = this.alertController.create({
+                                                                    title: checkDepositInput,
+                                                                    subTitle:LimitedThreeTrials,
+                                                                    buttons: ['OK']
+                                                                });
+                                                                alert.present();
+                                                                this.cashInEnable = true;
+                                                            });
+                                            });
+                                    }else if(res.result=="failure" && res.error=="no service time"){
+                                            this.translateService.get('serviceUnavailableInspectionPeriod').subscribe( serviceUnavailableInspectionPeriod=>{
+                                                this.translateService.get('tryAgainAfterLimit').subscribe(
+                                                            tryAgainAfterLimit => {
+                                                                let alert = this.alertController.create({
+                                                                    title: serviceUnavailableInspectionPeriod,
+                                                                    subTitle:tryAgainAfterLimit,
+                                                                    buttons: ['OK']
+                                                                });
+                                                                alert.present();
+                                                                this.cashInEnable = true;
+                                                            });
+                                            });
+                                    }else{
+                                        let alert;
+                                        if(res.error=="count excess"){
+                                                this.manualCheckHidden=true; 
+                                                alert = this.alertController.create({
+                                                    title: '3회 연속 오류로 수동확인이 불가능합니다.',
+                                                    subTitle: '고객센터(help@takit.biz,0505-170-3636)에 연락하여 주시기바랍니다.',
+                                                    buttons: ['OK']
+                                                });
+                                                alert.present();
+                                                this.cashInEnable = true;
+                                        }else{
+                                            this.translateService.get('failedRequest').subscribe( failedRequest=>{
+                                                this.translateService.get('TryItAgainLater').subscribe(
+                                                            TryItAgainLater => {
+                                                                let alert = this.alertController.create({
+                                                                    title: failedRequest,
+                                                                    subTitle:TryItAgainLater,
+                                                                    buttons: ['OK']
+                                                                });
+                                                                alert.present();
+                                                                this.cashInEnable = true;
+                                                            });
+                                            });
+                                        }
+                                    }
+                                },(err)=>{
+                                            if(err=="NetworkFailure"){
+                                                this.translateService.get('NetworkProblem').subscribe(
+                                                    NetworkProblem => {
+                                                            this.translateService.get('checkNetwork').subscribe(
+                                                            checkNetwork => {
+                                                                let alert = this.alertCtrl.create({
+                                                                    title: NetworkProblem,
+                                                                    subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                                    buttons: ['OK']
+                                                                });
+                                                                alert.present();
+                                                                this.cashInEnable = true;
+                                                            });
+                                                });
+                                            }else{
+                                                this.translateService.get('failedRequest').subscribe( failedRequest=>{
+                                                this.translateService.get('TryItAgainLater').subscribe(
+                                                            TryItAgainLater => {
+                                                                let alert = this.alertController.create({
+                                                                    title: failedRequest,
+                                                                    subTitle:TryItAgainLater,
+                                                                    buttons: ['OK']
+                                                                });
+                                                                alert.present();
+                                                                this.cashInEnable = true;
+                                                            });
+                                                });
+                                            }
+                                });  
+    //                           }}]
+    //         });
+    //         alert.present();
+    //   }else{
+    //       this.storageProvider.cashConfirmInfo = body;
+    //         console.log("body:"+JSON.stringify(body));                           
+
+    //         this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashUserself",JSON.stringify(body)).then((res:any)=>{
+    //             console.log("res:"+JSON.stringify(res));
+                        
+    //             if(res.result=="success"){
+    //                     this.manualCheckHidden=true;                   
+    //                     let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
+    //                     iOSAlertPage.present();
+    //                     this.depositAmount=undefined;
+    //                     this.storageProvider.depositBank =undefined;
+    //             }else if(res.result=="failure" && res.error=="gcm:400"){
+    //                         this.manualCheckHidden=true; 
+    //                         this.translateService.get('confirmDepositInHistory').subscribe(
+    //                             confirmDepositInHistory => {
+    //                                 let alert = this.alertController.create({
+    //                                     title: confirmDepositInHistory,
+    //                                     buttons: ['OK']
+    //                                 });
+    //                                 alert.present();
+    //                             }
+    //                         );
+    //             }else if(res.result=="failure" && res.error=="incorrect depositor"){
+    //                         this.translateService.get('checkDepositInput').subscribe( checkDepositInput=>{
+    //                         this.translateService.get('LimitedThreeTrials').subscribe(
+    //                                     LimitedThreeTrials => {
+    //                                         let alert = this.alertController.create({
+    //                                             title: checkDepositInput,
+    //                                             subTitle:LimitedThreeTrials,
+    //                                             buttons: ['OK']
+    //                                         });
+    //                                         alert.present();
+    //                                     });
+    //                     });
+    //             }else if(res.result=="failure" && res.error=="no service time"){
+    //                     this.translateService.get('serviceUnavailableInspectionPeriod').subscribe( serviceUnavailableInspectionPeriod=>{
+    //                         this.translateService.get('tryAgainAfterLimit').subscribe(
+    //                                     tryAgainAfterLimit => {
+    //                                         let alert = this.alertController.create({
+    //                                             title: serviceUnavailableInspectionPeriod,
+    //                                             subTitle:tryAgainAfterLimit,
+    //                                             buttons: ['OK']
+    //                                         });
+    //                                         alert.present();
+    //                                     });
+    //                     });
+    //             }else{
+    //                 let alert;
+    //                 if(res.error=="count excess"){
+    //                         this.manualCheckHidden=true; 
+    //                         alert = this.alertController.create({
+    //                             title: '3회 연속 오류로 수동확인이 불가능합니다.',
+    //                             subTitle: '고객센터(help@takit.biz,0505-170-3636)에 연락하여 주시기바랍니다.',
+    //                             buttons: ['OK']
+    //                         });
+    //                         alert.present();
+    //                 }else{
+    //                     this.translateService.get('failedRequest').subscribe( failedRequest=>{
+    //                         this.translateService.get('TryItAgainLater').subscribe(
+    //                                     TryItAgainLater => {
+    //                                         let alert = this.alertController.create({
+    //                                             title: failedRequest,
+    //                                             subTitle:TryItAgainLater,
+    //                                             buttons: ['OK']
+    //                                         });
+    //                                         alert.present();
+    //                                     });
+    //                     });
+    //                 }
+    //             }
+    //         },(err)=>{
+    //                     if(err=="NetworkFailure"){
+    //                         this.translateService.get('NetworkProblem').subscribe(
+    //                             NetworkProblem => {
+    //                                     this.translateService.get('checkNetwork').subscribe(
+    //                                     checkNetwork => {
+    //                                         let alert = this.alertCtrl.create({
+    //                                             title: NetworkProblem,
+    //                                             subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+    //                                             buttons: ['OK']
+    //                                         });
+    //                                         alert.present();
+    //                                     });
+    //                         });
+    //                     }else{
+    //                         this.translateService.get('failedRequest').subscribe( failedRequest=>{
+    //                         this.translateService.get('TryItAgainLater').subscribe(
+    //                                     TryItAgainLater => {
+    //                                         let alert = this.alertController.create({
+    //                                             title: failedRequest,
+    //                                             subTitle:TryItAgainLater,
+    //                                             buttons: ['OK']
+    //                                         });
+    //                                         alert.present();
+    //                                     });
+    //                         });
+    //                     }
+    //         });  
+    //}
+
+      
   }
   
   configureCashId(){
