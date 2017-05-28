@@ -320,11 +320,24 @@ ionViewDidEnter() {
       });
   }
 
+  cashInReset(){
+      let d = new Date();
+    console.log(" moment:"+moment().format("YYYY-MM-DDThh:mmZ"));
+    let mm = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1); // getMonth() is zero-based
+    let dd  = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
+    let hh = d.getHours() <10? "0"+d.getHours(): d.getHours();
+    let dString=d.getFullYear()+'-'+(mm)+'-'+dd+'T'+hh+":00"+moment().format("Z");
+    
+    this.transferDate=dString;
+
+      this.depositAmount=undefined;
+      this.storageProvider.depositBank =undefined;
+      this.depositMemo==undefined;
+  }
+
   cashInComplete(){
       if(!this.cashInEnable){
-        this.depositAmount=undefined;
-        this.storageProvider.depositBank =undefined;
-        this.depositMemo==undefined;
+        this.cashInReset();
         return;  
       }else{
           this.cashInEnable = false;
@@ -379,11 +392,9 @@ ionViewDidEnter() {
                 cashId:this.storageProvider.cashId
             };
 
-    console.log(this.storageProvider.cashConfirmInfo);
+    //console.log(this.storageProvider.cashConfirmInfo);
 
-    this.depositAmount=undefined;
-    this.storageProvider.depositBank =undefined;
-    this.depositMemo==undefined;
+    this.cashInReset();
 
     //   if(this.storageProvider.cashConfirmInfo.depositTime === body.depositTime &&
     //      this.storageProvider.cashConfirmInfo.amount === body.amount &&
@@ -397,7 +408,7 @@ ionViewDidEnter() {
     //                         }},
     //                         {text:"예",
     //                           handler:()=>{
-                                this.storageProvider.cashConfirmInfo = body;
+    //                            this.storageProvider.cashConfirmInfo = body;
                                 console.log("body:"+JSON.stringify(body));                           
 
                                 this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashUserself",JSON.stringify(body)).then((res:any)=>{
