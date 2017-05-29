@@ -20,6 +20,7 @@ export class CashPassword {
   cursor:number=0;
   body;
   trigger;
+  confirmInProgress=false;
 
   constructor(private app:App,public navCtrl: NavController,  
               public navParams: NavParams,public storageProvider:StorageProvider,
@@ -65,6 +66,8 @@ export class CashPassword {
 
   confirm(){
     console.log("confirm");
+    if(!this.confirmInProgress){
+    this.confirmInProgress=true;
 
     for(var i=0;i<6;i++){
         if(this.passwordInput[i]==' '){
@@ -73,6 +76,7 @@ export class CashPassword {
                     buttons: ['OK']
                 });
                 alert.present();
+                this.confirmInProgress=false;
                 return;        
         }
     }
@@ -125,6 +129,7 @@ export class CashPassword {
                                         this.app.getRootNav().pop();
                                     }
                                     this.storageProvider.shopTabRef.select(3);
+                                    this.confirmInProgress=false;    
                                     return;
                                 }
                             },
@@ -137,6 +142,7 @@ export class CashPassword {
                                         this.app.getRootNav().pop();
                                     }
                                     this.storageProvider.shopTabRef.select(3);
+                                    this.confirmInProgress=false;
                                     return;
                                 }
                             }
@@ -154,6 +160,7 @@ export class CashPassword {
                             this.navCtrl.pop();
                             if(this.trigger=="order"){
                                 this.app.getRootNav().pop();
+                                this.confirmInProgress=false;
                             }
                             this.storageProvider.shopTabRef.select(3);
                         });  
@@ -167,6 +174,7 @@ export class CashPassword {
                     });
                     alert.present();
                     this.navCtrl.pop();
+                    this.confirmInProgress=false;
                  }
            },(error)=>{
                  console.log("saveOrder err "+error);
@@ -197,6 +205,8 @@ export class CashPassword {
                         alert.present();                     
                  }
                  this.navCtrl.pop();
+                 this.confirmInProgress=false;
            })      
+    }
   }
 }
