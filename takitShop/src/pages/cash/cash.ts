@@ -5,7 +5,8 @@ import {Splashscreen} from 'ionic-native';
 import {PrinterProvider} from '../../providers/printerProvider';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
-import { Storage } from '@ionic/storage';
+//import { Storage } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 declare var moment:any;
 
@@ -23,7 +24,7 @@ export class CashPage {
     withrawTrAtATime=10;
 
   constructor(private navController: NavController, private navParams: NavParams,
-                private alertController:AlertController,private ngZone:NgZone,public storage:Storage,
+                private alertController:AlertController,private ngZone:NgZone,private nativeStorage: NativeStorage,
                 private serverProvider:ServerProvider,public storageProvider:StorageProvider,public alertCtrl:AlertController){
            console.log("CashPage construtor");
 

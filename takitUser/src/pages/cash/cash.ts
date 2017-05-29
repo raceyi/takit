@@ -8,7 +8,9 @@ import {Device} from 'ionic-native';
 import {CashIdPage} from '../cashid/cashid';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
-import {Storage} from '@ionic/storage';
+//import {Storage} from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
+
 import {BankBranchPage} from '../bankbranch/bankbranch';
 import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {IOSAlertPage} from '../ios-alert/ios-alert';
@@ -67,7 +69,7 @@ export class CashPage {
   constructor(private app:App,private platform:Platform, private navController: NavController
         ,private navParams: NavParams,public http:Http ,private alertController:AlertController
         ,public storageProvider:StorageProvider,private serverProvider:ServerProvider
-        ,public storage:Storage,public modalCtrl: ModalController,private ngZone:NgZone
+        ,private nativeStorage: NativeStorage,public modalCtrl: ModalController,private ngZone:NgZone
         ,public alertCtrl:AlertController,public translateService: TranslateService
         ,private iab: InAppBrowser,private clipboard: Clipboard) {
 
@@ -97,11 +99,11 @@ export class CashPage {
     }
         
     console.log("read refundBank");
-     this.storage.get("refundBank").then((value:string)=>{
+     this.nativeStorage.getItem("refundBank").then((value:string)=>{
          console.log("refundBank is "+value);
          if(value!=null){
             this.refundBank=this.storageProvider.decryptValue("refundBank",decodeURI(value));
-            this.storage.get("refundAccount").then((valueAccount:string)=>{
+            this.nativeStorage.getItem("refundAccount").then((valueAccount:string)=>{
                 if(value!=null){
                     this.refundAccount=this.storageProvider.decryptValue("refundAccount",decodeURI(valueAccount));
                     this.verifiedBank=this.refundBank;
@@ -1216,9 +1218,9 @@ checkDepositInLatestCashlist(cashList){
           if(res.result=="success"){
               // store info into local storage and convert button from registration into modification
               var encryptedBank:string=this.storageProvider.encryptValue('refundBank',this.refundBank);
-              this.storage.set('refundBank',encodeURI(encryptedBank));
+              this.nativeStorage.setItem('refundBank',encodeURI(encryptedBank));
               var encrypted:string=this.storageProvider.encryptValue('refundAccount',this.refundAccount.trim());
-              this.storage.set('refundAccount',encodeURI(encrypted));
+              this.nativeStorage.setItem('refundAccount',encodeURI(encrypted));
               this.verifiedBank=this.refundBank;
               this.verifiedAccount=this.refundAccount.trim();
               this.refundAccountMask=this.maskAccount(this.refundAccount); 

@@ -8,6 +8,7 @@ import {KakaoProvider} from '../providers/LoginProvider/kakao-provider';
 import {PrinterProvider} from '../providers/printerProvider';
 import {StorageProvider} from '../providers/storageProvider';
 import { IonicStorageModule } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 import {ServerProvider} from '../providers/serverProvider';
 import {ConfigProvider} from '../providers/configProvider';
 import {MediaProvider} from '../providers/mediaProvider';
@@ -93,6 +94,7 @@ import { HttpModule } from '@angular/http';
     Camera,
     Transfer,
     File,
+    NativeStorage,
     EmailProvider,
     KakaoProvider,
     ConfigProvider,

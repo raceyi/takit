@@ -4,7 +4,8 @@ import{ShopTablePage} from '../shoptable/shoptable';
 import {Splashscreen} from 'ionic-native';
 import {PrinterProvider} from '../../providers/printerProvider';
 import {StorageProvider} from '../../providers/storageProvider';
-import {Storage} from '@ionic/storage';
+//import {Storage} from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 @Component({
   selector: 'page-printer',
@@ -18,7 +19,7 @@ export class PrinterPage {
     printOn;
 
   constructor(private navController: NavController, private navParams: NavParams,public printerProvider:PrinterProvider,
-                private alertController:AlertController,private ngZone:NgZone,public storage:Storage,
+                private alertController:AlertController,private ngZone:NgZone,private nativeStorage: NativeStorage,
                 public storageProvider:StorageProvider){
            console.log("PrinterPage construtor-printOn"+this.storageProvider.printOn);
            this.printOn=this.storageProvider.printOn;
@@ -125,11 +126,11 @@ export class PrinterPage {
       }
 
   savePrinter(){
-      this.storage.set('printer',this.printerProvider.printer);
+      this.nativeStorage.setItem('printer',this.printerProvider.printer);
       this.storageProvider.printerName=this.printerProvider.printer;
       //save it into localstorage
       this.storageProvider.printOn=this.printOn;
-      this.storage.set("printOn",this.storageProvider.printOn.toString());
+      this.nativeStorage.setItem("printOn",this.storageProvider.printOn.toString());
   }    
 
   printOnChange(){
@@ -137,6 +138,6 @@ export class PrinterPage {
       //console.log("printOn:"+this.printOn);
       this.storageProvider.printOn=this.printOn;
       console.log("save printOn as "+this.storageProvider.printOn.toString());
-      this.storage.set("printOn",this.storageProvider.printOn.toString());
+      this.nativeStorage.setItem("printOn",this.storageProvider.printOn.toString());
   }
 }

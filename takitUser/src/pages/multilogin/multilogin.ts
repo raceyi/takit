@@ -5,7 +5,9 @@ import {ServerProvider} from '../../providers/serverProvider';
 import {TabsPage} from '../tabs/tabs';
 import {LoginPage} from  '../login/login';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import {Storage} from "@ionic/storage";
+//import {Storage} from "@ionic/storage";
+import { NativeStorage } from '@ionic-native/native-storage';
+
 import {Device} from 'ionic-native';
 
 /*
@@ -22,7 +24,7 @@ export class MultiloginPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
   public storageProvider:StorageProvider,private serverProvider:ServerProvider,
-  private app:App,private platform:Platform,public storage:Storage, private splashScreen: SplashScreen) {
+  private app:App,private platform:Platform,private nativeStorage: NativeStorage, private splashScreen: SplashScreen) {
     this.navParams.get("id");
     this.navParams.get("password");
   }
@@ -47,11 +49,11 @@ export class MultiloginPage {
               let id=this.navParams.get("id");
               if(id!=undefined){
                     var encrypted:string=this.storageProvider.encryptValue('id',id);
-                    this.storage.set('id',encodeURI(encrypted));
+                    this.nativeStorage.setItem('id',encodeURI(encrypted));
                     this.storageProvider.id=id;
               }else{
                 //read id info and then save it into storageProvider
-                this.storage.get("id").then((value:string)=>{
+                this.nativeStorage.getItem("id").then((value:string)=>{
                   this.storageProvider.id=this.storageProvider.decryptValue("id",decodeURI(value));
                 });
               }

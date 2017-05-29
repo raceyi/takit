@@ -15,7 +15,8 @@ import {Device} from 'ionic-native';
 import {Http,Headers} from '@angular/http';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
-import {Storage} from '@ionic/storage';
+//import {Storage} from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 import { TranslateService} from 'ng2-translate/ng2-translate';
 
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
@@ -51,7 +52,7 @@ export class TabsPage {
   constructor(translateService: TranslateService, public modalCtrl: ModalController,private navController: NavController,private app:App,private platform:Platform,public viewCtrl: ViewController,
     public storageProvider:StorageProvider,private http:Http, private alertController:AlertController,private ionicApp: IonicApp,
     private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider,
-    public storage:Storage, private push: Push,private navParams: NavParams) {
+    private nativeStorage: NativeStorage, private push: Push,private navParams: NavParams) {
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
         }    
@@ -701,10 +702,10 @@ export class TabsPage {
                   }
                 }else if(additionalData.GCMType==="multiLogin"){
                     // logout and move into login page
-                    this.storage.clear(); 
-                    this.storage.remove("id"); //So far, clear() doesn't work. Please remove this line later
-                    this.storage.remove("refundBank");
-                    this.storage.remove("refundAccount");
+                    this.nativeStorage.clear(); 
+                    this.nativeStorage.remove("id"); //So far, clear() doesn't work. Please remove this line later
+                    this.nativeStorage.remove("refundBank");
+                    this.nativeStorage.remove("refundAccount");
                     this.storageProvider.reset();
                     this.storageProvider.dropCartInfo().then(()=>{
                             console.log("call setRoot with LoginPage");

@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Platform ,NavController} from 'ionic-angular';
 import {SQLite} from 'ionic-native';
-import { Storage } from '@ionic/storage';
+//import { Storage } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 //import * as CryptoJS from 'crypto-js';
 declare var CryptoJS:any;
 import {ConfigProvider} from './configProvider';
@@ -57,7 +58,7 @@ export class StorageProvider{
     public accountMaskExceptFront=this.configProvider.getAccountMaskExceptFront();
     public accountMaskExceptEnd=this.configProvider.getAccountMaskExceptEnd();
 
-    constructor(private platform:Platform,private storage:Storage,private configProvider:ConfigProvider){
+    constructor(private platform:Platform,private nativeStorage: NativeStorage,private configProvider:ConfigProvider){
         console.log("StorageProvider constructor");  
         if(this.serverAddress.endsWith('8000')){
             console.log("test server 8000");
@@ -65,7 +66,7 @@ export class StorageProvider{
         }else{
             this.isTestServer = false;
         }
-        this.storage.get("printOn").then((value:string)=>{
+        this.nativeStorage.getItem("printOn").then((value:string)=>{
             console.log("printOn is "+value+" in storage");
             if(value==null || value==undefined){
                 this.printOn=false;
@@ -75,7 +76,7 @@ export class StorageProvider{
         });
         console.log("printOn is "+this.printOn);
         if(this.printOn){
-            this.storage.get("print").then((value:string)=>{
+            this.nativeStorage.getItem("print").then((value:string)=>{
             console.log("print is "+value+" in storage");
             this.printer= value;
             });

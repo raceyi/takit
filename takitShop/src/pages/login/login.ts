@@ -11,7 +11,8 @@ import{ShopTablePage} from '../shoptable/shoptable';
 import{SelectorPage} from '../selector/selector';
 import {UserSecretPage} from '../usersecret/usersecret';
 import {StorageProvider} from '../../providers/storageProvider';
-import { Storage } from '@ionic/storage';
+//import { Storage } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 @Component({
   selector: 'page-login',  
@@ -30,7 +31,7 @@ export class LoginPage {
   constructor(private navController: NavController, private navParams: NavParams,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
                 private kakaoProvider:KakaoProvider,private storageProvider:StorageProvider,
-                public storage:Storage,private platform:Platform,
+                private nativeStorage: NativeStorage,private platform:Platform,
                 private alertController:AlertController){
       console.log("LoginPage construtor");
   }
@@ -88,7 +89,7 @@ export class LoginPage {
                     }
                     if(res.result=="success"){
                         var encrypted:string=this.storageProvider.encryptValue('id','facebook');
-                        this.storage.set('id',encodeURI(encrypted));
+                        this.nativeStorage.setItem('id',encodeURI(encrypted));
                         console.log("save id with facebook");
                         //save shoplist
                         this.shoplistHandler(res.shopUserInfo);
@@ -162,7 +163,7 @@ export class LoginPage {
                 if(res.result=="success"){
                     //save shoplist
                     var encrypted:string=this.storageProvider.encryptValue('id','kakao');
-                    this.storage.set('id',encodeURI(encrypted));
+                    this.nativeStorage.setItem('id',encodeURI(encrypted));
                     this.shoplistHandler(res.shopUserInfo);
                 }else if(res.result=='invalidId'){
                     console.log("You have no right to access this app");
@@ -238,9 +239,9 @@ export class LoginPage {
                                 }
                                 if(res.result=="success"){
                                     var encrypted:string=this.storageProvider.encryptValue('id',this.email);
-                                    this.storage.set('id',encodeURI(encrypted));
+                                    this.nativeStorage.setItem('id',encodeURI(encrypted));
                                     encrypted=this.storageProvider.encryptValue('password',this.password);
-                                    this.storage.set('password',encodeURI(encrypted));
+                                    this.nativeStorage.setItem('password',encodeURI(encrypted));
                                     this.shoplistHandler(res.shopUserInfo);   
                                 }else if(res.result=='invalidId'){
                                     let alert = this.alertController.create({

@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import { AlertController, Platform} from 'ionic-angular';
 import {Http,Headers} from '@angular/http';
-import {Storage} from '@ionic/storage';
+//import {Storage} from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
 import { File } from '@ionic-native/file';
 
@@ -20,7 +21,7 @@ export class ServerProvider{
     private loading:any;
 
   constructor(private platform:Platform,private http:Http,
-            private storage:Storage,private transfer: Transfer,
+            private nativeStorage: NativeStorage,private transfer: Transfer,
             private alertController:AlertController,
             private fbProvider:FbProvider,private kakaoProvider:KakaoProvider,
             private emailProvider:EmailProvider,
@@ -95,7 +96,7 @@ export class ServerProvider{
                                     reject("NetworkFailure");
                     });
                 }else{ // email login 
-                    this.storage.get("password").then((value:string)=>{
+                    this.nativeStorage.getItem("password").then((value:string)=>{
                         var password=this.storageProvider.decryptValue("password",decodeURI(value));
                         this.emailProvider.EmailServerLogin(this.storageProvider.id,password).then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));

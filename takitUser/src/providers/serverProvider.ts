@@ -1,7 +1,8 @@
 import {Injectable,EventEmitter} from '@angular/core';
 import {Platform} from 'ionic-angular';
 import {Http,Headers} from '@angular/http';
-import {Storage} from '@ionic/storage';
+//import {Storage} from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 import {FbProvider} from './LoginProvider/fb-provider';
 import {KakaoProvider} from './LoginProvider/kakao-provider';
@@ -15,7 +16,7 @@ import 'rxjs/add/operator/map';
 export class ServerProvider{
   constructor(private platform:Platform
             ,private http:Http
-            ,private storage:Storage
+            ,private nativeStorage: NativeStorage
             ,private fbProvider:FbProvider
             ,private kakaoProvider:KakaoProvider
             ,private emailProvider:EmailProvider
@@ -98,7 +99,7 @@ export class ServerProvider{
                                     reject("NetworkFailure");
                     });
                 }else{ // email login 
-                    this.storage.get("password").then((value:string)=>{
+                    this.nativeStorage.getItem("password").then((value:string)=>{
                         var password=this.storageProvider.decryptValue("password",decodeURI(value));
                         this.emailProvider.EmailServerLogin(this.storageProvider.id,password).then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));
@@ -154,7 +155,7 @@ export class ServerProvider{
             },(err)=>{
                 reject(err);  
             });
-            this.storage.set("orderDoneFlag","true");
+            this.nativeStorage.setItem("orderDoneFlag","true");
       });
   }
 /*

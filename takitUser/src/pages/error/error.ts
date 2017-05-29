@@ -6,7 +6,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
-import {Storage} from '@ionic/storage';
+//import {Storage} from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
+
+
 import {TabsPage} from '../tabs/tabs';
 import {LoginPage} from '../login/login';
 import {MultiloginPage} from '../multilogin/multilogin';
@@ -24,7 +27,7 @@ export class ErrorPage{
      constructor(private navController: NavController, private _navParams: NavParams,
         private platform:Platform,public storageProvider:StorageProvider,
         public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
-        public emailProvider:EmailProvider,public storage:Storage,private app:App,
+        public emailProvider:EmailProvider,private nativeStorage: NativeStorage,private app:App,
         private translateService:TranslateService, private splashScreen: SplashScreen){
 
          console.log("ErrorPage constructor");
@@ -111,7 +114,7 @@ export class ErrorPage{
                                 //this.app.getRootNav().setRoot(ErrorPage);
                             });
                 }else{ // email login 
-                        this.storage.get("password").then((value:string)=>{
+                        this.nativeStorage.getItem("password").then((value:string)=>{
                         var password=this.storageProvider.decryptValue("password",decodeURI(value));
                         this.emailProvider.EmailServerLogin(id,password).then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));
@@ -144,7 +147,7 @@ export class ErrorPage{
 
     tryLogin(event){
         if(this.storageProvider.id==undefined){
-                this.storage.get("id").then((value:string)=>{
+                this.nativeStorage.getItem("id").then((value:string)=>{
                         console.log("value:"+value);
                         if(value==null){
                             console.log("id doesn't exist");

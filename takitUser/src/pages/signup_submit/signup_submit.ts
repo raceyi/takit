@@ -6,7 +6,8 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
-import {Storage} from "@ionic/storage";
+//import {Storage} from "@ionic/storage";
+import { NativeStorage } from '@ionic-native/native-storage';
 import {Http,Headers} from '@angular/http';
 import {ServerProvider} from '../../providers/serverProvider';
 
@@ -58,7 +59,7 @@ export class SignupSubmitPage {
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
                 private kakaoProvider:KakaoProvider,private alertController:AlertController,
                 private platform: Platform, private storageProvider:StorageProvider,
-                public storage:Storage,private http:Http, private ngZone:NgZone,
+                private nativeStorage: NativeStorage,private http:Http, private ngZone:NgZone,
                 private serverProvider:ServerProvider,private deviceAccounts: DeviceAccounts,
                 private sim: Sim){
       console.log("SignupPage construtor");
@@ -253,7 +254,7 @@ export class SignupSubmitPage {
                     }
                     if(serverCode=="success"){
                         var encrypted:string=this.storageProvider.encryptValue('id','kakao');// save kakao id 
-                        this.storage.set('id',encodeURI(encrypted));
+                        this.nativeStorage.setItem('id',encodeURI(encrypted));
                         this.storageProvider.shoplist=[];
                         this.storageProvider.userInfoSet(this.email,this.name,this.phone,
                                         this.receiptIssue,this.receiptId,this.receiptType);
@@ -290,7 +291,7 @@ export class SignupSubmitPage {
                     }
                     if(serverCode=="success"){
                         var encrypted:string=this.storageProvider.encryptValue('id','facebook');// save facebook id 
-                        this.storage.set('id',encodeURI(encrypted));
+                        this.nativeStorage.setItem('id',encodeURI(encrypted));
                         this.storageProvider.shoplist=[];
                         this.storageProvider.userInfoSet(this.email,this.name,this.phone,
                             this.receiptIssue,this.receiptId,this.receiptType);
@@ -327,9 +328,9 @@ export class SignupSubmitPage {
                     var output:string=result.result;
                     if(output=="success"){
                         var encrypted:string=this.storageProvider.encryptValue('id',this.email);// save kakao id 
-                        this.storage.set('id',encodeURI(encrypted));
+                        this.nativeStorage.setItem('id',encodeURI(encrypted));
                         encrypted=this.storageProvider.encryptValue('password',this.password);// save email id 
-                        this.storage.set('password',encodeURI(encrypted));
+                        this.nativeStorage.setItem('password',encodeURI(encrypted));
                         this.storageProvider.shoplist=[];
                         this.storageProvider.userInfoSet(this.email,this.name,this.phone,
                                 this.receiptIssue,this.receiptId,this.receiptType);

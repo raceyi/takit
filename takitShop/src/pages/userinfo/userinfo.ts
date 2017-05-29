@@ -4,7 +4,8 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {App} from 'ionic-angular';
 import {ServerProvider} from '../../providers/serverProvider';
 import {Http,Headers} from '@angular/http';
-import {Storage} from '@ionic/storage';
+//import {Storage} from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 declare var cordova:any;
 declare var zxcvbn:any;
@@ -23,7 +24,7 @@ export class UserInfoPage{
      constructor(public storageProvider:StorageProvider,private alertController:AlertController
         ,private app: App,private navController: NavController, private navParams: NavParams
         ,private serverProvider:ServerProvider,public ngZone:NgZone,private http:Http
-        ,public storage:Storage){
+        ,private nativeStorage: NativeStorage){
 	      console.log("UserInfoPage constructor");
      }
 

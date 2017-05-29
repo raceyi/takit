@@ -18,7 +18,8 @@ import {KakaoProvider} from '../providers/LoginProvider/kakao-provider';
 import {StorageProvider} from '../providers/storageProvider';
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import { StatusBar } from '@ionic-native/status-bar';
-import { Storage } from '@ionic/storage';
+//import { Storage } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 import { Device } from 'ionic-native';
 import { Network } from '@ionic-native/network';
 
@@ -33,7 +34,7 @@ export class MyApp {
   disconnectSubscription;
 
   constructor(platform: Platform,public storageProvider:StorageProvider,
-                public storage:Storage,public app:App,
+                private nativeStorage: NativeStorage,public app:App,
                 public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
                 public emailProvider:EmailProvider,public alertCtrl:AlertController,
                 public translateService: TranslateService, private network: Network, 
@@ -51,7 +52,7 @@ export class MyApp {
                 console.log('network was disconnected :-( ');
                 console.log("rootPage:"+JSON.stringify(this.rootPage));
                 if(this.rootPage==undefined){
-                    this.storage.get("id").then((value:string)=>{
+                    this.nativeStorage.getItem("id").then((value:string)=>{
                         console.log("value:"+value);
                         if(value==null){
                             this.rootPage=LoginPage;
@@ -66,11 +67,11 @@ export class MyApp {
             });
 
             //Please login if login info exists or move into login page
-            this.storage.get("id").then((value:string)=>{
+            this.nativeStorage.getItem("id").then((value:string)=>{
                 console.log("value:"+value);
                 if(value==null){
                     console.log("id doesn't exist");
-                    this.storage.get("tutorialShownFlag").then((value:string)=>{
+                    this.nativeStorage.getItem("tutorialShownFlag").then((value:string)=>{
                         console.log("value of tutorialShownFlag:"+value);
                         if(value==null){
                             this.storageProvider.tutorialShownFlag=false;
@@ -147,7 +148,7 @@ export class MyApp {
                                 this.rootPage=ErrorPage;
                             });
                 }else{ // email login 
-                        this.storage.get("password").then((value:string)=>{
+                        this.nativeStorage.getItem("password").then((value:string)=>{
                         var password=this.storageProvider.decryptValue("password",decodeURI(value));
                         this.emailProvider.EmailServerLogin(id,password).then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));
@@ -179,7 +180,7 @@ export class MyApp {
                }
             },(error)=>{
                 console.log("id doesn't exist");
-                this.storage.get("tutorialShownFlag").then((value:string)=>{
+                this.nativeStorage.getItem("tutorialShownFlag").then((value:string)=>{
                     this.rootPage=LoginPage;
                 },(err)=>{ //expReadFlag doesn't exist because of the first launch of takitUser.
                         this.storageProvider.tutorialShownFlag=false;
@@ -211,11 +212,11 @@ export class MyApp {
  }
 
   removeStoredInfo(){
-        this.storage.clear(); 
-        this.storage.remove("id"); //So far, clear() doesn't work. Please remove this line later
-        this.storage.remove("refundBank");
-        this.storage.remove("refundAccount");
-        this.storage.remove("cashDetailAlert");
+        this.nativeStorage.clear(); 
+        this.nativeStorage.remove("id"); //So far, clear() doesn't work. Please remove this line later
+        this.nativeStorage.remove("refundBank");
+        this.nativeStorage.remove("refundAccount");
+        this.nativeStorage.remove("cashDetailAlert");
         this.storageProvider.reset();
         this.storageProvider.dropCartInfo().then(()=>{
             console.log("move into LoginPage"); //Please exit App and then restart it.

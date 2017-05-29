@@ -11,6 +11,7 @@ import {EmailProvider} from '../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../providers/LoginProvider/kakao-provider';
 import {StorageProvider} from '../providers/storageProvider';
 import { IonicStorageModule } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 import {ServerProvider} from '../providers/serverProvider';
 
@@ -154,6 +155,7 @@ import { Keyboard } from '@ionic-native/keyboard';
               Clipboard,
               AppAvailability,
               Keyboard,
+              NativeStorage,
               ConfigProvider,
               StorageProvider,
               FbProvider,

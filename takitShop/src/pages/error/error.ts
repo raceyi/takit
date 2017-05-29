@@ -8,7 +8,8 @@ import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import {PrinterProvider} from '../../providers/printerProvider';
 
-import { Storage } from '@ionic/storage';
+//import { Storage } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 import {LoginPage} from '../login/login';
 import {ShopTablePage} from '../shoptable/shoptable';
@@ -27,7 +28,7 @@ export class ErrorPage{
      constructor(private navController: NavController, private _navParams: NavParams,
         private platform:Platform,private storageProvider:StorageProvider,
         public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
-        public emailProvider:EmailProvider,public storage:Storage,private app:App,
+        public emailProvider:EmailProvider,private nativeStorage: NativeStorage,private app:App,
         public printerProvider:PrinterProvider,private ngZone:NgZone){
 
          console.log("ErrorPage constructor");
@@ -50,7 +51,7 @@ export class ErrorPage{
 
     tryLogin(event){
         if(this.storageProvider.id==undefined){
-                this.storage.get("id").then((value:string)=>{
+                this.nativeStorage.getItem("id").then((value:string)=>{
                         console.log("value:"+value);
                         if(value==null){
                             console.log("id doesn't exist");
@@ -107,7 +108,7 @@ export class ErrorPage{
                                 //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                     });
                 }else{ // email login 
-                    this.storage.get("password").then((value:string)=>{
+                    this.nativeStorage.getItem("password").then((value:string)=>{
                         var password=this.storageProvider.decryptValue("password",decodeURI(value));
                         this.emailProvider.EmailServerLogin(id,password).then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));
@@ -146,10 +147,10 @@ export class ErrorPage{
                 this.app.getRootNav().setRoot(SelectorPage);
              }
         }
-        this.storage.get("printer").then((value:string)=>{
+        this.nativeStorage.getItem("printer").then((value:string)=>{
             this.storageProvider.printerName=value;
             this.printerProvider.setPrinter(value);
-            this.storage.get("printOn").then((value:string)=>{
+            this.nativeStorage.getItem("printOn").then((value:string)=>{
                 console.log("printOn:"+value);
                 this.storageProvider.printOn= JSON.parse(value);
             },()=>{

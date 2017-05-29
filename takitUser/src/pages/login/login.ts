@@ -14,7 +14,9 @@ import {PasswordPage} from '../password/password';
 import {MultiloginPage} from '../multilogin/multilogin';
 
 import {StorageProvider} from '../../providers/storageProvider';
-import {Storage} from "@ionic/storage";
+//import {Storage} from "@ionic/storage";
+import { NativeStorage } from '@ionic-native/native-storage';
+
 import {Device} from 'ionic-native';
 import { TranslateService} from 'ng2-translate/ng2-translate';
 import {Http,Headers} from '@angular/http';
@@ -39,7 +41,7 @@ export class LoginPage {
   constructor(private navController: NavController, private navParams: NavParams,
                 private fb:Facebook,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
-                private kakaoProvider:KakaoProvider, public storage:Storage,
+                private kakaoProvider:KakaoProvider, private nativeStorage: NativeStorage,
                 private storageProvider:StorageProvider,private platform:Platform,
                 private alertController:AlertController,private ionicApp: IonicApp,
                 private menuCtrl: MenuController,private http:Http,public viewCtrl: ViewController,
@@ -135,7 +137,7 @@ export class LoginPage {
                                 if(res.result=="success"){
                                     var encrypted:string=this.storageProvider.encryptValue('id','facebook');
                                     console.log("encrypted "+encrypted);
-                                    this.storage.set('id',encodeURI(encrypted));
+                                    this.nativeStorage.setItem('id',encodeURI(encrypted));
                                     console.log("shoplist:"+res.userInfo.shopList);
                                     if(res.userInfo.hasOwnProperty("shopList")){
                                         this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
@@ -195,7 +197,7 @@ export class LoginPage {
                                             alert.present();
                                     }
                                     var encrypted:string=this.storageProvider.encryptValue('id','kakao');
-                                    this.storage.set('id',encodeURI(encrypted));
+                                    this.nativeStorage.setItem('id',encodeURI(encrypted));
 
                                     if(res.userInfo.hasOwnProperty("shopList")){
                                         console.log("shoplist:"+res.userInfo.shopList);
@@ -274,9 +276,9 @@ export class LoginPage {
                                 }
                                 if(res.result=="success"){
                                     var encrypted:string=this.storageProvider.encryptValue('id',this.email);
-                                    this.storage.set('id',encodeURI(encrypted));
+                                    this.nativeStorage.setItem('id',encodeURI(encrypted));
                                     encrypted=this.storageProvider.encryptValue('password',this.password);
-                                    this.storage.set('password',encodeURI(encrypted));
+                                    this.nativeStorage.setItem('password',encodeURI(encrypted));
 
                                     console.log("email-shoplist:"+res.userInfo.shopList);
                                     if(res.userInfo.hasOwnProperty("shopList")){

@@ -1,7 +1,8 @@
 import { Component ,ViewChild} from '@angular/core';
 import { App,NavController, NavParams,Slides ,Content} from 'ionic-angular';
 import { StorageProvider} from '../../providers/storageProvider';
-import { Storage } from '@ionic/storage';
+//import { Storage } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 import { ConfigureCashTutorialPage } from '../configure-cash-tutorial/configure-cash-tutorial';
 import { DepositCashTutorialPage } from '../deposit-cash-tutorial/deposit-cash-tutorial';
 import { OrderTutorialPage } from '../order-tutorial/order-tutorial';
@@ -24,11 +25,11 @@ export class TutorialPage {
 
   stage="configureCash";
   
-  constructor(public navCtrl: NavController, public storage:Storage,
+  constructor(public navCtrl: NavController, private nativeStorage: NativeStorage,
       public storageProvider:StorageProvider,private app: App,private splashScreen: SplashScreen) {
     console.log("tutorialPage constructor tutorialShownFlag:"+this.storageProvider.tutorialShownFlag);
     //read each stage from storage.
-    this.storage.set('tutorialShownFlag',"true");
+    this.nativeStorage.setItem('tutorialShownFlag',"true");
   }
  
   ionViewDidLoad(){

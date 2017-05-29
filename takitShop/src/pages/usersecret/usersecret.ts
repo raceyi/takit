@@ -11,7 +11,9 @@ import{SelectorPage} from '../selector/selector';
 import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
-import {Storage} from '@ionic/storage';
+//import {Storage} from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
+
 import {ServerProvider} from '../../providers/serverProvider';
 
 @Component({
@@ -28,7 +30,7 @@ export class UserSecretPage {
   constructor(private navController: NavController, private navParams: NavParams,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
                 private kakaoProvider:KakaoProvider,private storageProvider:StorageProvider,
-                private http:Http,public storage:Storage,private serverProvider:ServerProvider){
+                private http:Http,private nativeStorage: NativeStorage,private serverProvider:ServerProvider){
       console.log("userSecretPage construtor");
       if(navParams.get("id")!=undefined){
           this.id=navParams.get("id");
@@ -78,10 +80,10 @@ export class UserSecretPage {
                                 if(res.result=="success"){
                                     if(this.id.startsWith("facebook_")){
                                         var encrypted:string=this.storageProvider.encryptValue('id','facebook');
-                                        this.storage.set('id',encodeURI(encrypted));
+                                        this.nativeStorage.setItem('id',encodeURI(encrypted));
                                     }else if(this.id.startsWith("kakao_")){    
                                         var encrypted:string=this.storageProvider.encryptValue('id','kakao');
-                                        this.storage.set('id',encodeURI(encrypted));
+                                        this.nativeStorage.setItem('id',encodeURI(encrypted));
                                     }
                                     this.shoplistHandler(res.shopUserInfo);
                                 }else if(res.result=='invalidId'){

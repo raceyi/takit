@@ -4,7 +4,8 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {App} from 'ionic-angular';
 import {ServerProvider} from '../../providers/serverProvider';
 import {Http,Headers} from '@angular/http';
-import {Storage} from '@ionic/storage';
+//import {Storage} from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 declare var cordova:any;
 declare var zxcvbn:any;
@@ -52,7 +53,7 @@ export class UserInfoPage{
      constructor(public storageProvider:StorageProvider,private alertController:AlertController
         ,private app: App,private navController: NavController, private navParams: NavParams
         ,private serverProvider:ServerProvider,public ngZone:NgZone,private http:Http
-        ,public storage:Storage){
+        ,private nativeStorage: NativeStorage){
 
 	      console.log("UserInfoPage constructor");
           this.getPassword().then((password:string)=>{
@@ -303,7 +304,7 @@ export class UserInfoPage{
 
   getPassword(){
       return new Promise((resolve, reject)=>{
-            this.storage.get("password").then((value:string)=>{
+            this.nativeStorage.getItem("password").then((value:string)=>{
                 var password=this.storageProvider.decryptValue("password",decodeURI(value));
                 resolve(password);
             },(err)=>{
@@ -462,7 +463,7 @@ export class UserInfoPage{
                  this.storageProvider.receiptType=this.receiptType;
                  if(this.passwordChange){
                     var encrypted=this.storageProvider.encryptValue('password',this.password);// save email id 
-                    this.storage.set('password',encodeURI(encrypted));
+                    this.nativeStorage.setItem('password',encodeURI(encrypted));
                     this.existingPassword=this.password;
                 }
                 

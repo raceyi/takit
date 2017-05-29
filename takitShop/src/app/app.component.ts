@@ -19,7 +19,9 @@ import { EditMenuPage } from '../pages/edit-menu-page/edit-menu-page';
 
 
 import { StatusBar } from '@ionic-native/status-bar';
-import { Storage } from '@ionic/storage';
+//import { Storage } from '@ionic/storage';
+import { NativeStorage } from '@ionic-native/native-storage';
+
 import { Network } from '@ionic-native/network';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {MediaProvider} from '../providers/mediaProvider';
@@ -38,7 +40,7 @@ export class MyApp {
    constructor(private platform:Platform,public app:App,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
                 private kakaoProvider:KakaoProvider,public storageProvider:StorageProvider,
-                public storage:Storage,public printerProvider:PrinterProvider,
+                private nativeStorage: NativeStorage,public printerProvider:PrinterProvider,
                 public alertCtrl:AlertController,private network: Network, 
                 private statusBar: StatusBar,private splashScreen:SplashScreen,
                 private mediaProvider:MediaProvider) {
@@ -68,7 +70,7 @@ export class MyApp {
             });
             this.mediaProvider.init();
             //Please login if login info exists or move into login page
-            this.storage.get("id").then((value:string)=>{
+            this.nativeStorage.getItem("id").then((value:string)=>{
                 console.log("value:"+value);
                 if(value==null){
                   console.log("id doesn't exist");
@@ -118,7 +120,7 @@ export class MyApp {
                                 this.rootPage=ErrorPage;
                     });
                 }else{ // email login 
-                    this.storage.get("password").then((value:string)=>{
+                    this.nativeStorage.getItem("password").then((value:string)=>{
                         var password=this.storageProvider.decryptValue("password",decodeURI(value));
                         this.emailProvider.EmailServerLogin(id,password).then((res:any)=>{
                                 console.log("MyApp:"+JSON.stringify(res));
@@ -172,10 +174,10 @@ export class MyApp {
                 this.rootPage=SelectorPage;
              }
         }
-        this.storage.get("printer").then((value:string)=>{
+        this.nativeStorage.getItem("printer").then((value:string)=>{
             this.storageProvider.printerName=value;
             this.printerProvider.setPrinter(value);
-            this.storage.get("printOn").then((value:string)=>{
+            this.nativeStorage.getItem("printOn").then((value:string)=>{
                 console.log("printOn:"+value);
                 this.storageProvider.printOn= JSON.parse(value);
             },()=>{
@@ -255,10 +257,10 @@ export class MyApp {
    }
 
    removeStoredInfo(){
-        this.storage.clear(); 
-        this.storage.remove("id"); //So far, clear() doesn't work. Please remove this line later
-        this.storage.remove("printer");
-        this.storage.remove("printOn");
+        this.nativeStorage.clear(); 
+        this.nativeStorage.remove("id"); //So far, clear() doesn't work. Please remove this line later
+        this.nativeStorage.remove("printer");
+        this.nativeStorage.remove("printOn");
         this.storageProvider.reset();
         console.log("move into LoginPage"); //Please exit App and then restart it.
         if(this.storageProvider.login==true){
