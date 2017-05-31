@@ -1,0 +1,58 @@
+page-home {
+    ion-scroll {
+        height: 150px;
+        
+    }
+
+    .favoriteScroll .scroll-content{
+        // padding: 0px;
+        padding: 0px 0px 0px 10px;
+    }
+
+    .card-ios{
+        margin: 3px 2px 2px 3px;
+    }
+
+    .card-favorite{
+        overflow: inherit;
+        width : 130px;
+        height: 130px;
+    }
+
+    .card-favorite > ion-col, .card-favorite > ion-col > button{
+        width: 130px;
+        height: 130px;
+    }
+
+    .card-favorite > ion-col > button .button-inner{
+        display: block;
+    }
+
+    .card-shop{
+        width: 100%;
+        height: 120px;
+    }
+
+    .card-shop > ion-row{
+        width: 100%;
+        height: 120px;
+    } 
+    .card-shop > ion-row > ion-col {
+        width: 120%;
+        height: 120px;
+    }
+
+    .img-shop{
+        width: 120%;
+        height: 110px;
+    }
+
+    .btn-shop{
+        height: 120px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent; /* make scrollbar transparent */
+    }
+}   

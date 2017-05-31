@@ -1,0 +1,60 @@
+<!--
+  Generated template for the Home page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Takit</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <!--<ion-item-divider color="white">최근 방문한 매장</ion-item-divider>-->
+    <!--<div class="favoriteDiv">
+    <ion-icon name="heart" color="danger"></ion-icon>
+    </div>-->
+    <br>
+    <ion-scroll scrollX="true" class="favoriteScroll">
+        <ion-row>
+            <ion-card *ngFor="let item of items" class="card-favorite" >
+                <ion-col no-padding>
+                    <button ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
+                        <ion-list>
+                        <ion-img width="130" height="90" class="shopImage" [src]="awsS3+item.img"></ion-img>
+                        </ion-list>
+                        <ion-list>
+                        <p>{{item.name}}</p>
+                        </ion-list>
+                        <ion-list>
+                        <p text-center>{{item.visit}}</p>
+                        </ion-list>
+                    </button>
+                </ion-col>
+            </ion-card>
+        </ion-row>
+    </ion-scroll>
+
+
+    <ion-item-divider color="white">내 주변 매장</ion-item-divider>
+    <ion-card *ngFor="let item of items" class="card-shop">
+        <ion-row no-padding>
+        <ion-col no-padding>
+            <button class="btn-shop" color="white" ion-button full no-padding no-margin>
+            <ion-img class="img-shop" [src]="awsS3+item.img" ></ion-img>
+            </button>     
+        </ion-col>
+        <ion-col no-padding>
+            <br>
+            {{"#"+item.takitId+"#"}}
+            <br>
+            <span>0.5%</span>
+        </ion-col>
+        </ion-row>
+    </ion-card>
+ 
+</ion-content>
