@@ -1,0 +1,38 @@
+page-my-wallet {
+    .wallet-type{
+        height: 50px;
+        vertical-align: middle;
+    }
+
+    .wallet-type .segment-button{
+        border-style: none;
+        font-size: 17px;
+    }
+
+    .card-cash-card{
+        height: 200px;
+    }
+    .scroll-cardList{
+        height: 200px;
+    }
+
+    .scroll-col-card{
+        flex: 0 0 45%;
+        //max-width: 40%;
+        // width: 40%;
+    }
+
+    // .slide-card .slide-zoom{
+    //     width: 40%;
+    // }
+
+    .img-card{
+      
+    }
+
+    .row-coupon > ion-row >  ion-col > ion-card, 
+    .row-coupon > ion-row >  ion-col > ion-card > img{
+        width: 100%;
+        height: 100px;
+    }
+}

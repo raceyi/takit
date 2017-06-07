@@ -1,0 +1,97 @@
+<!--
+  Generated template for the ShopHome page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{shopInfo[0].takitId}}</ion-title>
+    <button (click)="showShopAbout()" style="float:right;" class="btn-about" color="transparent" ion-button >
+     about
+    </button>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding #ShopHomeContent>
+    <ion-slides #BestMenusSlides class="btn-bestMenus">
+        <ion-slide *ngFor="let menu of bestMenus" >
+            <button (click)="showBestMenus()" [ngStyle]="{'background':'url('+storageProvider.awsS3+menu.imagePath+') no-repeat','background-size':'100% 200px'}" ion-button full no-padding no-margin class="btn-bestMenus" >
+                <button (click)="showLeftBest()" ion-button color="transparent" style="margin-right:60%; font-size:50px;"><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>
+                <!--<img [src]="storageProvider.awsS3+menu.imagePath" class="btn-bestMenus">-->
+                <button  (click)="showRightBest()" ion-button color="transparent" style="font-size:50px;"><ion-icon name="ios-arrow-forward" color="grey"></ion-icon></button>
+            </button>
+
+        </ion-slide>
+    </ion-slides>
+    <ion-row class="row-shopInfo">
+        <ion-col>
+            <h2 no-margin>{{shopInfo[0].shopName}}</h2>
+            <p no-margin>{{shopInfo[0].serviceType}}</p>
+        </ion-col>
+    </ion-row>
+
+    <ion-row class="row-takeout">
+        <ion-col>
+            <ion-icon name="heart">
+            </ion-icon>
+            <p>내매장</p>
+        </ion-col>
+        <ion-col>
+            <ion-icon name="md-radio-button-off">
+            </ion-icon>
+            <p>takeout</p>
+        </ion-col>
+        <ion-col>
+            <ion-icon name="md-radio-button-off">
+            </ion-icon>
+            <p>table-24</p>
+        </ion-col>
+        <ion-col>
+            <ion-icon name="md-radio-button-off">
+            </ion-icon>
+            <p>takeout</p>
+        </ion-col>
+    </ion-row>
+
+    <div class="div-menus">
+        <ion-row>
+            <ion-col class="col-scrollbar">
+                <ion-icon name="md-menu">
+                </ion-icon>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col class="col-menus">
+                <ion-scroll scrollY="true" class="scroll-menus">
+                    <ion-list *ngFor="let category of categories">
+                        <button full color="white" ion-button>
+                            <p>{{category.categoryName}}</p>
+                        </button>
+                    </ion-list>
+                </ion-scroll>
+            </ion-col>
+            <ion-col>
+                <ion-list *ngFor="let menu of menus">
+                    <button class="btn-menu" color="white" ion-button full no-padding no-margin>
+                        <ion-item>
+                            <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
+                            <h2>{{menu.menuName}}</h2>
+                            <p>{{menu.price}}</p>
+                        </ion-item>
+                    </button>
+                </ion-list>
+            </ion-col>
+        </ion-row>
+    </div>
+    <ion-fab bottom right>
+        <button ion-fab >주문</button>
+        <ion-fab-list side="top">
+            <button ion-button small>장바구니</button>
+            <button ion-button small>지난주문</button>
+        </ion-fab-list>
+    </ion-fab>
+
+</ion-content>

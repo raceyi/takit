@@ -9,6 +9,7 @@ import { TabsPage } from '../pages/tabs/tabs';
   templateUrl: 'app.html'
 })
 export class MyApp {
+    
   rootPage = TabsPage;
 
   constructor(platform: Platform) {
@@ -19,4 +20,5 @@ export class MyApp {
       Splashscreen.hide();
     });
   }
+
 }

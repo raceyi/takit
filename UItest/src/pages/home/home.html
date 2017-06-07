@@ -7,7 +7,11 @@
 <ion-header>
 
   <ion-navbar>
+      <button ion-button menuToggle>
+      <ion-icon name="menu" color="black"></ion-icon>
+    </button>
     <ion-title>Takit</ion-title>
+    <ion-icon name="search" color="black" style="float:right; margin-right:5%; font-size: 1.6em;"></ion-icon>
   </ion-navbar>
 
 </ion-header>
@@ -18,41 +22,57 @@
     <!--<div class="favoriteDiv">
     <ion-icon name="heart" color="danger"></ion-icon>
     </div>-->
-    <br>
+    <ion-item-divider color="white">최근 방문한 매장</ion-item-divider>
     <ion-scroll scrollX="true" class="favoriteScroll">
         <ion-row>
             <ion-card *ngFor="let item of items" class="card-favorite" >
                 <ion-col no-padding>
-                    <button ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
-                        <ion-list>
-                        <ion-img width="130" height="90" class="shopImage" [src]="awsS3+item.img"></ion-img>
-                        </ion-list>
-                        <ion-list>
-                        <p>{{item.name}}</p>
-                        </ion-list>
-                        <ion-list>
-                        <p text-center>{{item.visit}}</p>
-                        </ion-list>
+                    <button (click)="enterOldOrder(item.takitId)" ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
+                        <img  class="shopImage" [src]="awsS3+item.img">
+                        <ion-card-content>
+                            <p>{{item.name}}</p>
+                            <p text-center>{{item.visit}}</p>
+                        </ion-card-content>
+
                     </button>
                 </ion-col>
             </ion-card>
         </ion-row>
     </ion-scroll>
 
+    <ion-item-divider color="white">오늘의 쿠폰 / 이벤트</ion-item-divider>
+    
+
+    <ion-card class="card-event">
+        <ion-slides #Slides (ionSlideDidChange)="eventChanged()" pager="true">
+            <ion-slide *ngFor="let event of events; let i=index" >
+                <img [src]="awsHtml+event.img">
+            </ion-slide>
+        </ion-slides>
+    </ion-card>
+    <ion-item no-lines text-center >
+        <button ion-button color="white" *ngFor="let event of events">
+            <img *ngIf="!event.selected" [src]="storageProvider.awsS3OCR+circle[0]" class="slidebar">
+            <img *ngIf="event.selected" [src]="storageProvider.awsS3OCR+circle[1]" class="slidebar">
+        </button>
+    </ion-item>
+
+
 
     <ion-item-divider color="white">내 주변 매장</ion-item-divider>
     <ion-card *ngFor="let item of items" class="card-shop">
         <ion-row no-padding>
         <ion-col no-padding>
-            <button class="btn-shop" color="white" ion-button full no-padding no-margin>
-            <ion-img class="img-shop" [src]="awsS3+item.img" ></ion-img>
+            <button (click)="enterShopHome(item.takitId)" class="btn-shop" color="white" ion-button full no-padding no-margin>
+                <img class="img-shop" [src]="awsS3+item.img" >
             </button>     
         </ion-col>
-        <ion-col no-padding>
-            <br>
-            {{"#"+item.takitId+"#"}}
-            <br>
+        <ion-col >
+            <ion-card-content>
+                <br><br>
+            <p>{{"#"+item.takitId+"#"}}</p>
             <span>0.5%</span>
+            </ion-card-content>
         </ion-col>
         </ion-row>
     </ion-card>

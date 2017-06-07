@@ -1,10 +1,26 @@
-page-home {
+page-my-takit {
+    .item-historyTitle{
+        vertical-align: bottom;
+    }
+
     ion-scroll {
-        height: 150px;
+        height: 180px;
         
     }
 
-    .favoriteScroll .scroll-content{
+    #Slides{
+        height: 130px;
+    }
+    // .swiper-slide{
+    //     height: 180px;
+    // }
+
+    .slides-history{
+        vertical-align: top;
+        height: 160px;
+    }
+
+    .historyScroll .scroll-content{
         // padding: 0px;
         padding: 0px 0px 0px 10px;
     }
@@ -13,29 +29,27 @@ page-home {
         margin: 3px 2px 2px 3px;
     }
 
-    .card-favorite{
+    .card-history{
         overflow: inherit;
-        width : 130px;
-        height: 130px;
+        width : 33.3333%;
+        height: 155px;
     }
 
-    .card-favorite > ion-col, .card-favorite > ion-col > button{
-        width: 130px;
-        height: 130px;
+    .card-history >button{
+        height: 155px;
     }
 
-    .card-favorite > ion-col > button .button-inner{
+    .card-history > button .button-inner{
         display: block;
     }
 
-    .shopImage{
-        width:130px;
-        height:80px;
+    .swiper-slide img {
+        width:100%; 
+        height: 110px;
     }
-    //
 
-    .card-event{
-        height: 150px;
+    .card-content-ios{
+        padding: 0px;
     }
 
     .slidebar{
@@ -43,10 +57,7 @@ page-home {
         height: 10px;
     }
 
-    .swiper-slide img {
-        width:100%; 
-        height: 150px;
-    }
+
 
     //
     .card-shop{
@@ -76,8 +87,4 @@ page-home {
         height: 120px;
     }
 
-    ion-card-content{
-        vertical-align: middle;
-    }
-
-}   
+}
