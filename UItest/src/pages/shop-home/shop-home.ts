@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, NgZone, ViewChild ,trigger, state, style, transition, animate, keyframes } from '@angular/core';
 import { NavController, NavParams, Slides ,App} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import { ShopAboutPage } from '../shop-about/shop-about';
@@ -13,13 +13,30 @@ import { Content } from 'ionic-angular';
 */
 @Component({
   selector: 'page-shop-home',
-  templateUrl: 'shop-home.html'
+  templateUrl: 'shop-home.html',
+  animations: [
+    trigger('slideUp', [
+      state('down', style({
+        opacity: 1,
+        transform: 'translate3d(0, 0, 0)' // x,y,z
+      })),
+      state('up', style({
+        opacity: 1,
+        transform: 'translate3d(0, -50vh, 0)'
+      })),
+      transition('down => up', animate('200ms')),
+      transition('up => down', animate('200ms'))
+    ])
+  ]
 })
 export class ShopHomePage {
     @ViewChild('BestMenusSlides') slides: Slides;
     @ViewChild('ShopHomeContent') content: Content;
-    
+    pos:String='-50vh';
+
     menuSlideUp:boolean=false;
+    slideUpState:String='down';
+    slideDownState:String='up';
 
     shopInfo = [{"takitId":"세종대@더큰도시락","shopName":"더큰도시락", "serviceType":"도시락, 한식"},
              {"takitId":"세종대@HandelandGretel","shopName":"헨델엔그레텔", "serviceType":"커피, 디저트"},
@@ -88,7 +105,8 @@ export class ShopHomePage {
     slideStyle={};
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-                public storageProvider:StorageProvider,private app: App) {
+                public storageProvider:StorageProvider,private app: App,
+               private ngZone:NgZone) {
 
                         console.log(this.categories[0].categoryName);
 
@@ -130,14 +148,22 @@ export class ShopHomePage {
   clickMenuArea(){
     console.log("clickMenuArea "+this.menuSlideUp);
     if(!this.menuSlideUp){
-         this.menuSlideUp=true;   
+      this.slideUpState='up'; //up으로 이동하기 
+      setTimeout(() => {
+         this.menuSlideUp=true;
+         console.log("slide up");
+       }, 200);     
     }
   }
 
   slidePressed(){
     console.log("slidePressed "+this.menuSlideUp);
     if(this.menuSlideUp){
-         this.menuSlideUp=false;   
+      this.menuSlideUp=false;
+      this.slideUpState='down';
+       setTimeout(() => {
+          console.log("slide down");
+       }, 200);
     }
   }
 }
