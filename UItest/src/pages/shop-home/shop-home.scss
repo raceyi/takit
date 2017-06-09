@@ -4,6 +4,15 @@ page-shop-home {
     //     height: 150px;
     // }
 
+    .toolbar-ios ion-title {
+        padding-left:  0px; 
+        padding-right: 0px; 
+    }
+
+    ion-icon, custom-icon {
+        font-size: 10vw; //show backbutton bigger
+    }
+
     .btn-bestMenus {
         width:100%; 
         height: 200px;

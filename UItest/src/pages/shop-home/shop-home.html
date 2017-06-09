@@ -7,10 +7,19 @@
 <ion-header>
 
   <ion-navbar>
+        <ion-row>
+      <ion-col col-2>
+        <ion-icon name="arrow-round-back"  (click)="back()"></ion-icon>
+      </ion-col>
+      <ion-col col-8>
     <ion-title>{{shopInfo[0].takitId}}</ion-title>
+      </ion-col>
+      <ion-col col-2>
     <button (click)="showShopAbout()" style="float:right;" class="btn-about" color="transparent" ion-button >
      about
     </button>
+      </ion-col>
+      </ion-row>
   </ion-navbar>
 </ion-header>
 

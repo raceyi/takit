@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, Slides } from 'ionic-angular';
+import { NavController, NavParams, Slides ,App} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import { ShopAboutPage } from '../shop-about/shop-about';
 import { Content } from 'ionic-angular';
@@ -86,7 +86,7 @@ export class ShopHomePage {
     slideStyle={};
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-                public storageProvider:StorageProvider) {
+                public storageProvider:StorageProvider,private app: App) {
 
                         console.log(this.categories[0].categoryName);
 
@@ -99,7 +99,7 @@ export class ShopHomePage {
   }
 
   showShopAbout(){
-    this.navCtrl.push(ShopAboutPage);
+    this.navCtrl.push(ShopAboutPage, {},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
 
@@ -119,5 +119,9 @@ export class ShopHomePage {
 
   showBestMenus(){
       console.log("showBestMenus");
+  }
+
+  back(){
+     this.app.getRootNav().pop({animate:true,animation: 'slide-up', direction: 'forward' });
   }
 }
