@@ -25,7 +25,7 @@
 
 
 <ion-content padding #ShopHomeContent>
-    <ion-slides #BestMenusSlides class="btn-bestMenus">
+    <ion-slides #BestMenusSlides class="btn-bestMenus" [hidden]="menuSlideUp">
         <ion-slide *ngFor="let menu of bestMenus" >
             <button (click)="showBestMenus()" [ngStyle]="{'background':'url('+storageProvider.awsS3+menu.imagePath+') no-repeat','background-size':'100% 200px'}" ion-button full no-padding no-margin class="btn-bestMenus" >
                 <button (click)="showLeftBest()" ion-button color="transparent" style="margin-right:60%; font-size:50px;"><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>
@@ -35,14 +35,14 @@
 
         </ion-slide>
     </ion-slides>
-    <ion-row class="row-shopInfo">
+    <ion-row class="row-shopInfo" [hidden]="menuSlideUp">
         <ion-col>
             <h2 no-margin>{{shopInfo[0].shopName}}</h2>
             <p no-margin>{{shopInfo[0].serviceType}}</p>
         </ion-col>
     </ion-row>
 
-    <ion-row class="row-takeout">
+    <ion-row class="row-takeout" [hidden]="menuSlideUp">
         <ion-col>
             <ion-icon name="heart">
             </ion-icon>
@@ -65,8 +65,39 @@
         </ion-col>
     </ion-row>
 
-    <div class="div-menus">
+    <div class="div-menus" [hidden]="menuSlideUp" (click)="clickMenuArea()">
+        <ion-row (click)="slidePressed()">
+            <ion-col class="col-scrollbar">
+                <ion-icon name="md-menu">
+                </ion-icon>
+            </ion-col>
+        </ion-row>
         <ion-row>
+            <ion-col class="col-menus">
+                <ion-scroll scrollY="true" class="scroll-menus">
+                    <ion-list *ngFor="let category of categories">
+                        <button full color="white" ion-button>
+                            <p>{{category.categoryName}}</p>
+                        </button>
+                    </ion-list>
+                </ion-scroll>
+            </ion-col>
+            <ion-col>
+                <ion-list *ngFor="let menu of menus">
+                    <button class="btn-menu" color="white" ion-button full no-padding no-margin>
+                        <ion-item>
+                            <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
+                            <h2>{{menu.menuName}}</h2>
+                            <p>{{menu.price}}</p>
+                        </ion-item>
+                    </button>
+                </ion-list>
+            </ion-col>
+        </ion-row>
+    </div>
+
+    <div class="div-menus" [hidden]="!menuSlideUp">
+        <ion-row (click)="slidePressed()">
             <ion-col class="col-scrollbar">
                 <ion-icon name="md-menu">
                 </ion-icon>

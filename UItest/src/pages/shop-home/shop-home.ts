@@ -19,6 +19,8 @@ export class ShopHomePage {
     @ViewChild('BestMenusSlides') slides: Slides;
     @ViewChild('ShopHomeContent') content: Content;
     
+    menuSlideUp:boolean=false;
+
     shopInfo = [{"takitId":"세종대@더큰도시락","shopName":"더큰도시락", "serviceType":"도시락, 한식"},
              {"takitId":"세종대@HandelandGretel","shopName":"헨델엔그레텔", "serviceType":"커피, 디저트"},
             {"takitId":"세종대@Pandorothy","shopName":"팬도로시", "serviceType":"커피, 디저트"},
@@ -123,5 +125,19 @@ export class ShopHomePage {
 
   back(){
      this.app.getRootNav().pop({animate:true,animation: 'slide-up', direction: 'forward' });
+  }
+
+  clickMenuArea(){
+    console.log("clickMenuArea "+this.menuSlideUp);
+    if(!this.menuSlideUp){
+         this.menuSlideUp=true;   
+    }
+  }
+
+  slidePressed(){
+    console.log("slidePressed "+this.menuSlideUp);
+    if(this.menuSlideUp){
+         this.menuSlideUp=false;   
+    }
   }
 }
