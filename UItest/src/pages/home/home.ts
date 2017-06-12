@@ -64,7 +64,8 @@ export class HomePage {
 
   enterShopHome(takitId){
       //tab bar 가림
-      this.app.getRootNav().push(ShopHomePage,{"takitId":takitId});
+      //this.app.getRootNav().push(ShopHomePage,{"takitId":takitId});
+      this.app.getRootNav().push(ShopHomePage,{"takitId":takitId},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
 }

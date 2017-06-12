@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, Slides } from 'ionic-angular';
-import { Content } from 'ionic-angular';
-
+import { Component, NgZone, ViewChild ,trigger, state, style, transition, animate, keyframes } from '@angular/core';
+import { NavController, NavParams, Slides ,App} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import { ShopAboutPage } from '../shop-about/shop-about';
+import { Content } from 'ionic-angular';
+
 import { OldOrderPage } from '../old-order/old-order';
 import { OrderPage } from '../order/order';
 
@@ -15,12 +15,31 @@ import { OrderPage } from '../order/order';
 */
 @Component({
   selector: 'page-shop-home',
-  templateUrl: 'shop-home.html'
+  templateUrl: 'shop-home.html',
+  animations: [
+    trigger('slideUp', [
+      state('down', style({
+        opacity: 1,
+        transform: 'translate3d(0, 0, 0)' // x,y,z
+      })),
+      state('up', style({
+        opacity: 1,
+        transform: 'translate3d(0, -50vh, 0)'
+      })),
+      transition('down => up', animate('2000ms')),
+      transition('up => down', animate('2000ms'))
+    ])
+  ]
 })
 export class ShopHomePage {
     @ViewChild('BestMenusSlides') slides: Slides;
     @ViewChild('ShopHomeContent') content: Content;
-    
+    pos:String='-50vh';
+
+    menuSlideUp:boolean=false;
+    slideUpState:String='down';
+    slideDownState:String='up';
+
     shopInfo = [{"takitId":"세종대@더큰도시락","shopName":"더큰도시락", "serviceType":"도시락, 한식"},
              {"takitId":"세종대@HandelandGretel","shopName":"헨델엔그레텔", "serviceType":"커피, 디저트"},
             {"takitId":"세종대@Pandorothy","shopName":"팬도로시", "serviceType":"커피, 디저트"},
@@ -88,7 +107,8 @@ export class ShopHomePage {
     slideStyle={};
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-                public storageProvider:StorageProvider) {
+                public storageProvider:StorageProvider,private app: App,
+               private ngZone:NgZone) {
 
                         console.log(this.categories[0].categoryName);
 
@@ -101,7 +121,7 @@ export class ShopHomePage {
   }
 
   showShopAbout(){
-    this.navCtrl.push(ShopAboutPage);
+    this.navCtrl.push(ShopAboutPage, {},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
 
@@ -129,5 +149,31 @@ export class ShopHomePage {
 
   enterOrder(menu){
       this.navCtrl.push(OrderPage,{menu:menu});
+  }
+
+  back(){
+     this.app.getRootNav().pop({animate:true,animation: 'slide-up', direction: 'forward' });
+  }
+
+  clickMenuArea(){
+    console.log("clickMenuArea "+this.menuSlideUp);
+    if(!this.menuSlideUp){
+      this.slideUpState='up'; //up으로 이동하기 
+      setTimeout(() => {
+         this.menuSlideUp=true;
+         console.log("slide up");
+       }, 2000);     
+    }
+  }
+
+  slidePressed(){
+    console.log("slidePressed "+this.menuSlideUp);
+    if(this.menuSlideUp){
+      this.menuSlideUp=false;
+      this.slideUpState='down';
+       setTimeout(() => {
+          console.log("slide down");
+       }, 2000);
+    }
   }
 }

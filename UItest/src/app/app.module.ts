@@ -47,7 +47,7 @@ import {ConfigProvider} from '../providers/configProvider';
     BrowserAnimationsModule,
     HttpModule,
     CustomIconsModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp,{mode:'ios'})
   ],
   bootstrap: [IonicApp],
   entryComponents: [
