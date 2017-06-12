@@ -1,5 +1,5 @@
 import { Component,ViewChild } from '@angular/core';
-import { NavController, NavParams, Slides } from 'ionic-angular';
+import { NavController, NavParams, Slides, App } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import { OldOrderPage } from '../old-order/old-order';
 import { ShopHomePage } from '../shop-home/shop-home';
@@ -32,7 +32,7 @@ export class HomePage {
     circle = ["UItest/circle1.png","UItest/circle2.png"]
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-                public storageProvider:StorageProvider) {
+                public storageProvider:StorageProvider, private app:App) {
                     
                 }
 
@@ -63,7 +63,8 @@ export class HomePage {
   }
 
   enterShopHome(takitId){
-      this.navCtrl.push(ShopHomePage,{"takitId":takitId});
+      //tab bar 가림
+      this.app.getRootNav().push(ShopHomePage,{"takitId":takitId});
   }
 
 }

@@ -6,7 +6,12 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar hideBackButton="true" >
+      <ion-buttons start>
+        <button navPop class="nav-btn" small ion-button no-margin clear>
+          <p>< back</p>
+        </button>
+      </ion-buttons>
     <ion-title>{{oldOrders[0].takitId}}</ion-title>
   </ion-navbar>
 </ion-header>

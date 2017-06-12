@@ -6,7 +6,12 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar hideBackButton="true" >
+    <ion-buttons start>
+      <button navPop class="nav-btn" color="transparent" small ion-button no-margin >
+          <p>< back</p>
+      </button>
+    </ion-buttons>
     <ion-title>shopAbout</ion-title>
   </ion-navbar>
 
@@ -73,7 +78,7 @@
         <button ion-fab >주문</button>
         <ion-fab-list side="top">
             <button ion-button small>장바구니</button>
-            <button ion-button small>지난주문</button>
+            <button (click)="enterOldOrder()" ion-button small>지난주문</button>
         </ion-fab-list>
     </ion-fab>
 </ion-content>

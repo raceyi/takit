@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
+import { OldOrderPage } from '../old-order/old-order';
+
 /*
   Generated class for the ShopAbout page.
 
@@ -23,4 +25,7 @@ export class ShopAboutPage {
     console.log('ionViewDidLoad ShopAboutPage');
   }
 
+  enterOldOrder(){
+      this.navCtrl.push(OldOrderPage,{takitId:"세종대@더큰도시락"});
+  }
 }

@@ -4,20 +4,17 @@ page-my-takit {
     }
 
     ion-scroll {
-        height: 180px;
+        height: 150px;
         
     }
 
-    #Slides{
-        height: 130px;
-    }
-    // .swiper-slide{
-    //     height: 180px;
-    // }
-
     .slides-history{
         vertical-align: top;
-        height: 160px;
+        height: 140px;
+    }
+
+    .slides-history button, .slides-history ion-item{
+        height: 120px;
     }
 
     .historyScroll .scroll-content{

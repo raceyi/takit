@@ -5,12 +5,19 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>{{shopInfo[0].takitId}}</ion-title>
-    <button (click)="showShopAbout()" style="float:right;" class="btn-about" color="transparent" ion-button >
-     about
+    
+  <ion-navbar hideBackButton="true" >
+      <ion-buttons start>
+      <button navPop class="nav-btn" small ion-button no-margin clear>
+     <p>< back</p>
     </button>
+      </ion-buttons>
+    <ion-title>{{shopInfo[0].takitId}}</ion-title>
+     <ion-buttons end>
+        <button (click)="showShopAbout()" class="nav-btn" small ion-button no-margin clear>
+        <p>about</p>
+        </button>
+     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -19,9 +26,9 @@
     <ion-slides #BestMenusSlides class="btn-bestMenus">
         <ion-slide *ngFor="let menu of bestMenus" >
             <button (click)="showBestMenus()" [ngStyle]="{'background':'url('+storageProvider.awsS3+menu.imagePath+') no-repeat','background-size':'100% 200px'}" ion-button full no-padding no-margin class="btn-bestMenus" >
-                <button (click)="showLeftBest()" ion-button color="transparent" style="margin-right:60%; font-size:50px;"><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>
+                <button (click)="showLeftBest()" class="btn-prev" ion-button color="transparent" ><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>
                 <!--<img [src]="storageProvider.awsS3+menu.imagePath" class="btn-bestMenus">-->
-                <button  (click)="showRightBest()" ion-button color="transparent" style="font-size:50px;"><ion-icon name="ios-arrow-forward" color="grey"></ion-icon></button>
+                <button (click)="showRightBest()" class="btn-next" ion-button color="transparent" no-padding><ion-icon name="ios-arrow-forward" color="grey"></ion-icon></button>
             </button>
 
         </ion-slide>
@@ -57,15 +64,15 @@
     </ion-row>
 
     <div class="div-menus">
-        <ion-row>
+        <ion-row class="row-scrollbar">
             <ion-col class="col-scrollbar">
                 <ion-icon name="md-menu">
                 </ion-icon>
             </ion-col>
         </ion-row>
-        <ion-row>
-            <ion-col class="col-menus">
-                <ion-scroll scrollY="true" class="scroll-menus">
+        <ion-row class="row-categories-menus">
+            <ion-col class="col-categories">
+                <ion-scroll scrollY="true" class="scroll-categories">
                     <ion-list *ngFor="let category of categories">
                         <button full color="white" ion-button>
                             <p>{{category.categoryName}}</p>
@@ -73,16 +80,18 @@
                     </ion-list>
                 </ion-scroll>
             </ion-col>
-            <ion-col>
-                <ion-list *ngFor="let menu of menus">
-                    <button class="btn-menu" color="white" ion-button full no-padding no-margin>
-                        <ion-item>
-                            <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
-                            <h2>{{menu.menuName}}</h2>
-                            <p>{{menu.price}}</p>
-                        </ion-item>
-                    </button>
-                </ion-list>
+            <ion-col class="col-menus">
+                <ion-scroll scrollY="true" class="scroll-menus">
+                    <ion-list *ngFor="let menu of menus">
+                        <button (click)="enterOrder(menu)" class="btn-menu" color="white" ion-button full no-padding no-margin>
+                            <ion-item no-lines>
+                                <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
+                                <h2>{{menu.menuName}}</h2>
+                                <p>{{menu.price}}</p>
+                            </ion-item>
+                        </button>
+                    </ion-list>
+                </ion-scroll>
             </ion-col>
         </ion-row>
     </div>
@@ -90,7 +99,7 @@
         <button ion-fab >주문</button>
         <ion-fab-list side="top">
             <button ion-button small>장바구니</button>
-            <button ion-button small>지난주문</button>
+            <button (click)="enterOldOrder()" ion-button small>지난주문</button>
         </ion-fab-list>
     </ion-fab>
 

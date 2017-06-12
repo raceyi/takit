@@ -46,38 +46,53 @@
         </ion-row>
     </ion-scroll>-->
     <ion-slides #Slides (ionSlideDidChange)="historyChanged()" class="slides-history">
-        <ion-slide>
-            <ion-row>
-            <ion-card class="card-history" >
-                <button ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
-                    <img  class="shopImage" [src]="storageProvider.awsS3+histories[0].imagePath">
-                    <ion-card-content>
-                        <p text-center>{{histories[0].takitId}}</p>
-                        <p text-center>{{histories[0].orderName}}</p>
-                    </ion-card-content>
-
+        <ion-slide *ngFor="let history of histories">
+            <ion-card style="margin-left:3%;" >
+                <button class="favoriteBtn" color="white" ion-button full no-padding no-margin>
+                    <ion-item [ngSwitch]="history.orderStatus">
+                        <!--<ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+history.imagePath"></ion-avatar>-->
+                        <h2>{{history.orderName+" &nbsp;&nbsp;"+history.amount}}</h2>               
+                        <p>{{history.takitId}}</p>
+                        <p *ngSwitchCase="'paid'">결제 완료</p>
+                        <p *ngSwitchCase="'checked'">주문 접수</p>  
+                        <p *ngSwitchCase="'completed'">주문 완료</p>
+                        <p *ngSwitchCase="'cancelled'">주문 취소</p>   
+                        <!--<p>{{history.orderedDate+" / "+history.orderedTime}}</p>-->
+                    </ion-item>
                 </button>
             </ion-card>
-            <ion-card class="card-history" >
-                <button ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
-                    <img  class="shopImage" [src]="storageProvider.awsS3+histories[1].imagePath">
-                    <ion-card-content>
-                        <p text-center>{{histories[1].takitId}}</p>
-                        <p text-center>{{histories[1].orderName}}</p>
-                    </ion-card-content>
+            <!--<ion-row>
+                <ion-card class="card-history" >
+                    <button ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
+                        <img  class="shopImage" [src]="storageProvider.awsS3+histories[0].imagePath">
+                        <ion-card-content>
+                            <p text-center>{{histories[0].takitId}}</p>
+                            <p text-center>{{histories[0].orderName}}</p>
+                        </ion-card-content>
 
-                </button>
-            </ion-card>
-            <ion-card class="card-history" >
-                <button ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
-                    <img class="shopImage" [src]="storageProvider.awsS3+histories[2].imagePath">
-                    <ion-card-content>
-                        <p text-center>{{histories[2].takitId}}</p>
-                        <p text-center>{{histories[2].orderName}}</p>
-                    </ion-card-content>
+                    </button>
+                </ion-card>
+                <ion-card class="card-history" >
+                    <button ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
+                        <img  class="shopImage" [src]="storageProvider.awsS3+histories[1].imagePath">
+                        <ion-card-content>
+                            <p text-center>{{histories[1].takitId}}</p>
+                            <p text-center>{{histories[1].orderName}}</p>
+                        </ion-card-content>
 
-                </button>
-            </ion-card></ion-row>
+                    </button>
+                </ion-card>
+                <ion-card class="card-history" >
+                    <button ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
+                        <img class="shopImage" [src]="storageProvider.awsS3+histories[2].imagePath">
+                        <ion-card-content>
+                            <p text-center>{{histories[2].takitId}}</p>
+                            <p text-center>{{histories[2].orderName}}</p>
+                        </ion-card-content>
+
+                    </button>
+                </ion-card>
+            </ion-row>
         </ion-slide>
         <ion-slide>
             <ion-row>
@@ -101,7 +116,7 @@
 
                 </button>
             </ion-card>
-            </ion-row>
+            </ion-row>-->
         </ion-slide>
     </ion-slides>
     <ion-item no-lines text-center no-padding no-margin>

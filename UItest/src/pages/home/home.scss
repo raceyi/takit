@@ -1,12 +1,21 @@
 page-home {
-    ion-scroll {
-        height: 150px;
+    $scroll-H:150px;
+    $favorite-img-H : 130px;
+
+    
+
+    .scroll-favorite {
+        height: $scroll-H;
         
     }
 
-    .favoriteScroll .scroll-content{
+    .scroll-favorite .scroll-content{
         // padding: 0px;
         padding: 0px 0px 0px 10px;
+    }
+
+    .scroll-row-favorite{
+        flex-wrap : inherit;
     }
 
     .card-ios{
@@ -16,12 +25,12 @@ page-home {
     .card-favorite{
         overflow: inherit;
         width : 130px;
-        height: 130px;
+        height: $favorite-img-H;
     }
 
     .card-favorite > ion-col, .card-favorite > ion-col > button{
         width: 130px;
-        height: 130px;
+        height: $favorite-img-H;
     }
 
     .card-favorite > ion-col > button .button-inner{
@@ -49,15 +58,11 @@ page-home {
     }
 
     //
-    .card-shop{
+    .card-shop, .card-shop > ion-row{
         width: 100%;
         height: 120px;
     }
 
-    .card-shop > ion-row{
-        width: 100%;
-        height: 120px;
-    } 
     .card-shop > ion-row > ion-col {
         width: 120%;
         height: 120px;

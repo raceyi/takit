@@ -4,6 +4,12 @@ page-shop-home {
     //     height: 150px;
     // }
 
+    @mixin calc($property, $expression) { 
+        #{$property}: -webkit-calc(#{$expression}); 
+        #{$property}: -moz-calc(#{$expression});
+        #{$property}: calc(#{$expression}); 
+    } 
+
     .btn-bestMenus {
         width:100%; 
         height: 200px;
@@ -37,16 +43,37 @@ page-shop-home {
         border-color: lightgray;
     }
 
+    .row-scrollbar{
+        height: 35px;
+        background-color: lightgray;
+    }
+
     .col-scrollbar {
         padding: 5px 0px 5px 0px;
-        background-color: lightgray;
         font-size: 1.7em;
         text-align: center;
+        height: 35px;
+    }
+    .row-categories-menus{
+        @include calc(height, "100% - 35px");
+    }
+
+    .col-categories{
+        flex: 0 0 30%;
+        height: 100%;
+        border-right: solid 3px;
+        border-right-color: lightgray;
     }
 
     .col-menus{
-        flex: 0 0 30%;
-        height: 500px;
+        height: 100%;
+    }
+
+    .scroll-categories{
+        width: 100%;
+        height: 100%;
+        padding-bottom: 5%;
+        margin : 0px;
     }
 
     .scroll-menus{
@@ -56,8 +83,18 @@ page-shop-home {
         margin : 0px;
     }
 
+
     .btn-about {
         color: black;
+    }
+
+    .btn-prev{
+        margin-right:75%;
+    }
+
+    .btn-prev, .btn-next{
+        font-size:50px;
+        padding:5px;
     }
 
 }

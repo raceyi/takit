@@ -23,8 +23,8 @@
     <ion-icon name="heart" color="danger"></ion-icon>
     </div>-->
     <ion-item-divider color="white">최근 방문한 매장</ion-item-divider>
-    <ion-scroll scrollX="true" class="favoriteScroll">
-        <ion-row>
+    <ion-scroll scrollX="true" class="scroll-favorite">
+        <ion-row class="scroll-row-favorite">
             <ion-card *ngFor="let item of items" class="card-favorite" >
                 <ion-col no-padding>
                     <button (click)="enterOldOrder(item.takitId)" ion-button full class="favoriteBtn" color="white" large no-padding no-margin>

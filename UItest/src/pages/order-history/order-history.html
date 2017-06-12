@@ -6,7 +6,12 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar hideBackButton="true" >
+    <ion-buttons start>
+        <button navPop class="nav-btn" color="transparent" small ion-button no-margin >
+          <p>< back</p>
+        </button>
+    </ion-buttons>
     <ion-title>orderHistory</ion-title>
   </ion-navbar>
 
@@ -25,7 +30,7 @@
   <ion-list *ngFor="let history of histories">
     <button class="btn-history" color="white" ion-button full no-padding no-margin>
         <ion-item [ngSwitch]="history.orderStatus">
-            <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+history.imagePath"></ion-avatar>
+            <!--<ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+history.imagePath"></ion-avatar>-->
             <h2>{{history.orderName+" &nbsp;&nbsp;"+history.amount}}</h2>               
             <p>{{history.takitId}}</p>
             <p *ngSwitchCase="'paid'">결제 완료</p>

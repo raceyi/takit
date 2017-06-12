@@ -46,7 +46,7 @@
       <ion-card-content no-padding>
           <ion-scroll scrollX="true" class="scroll-cardList" >
               <br><br>
-            <ion-row   >
+            <ion-row  class="scroll-row-cardList">
                 <ion-col *ngFor="let card of cardList" class="scroll-col-card" >
                 <img [src]="storageProvider.awsS3OCR+card.img" class="img-card">
                 <br>

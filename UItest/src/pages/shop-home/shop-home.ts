@@ -1,9 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavController, NavParams, Slides } from 'ionic-angular';
-import {StorageProvider} from '../../providers/storageProvider';
-import { ShopAboutPage } from '../shop-about/shop-about';
 import { Content } from 'ionic-angular';
 
+import {StorageProvider} from '../../providers/storageProvider';
+import { ShopAboutPage } from '../shop-about/shop-about';
+import { OldOrderPage } from '../old-order/old-order';
+import { OrderPage } from '../order/order';
 
 /*
   Generated class for the ShopHome page.
@@ -104,20 +106,28 @@ export class ShopHomePage {
 
 
   showLeftBest(){
-      console.log("showLeftBest start");
+    console.log("showLeftBest start");
     this.slides.lockSwipes(false);
     this.slides.slidePrev();
     this.slides.lockSwipes(true);
   }
 
   showRightBest(){
-      console.log("showRightBest start");
+    console.log("showRightBest start");
     this.slides.lockSwipes(false);
     this.slides.slideNext();
     this.slides.lockSwipes(true);
   }
 
   showBestMenus(){
-      console.log("showBestMenus");
+    console.log("showBestMenus");
+  }
+
+  enterOldOrder(){
+      this.navCtrl.push(OldOrderPage,{takitId:"세종대@더큰도시락"});
+  }
+
+  enterOrder(menu){
+      this.navCtrl.push(OrderPage,{menu:menu});
   }
 }
