@@ -1,3 +1,31 @@
 page-order {
+    
+
+    .div-takeout{
+        border-bottom:1px dashed;
+        button{
+            
+        }
+    }
+
+    .div-shopMSG{
+        //border-radius: 20px;
+        //border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        background-color: lightgray;
+    }
+
+
+    .div-pay{
+        display: flex;
+        
+    }
+    
+    .div-discount-inner{
+        border-radius: 5px;
+
+    }
 
 }

@@ -4,21 +4,44 @@ page-shop-home {
     //     height: 150px;
     // }
 
-    @mixin calc($property, $expression) { 
-        #{$property}: -webkit-calc(#{$expression}); 
-        #{$property}: -moz-calc(#{$expression});
-        #{$property}: calc(#{$expression}); 
-    } 
-
     .btn-bestMenus {
         width:100%; 
         height: 200px;
+        ion-card{
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            text-align: center;
+            display: flex;
+
+            img{
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+        }
+
+         .card-title {
+            position: absolute;
+            top: 60%;
+            height: 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.0em;
+            width: 100%;
+            font-weight: bold;
+            background:linear-gradient(transparent, $sub2-color);
+            color: #fff;
+        }
     }
 
     .row-shopInfo{
         padding: 10px 0px 10px 8px;
-        background-color: lightgrey;
-        color:white;
+        color: $sub2-color;
         vertical-align: middle;
     }
 
@@ -50,13 +73,12 @@ page-shop-home {
         height: 100%;
         border-left: solid 8px;
         border-right: solid 8px;
-        border-color: lightgray;
+        border-color:$sub-color;
         background-color: white;
     }
 
     .row-scrollbar{
         height: 35px;
-        background-color: lightgray;
     }
 
     .col-scrollbar {
@@ -64,16 +86,33 @@ page-shop-home {
         font-size: 1.7em;
         text-align: center;
         height: 35px;
+
     }
     .row-categories-menus{
         @include calc(height, "100% - 35px");
+
     }
 
     .col-categories{
         flex: 0 0 30%;
         height: 100%;
-        border-right: solid 3px;
-        border-right-color: lightgray;
+
+        //border-right: solid 3px;
+        //border-right-color: $sub-color;
+        .segment-categories{
+            flex-direction: column;
+        }
+
+        .segment-ios .segment-button{
+            width: 100%;
+            text-align: left;
+            border: none;
+        }
+
+        .segment-ios-subColor2 .segment-button:hover:not(.segment-activated){
+            background-color: $sub2-color;
+            color:white;
+        }
     }
 
     .col-menus{
@@ -92,6 +131,10 @@ page-shop-home {
         height: 100%;
         padding-bottom: 5%;
         margin : 0px;
+    }
+
+    .scroll-fix{
+        overflow-y: hidden;
     }
 
 

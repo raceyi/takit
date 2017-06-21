@@ -5,8 +5,8 @@ import { ShopAboutPage } from '../shop-about/shop-about';
 import { Content } from 'ionic-angular';
 
 import { OldOrderPage } from '../old-order/old-order';
-import { OrderPage } from '../order/order';
-
+import { MenuDetailPage } from '../menu-detail/menu-detail';
+import { ShopCartPage } from '../shop-cart/shop-cart';
 /*
   Generated class for the ShopHome page.
 
@@ -24,26 +24,26 @@ import { OrderPage } from '../order/order';
       })),
       state('up', style({
         opacity: 1,
-        transform: 'translate3d(0, -50vh, 0)'
+        transform: 'translate3d(0, -60vh, 0)'
       })),
-      transition('down => up', animate('2000ms')),
-      transition('up => down', animate('2000ms'))
+      transition('down => up', animate('200ms')),
+      transition('up => down', animate('200ms'))
     ])
   ]
 })
 export class ShopHomePage {
     @ViewChild('BestMenusSlides') slides: Slides;
     @ViewChild('ShopHomeContent') content: Content;
-    pos:String='-50vh';
+    pos:String='-60vh';
 
     menuSlideUp:boolean=false;
     slideUpState:String='down';
     slideDownState:String='up';
 
-    shopInfo = [{"takitId":"세종대@더큰도시락","shopName":"더큰도시락", "serviceType":"도시락, 한식"},
-             {"takitId":"세종대@HandelandGretel","shopName":"헨델엔그레텔", "serviceType":"커피, 디저트"},
-            {"takitId":"세종대@Pandorothy","shopName":"팬도로시", "serviceType":"커피, 디저트"},
-            {"takitId":"ORDER@GAROSU","shopName":"가로수그늘아래", "serviceType":"커피, 음료, 차"}];
+    shopInfo = [{"takitId":"세종대@더큰도시락","shopName":"더큰도시락", "serviceType":"도시락 / 한식"},
+             {"takitId":"세종대@HandelandGretel","shopName":"헨델엔그레텔", "serviceType":"커피 / 디저트"},
+            {"takitId":"세종대@Pandorothy","shopName":"팬도로시", "serviceType":"커피 / 디저트"},
+            {"takitId":"ORDER@GAROSU","shopName":"가로수그늘아래", "serviceType":"커피 / 음료 / 차"}];
 
     //이미지 찾기
     bestMenus = [{"menuName":"수제등심돈까스", "price":"5500", "imagePath":"세종대@더큰도시락;1_수제등심돈까스"},
@@ -148,7 +148,7 @@ export class ShopHomePage {
   }
 
   enterOrder(menu){
-      this.navCtrl.push(OrderPage,{menu:menu});
+      this.navCtrl.push(MenuDetailPage,{menu:menu});
   }
 
   back(){
@@ -162,7 +162,7 @@ export class ShopHomePage {
       setTimeout(() => {
          this.menuSlideUp=true;
          console.log("slide up");
-       }, 2000);     
+       }, 200);     
     }
   }
 
@@ -173,7 +173,15 @@ export class ShopHomePage {
       this.slideUpState='down';
        setTimeout(() => {
           console.log("slide down");
-       }, 2000);
+       }, 200);
     }
+  }
+
+  enterCart(){
+    this.navCtrl.push(ShopCartPage);
+  }
+
+  goHome(){
+      this.navCtrl.parent.select(0);
   }
 }

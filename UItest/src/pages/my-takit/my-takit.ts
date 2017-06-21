@@ -3,6 +3,7 @@ import { NavController, NavParams,Slides } from 'ionic-angular';
 import { App, ViewController } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {OrderHistoryPage} from '../order-history/order-history';
+import { HomePage } from '../home/home';
 /*
   Generated class for the MyTakit page.
 
@@ -16,15 +17,15 @@ import {OrderHistoryPage} from '../order-history/order-history';
 export class MyTakitPage {
      @ViewChild(Slides) slides: Slides;
 
-     histories = [{"selected":true,"takitId":"세종대@더큰도시락","orderName":"돈까스도시락", "amount":"3500","imagePath":"세종대@더큰도시락;1_돈까스도시락",
+     histories = [{"selected":true,"shopName":"더큰도시락", "takitId":"세종대@더큰도시락","orderName":"돈까스도시락", "amount":"3500","imagePath":"세종대@더큰도시락;1_돈까스도시락",
                 "orderStatus":"paid","orderedTime":"2017-06-01 20:15:13.000"},
-                {"selected":false,"takitId":"세종대@더큰도시락","orderName":"대왕참치마요", "amount":"4000","imagePath":"세종대@더큰도시락;3_대왕참치마요",
+                {"selected":false,"shopName":"더큰도시락","takitId":"세종대@더큰도시락","orderName":"대왕참치마요", "amount":"4000","imagePath":"세종대@더큰도시락;3_대왕참치마요",
                 "orderStatus":"completed","orderedTime":"2017-05-31 20:15:13.000"},
-                {"selected":false,"takitId":"세종대@HandelandGretel","orderName":"아메리카노", "amount":"3000","imagePath":"세종대@HandelandGretel;1_아메리카노",
+                {"selected":false,"shopName":"헨델과 그레텔","takitId":"세종대@HandelandGretel","orderName":"아메리카노", "amount":"3000","imagePath":"세종대@HandelandGretel;1_아메리카노",
                 "orderStatus":"completed","orderedTime":"2017-05-31 13:15:13.000"},
-                {"selected":false,"takitId":"세종대@더큰도시락","orderName":"커플1", "amount":"3800","imagePath":"세종대@더큰도시락;2_커플1",
+                {"selected":false,"shopName":"더큰도시락","takitId":"세종대@더큰도시락","orderName":"커플1", "amount":"3800","imagePath":"세종대@더큰도시락;2_커플1",
                 "orderStatus":"completed","orderedTime":"2017-05-31 12:00:13.000"},
-                {"selected":false,"takitId":"ORDER@GAROSU","orderName":"카페라떼", "amount":"3000","imagePath":"ORDER@GAROSU;1_카페라떼",
+                {"selected":false,"shopName":"가로수 그늘 아래","takitId":"ORDER@GAROSU","orderName":"카페라떼", "amount":"3000","imagePath":"ORDER@GAROSU;1_카페라떼",
                 "orderStatus":"completed","orderedTime":"2017-05-20 14:09:13.000"}];
 
     items=[{"takitId":"세종대@더큰도시락","name":"더큰도시락","visit":"1일 전 방문","img":"세종대@더큰도시락_main"},
@@ -58,5 +59,9 @@ export class MyTakitPage {
         this.histories[0].selected=true;
         this.histories[3].selected=false;
       }
+  }
+
+  goHome(){
+      this.navCtrl.parent.select(0);
   }
 }

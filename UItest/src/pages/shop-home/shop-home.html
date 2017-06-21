@@ -4,12 +4,12 @@
   See http://ionicframework.com/docs/v2/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
+<ion-header [hidden]="menuSlideUp">
   <ion-navbar hideBackButton="true" >
-      <ion-buttons start>
-      <button navPop class="nav-btn" small ion-button no-margin clear>
-     <p>< back</p>
-    </button>
+    <ion-buttons start>
+        <button navPop class="nav-btn" small ion-button no-margin clear>
+            <p>< back</p>
+        </button>
       </ion-buttons>
     <ion-title>{{shopInfo[0].takitId}}</ion-title>
      <ion-buttons end>
@@ -24,13 +24,15 @@
 <ion-content class="no-scroll" padding #ShopHomeContent>
     <ion-slides #BestMenusSlides class="btn-bestMenus" [hidden]="menuSlideUp">
         <ion-slide *ngFor="let menu of bestMenus" >
-            <button (click)="showBestMenus()" [ngStyle]="{'background':'url('+storageProvider.awsS3+menu.imagePath+') no-repeat','background-size':'100% 200px'}" ion-button full no-padding no-margin class="btn-bestMenus" >
-                <button (click)="showLeftBest()" class="btn-prev" ion-button color="transparent" ><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>
+            <button (click)="showBestMenus()" ion-button full no-padding no-margin class="btn-bestMenus" >
+            <ion-card>
+                <!--<button (click)="showLeftBest()" class="btn-prev" ion-button color="transparent" ><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>-->
                 <!--<button class="slide-button" (click)="showLeftBest()" ion-button color="transparent" style="margin-right:60%; font-size:50px;"><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>-->
-                <!--<img [src]="storageProvider.awsS3+menu.imagePath" class="btn-bestMenus">-->
-                <button (click)="showRightBest()" class="btn-next" ion-button color="transparent" no-padding><ion-icon name="ios-arrow-forward" color="grey"></ion-icon></button>
+                <img [src]="storageProvider.awsS3+menu.imagePath">
+                <div class="card-title">{{menu.menuName}}</div>
+                <!--<button (click)="showRightBest()" class="btn-next" ion-button color="transparent" no-padding><ion-icon name="ios-arrow-forward" color="grey"></ion-icon></button>-->
+            </ion-card>
             </button>
-
         </ion-slide>
     </ion-slides>
     <ion-row class="row-shopInfo" [hidden]="menuSlideUp">
@@ -66,25 +68,32 @@
 
     <div [@slideUp]="slideUpState" class="div-menus"  (click)="clickMenuArea()" [hidden]="menuSlideUp">
         <ion-row (click)="slidePressed()" class="row-scrollbar">
-            <ion-col class="col-scrollbar">
-                <ion-icon name="md-menu">
+            <ion-col class="col-scrollbar bg-sub1">
+                <ion-icon name="md-menu" color="white">
                 </ion-icon>
             </ion-col>
         </ion-row>
-        <ion-row class="row-categories-menus">
+        <ion-row class="row-categories-menus bg-sub1">
             <ion-col class="col-categories">
-                <ion-scroll scrollY="true" class="scroll-menus">
-                    <ion-list *ngFor="let category of categories">
-                        <button full color="white" ion-button>
+                <ion-scroll scrollY="true" class="scroll-menus no-scroll">
+                    <!--<ion-list *ngFor="let category of categories">
+                        <button full color="subColor" ion-button>
                             <p>{{category.categoryName}}</p>
                         </button>
-                    </ion-list>
+                    </ion-list>-->
+                    <ion-segment class="segment-categories" color="subColor2" no-padding no-margin>
+                        <ion-segment-button *ngFor="let category of categories" readonly>
+                            <!--<button full color="subColor" ion-button>-->
+                            {{category.categoryName}}
+                            <!--</button>-->
+                        </ion-segment-button>
+                    </ion-segment>
                 </ion-scroll>
             </ion-col>
             <ion-col  class="col-menus">
-                <ion-scroll scrollY="true" class="scroll-menus">
+                <ion-scroll scrollY="true" class="scroll-menus no-scroll">
                 <ion-list *ngFor="let menu of menus">
-                    <button class="btn-menu" color="white" ion-button full no-padding no-margin>
+                    <button class="btn-menu radius-5" color="white" ion-button full no-padding no-margin>
                         <ion-item>
                             <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
                             <h2>{{menu.menuName}}</h2>
@@ -98,26 +107,28 @@
     </div>
 
     <div class="div-menus" [hidden]="!menuSlideUp">
-        <ion-row (click)="slidePressed()" class="row-scrollbar">
-            <ion-col class="col-scrollbar">
-                <ion-icon name="md-menu">
+        <ion-row (click)="slidePressed()" class="row-scrollbar ">
+            <ion-col class="col-scrollbar bg-sub1">
+                <ion-icon name="md-menu" color="white">
                 </ion-icon>
             </ion-col>
         </ion-row>
-        <ion-row class="row-categories-menus">
+        <ion-row class="row-categories-menus bg-sub1">
             <ion-col class="col-categories">
                 <ion-scroll scrollY="true" class="scroll-categories">
-                    <ion-list *ngFor="let category of categories">
-                        <button full color="white" ion-button>
-                            <p>{{category.categoryName}}</p>
-                        </button>
-                    </ion-list>
+                    <ion-segment class="segment-categories" color="subColor2" no-padding no-margin>
+                        <ion-segment-button *ngFor="let category of categories">
+                            <!--<button full color="subColor" ion-button>-->
+                            {{category.categoryName}}
+                            <!--</button>-->
+                        </ion-segment-button>
+                    </ion-segment>
                 </ion-scroll>
             </ion-col>
             <ion-col class="col-menus">
                 <ion-scroll scrollY="true" class="scroll-menus">
                     <ion-list *ngFor="let menu of menus">
-                        <button (click)="enterOrder(menu)"  class="btn-menu" color="white" ion-button full no-padding no-margin>
+                        <button (click)="enterOrder(menu)"  class="btn-menu radius-5" color="white" ion-button full no-padding no-margin>
                             <ion-item no-lines>
                                 <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
                                 <h2>{{menu.menuName}}</h2>
@@ -126,16 +137,23 @@
                         </button>
                     </ion-list>
                 </ion-scroll>
-            </ion-col>
+            </ion-col> 
         </ion-row>
     </div>
 
-    <ion-fab bottom right>
-        <button ion-fab >주문</button>
-        <ion-fab-list side="top">
+    <ion-fab bottom color="subColor3" style="right: 80px">
+        <button ion-fab (click)="enterOldOrder()" >지난주문</button>
+        <!--<ion-fab-list side="top">
             <button ion-button small>장바구니</button>
             <button (click)="enterOldOrder()" ion-button small>지난주문</button>
-        </ion-fab-list>
+        </ion-fab-list>-->
+    </ion-fab>
+    <ion-fab bottom right color="subColor3">
+        <button ion-fab (click)="enterCart()">장바구니</button>
+        <!--<ion-fab-list side="top">
+            <button ion-button small>장바구니</button>
+            <button (click)="enterOldOrder()" ion-button small>지난주문</button>
+        </ion-fab-list>-->
     </ion-fab>
 
 </ion-content>

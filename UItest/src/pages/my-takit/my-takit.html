@@ -7,9 +7,12 @@
 <ion-header>
 
   <ion-navbar>
-      <button ion-button menuToggle>
-      <ion-icon name="menu" color="black"></ion-icon>
-    </button>
+      <ion-buttons start>
+        <button  (click)="goHome()" ion-button color="mainColor" clear>
+            <custom-icon set="tab" name="tab_more" ></custom-icon>
+        <!--<ion-icon customIconSet="tab" customIconName="tab_more" color="mainColor"></ion-icon>-->
+        </button>
+      </ion-buttons>
     <ion-title>나의 타킷</ion-title>
      <ion-icon name="search" color="black" style="float:right; margin-right:5%; font-size: 1.6em;"></ion-icon>
   </ion-navbar>
@@ -18,12 +21,33 @@
 
 
 <ion-content padding>
-    <ion-list no-margin>
-        <ion-item no-lines class="item-historyTitle">
-            <span>주문 히스토리</span>
-            <button (click)="showAllHistory()" color="white" ion-button no-padding style="float:right;">전체보기</button>
-        </ion-item>
-    </ion-list>
+    <ion-row>
+        <ion-col>
+            <p>최근 주문</p>
+        </ion-col>
+        <ion-col>
+            <p>4개월</p>
+        </ion-col>
+    </ion-row>
+
+    <div *ngFor="let history of histories; let i=index;" class="div-history">
+        <ion-row  *ngIf="i<=2">
+            <ion-col>
+                <p>{{history.orderName}}</p>
+                <p>{{history.shopName}}</p>
+            </ion-col>
+            <ion-col>
+                <button ion-button clear color="mainColor">
+                    <custom-icon set="tab" name="tab_more" ></custom-icon>
+                </button>
+            </ion-col>
+        </ion-row>
+    </div>
+
+    <button (click)="showAllHistory()" color="white" ion-button no-padding>전체보기</button>
+
+
+
 
     <!--<tr *ngFor="let hero of heroes; let first = first; let last = last" 
     [ngClass]="{ first: first, last: last }">
@@ -45,22 +69,22 @@
             </ion-card>
         </ion-row>
     </ion-scroll>-->
-    <ion-slides #Slides (ionSlideDidChange)="historyChanged()" class="slides-history">
+    <!--<ion-slides #Slides (ionSlideDidChange)="historyChanged()" class="slides-history">
         <ion-slide *ngFor="let history of histories">
             <ion-card style="margin-left:3%;" >
                 <button class="favoriteBtn" color="white" ion-button full no-padding no-margin>
-                    <ion-item [ngSwitch]="history.orderStatus">
+                    <ion-item [ngSwitch]="history.orderStatus">-->
                         <!--<ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+history.imagePath"></ion-avatar>-->
-                        <h2>{{history.orderName+" &nbsp;&nbsp;"+history.amount}}</h2>               
+                        <!--<h2>{{history.orderName+" &nbsp;&nbsp;"+history.amount}}</h2>               
                         <p>{{history.takitId}}</p>
                         <p *ngSwitchCase="'paid'">결제 완료</p>
                         <p *ngSwitchCase="'checked'">주문 접수</p>  
                         <p *ngSwitchCase="'completed'">주문 완료</p>
-                        <p *ngSwitchCase="'cancelled'">주문 취소</p>   
+                        <p *ngSwitchCase="'cancelled'">주문 취소</p>   -->
                         <!--<p>{{history.orderedDate+" / "+history.orderedTime}}</p>-->
-                    </ion-item>
+                    <!--</ion-item>
                 </button>
-            </ion-card>
+            </ion-card>-->
             <!--<ion-row>
                 <ion-card class="card-history" >
                     <button ion-button full class="favoriteBtn" color="white" large no-padding no-margin>
@@ -117,7 +141,7 @@
                 </button>
             </ion-card>
             </ion-row>-->
-        </ion-slide>
+        <!--</ion-slide>
     </ion-slides>
     <ion-item no-lines text-center no-padding no-margin>
         <button ion-button color="white">
@@ -128,11 +152,18 @@
             <img *ngIf="!histories[3].selected" [src]="storageProvider.awsS3OCR+circle[0]" class="slidebar">
             <img *ngIf="histories[3].selected" [src]="storageProvider.awsS3OCR+circle[1]" class="slidebar">
         </button>
-    </ion-item>
+    </ion-item>-->
+ 
+    <p color="white">자주 가는 매장</p>
 
+    <div class="div-favShop">
+        <ion-list *ngFor="let item of items" class="list-favShop">
+            <img [src]="storageProvider.awsS3+item.img">
+            <p>{{item.name}}</p>
+        </ion-list>
+    </div>
 
-    <ion-item-divider color="white">자주 가는 매장</ion-item-divider>
-    <ion-card *ngFor="let item of items" class="card-shop">
+    <!--<ion-card *ngFor="let item of items" class="card-shop">
         <ion-row no-padding>
         <ion-col no-padding>
             <button class="btn-shop" color="white" ion-button full no-padding no-margin>
@@ -140,7 +171,7 @@
             <img class="img-shop" [src]="storageProvider.awsS3+item.img" >
                 <!--<ion-icon name="heart" color="danger"></ion-icon>-->
             
-            </button>     
+            <!--</button>     
         </ion-col>
         <ion-col >
             <ion-card-content>
@@ -150,6 +181,7 @@
             </ion-card-content>
         </ion-col>
         </ion-row>
-    </ion-card>
+    </ion-card>-->
+
 
 </ion-content>

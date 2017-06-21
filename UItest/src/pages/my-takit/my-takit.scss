@@ -1,4 +1,29 @@
 page-my-takit {
+
+    .div-history{
+        ion-row{
+            padding: 0;
+            margin: 0;
+            border: solid 3px;
+            border-radius: 10px;
+            border-color: $sub-color;
+        }
+    }
+
+    .div-favShop{
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .list-favShop{
+        width: 50%;
+        
+        //flex-basis :300px;
+        img{
+            width: 100%;
+        }
+    }
+
     .item-historyTitle{
         vertical-align: bottom;
     }

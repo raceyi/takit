@@ -9,15 +9,87 @@
   <ion-navbar hideBackButton="true" >
     <ion-buttons start>
       <button navPop class="nav-btn" small ion-button no-margin clear>
-          <p>< back</p>
+          <p>< </p>
       </button>
     </ion-buttons>
-    <ion-title>order</ion-title>
+    <ion-title>주문하기</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+    <div class="div-takeout flex-container">
+        <button ion-button clear>
+            <ion-icon name="md-radio-button-off">
+            </ion-icon>
+            <ion-label>테이크아웃</ion-label>
+        </button>
+        <button ion-button clear>
+            <ion-icon name="md-radio-button-off">
+            </ion-icon>
+            매장식사
+        </button>
+        <button ion-button clear>
+            <ion-icon name="md-radio-button-off">
+            </ion-icon>
+            배달
+        </button>
+    </div>
+    <div>
+        <p>요청사항</p>
+        <div class="div-shopMSG">{{deliveryMSG}}</div>
+    </div>
+    <div class="div-coupon top-dashed">
+        <span>쿠폰</span>
+        <button [round]="true" color="subColor" ion-button>쿠폰 찾기</button>
+        <ion-item class="border-sub1">
+            <ion-select value="first">
+                <ion-option value="first">쿠폰</ion-option>
+                <ion-option value="f">Female</ion-option>
+                <ion-option value="m">Male</ion-option>
+            </ion-select>
+        </ion-item>
+    </div>
+    <div class="div-pay top-dashed">
+        <button ion-button clear full>카드결제</button>
+        <button ion-button clear full>타킷캐쉬</button>
+    </div>
+    <div class="border-sub1">
+        <div class="bottom-solid">
+            <span>사용가능금액</span>
+            <span>{{userInfo.balance}}</span>
+        </div>
+        <span>현금 영수증 발행</span>
+        <ion-checkbox></ion-checkbox>
+        <p>{{userInfo.receiptId}}</p>
+    </div>
+    <div class="bg-sub1">
+        <div class="radius-5">
+            <div class="bottom-solid bg-white">
+                <span >주문 금액</span>
+                <span>{{menu.amount}}</span>
+            </div>
+            <div>
+                <span>쿠폰 할인 금액</span>
+                <span>{{couponDiscount}}</span>
+            </div>
+            <div>
+                <span>타킷 할인 금액</span>
+                <span>{{takitDiscount}}</span>
+            </div>
+            <div  class="bottom-solid">
+                <span>총 할인 금액</span>
+                <span>{{totalDiscount}}</span>
+            </div>
+            <span>총 결제 금액</span>
+            <span>{{totalPay}}</span>
+        </div>
+    </div>
 
 </ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <button (click)="orderComplete()" ion-button full clear>결제하기</button>
+    </ion-toolbar>
+</ion-footer>

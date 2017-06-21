@@ -2,12 +2,21 @@ page-my-wallet {
     .wallet-type{
         height: 50px;
         vertical-align: middle;
+
+        
     }
 
     .wallet-type .segment-button{
+        border-top-left-radius:64px;
         border-style: none;
         font-size: 17px;
     }
+
+    .segment-ios .segment-button:first-of-type, 
+    .segment-ios .segment-button:last-of-type{
+        border-radius: 64px;
+    }
+
 
     .card-cash-card{
         height: 200px;

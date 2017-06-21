@@ -20,25 +20,24 @@
 
 <ion-content padding>
     <div>
-        <ion-row>
+        <ion-row class="row-about">
             <ion-col style="text-align: -webkit-center;">
-                <ion-item no-lines style="text-align:center; width:180px; height:180px;">
+                <p>더큰도시락</p>
+                <ion-item color="item-about" no-lines >
                 <ion-avatar style="text-align: -webkit-center;">
                     <img style="text-align:center; width:120px; height:120px;" [src]="storageProvider.awsS3OCR+shef[0].img">
                 </ion-avatar>
                 </ion-item>
-            </ion-col>
-        </ion-row>
-        <ion-row >
-            <ion-col text-center>
-                <h4> 건강한 식재료로 믿을 수 있는</h4>
-                <h4> 음식을 만들고 있습니다.</h4>
+                <p> 건강한 식재료로 믿을 수 있는</p>
+                <p> 음식을 만들고 있습니다.</p>
+                <button ion-button clear color="white">BLOG</button>
             </ion-col>
         </ion-row>
     </div>
-    <ion-row class="row-shopInfo">
+    <ion-row class="row-business">
         <ion-col>
-            <p>영업시간 : 평일 09:00-22:00 / 주말 10:00-20:00</p>
+            <p>영업시간</p>
+            <p>평일 09:00-22:00 / 주말 10:00-20:00</p>
             <p>주소 : 서울시 광진구 군자로 121 지하 1층</p>
             <p>전화번호 : 02-499-4888</p>
         </ion-col>

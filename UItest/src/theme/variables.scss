@@ -25,7 +25,7 @@ $font-path: "../assets/fonts";
 
 $colors: (
 //  primary:    #387ef5,
-  primary: #f53d3d,
+  primary: #eb6863,
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
@@ -33,7 +33,10 @@ $colors: (
   white :   #ffffff,
   black : #000,
   grey : #888,
-  transparent: transparent
+  transparent: transparent,
+  mainColor:#eb6863,
+  subColor:#d8e9f0,
+  subColor2:#002b3f
  // transparent : rgb(0,0,0,0)
 );
 

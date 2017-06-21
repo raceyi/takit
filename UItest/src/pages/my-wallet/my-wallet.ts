@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
+//import { TransactionHistoryPage } from '../transaction-history/transaction-history';
+import { TransactionHistoryPage } from '../transaction-history/transaction-history';
 /*
   Generated class for the MyWallet page.
 
@@ -28,6 +30,12 @@ export class MyWalletPage {
     console.log('ionViewDidLoad MyWalletPage');
   }
 
+  goHome(){
+      this.navCtrl.parent.select(0);
+  }
 
+  showTransactionHistory(){
+    this.navCtrl.push(TransactionHistoryPage);
+  }
 
 }

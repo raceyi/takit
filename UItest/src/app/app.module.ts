@@ -6,7 +6,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 
-import { MenuPage } from '../pages/menu/menu';
 import { TabsPage } from '../pages/tabs/tabs';
 import { HomePage } from '../pages/home/home';
 import { MyWalletPage } from '../pages/my-wallet/my-wallet';
@@ -17,8 +16,10 @@ import { OldOrderPage } from '../pages/old-order/old-order';
 import { ShopAboutPage } from '../pages/shop-about/shop-about';
 import { OrderPage } from '../pages/order/order';
 import { MorePage } from '../pages/more/more';
-
-
+import { TransactionHistoryPage } from '../pages/transaction-history/transaction-history';
+import { MenuDetailPage } from '../pages/menu-detail/menu-detail';
+import { ShopCartPage } from '../pages/shop-cart/shop-cart';
+import { OrderCompletePage } from '../pages/order-complete/order-complete';
 
 
 import {ServerProvider} from '../providers/serverProvider';
@@ -30,7 +31,6 @@ import {ConfigProvider} from '../providers/configProvider';
 @NgModule({
   declarations: [
     MyApp,
-    MenuPage,
     TabsPage,
     HomePage,
     MyWalletPage,
@@ -40,19 +40,22 @@ import {ConfigProvider} from '../providers/configProvider';
     OldOrderPage,
     ShopAboutPage,
     OrderPage,
-    MorePage
+    MorePage,
+    TransactionHistoryPage,
+    MenuDetailPage,
+    ShopCartPage,
+    OrderCompletePage
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
-    CustomIconsModule,
-    IonicModule.forRoot(MyApp,{mode:'ios'})
+    IonicModule.forRoot(MyApp,{mode:'ios'}),
+    CustomIconsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    MenuPage,
     TabsPage,
     HomePage,
     MyWalletPage,
@@ -62,7 +65,11 @@ import {ConfigProvider} from '../providers/configProvider';
     OldOrderPage,
     ShopAboutPage,
     OrderPage,
-    MorePage
+    MorePage,
+    TransactionHistoryPage,
+    MenuDetailPage,
+    ShopCartPage,
+    OrderCompletePage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
                 StorageProvider,
