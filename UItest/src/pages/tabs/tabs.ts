@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 
-
-import { MenuPage } from '../menu/menu';
 import { MyWalletPage } from '../my-wallet/my-wallet';
 import { MyTakitPage } from '../my-takit/my-takit';
 import { HomePage } from '../home/home';
