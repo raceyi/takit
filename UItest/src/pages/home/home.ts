@@ -17,8 +17,6 @@ import { ShopHomePage } from '../shop-home/shop-home';
 export class HomePage {
     @ViewChild(Slides) slides: Slides;
 
-    rootHome=HomePage;
-
     public awsS3:string="https://s3.ap-northeast-2.amazonaws.com/seerid.cafe.image/";
     awsHtml:string = "https://s3.ap-northeast-2.amazonaws.com/seerid.html/";
     items=[{"takitId":"세종대@더큰도시락","name":"더큰도시락","visit":"1일 전 방문","img":"세종대@더큰도시락_main","discountRate":"0.5%","businessType":"한식","distance":"500m","reviewCount":"10"},
@@ -75,7 +73,7 @@ export class HomePage {
   enterShopHome(takitId){
       //tab bar 가림
       //this.app.getRootNav().push(ShopHomePage,{"takitId":takitId});
-      this.app.getRootNav().push(ShopHomePage,{"takitId":takitId},{animate:true,animation: 'slide-up', direction: 'forward' });
+      this.app.getRootNav().push(ShopHomePage,{"takitId":takitId},{animate:true,animation: 'md-transition', direction: 'forward', duration:800 });
   }
 
   showMoreMenus(takitId){

@@ -7,11 +7,17 @@
 <ion-header>
 
   <ion-navbar>
-      <button ion-button menuToggle>
-      <ion-icon name="menu" color="black"></ion-icon>
-      </button>
+      <ion-buttons start>
+        <button  (click)="goHome()" ion-button color="mainColor" clear>
+            <ion-icon name="icon-logo" color="mainColor"></ion-icon>
+        </button>
+      </ion-buttons>
     <ion-title>내 지갑</ion-title>
-     <ion-icon name="search" color="black" style="float:right; margin-right:5%; font-size: 1.6em;"></ion-icon>
+     <ion-buttons end>
+        <button ion-button clear>
+            <ion-icon name="search" color="mainColor" ></ion-icon>
+        </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>

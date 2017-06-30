@@ -7,13 +7,13 @@
 <ion-header [hidden]="menuSlideUp">
   <ion-navbar hideBackButton="true" >
     <ion-buttons start>
-        <button navPop class="nav-btn" small ion-button no-margin clear>
-            <p>< back</p>
+        <button (click)="back()" class="nav-btn" color="subColor2" small ion-button no-margin clear>
+            <ion-icon name="icon-logo"></ion-icon>
         </button>
       </ion-buttons>
     <ion-title>{{shopInfo[0].takitId}}</ion-title>
      <ion-buttons end>
-        <button (click)="showShopAbout()" class="nav-btn" small ion-button no-margin clear>
+        <button (click)="showShopAbout()" color="subColor2" class="nav-btn" small ion-button no-margin clear>
         <p>about</p>
         </button>
      </ion-buttons>
@@ -76,13 +76,8 @@
         <ion-row class="row-categories-menus bg-sub1">
             <ion-col class="col-categories">
                 <ion-scroll scrollY="true" class="scroll-menus no-scroll">
-                    <!--<ion-list *ngFor="let category of categories">
-                        <button full color="subColor" ion-button>
-                            <p>{{category.categoryName}}</p>
-                        </button>
-                    </ion-list>-->
-                    <ion-segment class="segment-categories" color="subColor2" no-padding no-margin>
-                        <ion-segment-button *ngFor="let category of categories" readonly>
+                    <ion-segment [(ngModel)]="categorySelected" class="segment-categories" color="subColor2" no-padding no-margin>
+                        <ion-segment-button value={{category.sequence}} *ngFor="let category of categories"  readonly>
                             <!--<button full color="subColor" ion-button>-->
                             {{category.categoryName}}
                             <!--</button>-->
@@ -92,7 +87,7 @@
             </ion-col>
             <ion-col  class="col-menus">
                 <ion-scroll scrollY="true" class="scroll-menus no-scroll">
-                <ion-list *ngFor="let menu of menus">
+                <ion-list *ngFor="let menu of categories[categorySelected].menus">
                     <button class="btn-menu radius-5" color="white" ion-button full no-padding no-margin>
                         <ion-item>
                             <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
@@ -116,8 +111,8 @@
         <ion-row class="row-categories-menus bg-sub1">
             <ion-col class="col-categories">
                 <ion-scroll scrollY="true" class="scroll-categories">
-                    <ion-segment class="segment-categories" color="subColor2" no-padding no-margin>
-                        <ion-segment-button *ngFor="let category of categories">
+                    <ion-segment [(ngModel)]="categorySelected" class="segment-categories" color="subColor2" no-padding no-margin>
+                        <ion-segment-button value={{category.sequence}} *ngFor="let category of categories">
                             <!--<button full color="subColor" ion-button>-->
                             {{category.categoryName}}
                             <!--</button>-->
@@ -127,12 +122,14 @@
             </ion-col>
             <ion-col class="col-menus">
                 <ion-scroll scrollY="true" class="scroll-menus">
-                    <ion-list *ngFor="let menu of menus">
+                    <ion-list  *ngFor="let menu of categories[categorySelected].menus">
                         <button (click)="enterOrder(menu)"  class="btn-menu radius-5" color="white" ion-button full no-padding no-margin>
                             <ion-item no-lines>
                                 <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
-                                <h2>{{menu.menuName}}</h2>
-                                <p>{{menu.price}}</p>
+                                <!--<h2>{{menu.menuName}}</h2>-->
+                                <!--<p>{{menu.price}}</p>-->
+                                <h2>{{categories[0].menus[0].menuName}}</h2>
+                                <p>{{categories[0].menus[0].price}}</p>
                             </ion-item>
                         </button>
                     </ion-list>

@@ -39,6 +39,7 @@ export class ShopHomePage {
     menuSlideUp:boolean=false;
     slideUpState:String='down';
     slideDownState:String='up';
+    nowCategory;
 
     shopInfo = [{"takitId":"세종대@더큰도시락","shopName":"더큰도시락", "serviceType":"도시락 / 한식"},
              {"takitId":"세종대@HandelandGretel","shopName":"헨델엔그레텔", "serviceType":"커피 / 디저트"},
@@ -66,22 +67,22 @@ export class ShopHomePage {
                 //   {"menuName":"삼식스페셜", "price":"3500", "imagePath":"세종대@더큰도시락;9_삼식스페셜"},
                 //   {"menuName":"매콤규동", "price":"3500", "imagePath":"세종대@더큰도시락;13_매콤규동"}]}]
 
-    categories=[{"takitId":"세종대@더큰도시락","categoryNO":"1","categoryName":"정식도시락","categoryNameEn":"Basic"},
-                {"takitId":"세종대@더큰도시락","categoryNO":"2","categoryName":"실속도시락","categoryNameEn":"Couple "},
-                {"takitId":"세종대@더큰도시락","categoryNO":"3","categoryName":"마요도시락","categoryNameEn":"Mayo "},
-                {"takitId":"세종대@더큰도시락","categoryNO":"4","categoryName":"반반마요도시락","categoryNameEn":"Mayo combo "},
-                {"takitId":"세종대@더큰도시락","categoryNO":"5","categoryName":"매콤마요도시락","categoryNameEn":"Spicy mayo "},
-                {"takitId":"세종대@더큰도시락","categoryNO":"6","categoryName":"덮밥도시락","categoryNameEn":"Rice "},
-                {"takitId":"세종대@더큰도시락","categoryNO":"7","categoryName":"볶음밥도시락","categoryNameEn":"Fried rice "},
-                {"takitId":"세종대@더큰도시락","categoryNO":"8","categoryName":"특선도시락","categoryNameEn":"Luxury "},
-                {"takitId":"세종대@더큰도시락","categoryNO":"9","categoryName":"스페셜도시락","categoryNameEn":"Special "},
-                {"takitId":"세종대@더큰도시락","categoryNO":"10","categoryName":"비빔밥도시락","categoryNameEn":"Bibimbap"},
-                {"takitId":"세종대@더큰도시락","categoryNO":"11","categoryName":"카레도시락","categoryNameEn":"Curry "},
-                {"takitId":"세종대@더큰도시락","categoryNO":"12","categoryName":"돈부리시리즈","categoryNameEn":"Donburi"},
-                {"takitId":"세종대@더큰도시락","categoryNO":"13","categoryName":"얼큰한 국물","categoryNameEn":"Spicy Soup"},
-                {"takitId":"세종대@더큰도시락","categoryNO":"14","categoryName":"이색BOX","categoryNameEn":"Fried food"},
-                {"takitId":"세종대@더큰도시락","categoryNO":"15","categoryName":"분식","categoryNameEn":"Snack bar"},
-                {"takitId":"세종대@더큰도시락","categoryNO":"16","categoryName":"사이드메뉴","categoryNameEn":"Side"}];
+    categories=[{"takitId":"세종대@더큰도시락","categoryNO":"1","categoryName":"정식도시락","categoryNameEn":"Basic",sequence:1 ,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"2","categoryName":"실속도시락","categoryNameEn":"Couple ",sequence:2,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"3","categoryName":"마요도시락","categoryNameEn":"Mayo ",sequence:3,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"4","categoryName":"반반마요도시락","categoryNameEn":"Mayo combo ",sequence:4,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"5","categoryName":"매콤마요도시락","categoryNameEn":"Spicy mayo ",sequence:5,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"6","categoryName":"덮밥도시락","categoryNameEn":"Rice ",sequence:6,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"7","categoryName":"볶음밥도시락","categoryNameEn":"Fried rice ",sequence:7,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"8","categoryName":"특선도시락","categoryNameEn":"Luxury ",sequence:8,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"9","categoryName":"스페셜도시락","categoryNameEn":"Special ",sequence:9,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"10","categoryName":"비빔밥도시락","categoryNameEn":"Bibimbap",sequence:10,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"11","categoryName":"카레도시락","categoryNameEn":"Curry ",sequence:11,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"12","categoryName":"돈부리시리즈","categoryNameEn":"Donburi",sequence:12,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"13","categoryName":"얼큰한 국물","categoryNameEn":"Spicy Soup",sequence:13,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"14","categoryName":"이색BOX","categoryNameEn":"Fried food",sequence:14,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"15","categoryName":"분식","categoryNameEn":"Snack bar",sequence:15,menus:[]},
+                {"takitId":"세종대@더큰도시락","categoryNO":"16","categoryName":"사이드메뉴","categoryNameEn":"Side",sequence:16,menus:[]}];
 
     menus=[{"menuNO":"세종대@더큰도시락;1","menuName":"데리치킨도시락","explanation":"","price":"3600","options":"[{\"name\":\"밥곱빼기\",\"price\":\"200\"}]","takeout":"1","imagePath":"세종대@더큰도시락;1_데리치킨도시락","requiredTime":null,"menuNameEn":"Teriyaki chicken ","explanationEn":"chicken","optionsEn":"[{\"name\":\"Extra rice\",\"price\":\"200\"}]"},
             {"menuNO":"세종대@더큰도시락;1","menuName":"돈까스도시락","explanation":"","price":"3400","options":"[{\"name\":\"밥곱빼기\",\"price\":\"200\"}]","takeout":"1","imagePath":"세종대@더큰도시락;1_돈까스도시락","requiredTime":null,"menuNameEn":"Katsu ","explanationEn":"pork","optionsEn":"[{\"name\":\"Extra rice\",\"price\":\"200\"}]"},
@@ -106,11 +107,19 @@ export class ShopHomePage {
 
     slideStyle={};
 
+    categorySelected=1;
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
                 public storageProvider:StorageProvider,private app: App,
                private ngZone:NgZone) {
 
                         console.log(this.categories[0].categoryName);
+
+                        for(let i=0; i<this.categories.length; i++){
+                            this.categories[i].menus=this.menus;
+                        }
+
+                        console.log(this.categories);
 
                 }
 
@@ -152,7 +161,7 @@ export class ShopHomePage {
   }
 
   back(){
-     this.app.getRootNav().pop({animate:true,animation: 'slide-up', direction: 'forward' });
+     this.app.getRootNav().pop({animate:true,animation: 'md-transition', direction: 'back' });
   }
 
   clickMenuArea(){

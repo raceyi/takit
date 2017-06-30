@@ -1,0 +1,103 @@
+// http://ionicframework.com/docs/v2/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+$main-color : #eb6863;
+$sub-color : #d8e9f0;
+$sub2-color:#002b3f;
+$sub3-color:#00c4c0;
+$awsS3:"https://s3.ap-northeast-2.amazonaws.com/seerid.html/";
+
+@mixin calc($property, $expression) { 
+        #{$property}: -webkit-calc(#{$expression}); 
+        #{$property}: -moz-calc(#{$expression});
+        #{$property}: calc(#{$expression}); 
+} 
+
+ion-app.ios [padding],
+ion-app.ios [padding] .scroll-content {
+  padding: 0px 0px 0px 0px;
+}
+
+
+*{
+    font-family: 'NanumSquare', sans-serif;
+}
+
+.nav-btn{
+    font-size: 18px;
+    //background-color: transparent;
+}
+
+.header-ios .toolbar-ios:last-child .toolbar-background-ios{
+    background-color: white;
+    border-bottom: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.tabs-ios .tabbar{
+    background-color:white;
+    border-top:none;
+}
+
+.footer-ios .toolbar-background-ios{
+    background-color:white;
+    border:none;
+}
+
+.toolbar-shadow{
+    box-shadow: 0px 1px 10px #888888;
+}
+
+.flex-container{
+    display: flex;
+}
+
+.bg-sub1{
+   background-color:$sub-color; 
+}
+
+.bg-sub2{
+   background-color:$sub2-color; 
+}
+
+.bg-white{
+    background-color:white; 
+}
+
+.sub3-color{
+    color:$sub3-color;
+}
+
+.top-dashed{
+    border-top:1px dashed;
+    border-color:lightgray;
+}
+
+.bottom-solid{
+    border-bottom:1px solid;
+    border-color:lightgray;
+   
+}
+.radius-5{
+     border-radius: 5px;
+}
+
+.border-sub1{
+    border-top:3px solid;
+    border-color:$sub-color;
+    border-radius: 5px;
+}

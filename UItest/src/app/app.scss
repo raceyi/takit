@@ -18,6 +18,7 @@ $main-color : #eb6863;
 $sub-color : #d8e9f0;
 $sub2-color:#002b3f;
 $sub3-color:#00c4c0;
+$awsS3:"https://s3.ap-northeast-2.amazonaws.com/seerid.html/";
 
 @mixin calc($property, $expression) { 
         #{$property}: -webkit-calc(#{$expression}); 
@@ -36,7 +37,6 @@ ion-app.ios [padding] .scroll-content {
 }
 
 .nav-btn{
-    color: black;
     font-size: 18px;
     //background-color: transparent;
 }
@@ -101,4 +101,5 @@ ion-app.ios [padding] .scroll-content {
     border-color:$sub-color;
     border-radius: 5px;
 }
+
 

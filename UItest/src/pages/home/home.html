@@ -9,8 +9,7 @@
   <ion-navbar hideBackButton="true" >
       <ion-buttons start>
         <button  (click)="goHome()" ion-button color="mainColor" clear>
-            <custom-icon set="tab" name="Logo" ></custom-icon>
-        <!--<ion-icon customIconSet="tab" customIconName="tab_more" color="mainColor"></ion-icon>-->
+            <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
     <ion-title>Takit</ion-title>
@@ -25,6 +24,7 @@
 
 
 <ion-content padding>
+    
     <p class="p-title">최근 방문</p>
     <!--<ion-scroll scrollX="true" class="scroll-favorite">
         <ion-row class="scroll-row-favorite">
@@ -51,7 +51,7 @@
                     </ion-col>
                     <ion-col col-2 >
                         <button (click)="enterOldOrder(item.takitId)" ion-button class="scroll-btn-latest" color="mainColor" clear>
-                            <ion-icon name="menu"></ion-icon>
+                            <ion-icon name="icon-menu"></ion-icon>
                         </button>
                     </ion-col>
                 </ion-row>

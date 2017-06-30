@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>캐쉬 아이디 설정</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+<ion-slides #slides pager>
+  <ion-slide>
+      <h2 class="slide-title">설정 버튼 선택</h2>
+      <img src="assets/configureCashId/pressConfigureButton.png" class="slide-image"/>
+      <p>캐쉬화면에서 충전하기를 선택하신후 <br> 설정 버튼을 눌러주세요.</p>
+    </ion-slide>
+    <ion-slide>
+      <h2 class="slide-title">휴대폰 본인인증수행</h2>
+      <img src="assets/configureCashId/phoneAuth.png" class="slide-image"/>
+      <p>휴대폰 본인인증을 수행합니다.</p>
+    </ion-slide>
+    <ion-slide>
+      <h2 class="slide-title">본인인증 완료 확인</h2>
+      <img src="assets/configureCashId/confirmAuth.png" class="slide-image"/>
+      <p>휴대폰 본인인증에 성공하신후 확인 버튼을 클릭해주세요.</p>
+    </ion-slide>
+    <ion-slide>
+      <h2 class="slide-title">캐쉬아이디 설정하기</h2>
+      <img src="assets/configureCashId/configure.png" class="slide-image"/>
+      <p>사용하실 캐쉬아이디와 비밀번호를 설정합니다.</p>
+      <button ion-button large clear icon-right (click)="dismiss()" color="primary">
+        나가기
+        <ion-icon name="md-exit"></ion-icon>
+      </button>
+    </ion-slide>
+</ion-slides>
+ </ion-content>

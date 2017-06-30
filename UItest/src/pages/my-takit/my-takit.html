@@ -9,12 +9,15 @@
   <ion-navbar>
       <ion-buttons start>
         <button  (click)="goHome()" ion-button color="mainColor" clear>
-            <custom-icon set="tab" name="tab_more" ></custom-icon>
-        <!--<ion-icon customIconSet="tab" customIconName="tab_more" color="mainColor"></ion-icon>-->
+            <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
     <ion-title>나의 타킷</ion-title>
-     <ion-icon name="search" color="black" style="float:right; margin-right:5%; font-size: 1.6em;"></ion-icon>
+    <ion-buttons end>
+        <button ion-button clear>
+            <ion-icon name="search" color="mainColor" ></ion-icon>
+        </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
