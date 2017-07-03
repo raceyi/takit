@@ -82,7 +82,7 @@ License: GPL
 
  $ionic cordova plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
 
- $ionic cordova plugin add cordova-plugin-background-mode
+ $ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git#0.6.5
 
  $ npm install --save @ionic-native/background-mode
 
