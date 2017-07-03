@@ -16,7 +16,7 @@ License: GPL
  
 # takitUser
 
- $ionic start takitUser --v2
+ $ionic start takitUser --type=ionic-angular
 
  $cd takitUser
   => config.xml의 id,name 수정 
@@ -27,9 +27,12 @@ License: GPL
     ...
     <preference name="AutoHideSplashScreen" value="false" />
 
- $ionic platform add android@latest
+ $ionic cordova platform add android@latest
 
- $ionic resources
+ $ionic cordova platform add ios@latest
+
+ $ionic cordova resources
+	ionic email, password 입력
 
  $npm install --save @ionic-native/core@latest 
 
@@ -37,51 +40,53 @@ License: GPL
 
  $npm install --save @ionic-native/splash-screen@latest
 
- $ionic plugin add https://github.com/taejaehan/cordova-kakaotalk.git --variable KAKAO_APP_KEY={takitUser.kakao.appId}
+ $ionic cordova plugin add https://github.com/taejaehan/cordova-kakaotalk.git --variable KAKAO_APP_KEY={takitUser.kakao.appId}
 
   =>takitUser/platforms/android/cordova-plugin-htj-kakaotalk/user-kakao.gradle 파일에 sdk version수정
 
    현재 SDK버전: com.kakao.sdk:kakaotalk:1.1.21
 
- $ionic plugin add https://github.com/loicknuchel/cordova-device-accounts.git
+ $ionic cordova plugin add cordova-device-accounts
 
  $npm install --save @ionic-native/device-accounts
 
- $ionic plugin add cordova-plugin-facebook4 --save --variable APP_ID="{takitUser.facebook.appId}" --variable APP_NAME="takitUser"
+ $ionic cordova plugin add cordova-plugin-facebook4 --save --variable APP_ID="{takitUser.facebook.appId}" --variable APP_NAME="takitUser"
 
  $npm install --save @ionic-native/facebook
 
- $ionic plugin add cordova-plugin-network-information
+ $ionic cordova plugin add cordova-plugin-network-information
 
  $npm install --save @ionic-native/network
  
- $ionic plugin add phonegap-plugin-push --variable SENDER_ID={takitUser.fcm.senderId}
+ $ionic cordova plugin add phonegap-plugin-push --variable SENDER_ID={takitUser.fcm.senderId}
 
  $npm install --save @ionic-native/push
 
- $ionic plugin add cordova-sqlite-storage
+ $ionic cordova plugin add cordova-sqlite-storage
 
  $npm install --save @ionic-native/sqlite
 
- $ionic plugin add https://github.com/46cl/cordova-android-focus-plugin
+ $ionic cordova plugin add https://github.com/46cl/cordova-android-focus-plugin
 
- $ionic plugin add cordova-plugin-sim
+ $ionic cordova plugin add cordova-plugin-sim
 
  $npm install --save @ionic-native/sim
 
- $ionic plugin add cordova-plugin-inappbrowser
+ $ionic cordova plugin add cordova-plugin-inappbrowser
 
  $npm install --save @ionic-native/in-app-browser
 
- $ionic plugin add cordova-plugin-appavailability
+ $ionic cordova plugin add cordova-plugin-appavailability
 
  $npm install --save @ionic-native/app-availability
 
- $ionic plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
+ $ionic cordova plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
 
- $ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git#0.6.5
+ $ionic cordova plugin add cordova-plugin-background-mode
 
- $ionic plugin add https://github.com/VersoSolutions/CordovaClipboard 
+ $ npm install --save @ionic-native/background-mode
+
+ $ ionic cordova plugin add danielsogl-cordova-plugin-clipboard
 
  $npm install --save @ionic-native/clipboard
 
@@ -89,21 +94,35 @@ License: GPL
 
  $npm install --save @ionic-native/native-storage 
 
+ $ ionic cordova plugin add cordova-plugin-device
+ 
+ $ npm install --save @ionic-native/device
+
+ $ ionic cordova plugin add ionic-plugin-keyboard
+
+ $ npm install --save @ionic-native/keyboard
+
+ $ ionic cordova plugin add cordova-plugin-file-transfer
+
+ $ npm install --save @ionic-native/transfer
+  
+ $ npm install @angular/animations@4.1.3 
+
  $npm install crypto-js
 
  $npm install @types/crypto-js --save
 
  $npm install ng2-translate --save
 
- $ionic g directive focuser
+ $ionic cordova g directive focuser
 
  $git checkout platforms/ios/타킷/Classes/AppDelegate.m
  
- $ionic build ios
+ $ionic cordova build ios
 
  $git checkout platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
 
- $ionic run android 
+ $ionic cordova run android 
 
    platforms/ios/타킷/타킷-Info.plist 수정
 
@@ -209,13 +228,13 @@ License: GPL
 
  $cd takitUser
 
- $ionic run android --prod --device
+ $ionic cordova run android --prod --device
 
- $ionic run ios
+ $ionic cordova run ios --prod
 
 # takitShop
 
-$ionic start takitShop --v2
+$ionic start takitShop --type=ionic-angular
 
 $cd takitShop => config.xml의 id,name 수정
   splash관련 사항 추가 
@@ -225,59 +244,61 @@ $cd takitShop => config.xml의 id,name 수정
      ...
      <preference name="AutoHideSplashScreen" value="false" /> 
 
-$ionic platform add android
+$ionic cordova platform add android
+
+$ionic cordova platform add ios
 
 $ionic resources
 
-$ionic plugin add https://github.com/taejaehan/cordova-kakaotalk.git --variable KAKAO_APP_KEY={takitShop.kakao.appId} 
+$ionic cordova plugin add https://github.com/taejaehan/cordova-kakaotalk.git --variable KAKAO_APP_KEY={takitShop.kakao.appId} 
 
 =>platforms/android/cordova-plugin-htj-kakaotalk/shop-kakao.gradle 파일에 sdk version수정 
 
   현재SDK버전: com.kakao.sdk:kakaotalk:1.1.21 (KakaoTalk.java파일 수정=>git checkout takitShop이수행함)
 
-$ionic plugin add cordova-plugin-facebook4 --save --variable APP_ID="{takitShop.facebook.appId}" --variable APP_NAME="takitShop"
+$ionic cordova plugin add cordova-plugin-facebook4 --save --variable APP_ID="{takitShop.facebook.appId}" --variable APP_NAME="takitShop"
 
 $npm install --save @ionic-native/facebook
 
-$ionic plugin add cordova-plugin-network-information
+$ionic cordova plugin add cordova-plugin-network-information
 
 $npm install --save @ionic-native/network
 
-$ionic plugin add cordova-plugin-file-transfer
+$ionic cordova plugin add cordova-plugin-file-transfer
 
 $npm install --save @ionic-native/transfer
 
-$ionic plugin add cordova-plugin-camera
+$ionic cordova plugin add cordova-plugin-camera
 
 $npm install --save @ionic-native/camera
 
-$ionic plugin add cordova-plugin-file
+$ionic cordova plugin add cordova-plugin-file
 
 $npm install --save @ionic-native/file
 
-$ionic plugin add cordova-plugin-filepath
+$ionic cordova plugin add cordova-plugin-filepath
 
 $npm install --save @ionic-native/file-path
 
-$ionic plugin add phonegap-plugin-push --variable SENDER_ID={takitShop.fcm.senderId}
+$ionic cordova plugin add phonegap-plugin-push --variable SENDER_ID={takitShop.fcm.senderId}
 
 $npm install --save @ionic-native/push
 
-$ionic plugin add cordova-plugin-inappbrowser 
+$ionic cordova plugin add cordova-plugin-inappbrowser 
 
 $npm install --save @ionic-native/in-app-browser
 
-$ionic plugin add cordova-plugin-appavailability
+$ionic cordova plugin add cordova-plugin-appavailability
 
 $npm install --save @ionic-native/app-availability
 
-$ionic plugin add https://github.com/srehanuddin/Cordova-Plugin-Bluetooth-Printer.git
+$ionic cordova plugin add https://github.com/srehanuddin/Cordova-Plugin-Bluetooth-Printer.git
 
-$ionic plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
+$ionic cordova plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
 
-$ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git#0.6.5
+$ionic cordova plugin add https://github.com/katzer/cordova-plugin-background-mode.git#0.6.5
 
-$ionic plugin add cordova-plugin-media
+$ionic cordova plugin add cordova-plugin-media
 
 $npm install --save @ionic-native/media
 
@@ -285,7 +306,7 @@ $ionic cordova plugin add cordova-plugin-nativestorage
 
 $npm install --save @ionic-native/native-storage 
 
-$ionic g directive focuser
+$ionic cordova g directive focuser
 
 $npm install crypto-js
 
@@ -295,11 +316,11 @@ $npm install ionic-native
 
 $git checkout platforms/ios/타킷운영자/Classes/AppDelegate.m 
 
-$ionic build ios
+$ionic cordova build ios
 
 $git checkout platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
 
-$ionic build android
+$ionic cordova build android
 
  takitShop/platforms/ios/타킷운영자/타킷운영자-Info.plist
 
@@ -388,9 +409,9 @@ $git checkout takitShop
     }
 
 
- $ionic run android --prod --device
+ $ionic cordova run android --prod --device
 
- $ionic run ios
+ $ionic cordova run ios
 
 Schedule
 
