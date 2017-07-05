@@ -31,6 +31,10 @@ License: GPL
 
  $ionic cordova platform add ios@latest
 
+ $ git checkout resources/icon.png 
+
+ $ git checkout resources/splash.png
+
  $ionic cordova resources
 
   처음 실행시 ionic email, password 입력

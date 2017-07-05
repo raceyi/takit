@@ -74,7 +74,7 @@ import { AppAvailability } from '@ionic-native/app-availability';
 import { Clipboard } from '@ionic-native/clipboard';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Device } from '@ionic-native/device';
-import { Transfer } from '@ionic-native/transfer';
+//import { Transfer } from '@ionic-native/transfer';
 
 import { FocuserDirective } from '../directives/focuser/focuser';
 
@@ -193,7 +193,7 @@ import { FocuserDirective } from '../directives/focuser/focuser';
               AppAvailability,
               Keyboard,
               Device,
-              Transfer,
+              //Transfer,
               NativeStorage,
               ConfigProvider,
               StorageProvider,

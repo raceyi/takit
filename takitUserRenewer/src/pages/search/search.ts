@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {NavController,Platform,Tabs,AlertController} from 'ionic-angular';
 //import {Camera} from 'ionic-native';
-import {Transfer} from '@ionic-native/transfer';
+//import {Transfer} from '@ionic-native/transfer';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -39,7 +39,7 @@ export class SearchPage {
 
   constructor(private app:App, public storageProvider:StorageProvider, private navController: NavController,
     private platform:Platform,private http:Http ,private alertController:AlertController,private serverProvider:ServerProvider,
-    private splashScreen: SplashScreen, private transfer:Transfer) {
+    private splashScreen: SplashScreen/*, private transfer:Transfer*/) {
       console.log("SearchPage constructor");
       console.log("this.platform.is('android'):"+this.platform.is('android'));
   }
@@ -116,7 +116,7 @@ export class SearchPage {
        });        
 */        
   }
-
+/*
   fileTransfer(imageURI){
       let ft = this.transfer.create();
           var filename= imageURI.substr(imageURI.lastIndexOf('/') + 1); 
@@ -161,7 +161,7 @@ export class SearchPage {
             this.loading.dismiss();
           }); 
   }
-
+*/
     getTakitIds(){
         console.log("getTakitIds");
         return new Promise((resolve,reject)=>{
