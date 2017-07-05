@@ -105,7 +105,7 @@ export class KakaoProvider {
                                     console.log('Successful kakaotalk login with'+profile.id);
                                     handler(profile.id,kakaoProvider).then(
                                         (result:any)=>{
-                                                    console.log("result comes:"+JSON.stringify(result));
+                                                    console.log("result comes:"+result);
                                                     result.id="kakao_"+profile.id; 
                                                     resolve(result);
                                         },serverlogin_err=>{
@@ -171,9 +171,7 @@ export class KakaoProvider {
   kakaoServerLogin(kakaoid,kakaoProvider:KakaoProvider){
       return new Promise((resolve, reject)=>{
               console.log("kakaoServerLogin");
-              let body = JSON.stringify({referenceId:"kakao_"+kakaoid,
-                                         uuid:kakaoProvider.device.uuid,
-                                         version:kakaoProvider.storageProvider.version});
+              let body = JSON.stringify({referenceId:"kakao_"+kakaoid,uuid:kakaoProvider.device.uuid,version:kakaoProvider.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ kakaoProvider.storageProvider.serverAddress);
