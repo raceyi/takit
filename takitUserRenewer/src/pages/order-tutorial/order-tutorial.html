@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>주문</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+<ion-slides #slides pager>
+  <ion-slide>
+      <h2 class="slide-title">상점 검색</h2>
+      <img src="assets/order/searchStore.png" class="slide-image"/>
+      <p>검색화면에서 주문상점을 선택해 주세요.</p>
+      <p>방문하신 상점은 홈화면에 등록됩니다</p>
+    </ion-slide>
+    <ion-slide>
+      <h2 class="slide-title">메뉴선택</h2>
+      <img src="assets/order/selectMenu.png" class="slide-image"/>
+      <p>상점에서 주문 메뉴를 선택합니다.</p>
+    </ion-slide>
+    <ion-slide>
+      <h2 class="slide-title">주문</h2>
+      <img src="assets/order/order.png" class="slide-image"/>
+      <p>캐쉬비밀번호를 입력하시고 <br>주문결제하기를 클릭해주세요.</p>
+      <p>주문접수 전까지는 취소가 가능합니다</p> 
+      <button ion-button large clear icon-right (click)="dismiss()" color="primary">
+        나가기
+        <ion-icon name="md-exit"></ion-icon>
+      </button>
+    </ion-slide>
+</ion-slides>
+ </ion-content>

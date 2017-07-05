@@ -1,0 +1,49 @@
+page-order{
+
+    .segment-ios .segment-button{
+        border: none;
+        height: 110px;
+        font-size:15px;
+        p{
+            margin: 0;
+        }
+        ion-icon{
+            line-height:5.0rem;
+            font-size:40px;
+        }
+
+            
+    }
+
+    .segment-ios .segment-button.segment-activated{
+        color:$main-color;
+        background-color: white;
+    }
+
+    .div-takeout{
+        border-bottom:1px dashed;
+       
+
+    }
+
+    .div-shopMSG{
+        //border-radius: 20px;
+        //border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        background-color: lightgray;
+        padding: 10px;
+    }
+
+
+    .div-pay{
+        display: flex;
+        
+    }
+    
+    .div-discount-inner{
+        border-radius: 5px;
+
+    }
+}

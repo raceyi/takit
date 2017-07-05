@@ -1,0 +1,39 @@
+<!--
+  Generated template for the OldOrder page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton="true" >
+      <ion-buttons start>
+        <button navPop class="nav-btn" small ion-button no-margin clear>
+          <ion-icon name="icon-prev"></ion-icon>
+        </button>
+      </ion-buttons>
+    <ion-title>{{takitId}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+    <ion-row *ngFor="let arr of array; let i=index; ">
+        <ion-col>
+            <ion-card class="card-oldOrder">
+                <h2>{{oldOrders[i*2].orderName}}</h2>
+                <p>{{oldOrders[i*2].amount}}</p>
+                <p>{{"주문횟수:"+oldOrders[i*2].orderCount}}</p>
+            </ion-card>
+        </ion-col>
+            
+        <ion-col>
+            <ion-card class="card-oldOrder">
+                 <h2>{{oldOrders[i*2+1].orderName}}</h2>
+                 <p>{{oldOrders[i*2+1].amount}}</p>
+                <p>{{"주문횟수:"+oldOrders[i*2+1].orderCount}}</p>
+            </ion-card>
+        </ion-col>
+    </ion-row>
+
+</ion-content>

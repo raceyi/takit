@@ -1,0 +1,29 @@
+page-shop-about {
+    
+    .row-about{
+        background-color: $sub2-color;
+        ion-item{
+            text-align:center; 
+            width:180px; 
+            height:180px;
+            background-color: $sub2-color;
+        }
+        button{
+            border: solid 2px;
+            border-radius: 50px;
+            border-color: white;
+        }
+
+        p{
+            color : white;
+        }
+    }
+
+    .row-business{
+        //background-color: lightgray;
+        padding: 5px;
+        border-bottom: 1px solid;
+        border-bottom-color: $sub-color;
+    }
+
+}

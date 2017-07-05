@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar >
+    <ion-title>자주 묻는 질문</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-row>
+     <ion-col>
+  <a href="tel:0505-170-3636"><ion-icon width-20 color="black" name="call">전화문의</ion-icon></a>
+     </ion-col>
+     <ion-col>
+  <a href="mailto:help@takit.biz"><ion-icon width-20 color="black" name="mail">이메일문의</ion-icon></a>
+    </ion-col>
+</ion-row>
+
+  <ion-list>
+    <ion-item *ngFor="let question of questions">
+      <ion-row (click)="showAnswerToggle(question)">
+        {{question.question}}
+      </ion-row>
+      <ion-row [hidden]="question.hidden">
+        <p [innerHTML]="question.answer">
+        </p>
+      </ion-row>
+    </ion-item>
+</ion-list>
+
+</ion-content>
