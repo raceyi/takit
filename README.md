@@ -26,14 +26,15 @@ License: GPL
     <name>타킷</name>
     ...
     <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="orientation" value="portrait" />
 
  $ionic cordova platform add android@latest
 
  $ionic cordova platform add ios@latest
 
- $ git checkout resources/icon.png 
+ $ git checkout takitUser/resources/icon.png 
 
- $ git checkout resources/splash.png
+ $ git checkout takitUser/resources/splash.png
 
  $ionic cordova resources
 
@@ -115,7 +116,7 @@ License: GPL
 
  $ionic g directive focuser
 
- $git checkout platforms/ios/타킷/Classes/AppDelegate.m
+ $git checkout takitUser/platforms/ios/타킷/Classes/AppDelegate.m
 
    1. platforms/ios/타킷/타킷-Info.plist 수정
 
@@ -139,7 +140,7 @@ License: GPL
  
  $ionic cordova build ios
 
- $git checkout platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
+ $git checkout takitUser/platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
 
  $ionic cordova run android
 
@@ -232,7 +233,7 @@ License: GPL
 
  $ionic cordova run android --prod --device
 
- $ionic cordova run ios --prod
+ $ionic cordova build ios --prod
 
 # takitShop
 
