@@ -1,0 +1,63 @@
+page-login {
+    .gradiPage{
+        background-image: url('../assets/background/bg_gradiation.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .takit-icon{
+        height:50vh;
+    }
+
+    .symbol-image{
+        width: 50vw;
+    }
+    .button-ios-white {
+        color: red;
+    }
+
+    .explain{
+        margin-bottom: 0px;
+        text-align: center;
+        color: white;
+    }
+    .dummy{
+        height:5vh;
+    }
+
+    button{
+        font-weight: bold;
+    }
+
+    .extender {
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        right: 0px;
+        width: 100%;
+    }
+
+    .padder-center{
+        width: 100%;
+        height: 100%;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -moz-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+
+    .social-icon{
+        color:white;
+        background-color: red;    
+    }
+}
