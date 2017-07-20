@@ -186,7 +186,7 @@ export class KakaoProvider {
   }
 
 
-  kakaoServerSignup(kakaoid:string,country:string,phone:string,email:string,name:string,receiptIssue,receiptId,receiptType){
+  kakaoServerSignup(kakaoid:string,country:string,phone:string,sex,birthYear,email:string,name:string,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("kakaoServerSignup");
               let receiptIssueVal;
@@ -197,6 +197,7 @@ export class KakaoProvider {
               }
               let body = JSON.stringify({referenceId:kakaoid,name:name,
                                             email:email,country:country,phone:phone,
+                                            sex:sex, birthYear:birthYear,
                                             receiptIssue:receiptIssueVal,receiptId:receiptId,receiptType:receiptType,
                                             uuid:this.device.uuid,version:this.storageProvider.version});
               let headers = new Headers();

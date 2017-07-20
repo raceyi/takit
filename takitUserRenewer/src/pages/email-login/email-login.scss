@@ -1,5 +1,5 @@
-page-password{
-  .gradiPage{
+page-email-login {
+    .gradiPage{
         background-image: url('../assets/background/bg_gradiation.png');
         background-repeat: no-repeat;
         background-size: cover;
@@ -60,7 +60,7 @@ page-password{
     }
 
     .button-ios-white {
-        color: red;
+        color: #e8454c;
     }
 
     // change the color of placeholder -begin  
@@ -82,7 +82,6 @@ page-password{
         margin-bottom: 0px;
         text-align: center;
         color: white;
-        font-size:small;
     }
-}
 
+}

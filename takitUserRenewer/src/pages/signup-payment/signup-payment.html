@@ -1,0 +1,110 @@
+<!--
+  Generated template for the SignupPaymentPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-navbar *navbar hideBackButton>
+</ion-navbar>
+
+<ion-content>
+<ion-grid class="header">
+<ion-row align-items-center>
+  <ion-col col-3>
+    <button class="backbutton" color="red" ion-button clear (click)="back()">
+      <ion-icon [hidden]="true" class="backbutton-icon" name="ios-arrow-back-outline"></ion-icon>
+        &nbsp;
+    </button>    
+  </ion-col>
+  <ion-col col-6 class="title">
+     <ion-icon name="icon-logo" color="mainColor"></ion-icon>
+      <span> 결제 정보 등록</span> 
+    </ion-col> 
+  <ion-col col-3>
+  </ion-col>
+</ion-row>
+
+<ion-row align-items-center>
+  <ion-col col-8>
+    <ion-label>캐쉬아이디<span class="required"> **</span></ion-label>
+    <ion-input class="cashIdInput" type="text" placeholder="영문,숫자조합 5~7자리" pattern="[0-9a-zA-Z]{5,7}" [disabled]="storageProvider.cashId.length!=0" [(ngModel)]="cashId"></ion-input>
+  </ion-col>
+  <ion-col col-4>
+  <button ion-button outline outline color="skyblue" (click)="checkCashIdDuplicate()">중복확인</button>    
+  </ion-col>
+</ion-row>
+<ion-row [hidden]="validCashId" style="color:gray;margin-left:10px;">
+    {{cashIdGuide}}
+</ion-row>
+<ion-row [hidden]="!validCashId" class="warning">
+   *주의: 캐쉬아이디는 고객님의 개인 정보로 타인에게 알릴 경우 악용의 소지가 있습니다. 
+   이경우 타킷은 법적 책임을 지지 않습니다.
+</ion-row>
+<ion-row align-items-center>
+  <ion-col col-6>
+    캐쉬비밀번호<span class="required"> **</span>
+  </ion-col>
+  <ion-col col-3>
+    {{passwordString}}
+  </ion-col>
+  <ion-col col-3>
+  <button ion-button outline color="skyblue" (click)="passwordInput()">입력</button>    
+  </ion-col>
+</ion-row>
+<ion-row align-items-center>
+  <ion-col col-6>
+    캐쉬비밀번호 확인<span class="required"> **</span>
+  </ion-col>
+  <ion-col col-3>
+    {{passwordConfirmString}}
+  </ion-col>
+  <ion-col col-3>
+  <button ion-button outline outline color="skyblue" (click)="passwordConfirmInput()">입력</button>    
+  </ion-col>
+</ion-row>
+<ion-row>
+  <hr>
+</ion-row>  
+<ion-row align-items-center>
+  <ion-col col-6>
+    현금영수증 발급번호
+  </ion-col>
+  <ion-col col-6>
+    <ion-input class="cashIdInput" type="tel"></ion-input>
+  </ion-col>
+</ion-row>
+<ion-row radio-group [ngModel]="receiptType">
+    <ion-col>
+      <ion-item>
+        <ion-label>소득공제용</ion-label>
+        <ion-radio color="black" value="IncomeDeduction" (ionSelect)="expenseProofOff()"></ion-radio>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+       <ion-label>지출증빙용</ion-label>
+        <ion-radio color="black" value="ExpenseProof" (ionSelect)="expenseProofOn()"></ion-radio>
+      </ion-item>
+    </ion-col>
+</ion-row>
+<ion-row align-items-center [hidden]="receiptType=='IncomeDeduction'">
+  <ion-col> 상호 </ion-col>
+  <ion-col>
+    <ion-input class="cashIdInput" type="text" [(ngModel)]="taxIssueCompanyName"></ion-input>
+  </ion-col>
+</ion-row>
+<ion-row align-items-center [hidden]="receiptType=='IncomeDeduction'">
+  <ion-col>
+    이메일<span style="font-size:xx-small;">(전자 세금계산서 발급)</span>
+  </ion-col>
+  <ion-col>  
+    <ion-input class="cashIdInput" type="text" [(ngModel)]="taxIssueEmail"></ion-input>
+  </ion-col>
+</ion-row>
+</ion-grid>
+
+</ion-content>
+
+<ion-footer>
+  <button style="padding:0px;margin:0px" ion-button color="red" full (click)="start()">타킷시작하기</button>
+</ion-footer>

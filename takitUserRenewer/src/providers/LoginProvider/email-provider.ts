@@ -35,7 +35,7 @@ export class EmailProvider{
          });
   }
 
-  emailServerSignup(password,name,email,country,phone,receiptIssue,receiptId,receiptType){
+  emailServerSignup(password,name,email,country,phone,sex,birthYear,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("emailServerSignup "+phone);
               let receiptIssueVal;
@@ -47,6 +47,7 @@ export class EmailProvider{
               let body = JSON.stringify({referenceId:"email_"+email,password:password,name:name,
                                             email:email,country:country,phone:phone,
                                             receiptIssue:receiptIssueVal,receiptId:receiptId,receiptType:receiptType,
+                                            sex:sex, birthYear:birthYear,
                                             uuid:this.device.uuid,version:this.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');

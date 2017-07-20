@@ -11,6 +11,7 @@ import {TutorialPage} from '../pages/tutorial/tutorial';
 
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
+import {SignupPaymentPage} from '../pages/signup-payment/signup-payment';
 
 import {FbProvider} from '../providers/LoginProvider/fb-provider';
 import {EmailProvider} from '../providers/LoginProvider/email-provider';
@@ -99,10 +100,17 @@ export class MyApp {
                                     }
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("shoplist...:"+JSON.stringify(this.storageProvider.shoplist));
-                                    this.rootPage=TabsPage;
+                                    if(!res.userInfo.hasOwnProperty("cashId") || res.userInfo.cashId==null || res.userInfo.cashId==undefined){
+                                        console.log("move into signupPaymentPage");
+                                        this.rootPage.setRoot(SignupPaymentPage);
+                                    }else{
+                                        console.log("move into TabsPage");
+                                        this.rootPage.setRoot(TabsPage);
+                                    }
                                 }else if(res.result=='failure'&& res.error=='invalidId'){
                                     console.log("사용자 정보에 문제가 발생했습니다. 로그인 페이지로 이동합니다.");
                                     this.rootPage=LoginPage;   
+
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
                                         // How to show user a message here? move into error page?
                                         // Is it possible to show alert here?
@@ -129,8 +137,14 @@ export class MyApp {
                                     }
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("move into TabsPage");
-                                    this.rootPage=TabsPage;
-                                }else if(res.result=='failure' && res.result=='invalidId'){
+                                    if(!res.userInfo.hasOwnProperty("cashId") || res.userInfo.cashId==null || res.userInfo.cashId==undefined){
+                                        console.log("move into signupPaymentPage");
+                                        this.rootPage.setRoot(SignupPaymentPage);
+                                    }else{
+                                        console.log("move into TabsPage");
+                                        this.rootPage.setRoot(TabsPage);
+                                    }
+                                }else if(res.result=='failure' && res.error=='invalidId'){
                                     console.log("사용자 정보에 문제가 발생했습니다. 로그인 페이지로 이동합니다.");
                                     this.rootPage=LoginPage;
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
@@ -158,6 +172,13 @@ export class MyApp {
                                         this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
                                     }
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
+                                    if(!res.userInfo.hasOwnProperty("cashId") || res.userInfo.cashId==null || res.userInfo.cashId==undefined){
+                                        console.log("move into signupPaymentPage");
+                                        this.rootPage.setRoot(SignupPaymentPage);
+                                    }else{
+                                        console.log("move into TabsPage");
+                                        this.rootPage.setRoot(TabsPage);
+                                    }
                                     this.rootPage=TabsPage;
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
                                         // How to show user a message here? move into error page?

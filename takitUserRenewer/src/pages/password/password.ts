@@ -28,29 +28,21 @@ export class PasswordPage {
       console.log("resetPassword");
       console.log('emailLogin comes email:'+this.email+" phone:"+this.phone);    
       //Please check the validity of email and phone.
-      if(this.email.length==0){
-          if(this.platform.is('android'))
-            this.focusEmail.emit(true);
-          else if(this.platform.is('ios')){ // show alert message
+      if(this.email.trim().length==0){
               let alert = this.alertController.create({
                         title: '이메일을 입력해주시기 바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present();
-          }
-          return;
+                return;
       }
-      if(this.phone.length==0){
-            if(this.platform.is('android'))
-                this.focusPhone.emit(true);
-            else if(this.platform.is('ios')){
+      if(this.phone.trim().length==0){
                 let alert = this.alertController.create({
                         title: '등록폰번호를 입력해주시기 바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present();
-            }
-            return;
+                return;
       }  
       this.callServerResetPassword(this.email,this.phone).then(()=>{
           // 'success'(move into login page)
