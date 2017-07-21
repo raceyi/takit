@@ -23,6 +23,10 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import { Device } from '@ionic-native/device';
 import { Network } from '@ionic-native/network';
 
+import {SlideUpTransition} from '../classes/slide-up-transition';
+import {SlideDownTransition} from '../classes/slide-down-transition';
+import { Config } from 'ionic-angular';
+
 declare var cordova:any;
 
 @Component({
@@ -38,8 +42,12 @@ export class MyApp {
                 public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
                 public emailProvider:EmailProvider,public alertCtrl:AlertController,
                 public translateService: TranslateService, private network: Network, 
-                private statusBar: StatusBar, private device:Device) {
+                private statusBar: StatusBar, private device:Device,
+                public config: Config) {
     console.log("platform ready comes");
+
+    this.config.setTransition('slide-up', SlideUpTransition);
+    //this.config.setTransition('slide-down', SlideDownTransition);
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.

@@ -54,18 +54,45 @@ page-menu-detail {
         }
         .div-footer-amount{
             display: flex;
-        }
-        .div-count{
-            display: flex;
-            width: 30%;
-            ion-input, .text-input-ios{
-                width: 20px;
+            align-items: center;
+            div:first-child{
+                width: 50%;
+                //text-align: center;
+                padding-left: 15%;
+                span:first-child{
+                    font-size:18px;
+                    font-weight: 900;
+                    margin-right: 5px;
+                }
+                span:last-child{
+                    font-weight: 900;
+                    font-size: 13px;
+                }
             }
-            button{
-                padding: 0;
-                margin: 0;
+            .div-quantity{
+                display: flex;
+                width: 50%;
+                ion-input, .text-input-ios{
+                    margin-right: 0;
+                    //width:10px;
+                    font-size: 17px;
+                    font-weight: 900;
+                    max-width: 30px;
+                    color:$sub2-color
+                }
+                button{
+                    padding-right: 10%;
+                    margin: 0;
+                    width: 35%;
+                    
+                }
+                ion-icon{
+                    font-weight: 900;
+                    font-size: 27px;
+                }
             }
         }
+        
         .div-btn-order{
             width: 100%;
             display: flex;
@@ -75,5 +102,6 @@ page-menu-detail {
             width: 50%;
         }
     }
+
 
 }

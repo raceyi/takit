@@ -35,7 +35,7 @@ export class MyWalletPage {
   }
 
   showTransactionHistory(){
-    this.navCtrl.push(TransactionHistoryPage);
+    this.navCtrl.push(TransactionHistoryPage,{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
 }

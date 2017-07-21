@@ -4,6 +4,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {OldOrderPage } from '../old-order/old-order';
+import {MenuDetailPage} from '../menu-detail/menu-detail';
 
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -35,24 +36,26 @@ export class HomePage{
 
       circle = ["UItest/circle1.png","UItest/circle2.png"];
 
-       bestMenus = [{"menuName":"수제등심돈까스", "price":"5500", "imagePath":"세종대@더큰도시락;1_수제등심돈까스"},
-                  {"menuName":"대왕참치마요", "price":"3500", "imagePath":"세종대@더큰도시락;3_대왕참치마요"},
-                  {"menuName":"삼식스페셜", "price":"3500", "imagePath":"세종대@더큰도시락;9_삼식스페셜"},
-                  {"menuName":"매콤규동", "price":"3500", "imagePath":"세종대@더큰도시락;13_매콤규동"}];
+    //    bestMenus = [{"menuName":"수제등심돈까스", "price":"5500", "imagePath":"세종대@더큰도시락;1_수제등심돈까스"},
+    //               {"menuName":"대왕참치마요", "price":"3500", "imagePath":"세종대@더큰도시락;3_대왕참치마요"},
+    //               {"menuName":"삼식스페셜", "price":"3500", "imagePath":"세종대@더큰도시락;9_삼식스페셜"},
+    //               {"menuName":"매콤규동", "price":"3500", "imagePath":"세종대@더큰도시락;13_매콤규동"}];
 
-
+    
     selectedTakitId;
 
     selectSejong=false;
     selectWecook=false;
     nearShops = [];
+    reviewCount:number;
 
      constructor(private platform:Platform,private navController: NavController,
         private app: App, menu:MenuController,public storageProvider:StorageProvider,
         private http:Http,private serverProvider:ServerProvider, private splashScreen: SplashScreen){
          console.log("homePage constructor screen:"+ window.screen.availWidth+" "+window.screen.width+" "+window.screen.availHeight+ " "+window.screen.height);
          //console.log("cordova.file.dataDirectory:"+cordova.file.dataDirectory);
-         this.nearShops=storageProvider.shoplist;
+         //this.nearShops=storageProvider.shoplist;
+         this.getSejong();
      }
 
      ionViewDidLoad(){
@@ -219,7 +222,7 @@ export class HomePage{
                 this.storageProvider.shopResponse=res;
                 console.log("push ShopHomePage at home.ts");
                 console.log("this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
-                this.app.getRootNav().push(ShopHomePage,{takitId:takitId, bestMenus:JSON.parse(res.shopInfo.bestMenus)},{animate:true,animation: 'md-transition', direction: 'forward', duration:500  });
+                this.app.getRootNav().push(ShopHomePage,{takitId:takitId, bestMenus:JSON.parse(res.shopInfo.bestMenus)});
             },(err)=>{
                 console.log("error:"+JSON.stringify(err));
                  this.storageProvider.shopSelected=false;
@@ -248,16 +251,18 @@ export class HomePage{
       //1. need to sorting data by many order
       //and send it oldOrderPage
       //2. or send takitId and can get sorting datas
-      this.navController.push(OldOrderPage,{takitId:takitId},{animate:true,animation: 'md-transition', direction: 'forward', duration:500  });
+      console.log("enterOldOrder");
+      this.navController.push(OldOrderPage,{takitId:takitId},{animate:true,animation: 'slide-up',direction: 'forward' });
   }
 
   showMoreMenus(shop){
-    this.selectedTakitId=shop.takitId;
     if(shop.showMore===undefined || shop.showMore===false){
         shop.showMore=true;
     }else{
         shop.showMore=false;
     }
+
+    console.log("showMoreMenus:"+shop.showMore);
   }
 
   goHome(){
@@ -280,12 +285,39 @@ export class HomePage{
     
   }
 
+  showBestMenus(i){
+      if(this.nearShops[i].bestMenus===null || this.nearShops[i].bestMenus===undefined){
+          //this.nearShops[i].bestMenus=[];
+          return false;
+      }else{
+          this.nearShops[i].bestMenus=JSON.parse(this.nearShops[i].bestMenus);
+          return true;
+      }
+
+  }
+
   getSejong(){
       this.selectSejong = true;
       if(this.storageProvider.sejongShops!==undefined){
           this.serverProvider.getKeywordShops("세종대").then((res:any)=>{
+
+                console.log("getSejong success:"+JSON.stringify(res));
+                res.forEach(shop => {
+                    if(shop.bestMenus ===null){
+                        shop.bestMenus=[];
+                    }else{
+                        shop.bestMenus = JSON.parse(shop.bestMenus);
+                    } 
+                    if(shop.reviewList === null){
+                        shop.reviewList=[];
+                    }else{
+                        shop.reviewList = JSON.parse(shop.reviewList);
+                    }
+                });
+                
                 this.storageProvider.sejongShops=res;
                 this.nearShops = res;
+                
           },(err)=>{
                 console.log("error:"+JSON.stringify(err));
           });
@@ -298,14 +330,43 @@ export class HomePage{
       this.selectWecook = true;
       if(this.storageProvider.wecookShops!==undefined){
           this.serverProvider.getKeywordShops("wecook").then((res:any)=>{
-                this.storageProvider.wecookShops=res;
-                this.nearShops = res;                
+                res.forEach(shop => {
+                    if(shop.bestMenus ===null){
+                        shop.bestMenus=[];
+                    }else{
+                        shop.bestMenus = JSON.parse(shop.bestMenus);
+                    } 
+
+                    console.log("shop.bestMenus:"+shop.bestMenus);
+                    if(shop.reviewList === null){
+                        shop.reviewList=[];
+                    }else{
+                        shop.reviewList = JSON.parse(shop.reviewList);
+                    }
+                    console.log("shop.reviewList:"+shop.reviewList);
+                });
+                this.storageProvider.sejongShops=res;
+                this.nearShops = res;
+                                
           },(err)=>{
                 console.log("error:"+JSON.stringify(err));
           });
       }else{
           this.nearShops=this.storageProvider.wecookShops;
       }
+  }
+
+  enterMenuDetail(){
+    let option={};
+    this.serverProvider.post(this.storageProvider.serverAddress+"/getMenu",JSON.stringify(option)).then((res:any)=>{
+        if(res.result==="success"){
+            this.navController.push(MenuDetailPage,{menu:res.menu});
+        }else if(res.result === "failure"){
+            console.log("enterMenuDetail server failure:"+res.error);
+        }
+    }).catch(err=>{
+        console.log(err);
+    });
   }
 }
 

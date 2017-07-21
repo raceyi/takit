@@ -6,9 +6,11 @@
 -->
 <ion-header >
   <ion-navbar hideBackButton="true">
-      <button navPop class="nav-btn" small ion-button no-margin clear>
-          <p><</p>
+    <ion-buttons start>
+        <button navPop class="nav-btn" small ion-button no-margin clear>
+            <ion-icon name="icon-prev"></ion-icon>
         </button>
+    </ion-buttons>
     <ion-title>{{shopName}}</ion-title>
   </ion-navbar>
 </ion-header>
@@ -28,9 +30,20 @@
         <div class="div-options">
             <p>추가옵션</p>
             <div *ngFor="let option of options">
-                <span>{{option.name}}</span>
-                <span class="sub3-color">{{"+"+option.price}}</span>
-                <ion-checkbox color="subColor2"></ion-checkbox>
+                 <ion-item class="bg-sub1" no-lines>
+                    <ion-label>{{option.name}}</ion-label>
+                    <ion-label class="sub3-color">+{{option.price}}</ion-label>
+                    <ion-toggle [(ngModel)]="option.flag" (ionChange)="changeOption(option)" color="subColor2"></ion-toggle>
+                 </ion-item>
+
+                <ion-row radio-group [(ngModel)]="option.default" *ngIf="option.choice!==undefined">
+                    <ion-col  *ngFor="let choice of option.choice">
+                        <ion-item class="bg-sub1" no-lines >
+                            <ion-label>{{choice}}</ion-label>
+                            <ion-radio  color="subColor2" [value]="choice"></ion-radio>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
             </div>
         </div>
     </div>
@@ -38,13 +51,13 @@
 <ion-footer>
     <ion-toolbar class="toolbar-shadow">
         <div class="div-footer-amount">
-            <p class="sub3-color">{{amount}}</p><p>원</p>
-            <div class="div-count">
-                <button (click)="decreaseCount(menu)" color="black" ion-button clear icon-only>
+            <div><span class="sub3-color">{{amount}}</span><span>원</span></div>
+            <div class="div-quantity">
+                <button (click)="decreaseQuantity(menu)" color="subColor2" ion-button clear icon-only>
                     <ion-icon name="ios-remove-circle-outline"></ion-icon>
                 </button>
-                <ion-input type="number" [(ngModel)]="menu.quantity" min="1" readonly></ion-input>
-                <button (click)="increaseCount(menu)" color="black" ion-button clear icon-only>
+                <ion-input type="number" [(ngModel)]="menu.quantity" min="1" color="subColor2" readonly></ion-input>
+                <button (click)="increaseQuantity(menu)" color="subColor2" ion-button clear icon-only>
                     <ion-icon name="ios-add-circle-outline"></ion-icon>
                 </button>
             </div>

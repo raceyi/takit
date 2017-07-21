@@ -260,16 +260,11 @@ export class ServerProvider{
     getOldOrders(){
         return new Promise((resolve,reject)=>{
             //takitId old-order.ts에서 변경
-            let body = JSON.stringify({takitId:this.storageProvider.takitId});
-            console.log("getOldOrders "+body);
-            this.post(this.storageProvider.serverAddress+"/getOldOrders",body).then((res:any)=>{
+            let body = {takitId:this.storageProvider.takitId};
+            console.log("getOldOrders "+this.storageProvider.takitId);
+            this.post(this.storageProvider.serverAddress+"/getOldOrders",JSON.stringify(body)).then((res:any)=>{
                 console.log("getOldOrders res:"+JSON.stringify(res));
-                if(res.result=="success"){
-                    //this.storageProvider.=res.balance;
-                    resolve(res.oldOrders);
-                }else{
-                    reject(res.error);
-                }
+                resolve(res);
             },(err)=>{
                 reject(err);                                  
             });
@@ -294,6 +289,55 @@ export class ServerProvider{
             });
         });
     }
+
+    getOrders(monthOption){
+        return new Promise((resolve,reject)=>{
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            console.log("server:"+ this.storageProvider.serverAddress);
+            let body  = JSON.stringify({    takitId:this.storageProvider.takitId,
+                                            monthOption:monthOption});
+            console.log("getOrders:"+body);
+            this.post(this.storageProvider.serverAddress+"/getOrders",body).then((res:any)=>{
+                //console.log("getOrders-res:"+JSON.stringify(res));
+                resolve(res);
+            },(err)=>{
+                reject(err);
+            });
+        });
+    }
+
+    getFavoriteShops(){
+        return new Promise((resolve,reject)=>{
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            this.post(this.storageProvider.serverAddress+"/getFavoriteShops","{}").then((res:any)=>{
+                //console.log("getOrders-res:"+JSON.stringify(res));
+                resolve(res);
+            },(err)=>{
+                reject(err);
+            });
+        });
+    }
+
+    getBestMenus(){
+        
+    }
+
+    getCoupons(option){
+
+        return new Promise((resolve,reject)=>{
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            this.post(this.storageProvider.serverAddress+"/getFavoriteShops",JSON.stringify(option)).then((res:any)=>{
+                //console.log("getOrders-res:"+JSON.stringify(res));
+                resolve(res);
+            },(err)=>{
+                reject(err);
+            });
+        });
+    }
+
 }
 
 

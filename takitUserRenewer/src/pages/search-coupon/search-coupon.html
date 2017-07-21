@@ -1,0 +1,24 @@
+<!--
+  Generated template for the SearchCouponPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>searchCoupon</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <p *ngIf="coupons.length===0">다운 받을 수 있는 쿠폰이 없습니다.</p>
+    <div *ngFor="let coupon of coupons">
+        <p>{{coupons.name}}</p>
+        <button [disabled]="storageProvider.couponList.includes(coupon.couponNO)" 
+                (click)="downloadCoupon(coupon)" ion-button>다운로드</button>
+    </div>
+
+</ion-content>
