@@ -46,6 +46,7 @@
 @include makeIcon(icon-bad, $icon-bad);
 
 @include makeIcon(icon-event_coupun_bg, $icon-event_coupun_bg);
+@include makeIcon(icon-facebook, $icon-facebook);
 @include makeIcon(icon-favorite, $icon-favorite);
 @include makeIcon(icon-floating_close, $icon-floating_close);
 @include makeIcon(icon-floating_open, $icon-floating_open);
@@ -55,9 +56,10 @@
 @include makeIcon(icon-history_bar_1_on, $icon-history_bar_1_on);
 @include makeIcon(icon-history_bar_2_off, $icon-history_bar_2_off);
 @include makeIcon(icon-history_bar_2_on, $icon-history_bar_2_on);
-
 @include makeIcon(icon-history_dropdown_btn, $icon-history_dropdown_btn);
 @include makeIcon(icon-history, $icon-history);
+@include makeIcon(icon-kakaotalk, $icon-kakaotalk);
+
 @include makeIcon(icon-list_1, $icon-list_1);
 @include makeIcon(icon-list_2, $icon-list_2);
 @include makeIcon(icon-location, $icon-location);
@@ -69,13 +71,13 @@
 @include makeIcon(icon-receipt_bg_1, $icon-receipt_bg_1);
 @include makeIcon(icon-receipt_bg_2, $icon-receipt_bg_2);
 
+@include makeIcon(icon-setting, $icon-setting);
 @include makeIcon(icon-store_menu, $icon-store_menu);
 @include makeIcon(icon-tab_home, $icon-tab_home);
 @include makeIcon(icon-tab_more, $icon-tab_more);
 @include makeIcon(icon-tab_mytakit, $icon-tab_mytakit);
 @include makeIcon(icon-tab_mywallet, $icon-tab_mywallet);
 @include makeIcon(icon-takeout, $icon-takeout);
-
 @include makeIcon(icon-takit_full_logo, $icon-takit_full_logo);
 @include makeIcon(icon-takit_simbol_logo, $icon-takit_simbol_logo);
 @include makeIcon(icon-up, $icon-up);
