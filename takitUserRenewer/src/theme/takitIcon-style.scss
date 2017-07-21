@@ -27,33 +27,58 @@
 
 
 
+@include makeIcon(icon-cash_2, $icon-cash_2);
+@include makeIcon(icon-atRestaurant, $icon-atRestaurant);
 @include makeIcon(icon-cancel, $icon-cancel);
 @include makeIcon(icon-cart, $icon-cart);
+
+@include makeIcon(icon-cash_history_1, $icon-cash_history_1);
+@include makeIcon(icon-cash_history_2, $icon-cash_history_2);
 @include makeIcon(icon-cash, $icon-cash);
-@include makeIcon(icon-cash_2, $icon-cash_2);
 @include makeIcon(icon-chat, $icon-chat);
 @include makeIcon(icon-coupun_bg, $icon-coupun_bg);
 @include makeIcon(icon-delete, $icon-delete);
+@include makeIcon(icon-delivery, $icon-delivery);
 @include makeIcon(icon-down, $icon-down);
+
+@include makeIcon(icon-good, $icon-good);
+@include makeIcon(icon-soso, $icon-soso);
+@include makeIcon(icon-bad, $icon-bad);
+
+@include makeIcon(icon-event_coupun_bg, $icon-event_coupun_bg);
 @include makeIcon(icon-favorite, $icon-favorite);
+@include makeIcon(icon-floating_close, $icon-floating_close);
+@include makeIcon(icon-floating_open, $icon-floating_open);
+
+@include makeIcon(icon-history2, $icon-history2);
+@include makeIcon(icon-history_bar_1_off, $icon-history_bar_1_off);
+@include makeIcon(icon-history_bar_1_on, $icon-history_bar_1_on);
+@include makeIcon(icon-history_bar_2_off, $icon-history_bar_2_off);
+@include makeIcon(icon-history_bar_2_on, $icon-history_bar_2_on);
+
+@include makeIcon(icon-history_dropdown_btn, $icon-history_dropdown_btn);
 @include makeIcon(icon-history, $icon-history);
 @include makeIcon(icon-list_1, $icon-list_1);
 @include makeIcon(icon-list_2, $icon-list_2);
 @include makeIcon(icon-location, $icon-location);
+@include makeIcon(icon-logo, $icon-logo);
+@include makeIcon(icon-menu, $icon-menu);
 @include makeIcon(icon-next, $icon-next);
 @include makeIcon(icon-phone, $icon-phone);
 @include makeIcon(icon-prev, $icon-prev);
-@include makeIcon(icon-up, $icon-up);
-@include makeIcon(icon-atRestaurant, $icon-atRestaurant);
-@include makeIcon(icon-delivery, $icon-delivery);
-@include makeIcon(icon-logo, $icon-logo);
-@include makeIcon(icon-menu, $icon-menu);
+@include makeIcon(icon-receipt_bg_1, $icon-receipt_bg_1);
+@include makeIcon(icon-receipt_bg_2, $icon-receipt_bg_2);
+
+@include makeIcon(icon-store_menu, $icon-store_menu);
 @include makeIcon(icon-tab_home, $icon-tab_home);
 @include makeIcon(icon-tab_more, $icon-tab_more);
 @include makeIcon(icon-tab_mytakit, $icon-tab_mytakit);
 @include makeIcon(icon-tab_mywallet, $icon-tab_mywallet);
 @include makeIcon(icon-takeout, $icon-takeout);
 
+@include makeIcon(icon-takit_full_logo, $icon-takit_full_logo);
+@include makeIcon(icon-takit_simbol_logo, $icon-takit_simbol_logo);
+@include makeIcon(icon-up, $icon-up);
 
 
 // @font-face {

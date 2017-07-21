@@ -28,15 +28,22 @@
             <p>최근 주문</p>
         </ion-col>
         <ion-col>
-            <p>4개월</p>
+            <!-- <ion-item class="item-last" no-lines  [hidden]="!showHistory">
+                <ion-select [(ngModel)]="lastOrderMonth" (ionChange)="changeMonthSelect()" interface="popover">
+                    <ion-option>1개월</ion-option>
+                    <ion-option>2개월</ion-option>
+                    <ion-option>3개월</ion-option>
+                    <ion-option>4개월</ion-option>
+                </ion-select>
+            </ion-item> -->
         </ion-col>
     </ion-row>
 
-    <div *ngFor="let history of histories; let i=index;" class="div-history">
+    <div *ngFor="let order of historyOrders; let i=index;" class="div-history">
         <ion-row  *ngIf="i<=2">
             <ion-col>
-                <p>{{history.orderName}}</p>
-                <p>{{history.shopName}}</p>
+                <p>{{order.orderName}}</p>
+                <p>{{order.takitId}}</p>
             </ion-col>
             <ion-col>
                 <button ion-button clear color="mainColor">
@@ -46,7 +53,10 @@
         </ion-row>
     </div>
 
-    <button (click)="showAllHistory()" color="white" ion-button no-padding>전체보기</button>
+    <button (click)="showAllHistory()" class="btn-all" ion-button no-padding full clear color="subColor"> 
+        <ion-icon name="icon-history2"></ion-icon>
+        <p>최근주문 모두보기</p>
+    </button> 
 
 
 
@@ -155,16 +165,16 @@
             <img *ngIf="histories[3].selected" [src]="storageProvider.awsS3OCR+circle[1]" class="slidebar">
         </button>
     </ion-item>-->
- 
-    <p color="white">자주 가는 매장</p>
+    <div>
+        <p color="white">단골 매장</p>
 
-    <div class="div-favShop">
-        <ion-list *ngFor="let item of items" class="list-favShop">
-            <img [src]="storageProvider.awsS3+item.img">
-            <p>{{item.name}}</p>
-        </ion-list>
+        <div class="div-favShop">
+            <ion-list *ngFor="let shop of favoriteShops" class="list-favShop">
+                <img [src]="storageProvider.awsS3+shop.imagePath">
+                <p>{{shop.name}}</p>
+            </ion-list>
+        </div>
     </div>
-
     <!--<ion-card *ngFor="let item of items" class="card-shop">
         <ion-row no-padding>
         <ion-col no-padding>

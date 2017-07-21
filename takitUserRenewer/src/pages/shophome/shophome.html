@@ -30,7 +30,7 @@
 </ion-header>
 
 <ion-content #shophomeContent>
-    <ion-slides #BestMenusSlides class="btn-bestMenus" [hidden]="menuSlideUp">
+    <ion-slides #BestMenusSlides class="btn-bestMenus" [hidden]="menuSlideUp || bestMenus.length===0">
         <ion-slide *ngFor="let menu of bestMenus" >
             <button (click)="showBestMenus()" ion-button full no-padding no-margin class="btn-bestMenus" >
             <ion-card>
@@ -96,14 +96,14 @@
             </ion-col>
             <ion-col  class="col-menus">
                 <ion-scroll scrollY="true" class="scroll-menus no-scroll">
-                <ion-list *ngFor="let menu of nowMenus">
-                    <button class="btn-menu radius-5" color="white" ion-button full no-padding no-margin>
-                        <ion-item>
-                            <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
-                            <h2>{{menu.menuName}}</h2>
-                            <p>{{menu.price}}</p>
-                        </ion-item>
-                    </button>
+                <ion-list class="radius-5" *ngFor="let menu of nowMenus">
+                    <div>
+                        <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
+                    </div>
+                    <div>
+                        <h5>{{menu.menuName}}</h5>
+                        <h5>{{menu.price}}</h5>
+                    </div>
                 </ion-list>
                 </ion-scroll>
             </ion-col>
@@ -129,14 +129,14 @@
             </ion-col>
             <ion-col class="col-menus">
                 <ion-scroll scrollY="true" class="scroll-menus">
-                    <ion-list *ngFor="let menu of nowMenus">
-                        <button (click)="menuSelected(menu.menuName)" class="btn-menu radius-5" color="white" ion-button full no-padding no-margin>
-                            <ion-item no-lines>
-                                <ion-avatar item-left> <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath"></ion-avatar>
-                                <h2>{{menu.menuName}}</h2>
-                                <p>{{menu.price}}</p>
-                            </ion-item>
-                        </button>
+                    <ion-list (click)="menuSelected(menu.menuName)" *ngFor="let menu of nowMenus" class="radius-5" >
+                        <div>
+                            <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
+                        </div>
+                        <div>
+                            <h5>{{menu.menuName}}</h5>
+                            <h5>{{menu.price}}</h5>
+                        </div>
                     </ion-list>
                 </ion-scroll>
             </ion-col> 

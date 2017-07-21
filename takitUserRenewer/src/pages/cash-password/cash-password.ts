@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams ,AlertController, App} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
+import { OrderCompletePage } from '../order-complete/order-complete';
 
 /**
  * Generated class for the CashPassword page.
@@ -199,6 +200,7 @@ export class CashPassword {
                                 title: '주문에 실패하였습니다.',
                                 subTitle: '다시 주문해주시기 바랍니다.',
                                 buttons: ['OK']
+
                             });
                             alert.present();
                             this.navCtrl.pop();

@@ -1,5 +1,10 @@
 <ion-header>
-  <ion-navbar >
+  <ion-navbar hideBackButton="true">
+      <ion-buttons start>
+        <button navPop class="nav-btn" small ion-button no-margin clear>
+            <ion-icon name="icon-prev"></ion-icon>
+        </button>
+    </ion-buttons>
     <ion-title>장바구니</ion-title>
   </ion-navbar>
 </ion-header>
@@ -19,11 +24,12 @@
 
     <div *ngFor="let menu of storageProvider.cart.menus" class="div-cart-menu">
         <p>{{menu.menuName}}</p>
+        <span><ion-icon (click)="deleteMenu(menu)" name="icon-delete"></ion-icon></span>
         <div class="div-amount-container">
-            <span class="span-amount">{{menu.amount*menu.quantity}}</span><span>원</span>
+            <span class="span-amount">{{menu.price*menu.quantity}}</span><span>원</span>
             <div class="div-count">
                 <button (click)="decreaseCount(menu)" color="black" ion-button clear icon-only>
-                    <ion-icon name="ios-remove-circle-outline">
+                    <ion-icon  name="ios-remove-circle-outline">
                     </ion-icon>
                 </button>
                 <ion-input type="number" [(ngModel)]="menu.quantity" min="1" readonly></ion-input>
@@ -32,6 +38,10 @@
                     </ion-icon>
                 </button>
             </div>
+        </div>
+        <div *ngFor="let option of menu.options">
+            <span>{{option.name}}</span>
+            <span>{{option.price*menu.quantity}}</span>
         </div>
     </div>
   <!--<ion-item class="order5" *ngFor="let menu of cart.menus">
@@ -217,7 +227,7 @@
 </ion-content>
 <ion-footer>
     <ion-toolbar class="toolbar-shadow">
-        <div color="subColor3">{{totalAmount+"원"}}</div>
+        <div color="subColor3">{{amount+"원"}}</div>
         <button (click)="enterOrder()" color="white" ion-button full>주문하기</button>
     </ion-toolbar>
 </ion-footer>

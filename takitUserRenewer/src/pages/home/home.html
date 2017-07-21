@@ -30,10 +30,10 @@
                     <ion-col (click)="getSelected(shop.takitId)" >
                         <p class="scroll-p-shop">{{shop.takitId}}</p>
                     </ion-col>
-                    <ion-col col-2 >
-                        <button (click)="enterOldOrder(shop.takitId)" ion-button class="scroll-btn-latest" color="mainColor" clear>
-                            <ion-icon name="icon-menu"></ion-icon>
-                        </button>
+                    <ion-col col-2 (click)="enterOldOrder(shop.takitId)" >
+                        <!-- <button  ion-button class="scroll-btn-latest" color="mainColor" clear> -->
+                            <ion-icon name="icon-menu" class="scroll-icon-latest" color="mainColor"></ion-icon>
+                        <!-- </button> -->
                     </ion-col>
                 </ion-row>
                 <ion-row >
@@ -72,7 +72,9 @@
         <p class="p-title">내 주변 매장</p>
         </ion-col>
         <ion-col col-4>
-            <ion-item no-lines>
+
+            <!--next version  -->
+            <!-- <ion-item no-lines>
                 <ion-label>전체</ion-label>
                 <ion-select interface="popover" [(ngModel)]="distanceSelected">
                     <ion-option value="1">1km</ion-option>
@@ -80,37 +82,38 @@
                     <ion-option value="3">10km</ion-option>
                     <ion-option value="4">전국</ion-option>
                 </ion-select>
-            </ion-item>
+            </ion-item> -->
         </ion-col>
     </ion-row>
     <!--거리별 shoplist가 되어야 함-->
-    <div *ngFor="let shop of nearShops">
+    <div *ngFor="let shop of nearShops; let i=index">
         <ion-card class="card-shop">
             <ion-row >
                 <ion-col no-padding (click)="getSelected(shop.takitId)" >
                     <button  class="btn-shop" color="white" ion-button full no-padding no-margin>
-                        <img class="img-shop" [src]="storageProvider.awsS3+shop.s3key" >
+                        <img class="img-shop" [src]="storageProvider.awsS3+shop.imagePath" >
                     </button>     
                 </ion-col>
                 <ion-col (click)="getSelected(shop.takitId)" >
                     <ion-card-content>
                         <p>{{shop.name}}</p>
-                        <p>{{"#"+shop.takitId+"#"}}</p>
-                        <p>{{shop.discountRate+" "+shop.businessType+" "+shop.distance+" "+shop.reviewCount}}</p>
+                        <p>{{shop.shopName}}</p>
+                        <p>{{shop.discountRate+" "+shop.businessType+" "}}</p>
+                        <p>{{shop.reviewList.length}}</p>
                     </ion-card-content>
                 </ion-col>
                 <ion-col col-2>
-                    <button (click)="showMoreMenus(shop)" class="btn-shop-more" ion-button clear color="mainColor">
+                    <button (click)="showMoreMenus(shop)" class="btn-shop-more" ion-button clear color="mainColor" *ngIf="shop.bestMenus.length>0">
                         <ion-icon name="md-more"></ion-icon>
                     </button>
                 </ion-col>
             </ion-row>
         </ion-card>
-        <ion-scroll class="scroll-more" scrollX="true" *ngIf="shop.takitId === selectedTakitId && shop.showMore" >
+        <ion-scroll class="scroll-more" scrollX="true" *ngIf="shop.showMore" >
             <ion-row class="scroll-row-more">
                 <ion-col *ngFor="let menu of shop.bestMenus" class="more-menus">
                     <ion-row row-4>
-                        <ion-col>
+                        <ion-col (click)="enterMenuDetail()">
                             <ion-item no-lines class="item-more">
                                 <ion-avatar item-left> 
                                     <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">

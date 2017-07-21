@@ -75,6 +75,11 @@ export class ShopHomePage {
     //Any other way to pass takitId into ShopHome page?
             this.storageProvider.takitId=navParams.get("takitId");
             this.bestMenus=navParams.get('bestMenus');
+            if(!this.bestMenus){ //this.bestMenu !== null or undefined
+                this.bestMenus = [];
+            }
+
+            console.log("bestMenus:"+this.bestMenus);
   }
 
   ionViewDidEnter(){ // Be careful that it should be DidEnter not Load 
@@ -189,7 +194,11 @@ export class ShopHomePage {
         this.configureShopInfo();
 
         // update shoplist at Serve (takitId,s3key)
-        var thisShop:any={takitId:this.takitId , shopName:this.shop.shopInfo.shopName,s3key: this.shop.shopInfo.imagePath, discountRate:this.shop.shopInfo.discountRate,visitedTime:new Date()};
+        var thisShop:any={takitId:this.takitId , 
+                            shopName:this.shop.shopInfo.shopName,
+                            s3key: this.shop.shopInfo.imagePath, 
+                            discountRate:this.shop.shopInfo.discountRate,
+                            visitedTime:new Date()};
         if(this.shop.shopInfo.imagePath.startsWith("takitId/")){
 
         }else{
@@ -356,7 +365,7 @@ export class ShopHomePage {
   }
 
   back(){      
-     this.app.getRootNav().pop({animate:true,animation: 'md-transition', direction: 'back' });
+     this.app.getRootNav().pop();
   }
 
      

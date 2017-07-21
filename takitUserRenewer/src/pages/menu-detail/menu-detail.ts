@@ -16,36 +16,102 @@ import { OrderPage } from '../order/order';
 })
 export class MenuDetailPage {
     menu:any;
-    amount:number;
+    amount:number;  //price*quantity+option-discount ..
     options:any;
     shopName:string;
+    choice; 
+    discount:number;
+    discountPrice:number; //when only 1 quantity selected dicounting amount
+    optionAmount:number=0;  // 
+    // 갯수가 올라간 상태에서 option을 선택했을 경우 -> option이 선택될 때 그 갯수 만큼 가격이 더해져야함.
+    // option이 선택된 상태에서 갯수가 올라간 경우  -> 갯수가 올라갈 때 option 가격도 *갯수 만큼 올라가야 함.
+    //option이 선택된 상태에서 갯수가 적어진 경우 -> 갯수가 내려갈 때 option 가격도 *갯수 만큼 내려가야 함.
+
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public storageProvider:StorageProvider, public alertController:AlertController) {
      console.log("param:"+JSON.stringify(navParams.get('menu')));
      this.menu=navParams.get('menu');
      this.shopName=navParams.get('shopName');
-     this.amount=this.menu.price;
+     this.discount = this.calcDiscountAmount(this.menu.price);
+     this.amount = this.discountPrice=this.menu.price-this.discount;
      this.options=JSON.parse(this.menu.options);
      this.menu.quantity = 1;
      console.log("menu options1:"+this.menu.options);
      console.log("menu options:"+JSON.stringify(this.options));
+
+     if(this.options!==undefined && this.options.length>0){
+          console.log("hum...-1.1");
+          //this.hasOptions=true;                   
+          
+          this.options.forEach((option)=>{
+              option.flag=false;
+              if(option.hasOwnProperty("choice") && Array.isArray(option.choice)){
+                //   option.choiceFlags=[];
+                //   //option.disabled=[];
+                  
+                //   for(let i=0;i<option.choice.length;i++){
+                //       option.choiceFlags.push(false);
+                //     //  option.disabled.push(false);
+                //   }
+
+                  if(option.hasOwnProperty("default")){
+                      console.log("default:"+option.default);
+                        for(let i=0;i<option.choice.length;i++){
+                            if(option.choice[i]==option.default){
+                                    option.flag=true;
+                            }
+                        }
+                  }
+              }
+          });
+      }
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MenuDetailPage');
   }
 
-  decreaseCount(menu){
+  calcDiscountAmount(price){
+      return Math.round(price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
+  }
+
+  decreaseQuantity(menu){
     if(menu.quantity <= 1){
+        console.log("decreaseQuantity <=1 :"+menu.quantity);
         menu.quantity=1;
+        this.amount = this.discountPrice*menu.quantity;
+        this.options.forEach(option => {
+            if(option.flag===true){
+                console.log("option.flag true");
+                this.amount+=(option.price-this.calcDiscountAmount(option.price))*menu.quantity;
+            }
+        });        
     }else{
+        console.log("decreaseQuantity > 1 :"+menu.quantity);
         menu.quantity--;
+        this.amount = this.discountPrice*menu.quantity;
+        this.options.forEach(option => {
+            if(option.flag===true){
+                this.amount+=(option.price-this.calcDiscountAmount(option.price))*menu.quantity;
+            }
+        });
     }
     
   }
 
-  increaseCount(menu){
+  increaseQuantity(menu){
+              console.log("increaseQuantity :"+menu.quantity);
+
     menu.quantity++;
+    this.amount = this.discountPrice*menu.quantity;
+    this.options.forEach(option => {
+        if(option.flag===true){
+            console.log("option.flag true");
+            console.log((option.price-this.calcDiscountAmount(option.price))*menu.quantity)
+            this.amount+=(option.price-this.calcDiscountAmount(option.price))*menu.quantity;
+        }
+    });
   }
 
   checkOptionValidity(){
@@ -55,9 +121,10 @@ export class MenuDetailPage {
             if(this.options!=undefined && this.options!=null && Array.isArray(this.options)){
                 for(i=0;i<this.options.length;i++){
                         var option=this.options[i];
-                        if(option.hasOwnProperty("choice")==true && option.flag){
-                            console.log("option.select:"+option.select);
-                            if(option.select==undefined && option.name!=undefined){
+                        if(option.hasOwnProperty("choice") && option.flag){
+                            console.log("option.selectedChoice:"+option.default);
+                            
+                            if(option.default === undefined || option.default === null){
                                 reject(option.name);
                             }
                         }
@@ -124,10 +191,9 @@ export class MenuDetailPage {
                     quantity:this.menu.quantity,
                     options: options,
                     price: this.menu.price,
-                    amount: this.menu.price*this.menu.quantity,
-                    discountAmount:this.menu.price-Math.round(this.menu.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0))
+                    amount: this.menu.price*this.menu.quantity
                     });
-        cart.total=cart.total+this.menu.price;
+        cart.total=parseInt(cart.total)+this.amount;
         console.log("cart:"+JSON.stringify(cart));
         this.storageProvider.saveCartInfo(this.storageProvider.takitId,JSON.stringify(cart)).then(()=>{
             //this.storageProvider.shopTabRef.select(2);
@@ -139,8 +205,26 @@ export class MenuDetailPage {
     });
   }
 
-  enterOrder(){
-        this.navCtrl.push(OrderPage,{menu:this.menu, shopName:this.shopName});
+  changeOption(option){
+    //   if(flag && )
+
+    console.log("flag:"+option.flag);
+      if(option.flag===true){
+
+          this.amount+= (option.price-this.calcDiscountAmount(option.price))*this.menu.quantity;
+      }else{
+          this.amount-= (option.price-this.calcDiscountAmount(option.price))*this.menu.quantity;
+      }
   }
+
+  enterOrder(){
+        this.menu.options=this.options;
+        
+        this.navCtrl.push(OrderPage,{menu:this.menu,
+                                    shopName:this.shopName,
+                                    trigger:"order"});
+  }
+
+
 
 }

@@ -8,17 +8,24 @@
 
   <ion-navbar hideBackButton="true" >
       <ion-buttons start>
-        <button navPop class="nav-btn" small ion-button no-margin clear>
+        <button (click)="closePage()" class="nav-btn" small ion-button no-margin clear>
           <ion-icon name="icon-prev"></ion-icon>
         </button>
       </ion-buttons>
-    <ion-title>{{takitId}}</ion-title>
+    <ion-title>{{storageProvider.takitId}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
-    <ion-row *ngFor="let arr of array; let i=index; ">
+    <div *ngFor="let order of oldOrders" class="flex-container">
+        <ion-card (click)="enterMenuDetail(order)" class="card-oldOrder">
+            <h2>{{order.menuName}}</h2>
+            <p>{{order.amount}}</p>
+            <p>{{"주문횟수:"+order.orderCount}}</p>
+        </ion-card>
+    </div>
+    <!-- <ion-row *ngFor="let arr of array; let i=index; " *ngIf="oldOrders.length>=1">
         <ion-col>
             <ion-card class="card-oldOrder">
                 <h2>{{oldOrders[i*2].orderName}}</h2>
@@ -34,6 +41,6 @@
                 <p>{{"주문횟수:"+oldOrders[i*2+1].orderCount}}</p>
             </ion-card>
         </ion-col>
-    </ion-row>
+    </ion-row>  -->
 
 </ion-content>

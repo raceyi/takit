@@ -8,9 +8,9 @@
 
   <ion-navbar hideBackButton="true" >
     <ion-buttons start>
-      <button navPop class="nav-btn" small ion-button no-margin clear>
-          <p>< back</p>
-      </button>
+        <button navPop class="nav-btn" small ion-button no-margin clear>
+            <ion-icon name="icon-prev"></ion-icon>
+        </button>
     </ion-buttons>
     <ion-title>shopAbout</ion-title>
   </ion-navbar>
@@ -25,14 +25,11 @@
                 <p>더큰도시락</p>
                 <ion-item color="item-about" no-lines >
                 <ion-avatar style="text-align: -webkit-center;">
-                    <img style="text-align:center; width:120px; height:120px;" [src]="storageProvider.awsS3OCR+shef[0].img">
+                    <img style="text-align:center; width:120px; height:120px;" [src]="storageProvider.awsS3+storageProvider.shopInfo.shefImage">
                 </ion-avatar>
                 </ion-item>
                 <p>{{storageProvider.shopInfo.introduce}}</p>
-                <button ion-button clear color="white">BLOG</button>
-                <a ion-item [href]="storageProvider.shopInfo.blogAddress">
-                BLOG
-                </a>
+                <a  [href]="storageProvider.shopInfo.blogAddress">BLOG</a>
             </ion-col>
         </ion-row>
     </div>
@@ -43,6 +40,7 @@
             <p>평일 {{businessTime[1]}} / 주말 {{businessTime[6]}}</p>
             <p>주소 : {{storageProvider.shopInfo.address}}</p>
             <p>전화번호 : {{storageProvider.shopInfo.shopPhone}}</p>
+            <!--전화번호는 바로 전화 걸 수 있도록-->
         </ion-col>
     </ion-row>
     <ion-row>
@@ -53,17 +51,7 @@
             <p>{{storageProvider.shopInfo.notice}}</p>
         </ion-col>
     </ion-row>
-    <div>
-        <ion-row>
-             <h6> KEYWORD</h6>
-        </ion-row>
-        <ion-row>
-            <ion-col *ngFor="let keyword of keywords">
-                <p>{{"#"+keyword}}</p>
-            </ion-col>
-        </ion-row>
-    </div>
-    <div>
+    <div class="bg-sub1">
         <h6> REVIEW</h6>
         <ion-list>
             

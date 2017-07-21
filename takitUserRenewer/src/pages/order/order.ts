@@ -4,9 +4,10 @@ import {Http,Headers} from '@angular/http';
 import {Platform,App,AlertController} from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import {StorageProvider} from '../../providers/storageProvider';
-//import {ServerProvider} from '../../providers/serverProvider';
+import {ServerProvider} from '../../providers/serverProvider';
 //import { Keyboard } from '@ionic-native/keyboard';
 import {CashPassword} from '../cash-password/cash-password';
+import {SearchCouponPage} from '../search-coupon/search-coupon';
 
 //declare var cordova:any;
 
@@ -35,7 +36,6 @@ export class OrderPage {
   hasOptions:boolean=false;
 
   quantity:number=1;
-  quantityInputType:string;
 
   discount:number;
   amount:number; //price*quantity
@@ -64,91 +64,229 @@ export class OrderPage {
 
   takeoutType:string="here";
   payType:string="cash";
-  myCoupon:string="1";
+  //myCouponName:string;
+  selectedCoupon={};
+  coupons=[];
 
+  trigger:string;
+  cart;
 
   constructor(private app:App,private navController: NavController,
         private navParams:NavParams,private ngZone:NgZone,
-        private alertController:AlertController, 
+        private alertController:AlertController, public serverProvider:ServerProvider,
         private platform:Platform,public storageProvider:StorageProvider,) {
       
         //Just for testing
         //this.storageProvider.shopInfo.freeDelivery="0";
         //this.storageProvider.shopInfo.deliveryArea="세종대학교내 예)00관 101호";
         ///////////////////////////////
-
+        this.trigger=navParams.get('trigger');
       if(!navigator.language.startsWith("ko")){
           this.lang="en";
       }else{
           this.lang="ko";
       }
       console.log("receiptIssue:"+this.storageProvider.receiptIssue);
+      
       if(this.storageProvider.receiptIssue){
             this.receiptIdMask=this.storageProvider.receiptId.substr(0,3)+"****"+this.storageProvider.receiptId.substr(7,this.storageProvider.receiptId.length-7);
             console.log("recpitIdMask:"+this.receiptIdMask);
       }
-      this.menu=navParams.get("menu");
-      this.shopName=navParams.get("shopName");
-      console.log("OrderPage-param(menu):"+navParams.get("menu"));
-      console.log("OrderPage-param(shopName):"+navParams.get("shopName"));
-      var splits=this.menu.menuNO.split(";");
-      this.takitId=splits[0];
-      console.log("takitId:"+this.takitId);
+      console.log("trigger:"+this.trigger);
+      if(this.trigger==="order"){
+        console.log("menudetail page->order page");
+        this.menu=navParams.get("menu");
+        this.shopName=navParams.get("shopName");
+        console.log("OrderPage-param(menu):"+navParams.get("menu"));
+        console.log("OrderPage-param(shopName):"+navParams.get("shopName"));
+        var splits=this.menu.menuNO.split(";");
+        this.takitId=splits[0];
+        console.log("takitId:"+this.takitId);
 
-      this.price=this.menu.price*1;
-      this.takitDiscount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
-      
-      this.amount=this.menu.price*this.menu.quantity
-      this.totalDiscount=this.takitDiscount+this.couponDiscount;
-      this.totalAmount=this.price-this.totalDiscount; //? 할인된 금액이 만원이 넘어야 하는 것인가?
+        this.price=this.menu.price*1;
+
+        this.takitDiscount= this.menu.quantity*this.calcDiscountAmount(this.menu.price);
+        let optionAmount:number=0;
+        let optionDiscount:number=0;
+            this.menu.options.forEach(option => {
+                if(option.flag===true){
+                    console.log("OrderPage constructor option.flag true");
+                    
+                    // !!! orderpage 계산 다시
+                    // !!! 장바구니 선택한 options 들어가게
+                    // !!! 주문확인
+                    // !!! 주문내역
+
+
+                    optionDiscount=this.calcDiscountAmount(option.price)*this.menu.quantity;
+                    this.takitDiscount+=optionDiscount;
+                    optionAmount+=parseInt(option.price);
+                }
+            });
+
+         console.log("optionAmount:"+optionAmount);
+        console.log("optionDiscount:"+optionDiscount);
+        
+        this.amount=(parseInt(this.menu.price)+optionAmount)*this.menu.quantity;
+        console.log("amount:"+this.amount);
+        
+        this.totalDiscount=this.takitDiscount+this.couponDiscount;
+        this.totalAmount=this.amount-this.totalDiscount; //? 할인된 금액이 만원이 넘어야 하는 것인가?
+
+        console.log(" ["+this.menu.hasOwnProperty("takeout")+"][ "+(this.menu.takeout!=null) +"] ["+ (this.menu.takeout!=false)+"]");
+        if(this.menu.hasOwnProperty("takeout") && (this.menu.takeout!=null) && (this.menu.takeout!=false)){ // humm... please add takeout field into all menus...
+            this.takeoutAvailable=true;
+            this.takeout=false;
+        }
+
+      }else if(this.trigger==="cart"){
+          console.log("cart page->order page");
+        this.cart=navParams.get('cart');
+
+        console.log("cart:"+JSON.stringify(this.cart));
+
+        this.cart.menus.forEach(menu => {
+            this.amount+=parseInt(menu.price)*parseInt(menu.quantity);
+            this.takitDiscount+=menu.quantity*this.calcDiscountAmount(menu.price);
+            this.totalDiscount=this.takitDiscount+this.couponDiscount;
+            menu.options.forEach(option => {
+                this.amount+=parseInt(option.price);
+                this.takitDiscount+=menu.quantity*this.calcDiscountAmount(option.price);
+            });
+
+            if(menu.hasOwnProperty("takeout") && (menu.takeout!=null)){ // humm... please add takeout field into all menus...
+                this.takeoutAvailable=menu.takeout; //menu.takeout 값을 넣어서 모두 true이면 true, 하나라도 false이면 false
+                this.takeout=false;
+            }
+        });
+        this.totalAmount=this.cart.total;
+      }
+
+      this.storageProvider.shopInfo.freeDelivery=parseInt(this.storageProvider.shopInfo.freeDelivery);
 
       if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
             this.delivery=false;
             this.takeout=false;
             this.here=true;
       }
-      console.log(" ["+this.menu.hasOwnProperty("takeout")+"][ "+(this.menu.takeout!=null) +"] ["+ (this.menu.takeout!=false)+"]");
-      if(this.menu.hasOwnProperty("takeout") && (this.menu.takeout!=null) && (this.menu.takeout!=false)){ // humm... please add takeout field into all menus...
-         this.takeoutAvailable=true;
-         this.takeout=false;
-      }
-      console.log("hum....--1");
-      if(this.menu.hasOwnProperty("options") 
-      //&& Array.isArray(this.menu.options)
-      && this.menu.options!=null && this.menu.options.length>0){
-          console.log("hum...-1.1");
-          this.hasOptions=true;         
-          this.options=JSON.parse(this.menu.options);
-          
-          this.options.forEach((option)=>{
-              if(option.hasOwnProperty("choice") && Array.isArray(option.choice)){
-                  option.flag=false;
-                  option.flags=[];
-                  option.disabled=[];
-                  var i;
-                  for(i=0;i<option.choice.length;i++){
-                      option.flags.push(false);
-                      option.disabled.push(false);
-                  }
-                  if(option.hasOwnProperty("default")){
-                      console.log("default:"+option.default);
-                        for(i=0;i<option.choice.length;i++){
-                            if(option.choice[i]==option.default){
-                                    option.flags[i]=true;
-                                    option.flag=true;
-                            }
-                        }
-                  }
-              }
-          });
-      }
-      console.log("hum....--2");
 
-      this.quantityInputType="select";
+      console.log(this.takeoutAvailable);
+      console.log(this.storageProvider.shopInfo.freeDelivery);      
+        //this.autoCompleteCoupon.couponNO="";
+      ///get user's couponList 에 해당하는 coupon 정보 가져오기
+      
+
+    //   if(storageProvider.couponList.length > 0 && storageProvider.nowCoupons.length === 0){
+    //     let option={takitId:storageProvider.takitId,
+    //               couponList:storageProvider.couponList};
+    //     serverProvider.getCoupons(option).then((res:any)=>{
+    //         console.log("getCoupons result:"+JSON.stringify(res));
+    //         if(res.result==="success"){
+    //             for(let i=0; i<res.coupons.length; i++){
+    //                 if(res.coupons[i].hasOwnProperty("availMenus")){ //coupon db에 쿠폰사용가능메뉴 field가 있고,
+    //                     if(!res.coupons[i].availMenus.includes(this.menu.menuNO)){ //해당 메뉴가 포함 되어 있을때
+    //                         res.coupons.splice(i,0);
+    //                     }
+    //                 }
+
+    //                 if(res.coupons[i].hasOwnProperty("availCategories")){ //coupon db에 쿠폰사용가능카테고리 field가 있고,
+    //                     if(!res.coupons[i].availCategories.includes(this.menu.categoryNO)){//해당 카테고리가 포함 되어 있을때
+    //                         res.coupons.splice(i,1);
+    //                     }
+    //                 }
+
+    //                 if(res.coupons[i].hasOwnProperty("exceptMenu")){ //coupon db에 쿠폰사용제외 field가 있고,
+    //                     if(res.coupons[i].exceptMenu.includes(this.menu.menuNO)){
+    //                         res.coupons.splice(i,1);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         //this.coupons=res.coupons;
+    //         storageProvider.nowCoupons = res.coupons;
+            
+    //         ///coupon auto complete
+            
+            
+
+    //     },err=>{
+    //         console.log("getCoupons error:"+JSON.stringify(err));
+    //     }).catch(err=>{
+    //         console.error(err);
+    //     });
+    //   }
+      
+        console.log("delivery flags:"+this.menu.takeout);
+        console.log(this.storageProvider.shopInfo.freeDelivery,typeof this.storageProvider.shopInfo.freeDelivery);
+        console.log(this.takeoutAvailable && (this.storageProvider.shopInfo.freeDelivery!=null) &&  (this.storageProvider.shopInfo.freeDelivery!=undefined) );
+        
+        if(this.storageProvider.shopInfo.freeDelivery===null){
+            console.log("1");
+        }
+        //console.log(this.storageProvider.shopInfo.freeDelivery);
+        if(this.storageProvider.shopInfo.freeDelivery){
+            console.log("2");
+        }
+
+        if(!this.storageProvider.shopInfo.freeDelivery){
+            console.log("3");
+        }
  }
+
+
+ ionViewWillEnter(){
+     console.log("orderPage-ionViewWillEnter");
+
+    // if(this.storageProvider.nowCoupons.length > 0 && this.storageProvider.nowCoupons[0].takitId===this.takitId){
+    //     this.coupons=this.storageProvider.nowCoupons;
+
+    //     if(this.coupons.length > 0){
+    //         let discountCoupon=null;
+    //         let addCoupon=null;
+
+    //         for(let i=0; i<this.coupons.length-1; i++){
+    //             if(this.coupons[i].type==="discount"){
+    //                 if(discountCoupon===null){
+    //                     discountCoupon=this.coupons[i].couponName;
+    //                 }else{
+    //                     if(parseInt(discountCoupon.discountRate.replace("%","")) 
+    //                         < parseInt(this.coupons[i].discountRate.replace("%",""))){
+    //                         discountCoupon=this.coupons[i];
+    //                     }
+    //                 }
+    //             }
+    //             if(this.coupons[i].type==="add" && addCoupon===null){
+    //                 addCoupon=this.coupons[i];
+    //             }
+    //         }
+    //         if(discountCoupon!==null){
+    //             this.autoCompleteCoupon = discountCoupon;
+    //             this.couponDiscount=Math.round(this.amount*(parseInt(discountCoupon.discountRate.replace("%",""))/100.0));
+    //             this.amount -= this.couponDiscount;
+    //         }else if(addCoupon!==null){
+    //             this.autoCompleteCoupon = addCoupon;
+    //         }
+                                
+    //     }
+    // }
+
+    if(this.hasOptions==false){
+    //console.log(".."+this.optionDivElementRef.nativeElement.style.border);
+    this.optionDivElementRef.nativeElement.style.border="none";
+
+    }
+    if(this.takeoutAvailable==false){
+        //console.log(".."+this.takeoutDivElementRef.nativeElement.style.border);
+        this.takeoutDivElementRef.nativeElement.style.border="none";
+    }
+
+ }
+
 
  ionViewDidEnter(){ // Be careful that it should be DidEnter not Load 
         this.orderPageRef.resize();
+
+       
         /*
         if(!this.storageProvider.isAndroid && !this.storageProvider.keyboardHandlerRegistered){ //ios
             this.storageProvider.keyboardHandlerRegistered=true;
@@ -185,6 +323,9 @@ export class OrderPage {
         });
         */
  }
+ calcDiscountAmount(price){
+      return Math.round(price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
+  }
 
 cashPasswordFocus(){
     if(!this.storageProvider.isAndroid){  // workaround solution
@@ -208,55 +349,65 @@ cashPasswordBlur(){
   sendSaveOrder(cart,menuName){
       if(this.storageProvider.tourMode==false){
              //check if cash and cashpassword exist             
-             var takeout;
-             if(this.takeout==true){
-                 takeout=1;
-             }else if(this.delivery==true){
-                 takeout=2;
-             }else
-                takeout=0;
-             let receiptIssueVal;
-              if(this.storageProvider.receiptIssue){
-                    receiptIssueVal=1;
-              }else{
-                    receiptIssueVal=0;
-              }
-              /*
-              let body = JSON.stringify({paymethod:"cash",
-                                        takitId:this.takitId,
-                                        orderList:JSON.stringify(cart), 
-                                        orderName:menuName+"("+this.quantity+")",
-                                        amount:this.amount,
-                                        takeout: takeout, // takeout:0(inStore) , 1(takeout), 2(delivery) 
-                                        orderedTime:new Date().toISOString(),
-                                        cashId: this.storageProvider.cashId,
-                                        //password:this.cashPassword,
-                                        receiptIssu:receiptIssueVal,
-                                        receiptId:this.storageProvider.receiptId,
-                                        receiptType:this.storageProvider.receiptType
-                                    });
-             */
-              let body = {              paymethod:"cash",
-                                        takitId:this.takitId,
-                                        orderList:JSON.stringify(cart), 
-                                        orderName:menuName+"("+this.quantity+")",
-                                        amount:this.totalAmount,
-                                        takeout: takeout, // takeout:0(inStore) , 1(takeout), 2(delivery) 
-                                        deliveryAddress: this.deliveryAddress,
-                                        orderedTime:new Date().toISOString(),
-                                        cashId: this.storageProvider.cashId,
-                                        //password:this.cashPassword,
-                                        receiptIssu:receiptIssueVal,
-                                        receiptId:this.storageProvider.receiptId,
-                                        receiptType:this.storageProvider.receiptType
-                         };
-              console.log("sendOrder:"+JSON.stringify(body));                          
-              let headers = new Headers();
-              headers.append('Content-Type', 'application/json');
-              console.log("server:"+ this.storageProvider.serverAddress);
-              this.navController.push(CashPassword, {body:body,trigger:"order"});
-              this.orderInProgress=false;
-              this.cashPassword="";
+            var takeout;
+            if(this.takeout==true){
+                takeout=1;
+            }else if(this.delivery==true){
+                takeout=2;
+            }else
+            takeout=0;
+            let receiptIssueVal;
+            if(this.storageProvider.receiptIssue){
+                receiptIssueVal=1;
+            }else{
+                receiptIssueVal=0;
+            }
+            /*
+            let body = JSON.stringify({paymethod:"cash",
+                                    takitId:this.takitId,
+                                    orderList:JSON.stringify(cart), 
+                                    orderName:menuName+"("+this.quantity+")",
+                                    amount:this.amount,
+                                    takeout: takeout, // takeout:0(inStore) , 1(takeout), 2(delivery) 
+                                    orderedTime:new Date().toISOString(),
+                                    cashId: this.storageProvider.cashId,
+                                    //password:this.cashPassword,
+                                    receiptIssu:receiptIssueVal,
+                                    receiptId:this.storageProvider.receiptId,
+                                    receiptType:this.storageProvider.receiptType
+                                });
+            */
+            let orderName=menuName+"("+this.quantity+")";
+
+            if(menuName===undefined){
+                orderName=cart.menus[0].menuName+"이외"+ cart.menus.length+"종";
+            }
+
+            let body = {    paymethod:"cash",
+                            takitId:this.takitId,
+                            orderList:JSON.stringify(cart), 
+                            orderName:orderName,
+                            amount:this.totalAmount,
+                            takeout: takeout, // takeout:0(inStore) , 1(takeout), 2(delivery) 
+                            deliveryAddress: this.deliveryAddress,
+                            orderedTime:new Date().toISOString(),
+                            cashId: this.storageProvider.cashId,
+                            //password:this.cashPassword,
+                            receiptIssu:receiptIssueVal,
+                            receiptId:this.storageProvider.receiptId,
+                            receiptType:this.storageProvider.receiptType,
+                            //couponNO:this.selectedCoupon.couponName,
+                            takitDiscount:this.takitDiscount,
+                            couponDiscount:this.couponDiscount
+
+                        };
+            console.log("sendOrder:"+JSON.stringify(body));                          
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            console.log("server:"+ this.storageProvider.serverAddress);
+            this.navController.push(CashPassword, {body:body,trigger:this.trigger});
+            this.orderInProgress=false;
+            this.cashPassword="";
 /*
              this.serverProvider.saveOrder(body).then((res)=>{    
                  resolve(res);
@@ -318,18 +469,24 @@ cashPasswordBlur(){
                     }    
                 });
            }
-           var menuName=this.menu.menuName;
-           if(this.menu.hasOwnProperty("description"))
-                menuName+=this.menu.description;
-
-           cart.menus.push({menuNO:this.menu.menuNO,
-                            menuName:menuName,
-                            quantity:this.quantity,
-                            options: options,
-                            price: this.amount});
-           cart.total=this.amount;
+        //    var menuName=this.menu.menuName;
+        //    if(this.menu.hasOwnProperty("description"))
+        //         menuName+=this.menu.description;
+            
+           if(this.trigger==="order"){
+                cart.menus.push({menuNO:this.menu.menuNO,
+                                menuName:this.menu.menuName,
+                                quantity:this.quantity,
+                                options: options,
+                                price: this.amount});
+                cart.total=this.amount;
+                this.sendSaveOrder(cart,this.menu.menuName); 
+           }else if(this.trigger==="cart"){
+                this.sendSaveOrder(this.storageProvider.cart,undefined); 
+           }
            
-           this.sendSaveOrder(cart,menuName);         
+           
+                   
   }  
 
  checkOptionValidity(){
@@ -383,6 +540,7 @@ cashPasswordBlur(){
                 text: '네',
                 handler: () => {
                     //['OK']
+                    this.app.getRootNav().pop();
                     this.storageProvider.tabRef.select(2);
                     this.storageProvider.cashMenu="cashIn";
                     this.app.getRootNav().pop(); // pop order page
@@ -459,90 +617,77 @@ cashPasswordBlur(){
     }
   }
 
-  shopcart(){
-        console.log("orderPage->shopcart");
-        if(this.quantity==undefined){
-            if(this.platform.is('android'))
-                this.focusQunatityNum.emit(true); 
-            else if(this.platform.is('ios')){
-             //show alert
-         }      
-        }
+//   shopcart(){
+//         console.log("orderPage->shopcart");
+//         if(this.quantity==undefined){
+//             if(this.platform.is('android'))
+//                 this.focusQunatityNum.emit(true); 
+//             else if(this.platform.is('ios')){
+//              //show alert
+//          }      
+//         }
 
-        this.checkOptionValidity().then(()=>{
-        this.saveShopcart();
-    },(name)=>{
-        console.log("option.select is undefined");
-        let alert = this.alertController.create({
-            subTitle: name+'을 선택해주십시오',
-            buttons: ['OK']
-        });
-        console.log("hum...");
-        alert.present().then(()=>{
-            console.log("alert done");
-            return;
-        });
-    });
+//         this.checkOptionValidity().then(()=>{
+//         this.saveShopcart();
+//     },(name)=>{
+//         console.log("option.select is undefined");
+//         let alert = this.alertController.create({
+//             subTitle: name+'을 선택해주십시오',
+//             buttons: ['OK']
+//         });
+//         console.log("hum...");
+//         alert.present().then(()=>{
+//             console.log("alert done");
+//             return;
+//         });
+//     });
 
-  }
+//   }
 
-  saveShopcart(){    
-    this.cashPassword="";  
-    this.storageProvider.getCartInfo(this.takitId).then((result:any)=>{
-        var cart;
-        if(Array.isArray(result) && result.length==1){
-            cart=JSON.parse(result[0].cart);
-        }else{
-            console.log("no cart info");
-            cart={menus:[],total:0};
-        }
-        var options=[];
-        if(this.options!=undefined){
-            this.options.forEach((option)=>{
-                if (option.flag==true){
-                    if(option.select!=undefined)
-                        options.push({name:option.name,price:option.price,select:option.select});
-                    else
-                        options.push({name:option.name,price:option.price});
-                }    
-            });
-        }
-        var menuName=this.menu.menuName;
-        if(this.menu.hasOwnProperty("description"))
-            menuName+=this.menu.description;
+//   saveShopcart(){    
+//     this.cashPassword="";  
+//     this.storageProvider.getCartInfo(this.takitId).then((result:any)=>{
+//         var cart;
+//         if(Array.isArray(result) && result.length==1){
+//             cart=JSON.parse(result[0].cart);
+//         }else{
+//             console.log("no cart info");
+//             cart={menus:[],total:0};
+//         }
+//         var options=[];
+//         if(this.options!=undefined){
+//             this.options.forEach((option)=>{
+//                 if (option.flag==true){
+//                     if(option.select!=undefined)
+//                         options.push({name:option.name,price:option.price,select:option.select});
+//                     else
+//                         options.push({name:option.name,price:option.price});
+//                 }    
+//             });
+//         }
+//         var menuName=this.menu.menuName;
+//         if(this.menu.hasOwnProperty("description"))
+//             menuName+=this.menu.description;
 
-        cart.menus.push({menuNO:this.menu.menuNO,
-                    menuName:menuName,
-                    quantity:this.quantity,
-                    options: options,
-                    price: this.menu.price,
-                    amount: this.price,
-                    discountAmount:this.price-Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0)),
-                    takeout:this.takeoutAvailable});
-        cart.total=cart.total+this.price;
-        console.log("cart:"+JSON.stringify(cart));
-        this.storageProvider.saveCartInfo(this.takitId,JSON.stringify(cart)).then(()=>{
-            this.storageProvider.shopTabRef.select(2);
-            this.navController.pop()
-        });
-    },(err)=>{
-        console.log("getCartInfo error");
-        // Please show error alert
-    });
-  }
-
- ionViewWillEnter(){
-     //console.log("orderPage-ionViewWillEnter");
-     
-     if(this.hasOptions==false){
-        //console.log(".."+this.optionDivElementRef.nativeElement.style.border);
-        this.optionDivElementRef.nativeElement.style.border="none";
-     }
-     if(this.takeoutAvailable==false){
-        //console.log(".."+this.takeoutDivElementRef.nativeElement.style.border);
-        this.takeoutDivElementRef.nativeElement.style.border="none";
-     }
- }
+//         cart.menus.push({menuNO:this.menu.menuNO,
+//                     menuName:menuName,
+//                     quantity:this.quantity,
+//                     options: options,
+//                     price: this.menu.price,
+//                     amount: this.price,
+//                     discountAmount:this.price-Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0)),
+//                     takeout:this.takeoutAvailable});
+//         cart.total=cart.total+this.price;
+//         console.log("cart:"+JSON.stringify(cart));
+//         this.storageProvider.saveCartInfo(this.takitId,JSON.stringify(cart)).then(()=>{
+//             this.storageProvider.shopTabRef.select(2);
+//             this.navController.pop()
+//         });
+//     },(err)=>{
+//         console.log("getCartInfo error");
+//         // Please show error alert
+//     });
+//   }
 
 
 //   getQuantity(quantity){
@@ -567,104 +712,104 @@ cashPasswordBlur(){
 //       }
 //   }
 
-  computeAmount(option){
-      console.log("[computeAmount]flag:"+option.flag);
-      if(option.flag==true){
-          this.price=this.price+option.price*this.quantity;    
-      }else{
-          this.price=this.price-option.price*this.quantity;
-          console.log("option.select:"+option.select);
-          if(option.hasOwnProperty("choice")){
-              option.select=undefined;
-              console.log("set false to choice flags");              
-                var i;
-                for(i=0;i<option.flags.length;i++){
-                        //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
-                        option.flags[i]=false;
-                }
-          }
-      }
-      this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
-      this.amount=this.price-this.discount;
-      if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
-            this.delivery=false;
-            this.takeout=false;
-            this.here=true;
-      }
-  }
+//   computeAmount(option){
+//       console.log("[computeAmount]flag:"+option.flag);
+//       if(option.flag==true){
+//           this.price=this.price+option.price*this.quantity;    
+//       }else{
+//           this.price=this.price-option.price*this.quantity;
+//           console.log("option.select:"+option.select);
+//           if(option.hasOwnProperty("choice")){
+//               option.select=undefined;
+//               console.log("set false to choice flags");              
+//                 var i;
+//                 for(i=0;i<option.flags.length;i++){
+//                         //console.log("choice:"+option.choice[i]+"flags:"+option.flags[i]);
+//                         option.flags[i]=false;
+//                 }
+//           }
+//       }
+//       this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
+//       this.amount=this.price-this.discount;
+//       if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+//             this.delivery=false;
+//             this.takeout=false;
+//             this.here=true;
+//       }
+//   }
 
-    choiceChange(option,idx,flag){
-        var prevOptionFlag=option.flag;
-        console.log("prevOptionFlag:"+prevOptionFlag);
-        this.ngZone.run(()=>{
-            if(flag==true && Array.isArray(option.flags)){
-                option.select=option.choice[idx];
-                option.flag=true;
-                if(prevOptionFlag==false){
-                    console.log("compute amount again(add)");
-                    this.computeAmount(option);
-                }
-                // other flags become false
-                let i;
-                for(i=0;i<option.flags.length;i++){
-                    if(i!=idx){
-                        option.flags[i]=false;
-                    }else{
-                        option.flags[i]=true;
-                    }
-                }
-            }else{
-                option.select=undefined;
-                let i;
-                for(i=0;i<option.flags.length;i++){
-                    if(option.flags[i]==true)
-                        break;
-                }
-                if(i==option.flags.length){
-                    option.flag=false;
-                    if(prevOptionFlag==true){
-                        this.computeAmount(option);            
-                        console.log("compute amount again(remove)");
-                    }
-                }
+//     choiceChange(option,idx,flag){
+//         var prevOptionFlag=option.flag;
+//         console.log("prevOptionFlag:"+prevOptionFlag);
+//         this.ngZone.run(()=>{
+//             if(flag==true && Array.isArray(option.flags)){
+//                 option.select=option.choice[idx];
+//                 option.flag=true;
+//                 if(prevOptionFlag==false){
+//                     console.log("compute amount again(add)");
+//                     this.computeAmount(option);
+//                 }
+//                 // other flags become false
+//                 let i;
+//                 for(i=0;i<option.flags.length;i++){
+//                     if(i!=idx){
+//                         option.flags[i]=false;
+//                     }else{
+//                         option.flags[i]=true;
+//                     }
+//                 }
+//             }else{
+//                 option.select=undefined;
+//                 let i;
+//                 for(i=0;i<option.flags.length;i++){
+//                     if(option.flags[i]==true)
+//                         break;
+//                 }
+//                 if(i==option.flags.length){
+//                     option.flag=false;
+//                     if(prevOptionFlag==true){
+//                         this.computeAmount(option);            
+//                         console.log("compute amount again(remove)");
+//                     }
+//                 }
 
-            }
-        });
-    }
+//             }
+//         });
+//     }
 
-  optionChange(option){
-      console.log("flag:"+option.flag);
-      if(option.flag==true){
-          this.price=this.price+option.price*this.quantity;    
-      }else{
-          this.price=this.price-option.price*this.quantity;
-          console.log("option.select:"+option.select);
-      }
-      this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
-      this.amount=this.price-this.discount;
-      if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
-            this.delivery=false;
-            this.takeout=false;
-            this.here=true;
-      }
+//   optionChange(option){
+//       console.log("flag:"+option.flag);
+//       if(option.flag==true){
+//           this.price=this.price+option.price*this.quantity;    
+//       }else{
+//           this.price=this.price-option.price*this.quantity;
+//           console.log("option.select:"+option.select);
+//       }
+//       this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
+//       this.amount=this.price-this.discount;
+//       if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+//             this.delivery=false;
+//             this.takeout=false;
+//             this.here=true;
+//       }
 
-  }
+//   }
 
-  quantityInput(flag){
-    // console.log("flag:"+flag+" quantityInputType:"+this.quantityInputType);
-     if(flag){ // number selection
-        if(this.quantityInputType=="select"){
-          return false;
-        }else  
-          return true;   
-     }else{ //text input
-        if(this.quantityInputType=="select"){
-          return true;
-        }else{
-          return false;   
-        }
-     }
-   }
+//   quantityInput(flag){
+//     // console.log("flag:"+flag+" quantityInputType:"+this.quantityInputType);
+//      if(flag){ // number selection
+//         if(this.quantityInputType=="select"){
+//           return false;
+//         }else  
+//           return true;   
+//      }else{ //text input
+//         if(this.quantityInputType=="select"){
+//           return true;
+//         }else{
+//           return false;   
+//         }
+//      }
+//    }
 
   onBlur($event){
       console.log("onBlur this.quantity:"+this.quantity);
@@ -689,7 +834,7 @@ cashPasswordBlur(){
         });
         console.log("unitPrice:"+unitPrice);
           this.price=unitPrice*this.quantity;
-          this.discount=Math.round(this.price*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
+          this.discount=this.calcDiscountAmount(this.price);
           this.amount=this.price-this.discount;
         if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
                 this.delivery=false;
@@ -706,7 +851,7 @@ cashPasswordBlur(){
      this.app.getRootNav().pop();
   }
 
-collapse($event){
+  collapse($event){
      //console.log("collpase");
      this.userNotiHidden=true;
   }
@@ -716,18 +861,18 @@ collapse($event){
      this.userNotiHidden=false;
   }
 
-    hasChoice(option){
-        //console.log("option:"+option.hasOwnProperty("choice"));
-        if(option.hasOwnProperty("choice")==true && Array.isArray(option.choice)){
-            return option.choice.length;
-        }
-        return 0;
-    }
+    // hasChoice(option){
+    //     //console.log("option:"+option.hasOwnProperty("choice"));
+    //     if(option.hasOwnProperty("choice")==true && Array.isArray(option.choice)){
+    //         return option.choice.length;
+    //     }
+    //     return 0;
+    // }
 
-    optionSelect(option){
-        if(option.select!=undefined)
-            option.flag=true;    
-    }
+    // optionSelect(option){
+    //     if(option.select!=undefined)
+    //         option.flag=true;    
+    // }
 /*
      onFocusPassword(event){
          if(!this.storageProvider.isAndroid){
@@ -741,6 +886,14 @@ collapse($event){
 
     searchCoupon(){
         console.log("searchCoupon func start");
+
+        this.navController.push(SearchCouponPage,{takitId:this.takitId, 
+                                                  menuNO:this.menu.menuNO,
+                                                  categoryNO:this.menu.categoryNO});
+
+        //searchCoupon눌렀을때는 새창 뜨고 자동 검색 된 후, 다운로드 가능해야함.
+
+
     }
 }
 

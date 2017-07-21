@@ -35,6 +35,8 @@ export class StorageProvider{
     public email:string="";
     public name:string="";
     public phone:string="";
+    public couponList=[];
+    
     public shopResponse:any;
     public run_in_background=false;
     public order_in_progress_24hours=false;
@@ -44,6 +46,7 @@ export class StorageProvider{
     public cashId="";
     public cashAmount:number;
     //public cashConfirmInfo={depositTime:null,amount:null,bankCode:null,depositMemo:null};
+    public nowCoupons=[];
 
     public backgroundMode=false; // true in background mode
 
@@ -410,6 +413,7 @@ export class StorageProvider{
         this.email=userInfo.email;
         this.name=userInfo.name;
         this.phone=userInfo.phone;
+        this.couponList=JSON.parse(userInfo.couponList); ///userInfo의 couponList
         if(userInfo.receiptIssue=="1"){
             this.receiptIssue=true;
         }else{

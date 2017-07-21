@@ -31,4 +31,8 @@ export class TransactionHistoryPage {
     console.log('ionViewDidLoad TransactionHistoryPage');
   }
 
+  closePage(){
+      this.navCtrl.pop({animate:true,animation: 'slide-up', direction:'back' });
+  }
+
 }

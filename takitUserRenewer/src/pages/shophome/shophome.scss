@@ -97,6 +97,7 @@ page-shophome{
         //border-right-color: $sub-color;
         .segment-categories{
             flex-direction: column;
+            margin-bottom: 10px;
         }
 
         .segment-ios .segment-button{
@@ -127,6 +128,18 @@ page-shophome{
         height: 100%;
         padding-bottom: 5%;
         margin : 0px;
+        ion-list{
+            height: 88px;
+            background-color: white;
+            margin-bottom: 5px;
+            display: flex;
+            padding: 5px;
+        }
+        
+        .img-shop{
+            //width:100%;
+            height:100%;
+        }
     }
 
     .scroll-fix{

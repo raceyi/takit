@@ -53,6 +53,8 @@ import {OrderHistoryPage} from '../pages/order-history/order-history';
 import { TransactionHistoryPage } from '../pages/transaction-history/transaction-history';
 import {ShopAboutPage} from '../pages/shop-about/shop-about';
 import {MenuDetailPage} from '../pages/menu-detail/menu-detail';
+import { OrderCompletePage } from '../pages/order-complete/order-complete';
+import { SearchCouponPage } from '../pages/search-coupon/search-coupon';
 
 import {TranslateModule, TranslateLoader,TranslateStaticLoader} from 'ng2-translate/ng2-translate';
 import {Http,Headers} from '@angular/http';
@@ -119,6 +121,8 @@ import {SignupPageModule} from '../pages/signup/signup.module';
     TransactionHistoryPage,
     ShopAboutPage,
     MenuDetailPage,
+    OrderCompletePage,
+    SearchCouponPage,
     FocuserDirective
   ],
   imports: [
@@ -175,7 +179,9 @@ import {SignupPageModule} from '../pages/signup/signup.module';
     OrderHistoryPage,
     TransactionHistoryPage,
     ShopAboutPage,
-    MenuDetailPage
+    MenuDetailPage,
+    OrderCompletePage,
+    SearchCouponPage
   ],
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
