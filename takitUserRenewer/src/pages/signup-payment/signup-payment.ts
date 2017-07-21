@@ -45,6 +45,11 @@ export class SignupPaymentPage {
       public navCtrl: NavController, private alertCtrl: AlertController,public navParams: NavParams) {
     console.log("SignupPaymentPage-constructor");    
     this.cashIdGuide="대소문자 구분없음";
+
+    this.email=this.navParams.get("email");
+    this.name=this.navParams.get("name");
+    this.phone=this.navParams.get("phone");
+
   }
 
   ionViewDidLoad() {
@@ -124,11 +129,26 @@ export class SignupPaymentPage {
                 this.serverProvider.post(this.storageProvider.serverAddress+"/createCashId",body).then((res:any)=>{
                     console.log("configureCashId:"+JSON.stringify(res));
                     if(res.result=="success"){
+                        console.log("res.result is success");
                         this.storageProvider.cashId=this.cashId.trim().toUpperCase();
                         this.storageProvider.cashAmount=0;
                         /////////////////////////////////////////
                         //configure payment info
-                        let  receiptIssueVal= this.receiptId.trim().length>0 ? 1:0;
+                        console.log("configure payment info "+this.receiptId.trim().length);
+                        let receiptIssueVal:number;
+                        if(this.receiptId.trim().length>0)
+                            receiptIssueVal=1;
+                        else
+                            receiptIssueVal=0;
+
+                        console.log(" email:"+ this.email.trim());
+                        console.log(" phone:"+ this.phone.trim());
+                        console.log(" name:"+ this.name.trim());
+                        console.log(" receiptIssue:"+ receiptIssueVal);
+                        console.log(" receiptId:"+ this.receiptId);
+                        console.log(" receiptType:"+this.receiptType);
+                        console.log(" taxIssueEmail:"+this.issueEmail);
+                        console.log(" taxIssueCompanyName:"+this.issueCompanyName);
 
                         body= JSON.stringify({email:this.email.trim(),
                                               phone:this.phone.trim(), 
@@ -138,7 +158,8 @@ export class SignupPaymentPage {
                                               receiptType:this.receiptType,
                                               taxIssueEmail:this.issueEmail,
                                               taxIssueCompanyName:this.issueCompanyName
-                                              });
+                                            });
+                                            
                         console.log("modifyUserInfo:"+body);
                         this.serverProvider.post(this.storageProvider.serverAddress+"/modifyUserInfo",body).then((res:any)=>{
                             console.log("res:"+JSON.stringify(res));

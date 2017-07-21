@@ -102,10 +102,10 @@ export class MyApp {
                                     console.log("shoplist...:"+JSON.stringify(this.storageProvider.shoplist));
                                     if(!res.userInfo.hasOwnProperty("cashId") || res.userInfo.cashId==null || res.userInfo.cashId==undefined){
                                         console.log("move into signupPaymentPage");
-                                        this.rootPage.setRoot(SignupPaymentPage);
+                                        this.rootPage=SignupPaymentPage;
                                     }else{
                                         console.log("move into TabsPage");
-                                        this.rootPage.setRoot(TabsPage);
+                                        this.rootPage=TabsPage;
                                     }
                                 }else if(res.result=='failure'&& res.error=='invalidId'){
                                     console.log("사용자 정보에 문제가 발생했습니다. 로그인 페이지로 이동합니다.");
@@ -139,10 +139,10 @@ export class MyApp {
                                     console.log("move into TabsPage");
                                     if(!res.userInfo.hasOwnProperty("cashId") || res.userInfo.cashId==null || res.userInfo.cashId==undefined){
                                         console.log("move into signupPaymentPage");
-                                        this.rootPage.setRoot(SignupPaymentPage);
+                                        this.rootPage=SignupPaymentPage;
                                     }else{
                                         console.log("move into TabsPage");
-                                        this.rootPage.setRoot(TabsPage);
+                                        this.rootPage=TabsPage;
                                     }
                                 }else if(res.result=='failure' && res.error=='invalidId'){
                                     console.log("사용자 정보에 문제가 발생했습니다. 로그인 페이지로 이동합니다.");
@@ -174,12 +174,11 @@ export class MyApp {
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     if(!res.userInfo.hasOwnProperty("cashId") || res.userInfo.cashId==null || res.userInfo.cashId==undefined){
                                         console.log("move into signupPaymentPage");
-                                        this.rootPage.setRoot(SignupPaymentPage);
+                                        this.rootPage=SignupPaymentPage;
                                     }else{
                                         console.log("move into TabsPage");
-                                        this.rootPage.setRoot(TabsPage);
+                                        this.rootPage=TabsPage;
                                     }
-                                    this.rootPage=TabsPage;
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){
                                         // How to show user a message here? move into error page?
                                         // Is it possible to show alert here?
