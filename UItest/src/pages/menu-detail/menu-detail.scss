@@ -53,10 +53,18 @@ page-menu-detail {
             flex-wrap: nowrap;
         }
         .div-footer-amount{
-            display: flex;
+            //display: flex;
         }
         .div-count{
             display: flex;
+            width: 50%;
+            ion-input, .text-input-ios{
+                width: 50px;
+            }
+            button{
+                padding: 0;
+                margin: 0;
+            }
         }
         .div-btn-order{
             width: 100%;

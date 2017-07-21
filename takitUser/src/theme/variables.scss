@@ -1,6 +1,16 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/v2/theming/
+
+// Font path is used to include ionicons,
+// roboto, and noto sans fonts
 $font-path: "../assets/fonts";
+
+
+// The app direction is used to include
+// rtl styles in your app. For more info, please see:
+// http://ionicframework.com/docs/theming/rtl-support/
+$app-direction: ltr;
+
 
 @import "ionic.globals";
 
@@ -11,8 +21,7 @@ $font-path: "../assets/fonts";
 // the Sass variables found in Ionic's source scss files.
 // To view all the possible Ionic variables, see:
 // http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/
-$text-color:        #000;
-$background-color:  #fff;
+
 
 
 
@@ -25,37 +34,27 @@ $background-color:  #fff;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #387ef5,
+  primary:    #488aff,
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222,
-  favorite:   #69BB7B,
-  white:      #ffffff,
-  kakao:      #ffff00,
-  email:      #afafaf,
-  facebook:   #3b5998,
-  gray:       #afafaf,
-  red:        #ff0000,
-  darkgray:   #A9A9A9,
-  lightgray: #A0A0A0,
-  black:      #000000	
+  dark:       #222
 );
+
 
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
-$alert-ios-title-font-size:	14px;
-$alert-ios-sub-title-font-size:	14px;
-$alert-ios-list-border-top	 :0px;
-$alert-ios-list-border-bottom:0px;
+
+
+
+
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
-$alert-md-title-font-size: 14px;
-$alert-md-sub-title-font-size: 14px;
-$alert-md-list-border-top   :0px;
-$alert-md-list-border-bottom:0px;
+
+
+
 
 // App Windows Variables
 // --------------------------------------------------
@@ -79,7 +78,7 @@ $alert-md-list-border-bottom:0px;
 // The premium icon font for Ionic. For more info, please see:
 // http://ionicframework.com/docs/v2/ionicons/
 
-@import "ionicons";
+@import "ionic.ionicons";
 
 
 // Fonts
