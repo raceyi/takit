@@ -105,7 +105,7 @@ export class KakaoProvider {
                                     console.log('Successful kakaotalk login with'+profile.id);
                                     handler(profile.id,kakaoProvider).then(
                                         (result:any)=>{
-                                                    console.log("result comes:"+JSON.stringify(result));
+                                                    console.log("result comes:"+result);
                                                     result.id="kakao_"+profile.id; 
                                                     resolve(result);
                                         },serverlogin_err=>{
@@ -171,9 +171,7 @@ export class KakaoProvider {
   kakaoServerLogin(kakaoid,kakaoProvider:KakaoProvider){
       return new Promise((resolve, reject)=>{
               console.log("kakaoServerLogin");
-              let body = JSON.stringify({referenceId:"kakao_"+kakaoid,
-                                         uuid:kakaoProvider.device.uuid,
-                                         version:kakaoProvider.storageProvider.version});
+              let body = JSON.stringify({referenceId:"kakao_"+kakaoid,uuid:kakaoProvider.device.uuid,version:kakaoProvider.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server:"+ kakaoProvider.storageProvider.serverAddress);
@@ -188,7 +186,7 @@ export class KakaoProvider {
   }
 
 
-  kakaoServerSignup(kakaoid:string,country:string,phone:string,email:string,name:string,receiptIssue,receiptId,receiptType){
+  kakaoServerSignup(kakaoid:string,country:string,phone:string,sex,birthYear,email:string,name:string,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("kakaoServerSignup");
               let receiptIssueVal;
@@ -199,6 +197,7 @@ export class KakaoProvider {
               }
               let body = JSON.stringify({referenceId:kakaoid,name:name,
                                             email:email,country:country,phone:phone,
+                                            sex:sex, birthYear:birthYear,
                                             receiptIssue:receiptIssueVal,receiptId:receiptId,receiptType:receiptType,
                                             uuid:this.device.uuid,version:this.storageProvider.version});
               let headers = new Headers();

@@ -20,8 +20,6 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import {ServerProvider} from '../providers/serverProvider';
 
 import {ConfigProvider} from '../providers/configProvider';
-import {SignupPage} from '../pages/signup/signup';
-import {SignupSubmitPage} from '../pages/signup_submit/signup_submit';
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {UserInfoPage} from '../pages/userinfo/userinfo';
 import { CashPage } from '../pages/cash/cash';
@@ -76,10 +74,12 @@ import { AppAvailability } from '@ionic-native/app-availability';
 import { Clipboard } from '@ionic-native/clipboard';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Device } from '@ionic-native/device';
-import { Transfer } from '@ionic-native/transfer';
-
+//import { Transfer } from '@ionic-native/transfer';
 import { FocuserDirective } from '../directives/focuser/focuser';
 
+import {EmailLoginPageModule} from '../pages/email-login/email-login.module';
+import {SignupPaymentPageModule} from '../pages/signup-payment/signup-payment.module';
+import {SignupPageModule} from '../pages/signup/signup.module';
 
 @NgModule({
   declarations: [
@@ -88,8 +88,6 @@ import { FocuserDirective } from '../directives/focuser/focuser';
     TabsPage,
     LoginPage,    
     ErrorPage,
-    SignupPage,
-    SignupSubmitPage,
     ServiceInfoPage,
     UserInfoPage,
     CashPage,
@@ -132,6 +130,9 @@ import { FocuserDirective } from '../directives/focuser/focuser';
     BrowserAnimationsModule,
     HttpModule,
     IonicModule.forRoot(MyApp,{mode:'ios'}),
+    EmailLoginPageModule,
+    SignupPageModule,
+    SignupPaymentPageModule,
     //IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,
@@ -146,8 +147,6 @@ import { FocuserDirective } from '../directives/focuser/focuser';
     TabsPage,
     LoginPage,
     ErrorPage,
-    SignupPage,
-    SignupSubmitPage,
     ServiceInfoPage,
     UserInfoPage,
     CashPage,
@@ -199,7 +198,7 @@ import { FocuserDirective } from '../directives/focuser/focuser';
               AppAvailability,
               Keyboard,
               Device,
-              Transfer,
+              //Transfer,
               NativeStorage,
               ConfigProvider,
               StorageProvider,

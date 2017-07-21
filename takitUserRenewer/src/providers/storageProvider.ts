@@ -11,7 +11,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
 
-declare var CryptoJS:any;
+import * as CryptoJS from 'crypto-js';
 
 @Injectable()
 export class StorageProvider{

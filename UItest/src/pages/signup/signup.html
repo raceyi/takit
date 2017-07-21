@@ -1,91 +1,82 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-       Takit 회원 가입
-    </ion-title>
-  </ion-navbar>
-</ion-header>
-
-<ion-content padding #signupPage class="signup_submit">
-<ion-row>
-  <ion-col width-70>
-    <ion-input type="tel"  [focuser]="focusPhone" [(ngModel)]="phone" (blur)="checkPhoneNumberChange()" placeholder="휴대폰번호"></ion-input> 
-  </ion-col>
-  <ion-col width-30>
-    <button ion-button full (click)="smsRequest()" >인증문자 요청 보내기</button>
-  </ion-col>
-</ion-row>
-<ion-row>
-  <ion-col width-70>
-  <ion-input type="tel" [(ngModel)]="verfiicationCode" placeholder="인증번호"></ion-input> 
-  </ion-col>
-  <ion-col full width-30>
-  <button ion-button full (click)="smsVerification()"> 인증하기 </button>
-  </ion-col>
-</ion-row>
-<ion-input [focuser]="focusEmail" [(ngModel)]="email" type="email"  placeholder="이메일"></ion-input> 
 <!--
-<p>주문 정보가 이메일로 전달됩니다.</p>
+  Generated template for the SignupPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
 -->
-<ion-input [focuser]="focusName" [(ngModel)]="name" type="text" placeholder="이름"></ion-input> 
-<!--
-<p>결제 정보로 사용됩니다. 정확한 성명을 입력해주시기 바랍니다.</p>
--->
+<ion-navbar *navbar hideBackButton>
+</ion-navbar>
 
-
-<ion-item>
-  <ion-label class="orderOption">결제시 현금 영수증을 발급합니다. </ion-label>
-  <ion-checkbox color="primary" [(ngModel)]="receiptIssue"></ion-checkbox>
-</ion-item>
-
-<ion-row [hidden]="!receiptIssue">
-<ion-col width-30>
-  <ion-item class="orderOption">
-    현금&nbsp;영수증  
-  </ion-item>
-</ion-col>
-<ion-col width-70>
-  <ion-item class="orderOption">
-  <ion-input  [(ngModel)]="receiptId" placeholder="발급번호" type="tel"></ion-input> 
-  </ion-item> 
-</ion-col>
-</ion-row>
-<ion-list radio-group [(ngModel)]="receiptType" [hidden]="!receiptIssue">
-<ion-row>
-  <ion-col width-50>
-  <ion-item>
-    <ion-label>소득공제용</ion-label>
-    <ion-radio checked="true" value="IncomeDeduction"></ion-radio>
-  </ion-item>
+<ion-content>
+<ion-grid class="header">
+<ion-row align-items-center>
+  <ion-col col-3>
+    <button class="backbutton" color="red" ion-button clear (click)="back()">
+      <ion-icon class="backbutton-icon" name="ios-arrow-back-outline"></ion-icon>
+        &nbsp;취소
+    </button>
   </ion-col>
-  <ion-col width-50>
-  <ion-item>
-    <ion-label>지출증빙용</ion-label>
-    <ion-radio value="ExpenseProof"></ion-radio>
-  </ion-item>
+  <ion-col col-6 class="title">
+     <ion-icon name="icon-logo" color="mainColor"></ion-icon>
+      회원 정보 등록 
+    </ion-col> 
+  <ion-col col-3>
   </ion-col>
 </ion-row>
+</ion-grid>
+
+<ion-list>
+  <ion-item>
+    <ion-label floating>이메일<span class="required"> **</span></ion-label>
+    <ion-input type="text"></ion-input>
+  </ion-item>
+
+  <ion-item [hidden]="!emailLogin">
+    <ion-label floating>비밀번호<span class="required"> **</span></ion-label>
+    <ion-input type="password"></ion-input>
+  </ion-item>
+  <ion-item class="description" [hidden]="paswordGuideHide">
+    {{paswordGuide}} 
+  </ion-item>
+  <ion-item [hidden]="!emailLogin">
+    <ion-label floating>비밀번호 확인<span class="required"> **</span></ion-label>
+    <ion-input type="password"></ion-input>
+  </ion-item>
+  <ion-item class="description" [hidden]="passwordMatch">
+    {{paswordMismatch}}
+  </ion-item>
 </ion-list>
 
-<ion-item>
-  <p class="explain"> 현금영수증발행을 원하실 경우 발급번호를 설정해 주시기 바랍니다. 가입후 회원정보 화면에서도 설정가능합니다.</p>
-</ion-item>
-
-
-  <ion-row>
-        <ion-col width-10 class="icon-parent">
-          <ion-icon class="icon-child" name="add-circle" [hidden]="!userAgreementHidden" (click)="expand(1)"></ion-icon>
-          <ion-icon class="icon-child" name="remove-circle" [hidden]="userAgreementHidden" (click)="collapse(1)"></ion-icon>
-        </ion-col>
-    <ion-col width-90>
-      <ion-item class="orderToggle" >
-        <ion-label class="orderOption"> 이용 약관 동의 </ion-label>
-        <ion-toggle class="onOff" [(ngModel)]="userAgreement"></ion-toggle>
-      </ion-item>
+<ion-grid>
+  <ion-row >
+    <ion-col col-2>
     </ion-col>
+    <ion-col col-8>
+        <button class="phoneAuthButton" ion-button outline round (click)="phoneAuth()">휴대폰 본인 인증하기**</button>
+        <p class="detail" [hidden]="!authVerified"> 인증 완료 되었습니다.</p>
+    </ion-col>    
+    <ion-col col-2>
+    </ion-col>
+  </ion-row>
+  <!--
+  <ion-row class="signupNotice" [hidden]="signupInputDone">
+    **필수 정보와 본인인증 후 가입이 가능합니다. 
   </ion-row>  
-      <div [hidden]="userAgreementHidden" class="textarea" >
-        <pre>
+  -->
+</ion-grid>
+<button ion-button color="red" full (click)="signup()">동의하고 가입하기</button>
+<div class="agreementArea">
+  <button class="agreement" color="black" ion-button clear disabled>본인은 만14세 이상이며,</button> 
+  <button class="agreementButton" color="black" ion-button clear (click)="userAgreement()">타킷의 이용약관,</button>
+  <button class="agreementButton" color="black" ion-button clear (click)="personalInfo()" >개인정보 처리방침,</button> 
+  <button class="agreementButton" color="black" ion-button clear (click)="locationShownClick()">위치정보 사용,</button> 
+  <button class="agreementButton" color="black" ion-button clear (click)="pictureShownClick()" >문자인식 사진정보 사용</button> 
+  <button class="agreement" color="black" ion-button clear disabled>내용을 확인하였으며,</button> 
+  <button class="agreement" color="black" style="font-weight:bold;" ion-button clear disabled>동의합니다.</button>
+</div>
+
+<div class="explain" [hidden]="!userAgreementShown">
+<pre>
 제 1조 (목적) 
 본 약관은 회원이 타킷주식회사(이하 '회사')에서 제공하는 타킷 서비스(이하 ‘서비스’)를 이용하는 것과 관련하여 회원과 회사 간의 권리, 의무 및 책임사항, 서비스 이용에 따른 이용조건 및 절차 등 기본적인 사항을 규정함을 목적으로 합니다.
 
@@ -202,23 +193,10 @@
 ② 전 항의 협의에도 불구하고 분쟁이 해결되지 않으면, 회사와 회원 양 당사자는 민사소송법상의 관할법원에 소를 제기할 수 있습니다.
 부칙
 (시행일) 본 약관은 2016년 10월 1일부터 시행합니다.
-        </pre>
-      </div>
-      <br>
-  <ion-row>
-        <ion-col width-10 class="icon-parent">
-          <ion-icon name="add-circle" class="icon-child" [hidden]="!personalInfoHidden" (click)="expand(2)"></ion-icon>
-          <ion-icon name="remove-circle" class="icon-child" [hidden]="personalInfoHidden" (click)="collapse(2)"></ion-icon>
-        </ion-col>
-    <ion-col width-90>
-      <ion-item class="orderToggle" >
-        <ion-label class="orderOption"> 개인 정보 처리방침 동의 </ion-label>
-        <ion-toggle class="onOff" [(ngModel)]="personalInfo"></ion-toggle>
-      </ion-item>
-    </ion-col>
-  </ion-row>  
-      <div [hidden]="personalInfoHidden" class="textarea" >
-        <pre>
+  </pre>
+</div>
+<div [hidden]="!userInfoShown" class="explain" >
+<pre>
 타킷은(는) 개인정보보호법에 따라 이용자의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다.
 타킷은(는) 회사는 개인정보처리방침을 개정하는 경우 웹사이트 공지사항(또는 개별공지)을 통하여 공지할 것입니다.
 ○ 본 방침은부터 2016년 8월 10일부터 시행됩니다.
@@ -360,23 +338,17 @@
 
 13. 개인정보 처리방침 변경
 ①이 개인정보처리방침은 시행일로부터 적용되며, 법령 및 방침에 따른 변경내용의 추가, 삭제 및 정정이 있는 경우에는 변경사항의 시행 7일 전부터 공지사항을 통하여 고지할 것입니다.
-        </pre>
-      </div>
-      <br>
-  <ion-row>
-        <ion-col width-10 class="icon-parent" >
-          <ion-icon name="add-circle" class="icon-child" [hidden]="!pictureInfoHidden" (click)="expand(3)"></ion-icon>
-          <ion-icon name="remove-circle" class="icon-child" [hidden]="pictureInfoHidden" (click)="collapse(3)"></ion-icon>
-        </ion-col>
-    <ion-col width-90>
-      <ion-item class="orderToggle" >
-        <ion-label class="orderOption"> 문자인식 사진정보 사용 동의 </ion-label>
-        <ion-toggle class="onOff"  [(ngModel)]="pictureInfo"></ion-toggle>
-      </ion-item>
-    </ion-col>
-  </ion-row>  
-      <div [hidden]="pictureInfoHidden" class="textarea" >
-        <pre>
+  </pre>
+</div>
+
+<div [hidden]="!locationShown" class="explain" >
+<pre>
+  위치정보 사용에 동의합니다. 
+</pre>
+</div>
+
+<div [hidden]="!pictureShown" class="explain" >
+  <pre>
 타킷은 광학문자인식(OCR)을 위해 상점인식시 사진정보를 수집하고 있습니다. 
 
 수집된 사진정보는 문자인식을 위한 이외의 목적으로 사용되지 않습니다.
@@ -385,17 +357,7 @@
 특별한 사유로 인해 사진정보의 삭제를 요청하시려면 아래로 연락주시기 바랍니다.
 부서명 : 고객지원
 연락처 : help@takit.biz
-        </pre>
-      </div>
-</ion-content>
+  </pre>
+</div>
 
-<ion-footer >
-<ion-row>
-  <ion-col width-50>
-    <button ion-button full (click)="cancelBtn($event)">취소</button>
-  </ion-col>
-  <ion-col width-50>
-    <button ion-button full (click)="signUpBtn($event)">회원가입</button>
-  </ion-col>
-</ion-row>
-</ion-footer>
+</ion-content>

@@ -1,0 +1,110 @@
+page-signup {
+    .backbutton{
+        font-size: large;
+    }
+
+    .backbutton-icon{
+        font-size: xx-large;
+    }
+    .header{
+        padding:0px;
+    }
+    .title{
+        font-size: x-large;
+        color: red;
+    }
+
+    .list-ios > .item-block:first-child {
+        border-top: 0px; 
+    }
+
+    .required{
+        color:red;
+    }
+
+    .item-ios {
+        padding-left: 0px; 
+    }
+
+    ion-list{
+        padding:20px;
+    }
+
+    .list-ios .item-block.phoneAuth .item-inner {
+            border: 0px;
+    }
+
+     button{
+        font-weight: bold;
+    }
+
+    .phoneAuthButton{
+        width: 60vw;
+    }
+
+    .list-ios {
+        margin-bottom: 0px; 
+        padding-bottom: 0px;
+        padding-top: 0px;
+    }
+
+    p.detail{
+            text-align: center;
+            margin-top:0px;
+    }
+
+    .signupNotice{
+        color:red;
+    }
+
+    .optional{
+        color:blue;
+    }
+
+    .list-ios .description.item-block .item-inner {
+        border-bottom: 0px;
+        padding: 0p;
+    }
+
+    .list-ios > .item-block:last-child, .list-ios > .item-wrapper:last-child .item-block {
+        border-bottom: 0px;
+    }
+
+    .description .label-ios{
+        margin:0px;
+        font-size:small;
+        white-space: pre-line;
+    }
+
+    .agreement{
+        font-size:small;
+        font-weight:normal;
+        margin:0px;
+        padding:0px;
+    }
+
+    .agreementButton{
+        font-weight: normal;
+        margin:0px;
+        padding:0px;
+        font-size:small;
+        font-weight:normal;
+    }
+
+    .agreementArea{
+        margin-left:10px;
+        margin-right:10px;
+        align-content: stretch;
+        align-items: stretch;        
+    }
+
+    [ion-button][disabled] {
+        opacity: 1.0;
+    }
+
+    .explain{
+        margin-left: 10px;
+        margin-right: 10px;
+        background-color: lightgray;
+    }
+}

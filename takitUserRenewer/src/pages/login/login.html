@@ -1,60 +1,68 @@
-<ion-content #loginPage padding>
-  <div class="Above">
-  </div>  
-  <ion-row>
-  <ion-col width-20>
-  </ion-col>
-  <ion-col width-60 *ngIf="!isTestServer">
-      <img class="logo" src="assets/logo.png"/>
-  </ion-col>    
-  <ion-col width-60 *ngIf="isTestServer">
-      검증
-  </ion-col>    
-  
-  <ion-col width-20>
-  </ion-col>
-</ion-row>   
+<!--
+  Generated template for the LoginPage page.
 
-<br>
-  <div padding>
-    <button ion-button full color="facebook" (click)="facebookLogin($event)"> 페이스북 </button>
-    <button ion-button full color="kakao" (click)="kakaoLogin($event)"> 카카오톡 </button> 
-    <button ion-button full color="email"(click)="emailLoginSelect($event)"> 이메일 </button>    
-        <ion-list  [hidden]="emailHide">
-          <ion-item>
-            <ion-input type="email" [focuser]="focusEmail"  placeholder="이메일" [(ngModel)]="email" ></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input type="password" [focuser]="focusPassword" full placeholder="비밀번호" [(ngModel)]= "password" ></ion-input>
-          </ion-item>
-            <ion-row *ngIf="!iphone5">
-            <ion-col class="loginReset">
-            <button ion-button full color="email" (click)="emailReset($event)">임시비밀번호발급</button>
-            </ion-col>
-            <ion-col class="loginSearchEmail">
-            <button ion-button full color="email" full (click)="emailLogin($event)">로그인</button>
-            </ion-col>
-            </ion-row>
-            <ion-row *ngIf="iphone5">
-            <ion-col class="loginReset" >
-            <button ion-button full color="email" (click)="emailReset($event)">임시비밀번호</button>
-            </ion-col>
-            <ion-col class="loginSearchEmail">
-            <button ion-button full color="email" full (click)="emailLogin($event)">로그인</button>
-            </ion-col>
-            </ion-row>
-        </ion-list>
-  </div>   
-  
-  <div padding>
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-navbar *navbar hideBackButton>
+</ion-navbar>
+
+<ion-content class="gradiPage">
+    <div class="takit-icon extender">
+      <div class="padder-center">
+          <img class="symbol-image" *ngIf="!isTestServer" src="assets/symbol.png"/>
+          <div class="extender" *ngIf="isTestServer">
+            <button ion-button color="loginRed" clear>
+                    검증
+            </button> 
+          </div>
+      </div>
+    </div>
+  <ion-grid class="selectable-grid">
     <ion-row>
-      <ion-col width-50>
-        <button ion-button full color="primary" (click)="tour()"> <ion-icon name="information-circle"></ion-icon>{{'tour'|translate}}</button>
+      <ion-col col-2>
       </ion-col>
-      <ion-col width-50>
-        <button ion-button full color="primary" (click)="signup($event)"> 회원가입하기 </button>
+      <ion-col col-8>
+        <button color="white" ion-button full round (click)="facebookLogin()">
+           <ion-icon class="social-icon" name="logo-android"></ion-icon>
+          &nbsp;&nbsp;페이스북으로 시작 
+        </button>
+      </ion-col>
+      <ion-col col-2>
       </ion-col>
     </ion-row>
-  </div>  
-</ion-content>
+    <ion-row>
+      <ion-col col-2>
+      </ion-col>
+      <ion-col col-8>
+        <button color="white" ion-button full round (click)="kakaoLogin()">
+          카카오로 시작 
+        </button>
+      </ion-col>
+      <ion-col col-2>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-2>
+      </ion-col>
+      <ion-col col-8>
+        <button color="white" ion-button full round (click)="moveToEmailLogin()">
+          이메일로 시작 
+        </button>
+      </ion-col>
+      <ion-col col-2>
+      </ion-col>
+    </ion-row>
+    </ion-grid>
 
+    <div class="dummy" >
+    </div> 
+    <div class="extender">
+      <div class="padder-center">
+        <button ion-button color="loginRed" clear (click)="tour()">
+                타킷 둘러보기>
+        </button> 
+      </div>
+    </div>
+ 
+</ion-content>

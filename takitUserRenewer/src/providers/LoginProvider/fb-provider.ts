@@ -125,14 +125,14 @@ export class FbProvider {
  
   facebookServerLogin(facebookid,fbProvider:FbProvider,token){
       return new Promise((resolve, reject)=>{
-              console.log("facebookServerLogin facebookid"+facebookid);
+              console.log("facebookServerLogin facebookid:"+facebookid);
               
               let body = {referenceId:"facebook_"+facebookid,
                             token:token,
                             uuid:fbProvider.device.uuid,
                             version:fbProvider.storageProvider.version};
 
-              console.log("facebookServerLogin body:"+body);
+              console.log("facebookServerLogin body:"+JSON.stringify(body));
 
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
@@ -150,7 +150,7 @@ export class FbProvider {
          });
   }
 
-  facebookServerSignup(facebookid,name,email,country,phone,receiptIssue,receiptId,receiptType){
+  facebookServerSignup(facebookid,name,email,country,phone,sex,birthYear,receiptIssue,receiptId,receiptType){
       return new Promise((resolve, reject)=>{
               console.log("facebookServerSignup !!!");
               let receiptIssueVal;
@@ -159,10 +159,18 @@ export class FbProvider {
               }else{
                     receiptIssueVal=0;
               }
-              let body = JSON.stringify({referenceId:facebookid,name:name,
-                                            email:email,country:country,phone:phone,
-                                            receiptIssue:receiptIssueVal,receiptId:receiptId,receiptType:receiptType,
-                                            uuid:this.device.uuid,version:this.storageProvider.version});
+              let body = JSON.stringify({referenceId:facebookid,
+                                            name:name,
+                                            email:email,
+                                            country:country,
+                                            phone:phone,
+                                            sex:sex, 
+                                            birthYear:birthYear,
+                                            receiptIssue:receiptIssueVal,
+                                            receiptId:receiptId,
+                                            receiptType:receiptType,
+                                            uuid:this.device.uuid,
+                                            version:this.storageProvider.version});
               let headers = new Headers();
               headers.append('Content-Type', 'application/json');
               console.log("server: "+ this.storageProvider.serverAddress+ " body:"+body);

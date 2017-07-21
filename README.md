@@ -26,13 +26,19 @@ License: GPL
     <name>타킷</name>
     ...
     <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="orientation" value="portrait" />
 
  $ionic cordova platform add android@latest
 
  $ionic cordova platform add ios@latest
 
+ $ git checkout takitUser/resources/icon.png 
+
+ $ git checkout takitUser/resources/splash.png
+
  $ionic cordova resources
-	ionic email, password 입력
+
+  처음 실행시 ionic email, password 입력
 
  $npm install --save @ionic-native/core@latest 
 
@@ -44,7 +50,7 @@ License: GPL
 
   =>takitUser/platforms/android/cordova-plugin-htj-kakaotalk/user-kakao.gradle 파일에 sdk version수정
 
-   현재 SDK버전: com.kakao.sdk:kakaotalk:1.1.21
+   현재 SDK버전: com.kakao.sdk:kakaotalk:1.4.1
 
  $ionic cordova plugin add cordova-device-accounts
 
@@ -80,9 +86,7 @@ License: GPL
 
  $npm install --save @ionic-native/app-availability
 
- $ionic cordova plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
-
- $ionic plugin add https://github.com/katzer/cordova-plugin-background-mode.git#0.6.5
+ $ionic cordova plugin add https://github.com/katzer/cordova-plugin-background-mode.git#0.6.5
 
  $ npm install --save @ionic-native/background-mode
 
@@ -102,10 +106,6 @@ License: GPL
 
  $ npm install --save @ionic-native/keyboard
 
- $ ionic cordova plugin add cordova-plugin-file-transfer
-
- $ npm install --save @ionic-native/transfer
-  
  $ npm install @angular/animations@4.1.3 
 
  $npm install crypto-js
@@ -114,32 +114,35 @@ License: GPL
 
  $npm install ng2-translate --save
 
- $ionic cordova g directive focuser
+ $ionic g directive focuser
 
- $git checkout platforms/ios/타킷/Classes/AppDelegate.m
- 
- $ionic cordova build ios
+ $git checkout takitUser/platforms/ios/타킷/Classes/AppDelegate.m
 
- $git checkout platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
-
- $ionic cordova run android 
-
-   platforms/ios/타킷/타킷-Info.plist 수정
+   1. platforms/ios/타킷/타킷-Info.plist 수정
 
      <key>LSApplicationQueriesSchemes</key>
      <array>
         <string>kakaotalk</string>
      </array>
 
- xcode에서 옵션 수정
+   2. workspace에서 옵션 수정
 
-    open platforms/ios/타킷.xcodeproj
+    open platforms/ios/타킷.xcworkspace
 
-    Build Settings > Linking > Other Linker Flags > add '-all_load' (kakao plugin git)
+    Frameworks->KakaoOpenSDK.framework삭제후 최근 KakaoOpenSDK framework추가하기(Drag and Drop사용)
+
+    Build Settings > Linking > Other Linker Flags > add '-all_load -framework "KakaoOpenSDK"' (kakao plugin git)
 
     Capabilities->Push Notifications -> ON
+                ->Background Modes -> Audio,AirPlay, and Picture in Picture 선택 해제
+ 
+    General-> Deployment Info->Devices를 iPhone으로 설정 
+ 
+ $ionic cordova build ios
 
- General-> Deployment Info->Devices를 iPhone으로 설정 
+ $git checkout takitUser/platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
+
+ $ionic cordova run android
 
  $cd ..
 
@@ -230,7 +233,7 @@ License: GPL
 
  $ionic cordova run android --prod --device
 
- $ionic cordova run ios --prod
+ $ionic cordova build ios --prod
 
 # takitShop
 
