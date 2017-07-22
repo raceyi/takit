@@ -140,7 +140,7 @@ export class SignupPaymentPage {
                             receiptIssueVal=1;
                         else
                             receiptIssueVal=0;
-
+                        /*
                         console.log(" email:"+ this.email.trim());
                         console.log(" phone:"+ this.phone.trim());
                         console.log(" name:"+ this.name.trim());
@@ -149,7 +149,7 @@ export class SignupPaymentPage {
                         console.log(" receiptType:"+this.receiptType);
                         console.log(" taxIssueEmail:"+this.issueEmail);
                         console.log(" taxIssueCompanyName:"+this.issueCompanyName);
-
+                        */
                         body= JSON.stringify({email:this.email.trim(),
                                               phone:this.phone.trim(), 
                                               name:this.name.trim(),

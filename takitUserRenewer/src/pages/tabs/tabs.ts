@@ -21,15 +21,15 @@ import {ServerProvider} from '../../providers/serverProvider';
 //import {Storage} from '@ionic/storage';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { TranslateService} from 'ng2-translate/ng2-translate';
-
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/map';
 
 //import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
 
-declare var cordova:any;
+//declare var cordova:any;
 
 @Component({
   templateUrl: 'tabs.html',
@@ -52,7 +52,7 @@ export class TabsPage {
     public storageProvider:StorageProvider,private http:Http, private alertController:AlertController,private ionicApp: IonicApp,
     private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider,
     private nativeStorage: NativeStorage, private push: Push,private navParams: NavParams,
-    private device:Device) {
+    private device:Device,private backgroundMode:BackgroundMode) {
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
         }    
@@ -209,7 +209,7 @@ export class TabsPage {
 
         this.storageProvider.tabMessageEmitter.subscribe((cmd)=>{
             if(cmd=="stopEnsureNoti"){
-                cordova.plugins.backgroundMode.backgroundMode.disable();
+                this.backgroundMode.disable();
                 this.ngZone.run(()=>{
                         this.storageProvider.run_in_background=false;
                         //change color of notification button
@@ -228,7 +228,7 @@ export class TabsPage {
                 });
             }else if(cmd=="wakeupNoti"){ //wake up notification
                 this.wakeupNoti().then(()=>{
-                cordova.plugins.backgroundMode.enable(); 
+                this.backgroundMode.enable(); 
                 this.ngZone.run(()=>{
                         this.storageProvider.run_in_background=true;
                         //change color of notification button
@@ -305,7 +305,7 @@ export class TabsPage {
                                         handler: () => {
                                         console.log("call stopEnsureNoti");
                                         console.log("cordova.plugins.backgroundMode.disable");
-                                        cordova.plugins.backgroundMode.disable();
+                                        this.backgroundMode.disable();
                                         this.ngZone.run(()=>{
                                             this.storageProvider.run_in_background=false;
                                             //change color of notification button
@@ -334,7 +334,7 @@ export class TabsPage {
                                 ]
                             }).present();
                     }else{
-                            cordova.plugins.backgroundMode.disable();
+                            this.backgroundMode.disable();
                             this.storageProvider.db.close(()=>{
                                 this.platform.exitApp();
                             },(err)=>{
@@ -371,17 +371,17 @@ export class TabsPage {
             this.storageProvider.backgroundMode=false;
         }); //How about reporting it to server?
 
-        cordova.plugins.backgroundMode.onactivate(()=>{
+        this.backgroundMode.on("enable").subscribe(()=>{
             console.log("background mode has been activated");
             this.storageProvider.backgroundMode=true;
         });
 
-        cordova.plugins.backgroundMode.ondeactivate (()=> {
+        this.backgroundMode.on("deactivate").subscribe(()=> {
         console.log("background mode has been deactivated");
         this.storageProvider.backgroundMode=false;
         });
 
-        cordova.plugins.backgroundMode.setDefaults({
+        this.backgroundMode.setDefaults({
             title:  '타킷이 실행중입니다',
             ticker: '주문알림 대기',
             text:   '타킷이 실행중입니다'
@@ -392,7 +392,7 @@ export class TabsPage {
             if(orders==undefined || orders==null ||orders.length==0){
                 console.log('no orders in progress');
                 this.storageProvider.order_in_progress_24hours=false;
-                cordova.plugins.backgroundMode.disable(); 
+                this.backgroundMode.disable(); 
                 this.ngZone.run(()=>{
                         this.storageProvider.run_in_background=false;
                         //change color of notification button
@@ -408,7 +408,7 @@ export class TabsPage {
                 this.storageProvider.order_in_progress_24hours=true;            
                 this.wakeupNoti().then(()=>{
                     console.log('cordova.plugins.backgroundMode.enable');
-                    cordova.plugins.backgroundMode.enable(); 
+                    this.backgroundMode.enable(); 
                         this.ngZone.run(()=>{
                             this.storageProvider.run_in_background=true;
                             //change color of notification button
@@ -664,7 +664,7 @@ export class TabsPage {
                               // off run_in_background 
                               console.log("no more order in progress within 24 hours");
                               console.log("cordova.plugins.backgroundMode.disable");
-                              cordova.plugins.backgroundMode.disable();
+                              this.backgroundMode.disable();
                               this.ngZone.run(()=>{
                                     this.storageProvider.run_in_background=false;
                                     this.storageProvider.order_in_progress_24hours=false;
@@ -767,7 +767,7 @@ export class TabsPage {
                         handler: () => {
                                 this.stopEnsureNoti().then(()=>{
                                                 console.log('cordova.plugins.backgroundMode.disable');
-                                                cordova.plugins.backgroundMode.disable(); //takitShop always runs in background Mode
+                                                this.backgroundMode.disable(); //takitShop always runs in background Mode
                                                 this.ngZone.run(()=>{
                                                     this.storageProvider.run_in_background=false;
                                                     //change color of notification button
@@ -799,7 +799,7 @@ export class TabsPage {
                         handler: () => {
                                 console.log('enable background mode');
                                 this.wakeupNoti().then(()=>{
-                                    cordova.plugins.backgroundMode.enable(); 
+                                    this.backgroundMode.enable(); 
                                     this.ngZone.run(()=>{
                                         this.storageProvider.run_in_background=true;
                                         //change color of notification button

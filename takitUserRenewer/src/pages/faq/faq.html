@@ -1,25 +1,36 @@
+<!--
+  Generated template for the FaqPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
 <ion-header>
-  <ion-navbar >
-    <ion-title>자주 묻는 질문</ion-title>
+  <ion-navbar hideBackButton="true" >
+    <ion-buttons start>
+        <button (click)="back()" class="nav-btn" color="subColor2" small ion-button no-margin clear>
+            <ion-icon name="icon-logo"></ion-icon>
+        </button>
+      </ion-buttons>
+       <ion-title class="title">자주 묻는 질문</ion-title>
   </ion-navbar>
+  <ion-row>
+     <ion-col text-center>
+       <a class="anchor" href="mailto:help@takit.biz"><ion-icon style="font-size:x-large;" color="red" name="ios-mail-outline"></ion-icon><b style="font-size:larger;">&nbsp;&nbsp;이메일문의</b></a>
+     </ion-col>
+     <ion-col text-center>        
+       <a class="anchor" href="tel:0505-170-3636"><ion-icon style="font-size:x-large;" color="red" name="ios-call-outline"></ion-icon><b style="font-size:larger;">&nbsp;&nbsp;전화문의</b></a>
+    </ion-col>
+</ion-row>
 </ion-header>
 
 <ion-content padding>
-  <ion-row>
-     <ion-col>
-  <a href="tel:0505-170-3636"><ion-icon width-20 color="black" name="call">전화문의</ion-icon></a>
-     </ion-col>
-     <ion-col>
-  <a href="mailto:help@takit.biz"><ion-icon width-20 color="black" name="mail">이메일문의</ion-icon></a>
-    </ion-col>
-</ion-row>
-
+  <br>
   <ion-list>
     <ion-item *ngFor="let question of questions">
-      <ion-row (click)="showAnswerToggle(question)">
+      <ion-row class="question" (click)="showAnswerToggle(question)">
         {{question.question}}
       </ion-row>
-      <ion-row [hidden]="question.hidden">
+      <ion-row class="answer" [hidden]="question.hidden">
         <p [innerHTML]="question.answer">
         </p>
       </ion-row>

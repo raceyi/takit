@@ -21,7 +21,7 @@ import {ServerProvider} from '../providers/serverProvider';
 
 import {ConfigProvider} from '../providers/configProvider';
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
-import {UserInfoPage} from '../pages/userinfo/userinfo';
+//import {UserInfoPage} from '../pages/user-info/user-info';
 import { CashPage } from '../pages/cash/cash';
 import { OrderPage } from '../pages/order/order';
 import { SearchPage } from '../pages/search/search';
@@ -37,7 +37,7 @@ import {BankBranchPage} from '../pages/bankbranch/bankbranch';
 import {IOSAlertPage} from '../pages/ios-alert/ios-alert';
 import {CashDepositDeletePage} from '../pages/cash-deposit-delete/cash-deposit-delete';
 import {MultiloginPage} from '../pages/multilogin/multilogin';
-import {FaqPage} from '../pages/faq/faq';
+//import {FaqPage} from '../pages/faq/faq';
 import {TutorialPage} from '../pages/tutorial/tutorial';
 import { ConfigureCashTutorialPage } from '../pages/configure-cash-tutorial/configure-cash-tutorial';
 import { DepositCashTutorialPage } from '../pages/deposit-cash-tutorial/deposit-cash-tutorial';
@@ -48,7 +48,7 @@ import {CashPassword} from '../pages/cash-password/cash-password';
 import {OldOrderPage } from '../pages/old-order/old-order';
 import { MyTakitPage } from '../pages/my-takit/my-takit';
 import {MyWalletPage} from '../pages/my-wallet/my-wallet';
-import { MorePage } from '../pages/more/more';
+//import { MorePage } from '../pages/more/more';
 import {OrderHistoryPage} from '../pages/order-history/order-history';
 import { TransactionHistoryPage } from '../pages/transaction-history/transaction-history';
 import {ShopAboutPage} from '../pages/shop-about/shop-about';
@@ -80,6 +80,11 @@ import { FocuserDirective } from '../directives/focuser/focuser';
 import {EmailLoginPageModule} from '../pages/email-login/email-login.module';
 import {SignupPaymentPageModule} from '../pages/signup-payment/signup-payment.module';
 import {SignupPageModule} from '../pages/signup/signup.module';
+import {FaqPageModule} from '../pages/faq/faq.module';
+import {PolicyPageModule} from '../pages/policy/policy.module';
+import {UserInfoPageModule} from '../pages/user-info/user-info.module';
+import {MorePageModule} from '../pages/more/more.module';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 @NgModule({
   declarations: [
@@ -89,7 +94,7 @@ import {SignupPageModule} from '../pages/signup/signup.module';
     LoginPage,    
     ErrorPage,
     ServiceInfoPage,
-    UserInfoPage,
+    //UserInfoPage,
     CashPage,
     OrderPage,
     SearchPage,
@@ -105,7 +110,7 @@ import {SignupPageModule} from '../pages/signup/signup.module';
     IOSAlertPage,
     CashDepositDeletePage,
     MultiloginPage,
-    FaqPage,
+    //FaqPage,
     TutorialPage,
     ConfigureCashTutorialPage,
     DepositCashTutorialPage,
@@ -116,7 +121,7 @@ import {SignupPageModule} from '../pages/signup/signup.module';
     OldOrderPage,
     MyTakitPage,
     MyWalletPage,
-    MorePage,
+    //MorePage,
     OrderHistoryPage,
     TransactionHistoryPage,
     ShopAboutPage,
@@ -133,6 +138,10 @@ import {SignupPageModule} from '../pages/signup/signup.module';
     EmailLoginPageModule,
     SignupPageModule,
     SignupPaymentPageModule,
+    PolicyPageModule,
+    UserInfoPageModule,
+    FaqPageModule,
+    MorePageModule,
     //IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,
@@ -148,7 +157,7 @@ import {SignupPageModule} from '../pages/signup/signup.module';
     LoginPage,
     ErrorPage,
     ServiceInfoPage,
-    UserInfoPage,
+   // UserInfoPage,
     CashPage,
     OrderPage,
     SearchPage,
@@ -164,7 +173,7 @@ import {SignupPageModule} from '../pages/signup/signup.module';
     IOSAlertPage,
     CashDepositDeletePage,
     MultiloginPage,
-    FaqPage,
+    //FaqPage,
     TutorialPage,
     ConfigureCashTutorialPage,
     DepositCashTutorialPage,
@@ -175,7 +184,7 @@ import {SignupPageModule} from '../pages/signup/signup.module';
     OldOrderPage,
     MyTakitPage,
     MyWalletPage,
-    MorePage,
+    //MorePage,
     OrderHistoryPage,
     TransactionHistoryPage,
     ShopAboutPage,
@@ -200,6 +209,7 @@ import {SignupPageModule} from '../pages/signup/signup.module';
               Device,
               //Transfer,
               NativeStorage,
+              BackgroundMode,
               ConfigProvider,
               StorageProvider,
               FbProvider,

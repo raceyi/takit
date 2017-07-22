@@ -10,7 +10,7 @@ import {FaqPage} from '../pages/faq/faq';
 import {TutorialPage} from '../pages/tutorial/tutorial';
 
 import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
-import {UserInfoPage} from '../pages/userinfo/userinfo';
+import {UserInfoPage} from '../pages/user-info/user-info';
 import {SignupPaymentPage} from '../pages/signup-payment/signup-payment';
 
 import {FbProvider} from '../providers/LoginProvider/fb-provider';
@@ -28,7 +28,9 @@ import {SlideUpTransition} from '../classes/slide-up-transition';
 import {SlideDownTransition} from '../classes/slide-down-transition';
 import { Config } from 'ionic-angular';
 
-declare var cordova:any;
+import { BackgroundMode } from '@ionic-native/background-mode';
+
+//declare var cordova:any;
 
 @Component({
   selector:'page-menu',
@@ -39,7 +41,7 @@ export class MyApp {
   disconnectSubscription;
 
   constructor(platform: Platform,public storageProvider:StorageProvider,
-                private nativeStorage: NativeStorage,public app:App,
+                private nativeStorage: NativeStorage,private backgroundMode:BackgroundMode, public app:App,
                 public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
                 public emailProvider:EmailProvider,public alertCtrl:AlertController,
                 public translateService: TranslateService, private network: Network, 
@@ -293,7 +295,7 @@ export class MyApp {
                 this.fbProvider.logout().then((result)=>{
                     console.log("fbProvider.logout() result:"+JSON.stringify(result));
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                     this.removeStoredInfo();
                 },(err)=>{
                     console.log("facebook-logout failure");
@@ -333,7 +335,7 @@ export class MyApp {
                 this.kakaoProvider.logout().then((res)=>{
                     console.log("kakao logout success");
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                     this.removeStoredInfo();
                 },(err)=>{
                     console.log("kakao-logout failure");
@@ -371,7 +373,7 @@ export class MyApp {
             }else{
                 this.emailProvider.logout().then(()=>{
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                     this.removeStoredInfo();
                 },(err)=>{
                     console.log("logout err:"+err);
@@ -435,7 +437,7 @@ export class MyApp {
                     console.log("facebook unregister success");
                     this.removeStoredInfo();
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                 },(err)=>{
                     console.log("unregister failure");
                     //move into error page
@@ -451,7 +453,7 @@ export class MyApp {
                     console.log("facebook unregister success");
                     this.removeStoredInfo();
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                 },(err)=>{
                     console.log("unregister failure");
                     confirm.dismiss();
@@ -466,7 +468,7 @@ export class MyApp {
                     console.log("unregister success");
                     this.removeStoredInfo();
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                 },(err)=>{
                     console.log("unregister failure");
                     confirm.dismiss();

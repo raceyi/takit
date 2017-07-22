@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/*
-  Generated class for the Faq page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
+/**
+ * Generated class for the FaqPage page.
+ *
+ * See http://ionicframework.com/docs/components/#navigation for more info
+ * on Ionic pages and navigation.
+ */
+@IonicPage()
 @Component({
   selector: 'page-faq',
-  templateUrl: 'faq.html'
+  templateUrl: 'faq.html',
 })
 export class FaqPage {
+
    questions=[{hidden:true,
                question:"캐쉬아이디를 어떻게 입력하나요?",answer:"스마트폰과 인터넷 뱅킹으로 계좌이체시 받는통장 표시내용에 캐쉬아이디를 입력하시면 됩니다. 은행마다 캐쉬아이디 입력방법이 틀립니다. <a href=\"http://www.takit.biz/cashId.html\">토스/주요은행 캐쉬아이디 입력방법</a>"},
              {hidden:true,
@@ -37,7 +39,7 @@ export class FaqPage {
              {hidden:true,
                question: "타인의 입금이 저에게 충전 확인 메시지가 전달되었어요. 어떻게 해야 하나요?",answer:"타인의 충전 확인 메시지를 수신하셨을시에 상단 우측에 삭제 버튼을 눌러 진행해 주시기 바랍니다."},
              {hidden:true,
-               question: "무료 결제수수료가 어떤 의미인가요?",answer:"고객님의 온라인 결제시 카드 결제 수수료는 3.2%, 은행자동인출은 450원,가상계좌는 300원의 수수료가 지불됩니다. 타킷캐쉬는 여러분의 캐쉬아이디 입력을 통해 고정비용만으로 운영이 됩니다. 상점주는 결제 수수료 없이 타킷 서비스 수수료 0.25%만을 지불하시면 됩니다."},
+               question: "무료 결제수수료가 어떤 의미인가요?",answer:"고객님의 온라인 결제시 카드 결제 수수료는 3.2%, 은행자동인출은 450원,가상계좌는 300원의 수수료가 지불됩니다. 타킷캐쉬는 여러분의 캐쉬아이디 입력을 통해 외부수수료 없이 운영 됩니다. 상점주는 결제 수수료 없이 타킷 서비스 수수료 0.25%만을 지불하시면 됩니다."},
                 
              ];
 
@@ -50,5 +52,9 @@ export class FaqPage {
   showAnswerToggle(question){
     //console.log("question:"+JSON.stringify(question));
     question.hidden=(!question.hidden);
+  }
+
+  back(){
+    this.navCtrl.pop();
   }
 }
