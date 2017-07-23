@@ -45,6 +45,21 @@ export class SignupPaymentPage {
       public navCtrl: NavController, private alertCtrl: AlertController,public navParams: NavParams) {
     console.log("SignupPaymentPage-constructor");    
     this.cashIdGuide="대소문자 구분없음";
+
+    if(this.navParams.get("email")==undefined ||
+       this.navParams.get("name")==undefined ||
+       this.navParams.get("phone")==undefined){
+            this.email=this.storageProvider.email;
+            this.name=this.storageProvider.name;
+            this.phone=this.storageProvider.phone;
+    }else{
+            this.email=this.navParams.get("email");
+            this.name=this.navParams.get("name");
+            this.phone=this.navParams.get("phone");
+            this.storageProvider.email=this.email;
+            this.storageProvider.name=this.name;
+            this.storageProvider.phone=this.phone;
+    }
   }
 
   ionViewDidLoad() {
@@ -109,6 +124,14 @@ export class SignupPaymentPage {
               alert.present();       
               return false;
             }
+            if(this.issueCompanyName.trim().length>0){
+              let alert = this.alertCtrl.create({
+                        title: '세금계산서 발급 이메일을 입력해주시기 바랍니다.',
+                        buttons: ['OK']
+                    });
+              alert.present();       
+              return false;
+            }
         }
 
         return true;
@@ -124,12 +147,27 @@ export class SignupPaymentPage {
                 this.serverProvider.post(this.storageProvider.serverAddress+"/createCashId",body).then((res:any)=>{
                     console.log("configureCashId:"+JSON.stringify(res));
                     if(res.result=="success"){
+                        console.log("res.result is success");
                         this.storageProvider.cashId=this.cashId.trim().toUpperCase();
                         this.storageProvider.cashAmount=0;
                         /////////////////////////////////////////
                         //configure payment info
-                        let  receiptIssueVal= this.receiptId.trim().length>0 ? 1:0;
-
+                        console.log("configure payment info "+this.receiptId.trim().length);
+                        let receiptIssueVal:number;
+                        if(this.receiptId.trim().length>0)
+                            receiptIssueVal=1;
+                        else
+                            receiptIssueVal=0;
+                        /*
+                        console.log(" email:"+ this.email.trim());
+                        console.log(" phone:"+ this.phone.trim());
+                        console.log(" name:"+ this.name.trim());
+                        console.log(" receiptIssue:"+ receiptIssueVal);
+                        console.log(" receiptId:"+ this.receiptId);
+                        console.log(" receiptType:"+this.receiptType);
+                        console.log(" taxIssueEmail:"+this.issueEmail);
+                        console.log(" taxIssueCompanyName:"+this.issueCompanyName);
+                        */
                         body= JSON.stringify({email:this.email.trim(),
                                               phone:this.phone.trim(), 
                                               name:this.name.trim(),
@@ -138,11 +176,17 @@ export class SignupPaymentPage {
                                               receiptType:this.receiptType,
                                               taxIssueEmail:this.issueEmail,
                                               taxIssueCompanyName:this.issueCompanyName
-                                              });
+                                            });
+                                            
                         console.log("modifyUserInfo:"+body);
                         this.serverProvider.post(this.storageProvider.serverAddress+"/modifyUserInfo",body).then((res:any)=>{
                             console.log("res:"+JSON.stringify(res));
                             if(res.result=="success"){
+                                    this.storageProvider.receiptIssue=(receiptIssueVal==1)?true:false;
+                                    this.storageProvider.receiptId=this.receiptId;
+                                    this.storageProvider.receiptType=this.receiptType;
+                                    this.storageProvider.taxIssueEmail=this.issueEmail;
+                                    this.storageProvider.taxIssueCompanyName=this.issueCompanyName;
                                     this.navCtrl.setRoot(TabsPage);
                             }
                         },(err)=>{

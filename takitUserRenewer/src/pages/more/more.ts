@@ -1,46 +1,78 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams,AlertController,App } from 'ionic-angular';
-
-import {LoginPage} from '../login/login';
-import {ErrorPage} from '../error/error';
-import {MultiloginPage} from '../multilogin/multilogin';
+import { IonicPage, NavController, NavParams,App,AlertController } from 'ionic-angular';
+import {UserInfoPage} from '../user-info/user-info';
+import {PolicyPage} from '../policy/policy';
 import {FaqPage} from '../faq/faq';
-import {TutorialPage} from '../tutorial/tutorial';
-
-import {ServiceInfoPage} from '../serviceinfo/serviceinfo';
-import {UserInfoPage} from '../userinfo/userinfo';
-
+import { NativeStorage } from '@ionic-native/native-storage';
+import {StorageProvider} from '../../providers/storageProvider';
+import {LoginPage} from '../login/login';
+import {TranslateService} from 'ng2-translate/ng2-translate';
 import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
-import {StorageProvider} from '../../providers/storageProvider';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
-import {TranslateService} from 'ng2-translate/ng2-translate';
-import { NativeStorage } from '@ionic-native/native-storage';
-
-
-declare var cordova:any;
-/*
-  Generated class for the More page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
+/**
+ * Generated class for the MorePage page.
+ *
+ * See http://ionicframework.com/docs/components/#navigation for more info
+ * on Ionic pages and navigation.
+ */
+@IonicPage()
 @Component({
   selector: 'page-more',
-  templateUrl: 'more.html'
+  templateUrl: 'more.html',
 })
 export class MorePage {
-    public rootPage:any;
-
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-                public storageProvider:StorageProvider,private nativeStorage: NativeStorage,
-                public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
-                public emailProvider:EmailProvider,public alertCtrl:AlertController,
-                public app:App,public translateService: TranslateService,) {}
+    phone:string;
+    email:string;
+    name:string;
+    loginMethod:string;
+    serviceInfoShow:boolean=false;
+    serviceVersion:string;
+    
+  constructor(public navCtrl: NavController, public navParams: NavParams
+            ,private app:App,private nativeStorage: NativeStorage
+            , public translateService: TranslateService,private backgroundMode:BackgroundMode
+            ,public fbProvider:FbProvider, public kakaoProvider:KakaoProvider
+            ,public emailProvider:EmailProvider
+            ,private alertCtrl: AlertController, public storageProvider:StorageProvider){
+    /////////////////////
+    this.phone=this.storageProvider.phone;
+    this.email=this.storageProvider.email;
+    this.name=this.storageProvider.name;
+    //this.loginMethod=this.storageProvider.lo"이메일"; Please add password change
+    this.serviceVersion=this.storageProvider.version;
+    ////////////////////
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MorePage');
+  }
+
+  configureUserInfo(){
+    console.log("configureUserInfo");
+    this.app.getRootNav().push(UserInfoPage);
+  }
+
+  serviceInfo(){
+    console.log("serviceInfo");
+    this.serviceInfoShow=!this.serviceInfoShow;
+  }
+
+  faq(){
+    console.log("faq");
+    this.app.getRootNav().push(FaqPage);
+  }
+
+  tutorial(){
+    console.log("tutorial");
+
+  }
+
+  policyInfo(){
+    console.log("policy");
+    this.app.getRootNav().push(PolicyPage);
   }
 
   goHome(){
@@ -51,23 +83,6 @@ export class MorePage {
     console.log("openFaqPage...");
     this.app.getRootNav().push(FaqPage);
   }
-
-  openServiceInfo(){
-    console.log("serviceInfo");
-    this.app.getRootNav().push(ServiceInfoPage);
-  }
-     
- openUserInfo(){
-    console.log("openUserInfo");
-    //call push function 
-     this.app.getRootNav().push(UserInfoPage);
-  }
-
- openTutorial(){
-    console.log("openTutorial");
-    this.app.getRootNav().push(TutorialPage);
- }
-
 
   removeStoredInfo(){
         this.nativeStorage.clear(); 
@@ -102,8 +117,6 @@ export class MorePage {
         });  
   }
 
-
-
   openLogout(){
     console.log("logout");
     let confirm = this.alertCtrl.create({
@@ -126,7 +139,7 @@ export class MorePage {
                 this.fbProvider.logout().then((result)=>{
                     console.log("fbProvider.logout() result:"+JSON.stringify(result));
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                     this.removeStoredInfo();
                 },(err)=>{
                     console.log("facebook-logout failure");
@@ -166,7 +179,7 @@ export class MorePage {
                 this.kakaoProvider.logout().then((res)=>{
                     console.log("kakao logout success");
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                     this.removeStoredInfo();
                 },(err)=>{
                     console.log("kakao-logout failure");
@@ -204,7 +217,7 @@ export class MorePage {
             }else{
                 this.emailProvider.logout().then(()=>{
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                     this.removeStoredInfo();
                 },(err)=>{
                     console.log("logout err:"+err);
@@ -268,7 +281,7 @@ export class MorePage {
                     console.log("facebook unregister success");
                     this.removeStoredInfo();
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                 },(err)=>{
                     console.log("unregister failure");
                     //move into error page
@@ -284,7 +297,7 @@ export class MorePage {
                     console.log("facebook unregister success");
                     this.removeStoredInfo();
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                 },(err)=>{
                     console.log("unregister failure");
                     confirm.dismiss();
@@ -299,7 +312,7 @@ export class MorePage {
                     console.log("unregister success");
                     this.removeStoredInfo();
                     console.log("cordova.plugins.backgroundMode.disable");
-                    cordova.plugins.backgroundMode.disable();
+                    this.backgroundMode.disable();
                 },(err)=>{
                     console.log("unregister failure");
                     confirm.dismiss();

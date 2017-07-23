@@ -1,32 +1,21 @@
-
-page-login {
-    .gradiPage{
-        background-image: url('../assets/background/bg_gradiation.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    .takit-icon{
-        height:30vh;
-    }
-
-    .button-ios-white {
-        //color: red;
-        color: #e8454c;
-    }
-
+page-policy {
     .explain{
-        margin-bottom: 0px;
-        text-align: center;
-        color: white;
-    }
-    .dummy{
-        height:15vh;
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+        background-color: #cde5e6;
     }
 
-    button{
-        font-weight: bold;
+    .buttonRow{
+        border-color:red;
+        border-bottom-width:1px;
+        border-bottom-style:solid;
+        margin-left:20px;
+        margin-right:10px;
+        .button-inner{
+            justify-content: flex-start;
+        }
     }
-
+    
     .extender {
         top: 0px;
         left: 0px;
@@ -54,11 +43,4 @@ page-login {
         -webkit-align-items: center;
         align-items: center;
     }
-
-    .social-icon{
-        color:#e8454c;
-        background-color:white;
-    }
 }
-
-

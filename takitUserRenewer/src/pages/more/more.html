@@ -1,53 +1,87 @@
 <!--
-  Generated template for the More page.
+  Generated template for the MorePage page.
 
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton="true" >
       <ion-buttons start>
         <button  (click)="goHome()" class="hearder-icon" ion-button color="mainColor" clear>
             <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
-    </ion-buttons>
-    <ion-title></ion-title>
+      </ion-buttons>
     <ion-buttons end>
         <button class="hearder-icon" ion-button clear>
             <ion-icon name="search" color="mainColor" ></ion-icon>
         </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
-<ion-content padding>
-    <button class="menu" color="white" ion-button full menuClose>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X  
-      </button>
-      <button class="menu" color="white" ion-button icon-left full  menuClose  (click)="openUserInfo()">
-        <ion-icon name="person"></ion-icon>&nbsp;&nbsp;회원정보
-      </button>
-      <button class="menu" color="white" ion-button icon-left full menuClose (click)="openFaq()">
-        <ion-icon name="help-circle"></ion-icon>&nbsp;&nbsp;자주묻는질문 
-      </button>
-      <!--
-      <button class="menu" color="white" ion-button icon-left full menuClose (click)="openTutorial()">
-        <ion-icon name="information-circle"></ion-icon>&nbsp;&nbsp;타킷가이드  
-      </button>
-      -->
-      <button class="menu" color="white" ion-button icon-left full menuClose (click)="openServiceInfo()">
-        <ion-icon name="information-circle"></ion-icon>&nbsp;&nbsp;서비스정보 
-      </button>
-      <button class="menu" color="white" ion-button icon-left full menuClose  (click)="openLogout()">
-        <ion-icon name="log-out"></ion-icon>&nbsp;&nbsp;로그아웃 
-      </button>
-      <button class="menu" color="white" ion-button icon-left full menuClose  (click)="openUnregister()">
-        <ion-icon name="exit"></ion-icon>&nbsp;&nbsp;회원탈퇴 
-      </button>
-
+<ion-content style="background-color: lightgray;">
+  <ion-grid  style="background-color: white; padding:0px;">
+  <ion-row>
+    <ion-col>
+      <p>{{name}}님</p>
+      <p>{{email}}</p>
+   <!--   <p>{{phone}}</p>  -->
+    </ion-col>
+    <ion-col>
+      <ion-buttons end>
+        <button ion-button clear (click)="configureUserInfo()">
+            <ion-icon name="icon-setting" color="mainColor" ></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-col>    
+  </ion-row>
+  <ion-row style="background-color: lightgray;">
+    <ion-col>
+      &nbsp;&nbsp;
+    </ion-col>
+  </ion-row>
+  <ion-row text-left class="buttonRow">
+        <button ion-button full color="black" icon-left text-left clear (click)="faq()">
+        자주묻는 질문
+        </button>
+  </ion-row>
+  <ion-row text-left class="buttonRow">
+        <button  ion-button full color="black" clear (click)="tutorial()">
+        이용 가이드
+        </button>
+  </ion-row>
+  <ion-row text-left class="buttonRow">
+        <button  ion-button full color="black" clear (click)="policyInfo()">
+        타킷 정책
+        </button>
+  </ion-row>
+  <ion-row text-left class="buttonRow">
+        <button  ion-button full color="black" clear (click)="serviceInfo()">
+        서비스 정보
+        </button>
+        <p [hidden]="!serviceInfoShow" style="padding-left:20px;">{{serviceVersion}}</p>
+  </ion-row>
+  </ion-grid>
+  <br>
+  <div text-center>
+        <button  ion-button color="mainColor" clear (click)="openLogout()">
+            <b>로그아웃</b>
+        </button>
+        <button  ion-button color="mainColor" clear (click)="openUnregister()">
+            <b>탈퇴</b>
+        </button>
+  </div>
 </ion-content>
-<!--<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>-->
+<ion-footer style="height:20vh;background-color: lightgray;font-size:xx-small;">
+    <div class="extender">
+       <div class="padder-center">
+          <div text-left>
+          <b>타킷 주식회사</b><br>
+          <p>대표: 이경주</p>
+          <p>사업자 등록번호 142-88-00447 |통신판매 신고번호: 2016 서울성북-0938</p>
+          <p>서울특별시 성북구 동소문로 63, 6층 31호 (동소문동 4가 드림트리)</p>
+          <p>메일: help@takit.biz | 대표번호: 0505-170-3636</p>
+          </div>
+       </div>
+    </div>
+</ion-footer>

@@ -1,0 +1,148 @@
+<!--
+  Generated template for the CashDepositPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar hideBackButton="true" >
+    <ion-buttons start>
+        <button (click)="back()" class="nav-btn" color="subColor2" small ion-button no-margin clear>
+            <ion-icon name="icon-logo"></ion-icon>
+        </button>
+      </ion-buttons>
+       <ion-title class="title">캐쉬 충전</ion-title>
+  </ion-navbar> 
+</ion-header>
+<ion-content>
+  <button ion-button full round style="border-radius:10px;"> 타킷 캐쉬 충전방법 보기></button>
+  <div class="account" text-center>
+    <p>타킷주식회사</p>
+    <p>농협 301-2424-3636-21</p>
+    <button ion-button outline color="skyblue" style="width:50vw;"> 계좌복사</button>
+    <br>받는 통장 표시 내용: {{cashId}}
+  </div>
+  <p class="explain">
+  *이용제한시간 00:00~00:30,3주월요일23:55~04:00 
+  </p>
+
+  <button ion-button color="black" class="manualButton" full clear (click)="manualCheckOpen() ">
+      캐쉬아이디 입력을 잊으셨나요? &nbsp;&nbsp;
+      <ion-icon [hidden]="!manualCheckHidden" name="add"></ion-icon>
+      <ion-icon [hidden]="manualCheckHidden" name="remove"></ion-icon>
+  </button>
+
+  <div class="cashIn-check" [hidden]="manualCheckHidden">
+                <ion-grid class="cashIn-check-table">
+                <ion-row center>
+                    <ion-col>
+                    <ion-item >
+                    <ion-label>입금일</ion-label>
+                    <ion-datetime style="width:40vw;border-bottom: black;border-bottom-style: solid;" displayFormat="YYYY MM DD" min="2016" [(ngModel)]="transferDate"></ion-datetime>
+                    </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row center>
+                    <ion-col>
+                    <ion-item>
+                    <ion-label>입금시간</ion-label>
+                    <ion-datetime style="width:40vw;border-bottom: black;border-bottom-style: solid;" displayFormat="HH" [(ngModel)]="transferDate"></ion-datetime>
+                    </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <p class="explain">
+                    *온라인 계좌이체 시간을 정확히 확인해 주세요.
+                    </p>
+                  </ion-col>
+                </ion-row>
+                <ion-row center>
+                    <ion-col>
+                        <ion-item>
+                        입금액
+                        </ion-item>
+                    </ion-col>
+                    <ion-col>
+                    <ion-item>
+                    <ion-input #depositCashAmount style="width:40vw;border-bottom: black;border-bottom-style: solid;" class="cashIn-check-inputBox" [(ngModel)]="depositAmount" type="number" ></ion-input>
+                    </ion-item>
+                    </ion-col>
+                </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-item >
+                    <ion-label>입금은행</ion-label>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item class="bankSelect" >
+                    <ion-label></ion-label>
+                    <ion-select style="width:40vw;" class="depositBankSelect" [(ngModel)]="depositBank">
+                      <ion-option value="-1"> 토스 </ion-option>
+                      <ion-option *ngFor="let bank of storageProvider.banklist" value="{{bank.value}}">{{bank.name}}</ion-option>
+                      <ion-option value="0" >은행코드직접입력</ion-option>
+                    </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <!--
+            <ion-row>
+              <ion-col width-50>
+                <ion-item >
+                    <ion-label>{{'DepositBranch'| translate}}</ion-label>
+                </ion-item>
+              </ion-col>
+              <ion-col width-40 [hidden]="storageProvider.depositBranch=='codeInput'">
+                <ion-item>
+                    <ion-input class="cashIn-check-inputBox" disabled [placeholder]="" [(ngModel)]="storageProvider.depositBranchInput"  ></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col width-40 [hidden]="storageProvider.depositBranch!='codeInput'">
+                <ion-item>
+                    <ion-input class="cashIn-check-inputBox" [placeholder]="" [(ngModel)]="storageProvider.depositBranchInput" type="number" ></ion-input>
+                </ion-item>
+              </ion-col>
+
+              <ion-col width-10 [hidden]="storageProvider.depositBank=='0'">
+                <ion-item class="selectButton">
+                    <button ion-button full class="selectButton" (click)="toggleSelectInput()">선택</button>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row [hidden]="storageProvider.depositBranch!='codeInput'">
+                <button ion-button clear small>지점코드(7자리숫자)조회방법</button>
+            </ion-row>
+            <ion-row [hidden]="storageProvider.depositBranch=='codeInput'">
+                <button ion-button clear small (click)="hrefBankBranch()">거래지점확인방법</button>
+            </ion-row>
+
+            !-->
+            <ion-row center>
+            <ion-col>
+              <ion-item>
+              통장표시내용
+              </ion-item>
+            </ion-col>
+            <ion-col>
+            <ion-item>
+            <ion-input class="cashIn-check-inputBox" style="width:40vw;border-bottom: black;border-bottom-style: solid;" [placeholder]="storageProvider.name" [(ngModel)]="depositMemo" type="text" > </ion-input>
+            </ion-item>
+            </ion-col>
+            </ion-row>
+            <ion-row>
+            <p class="explain">
+                * 이용제한시간에는 확인이 불가능합니다.
+            </p>
+            </ion-row>
+          <ion-row text-center>
+                <ion-col>
+                    <button ion-button  round outline style="width:33vw;" (click)="manualCheck(false)">취소</button>
+                </ion-col>
+                <ion-col>
+                    <button ion-button  round outline style="width:33vw;" (click)="cashInComplete(event)">입금확인</button>
+                </ion-col>
+            </ion-row>
+            </ion-grid>
+            </div>
+</ion-content>

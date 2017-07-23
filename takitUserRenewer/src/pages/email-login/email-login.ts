@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController} from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController,LoadingController} from 'ionic-angular';
 import { PasswordPage } from '../password/password';
 import {SignupPage } from '../signup/signup';
 import {StorageProvider} from '../../providers/storageProvider';
@@ -27,7 +27,8 @@ export class EmailLoginPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               private alertCtrl: AlertController,private emailProvider:EmailProvider,
-              private storageProvider:StorageProvider,private nativeStorage: NativeStorage) {
+              private storageProvider:StorageProvider,private nativeStorage: NativeStorage,
+              public loadingCtrl: LoadingController) {
 
   }
 
@@ -61,7 +62,17 @@ export class EmailLoginPage {
                     alert.present();
             return;
       }
+
+       let loading = this.loadingCtrl.create({
+            content: '로그인 중입니다.'
+        });
+      loading.present();
+        setTimeout(() => {
+            loading.dismiss();
+        }, 5000);
+
       this.emailProvider.EmailServerLogin(this.email,this.password).then((res:any)=>{
+                                loading.dismiss();
                                 console.log("emailLogin-login page:"+JSON.stringify(res));
                                 if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                                         let alert = this.alertCtrl.create({
@@ -81,6 +92,7 @@ export class EmailLoginPage {
                                     if(res.userInfo.hasOwnProperty("shopList")){
                                         this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
                                     }
+                                    this.storageProvider.emailLogin=true;
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     if(!res.userInfo.hasOwnProperty("cashId") || res.userInfo.cashId==null || res.userInfo.cashId==undefined){
                                         console.log("move into signupPaymentPage");
@@ -103,6 +115,7 @@ export class EmailLoginPage {
                                             });
                                 }
                             },login_err =>{
+                                loading.dismiss();
                                 console.log(JSON.stringify(login_err));
                                 let alert = this.alertCtrl.create({
                                         title: '로그인 에러가 발생했습니다',

@@ -1,0 +1,30 @@
+page-cash-withdraw {
+   .account{
+        margin-top: 5vw;
+        margin-bottom: 5vw;
+        margin: 5vw;
+        border-width: 2px;
+        border-color: skyblue;
+        padding-top: 5vw;
+        padding-bottom: 5vw;
+        border-style: solid;
+        border-radius: 10px;
+    }
+
+     .explain{
+        //text-align: justify;
+        white-space: normal;
+        color:#7F7F7F;
+        font-size: 1.3rem; 
+        padding-left:20px;
+        padding-right:20px;
+    }
+
+    .cashIdValue{
+        color:#387ef5;
+        border:1px solid #BEBEBE;
+        border-radius: 4px;
+        height:38px;
+    }
+
+}
