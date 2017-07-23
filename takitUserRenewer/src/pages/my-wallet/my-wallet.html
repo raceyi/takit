@@ -7,13 +7,13 @@
 <ion-header>
     <ion-navbar hideBackButton="true" >
       <ion-buttons start>
-        <button  (click)="goHome()" ion-button color="mainColor" clear>
+        <button  (click)="goHome()" class="hearder-icon" ion-button color="mainColor" clear>
             <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
     <ion-title *ngIf="this.isTestServer==true">검증</ion-title>
     <ion-buttons end>
-        <button ion-button clear>
+        <button class="hearder-icon" ion-button clear>
             <ion-icon name="search" color="mainColor" ></ion-icon>
         </button>
     </ion-buttons>
@@ -36,8 +36,8 @@
   <ion-card *ngIf="myWalletType==='cash'" class="card-cash-card">
       <ion-card-content>
           <br>
-        <p style="font-size:30px;"> Cash ID : TAKIT01</p>
-        <p style="font-size:40px; font-weight:900;"> 100,000 원</p>
+        <p style="font-size:30px;"> Cash ID : {{storageProvider.cashId}}</p>
+        <p style="font-size:40px; font-weight:900;"> {{storageProvider.cashAmount}} 원</p>
         <div text-right>
             <button ion-button color="white" no-padding no-margin large>충전</button>
             <button ion-button color="white" no-padding no-margin large disabled>/</button>

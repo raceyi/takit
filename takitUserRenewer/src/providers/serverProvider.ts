@@ -217,6 +217,24 @@ export class ServerProvider{
         });   
     }
 
+    getShopInfoPost(takitId){
+        return new Promise((resolve,reject)=>{
+            let body = JSON.stringify({takitId:takitId});
+            console.log("getShopInfoPost "+body);
+            this.post(this.storageProvider.serverAddress+"/shop/getShopInfo",body).then((res:any)=>{
+                console.log("getBalanceCash res:"+JSON.stringify(res));
+                if(res.result=="success"){
+                    this.storageProvider.cashAmount=res.balance;
+                    resolve();
+                }else{
+                    reject(res.error);
+                }
+            },(err)=>{
+                        reject(err);                                  
+            });
+        });
+    }
+
 
     updateCashAvailable(){
         return new Promise((resolve,reject)=>{

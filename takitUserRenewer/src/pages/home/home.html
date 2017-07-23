@@ -1,13 +1,13 @@
 <ion-header>
     <ion-navbar hideBackButton="true" >
       <ion-buttons start>
-        <button  (click)="goHome()" ion-button color="mainColor" clear>
+        <button  (click)="goHome()" class="hearder-icon" ion-button color="mainColor" clear>
             <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
     <ion-title *ngIf="this.isTestServer==true">검증</ion-title>
     <ion-buttons end>
-        <button ion-button clear>
+        <button ion-button class="hearder-icon" clear>
             <ion-icon name="search" color="mainColor" ></ion-icon>
         </button>
     </ion-buttons>
@@ -28,7 +28,7 @@
             <ion-col *ngFor="let shop of storageProvider.shoplist"  class="scroll-col-latest"  no-padding>
                 <ion-row  class="scroll-row-shop">
                     <ion-col (click)="getSelected(shop.takitId)" >
-                        <p class="scroll-p-shop">{{shop.takitId}}</p>
+                        <p class="scroll-p-shop">{{shop.shopName}}</p>
                     </ion-col>
                     <ion-col col-2 (click)="enterOldOrder(shop.takitId)" >
                         <!-- <button  ion-button class="scroll-btn-latest" color="mainColor" clear> -->
@@ -47,7 +47,7 @@
     </ion-scroll>
 
         
-    <p class="p-title">오늘의 쿠폰 / 이벤트</p>
+    <p class="p-title">이벤트 / 쿠폰</p>
     
 
     <ion-slides #Slides (ionSlideDidChange)="eventChanged()" >
@@ -69,7 +69,7 @@
 
     <ion-row>
         <ion-col no-padding>
-        <p class="p-title">내 주변 매장</p>
+        <p class="p-title">주변 매장</p>
         </ion-col>
         <ion-col col-4>
 
@@ -87,45 +87,27 @@
     </ion-row>
     <!--거리별 shoplist가 되어야 함-->
     <div *ngFor="let shop of nearShops; let i=index">
-        <ion-card class="card-shop">
-            <ion-row >
-                <ion-col no-padding (click)="getSelected(shop.takitId)" >
-                    <button  class="btn-shop" color="white" ion-button full no-padding no-margin>
-                        <img class="img-shop" [src]="storageProvider.awsS3+shop.imagePath" >
-                    </button>     
-                </ion-col>
-                <ion-col (click)="getSelected(shop.takitId)" >
-                    <ion-card-content>
-                        <p>{{shop.name}}</p>
-                        <p>{{shop.shopName}}</p>
-                        <p>{{shop.discountRate+" "+shop.businessType+" "}}</p>
-                        <p>{{shop.reviewList.length}}</p>
-                    </ion-card-content>
-                </ion-col>
-                <ion-col col-2>
-                    <button (click)="showMoreMenus(shop)" class="btn-shop-more" ion-button clear color="mainColor" *ngIf="shop.bestMenus.length>0">
-                        <ion-icon name="md-more"></ion-icon>
-                    </button>
-                </ion-col>
-            </ion-row>
-        </ion-card>
+        <ion-row class="row-nearShop" >
+            <ion-col no-padding (click)="getSelected(shop.takitId)" >
+                <!-- <button  class="btn-shop" color="white" ion-button full no-padding no-margin> -->
+                <img class="img-shop" [src]="storageProvider.awsS3+shop.imagePath" >
+                <!-- </button>      -->
+            </ion-col>
+            <ion-col (click)="getSelected(shop.takitId)" >
+                <p>{{shop.shopName}}</p>
+                <p>{{shop.takitId}}</p>
+                <p>{{shop.discountRate+" "+shop.businessType+" "}}{{shop.reviewList.length}}</p>            </ion-col>
+            <ion-col col-2>
+                <button (click)="showMoreMenus(shop)" class="btn-shop-more" ion-button clear color="mainColor" *ngIf="shop.bestMenus.length>0">
+                    <ion-icon name="md-more"></ion-icon>
+                </button>
+            </ion-col>
+        </ion-row>
         <ion-scroll class="scroll-more" scrollX="true" *ngIf="shop.showMore" >
             <ion-row class="scroll-row-more">
-                <ion-col *ngFor="let menu of shop.bestMenus" class="more-menus">
-                    <ion-row row-4>
-                        <ion-col (click)="enterMenuDetail()">
-                            <ion-item no-lines class="item-more">
-                                <ion-avatar item-left> 
-                                    <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
-                                </ion-avatar>
-                            </ion-item>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col>
-                            <p>{{menu.menuName}}</p>       
-                        </ion-col>
-                    </ion-row>
+                <ion-col *ngFor="let menu of shop.bestMenus" class="more-menus" (click)="enterMenuDetail()">
+                    <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
+                    <p>{{menu.menuName}}</p>       
                 </ion-col>
             </ion-row>
         </ion-scroll>

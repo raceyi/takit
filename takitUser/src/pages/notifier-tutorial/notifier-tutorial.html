@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>알림수신</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+<ion-slides #slides pager>
+    <ion-slide>
+      <h2 class="slide-title">주문접수 수신</h2>
+      <img src="assets/order/orderAccepted.jpg" class="slide-image"/>
+      <p>상점에서 주문을 접수하였습니다.<br>주문취소가 불가능합니다.</p>
+      <p>메시지 발송오류시 문자로 발신됩니다.</p>
+    </ion-slide>
+    <ion-slide>
+      <h2 class="slide-title">준비완료 수신</h2>
+      <img src="assets/order/orderDone.jpg" class="slide-image"/>
+      <p>준비된 식음료를 가져가시면 됩니다.<br>
+      메시지 발송오류시 문자로 발신됩니다.
+      <br>주의:주문번호를 확인해주세요</p>
+      <button ion-button large clear icon-right (click)="dismiss()" color="primary">
+        나가기
+        <ion-icon name="md-exit"></ion-icon>
+      </button>
+    </ion-slide>
+</ion-slides>
+ </ion-content>

@@ -1,0 +1,105 @@
+page-shophome{
+    /*
+    .segmentBar>.scroll-content{
+        overflow-x:scroll !important;
+        overflow-y:hidden !important;
+        position:relative !important;
+    }
+    */
+/*    
+    .menus>.scroll-content{
+        overflow-x:hidden !important;
+        overflow-y:scroll !important;
+        position:relative !important;
+    }
+
+    ion-content.menus{
+         height:100% !important;
+         position: relative !important;
+         div{
+            border-style:none !important;
+            border-bottom:0px !important;
+            border-color:white !important;
+
+        }
+        ion-item{
+            border-style:none !important;
+            border-bottom:0px !important;
+            border-color:white !important;
+        }
+        ion-row{
+            border-style:none !important;
+            border-bottom:0px !important;
+            border-color:white !important;
+        }
+        ion-col{
+            border-style:none !important;
+            border-bottom:0px !important;
+            border-color:white !important;
+        } 
+    }
+*/
+    .menuImgButton{
+            height:27vw !important;
+            width :100% !important;
+            border-radius : 50% !important;
+    }
+
+    .menuImg{
+        border-radius : 50% !important;
+        height : 100% !important;
+        width : 100% !important;
+    }
+
+     .MenuText{
+        text-align:center !important;
+        font-size : 3.0vw !important; //2.4
+    }
+
+    .segment-md>.segment-button{
+        font-size : 3.0vw !important;  //2.4
+    }
+
+    .segment-md>.segment-button {
+        border-width: 2px !important;
+        border-style: solid !important;
+        border-color: #3474e1 !important;
+        padding:0px !important;
+
+        height: 3rem;
+        line-height: 2.5rem;
+    }
+
+    .segment-md>.segment-activated {
+        background-color: #387ef5 !important;
+        color: white !important;
+    }
+
+    ion-col.segmentButton{
+        padding:0px !important;
+    }
+
+    .segment-ios .segment-button:last-of-type {
+        margin-left: 0;
+        border-left-width: 1px !important;
+        border-radius: 0; 
+    }
+    .segment-ios .segment-button:first-of-type {
+        margin-right: 0;
+        border-radius: 0; 
+        border-left-width: 1px;
+    }
+    
+    .Dummy{
+        height:20vh;
+    }
+
+    .card-md {
+        box-shadow: none;
+    }
+    
+    .card-ios {
+        box-shadow: none;
+    }
+    
+}

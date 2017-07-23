@@ -72,7 +72,7 @@ export class ShopHomePage {
       ,private alertController:AlertController,private serverProvider:ServerProvider) {
           console.log("ShopHomePage");
           console.log("param(takitId):"+navParams.get("takitId"));
-    //Any other way to pass takitId into ShopHome page?
+          //Any other way to pass takitId into ShopHome page?
             this.storageProvider.takitId=navParams.get("takitId");
             this.bestMenus=navParams.get('bestMenus');
             if(!this.bestMenus){ //this.bestMenu !== null or undefined
@@ -80,6 +80,7 @@ export class ShopHomePage {
             }
 
             console.log("bestMenus:"+this.bestMenus);
+            
   }
 
   ionViewDidEnter(){ // Be careful that it should be DidEnter not Load 

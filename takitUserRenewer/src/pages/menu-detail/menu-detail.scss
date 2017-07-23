@@ -18,24 +18,29 @@ page-menu-detail {
         align-items: center;
         flex-wrap: nowrap;
         border-radius: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
+        height: 48%;
+
+        img{
+            margin-top: 20px;
+            width: 35%;
+            height: 55%;
+            border-radius: 100%;
+
+        }
 
         .p-name{
             position: absolute;
-            top : 14%;
+            top : 22.5%;
             background-color: white;
-            padding: 10px;
+            padding-top: 20px;
+            font-weight: 600;
         }
 
         .p-description{
             //position: absolute;
-            margin: 20%;
-        }
-
-        img{
-            width: 30%;
-            height: 30%;
-            border-radius: 100%;
-
+            margin: 10%;
         }
     }
 

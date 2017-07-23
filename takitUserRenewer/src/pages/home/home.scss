@@ -12,15 +12,7 @@ page-home {
 
     
 
-    .p-title {
-        margin-top: 7px;
-        margin-left: 14px;
-        margin-bottom: 17px;
-        background-color: white;
-        font-size: 13px;
-        font-weight: 700;
-        color: #999;
-    }
+   
 
     .scroll-latest {
         height: $scroll-H;
@@ -41,8 +33,8 @@ page-home {
     .scroll-row-latest{
         flex-wrap : inherit;
         height: $latest-H;
-        margin-left: 14px;
-        margin-right: 14px;
+        margin-left: 10px;
+        margin-right: 10px;
     }
 
     .card-ios{
@@ -73,6 +65,7 @@ page-home {
             padding: 0;
             height: 44px;
             display: flex;
+            align-items: center;
         }
     }
 
@@ -144,106 +137,105 @@ page-home {
     }
 
     //
-    .card-shop {
-        @include calc(width, "100% - 10px");
+    .row-nearShop {
         height: $shop-list-H;
-        margin-left: 5px;
-        margin-right: 5px;
-        border: 3px solid;
-        border-radius: 5px;
-        border-color : $sub-color;
-        ion-row{
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+
+        img{
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px; 
+            width: 100%;
             height: 100%;
-            padding: 6px;
-            margin: 0;
-            
         }
+        
         ion-col{
             height: 100%;
             padding: 0;
             //display: flex;
+            
         }
 
-        ion-card-content p:nth-child(1) {
-            font-size: 13px;
-            font-weight: 900;
-            color : black;
-        }
+        ion-col:nth-child(2){
+            padding-left:18px;
+            flex-basis: 29%;
+            p:nth-child(1) {
+                font-family: 나눔고딕;
+                font-size: 16px;
+                font-weight: 900;
+                color : #4c4c4c;
+                margin-top: 8px;
+                margin-bottom: 3px;
+            }
+            p:nth-child(2) {
+                font-size: 14px;
+                //font-weight: 600;
+                color:#4c4c4c;
+                margin-top:3px;
+                margin-bottom: 10px;
+            }
+            p:nth-child(3) {
+                font-size: 14px;
+                //font-weight: 600;
+                color:#9f9f9f;
+            }
+        } 
 
-        ion-card-content p:nth-child(2) {
-            font-size: 11px;
-            //font-weight: 600;
-            color:#4c4c4c;
-        }
+        .btn-shop-more{
+            margin: 0;
+            //padding: 0;
+            height: 100%;
+            width: 4px;
+            display: flex;
+            align-items: center;
+            font-size: 25px;
 
-        ion-card-content p:nth-child(3) {
-            font-size: 11px;
-            //font-weight: 600;
-            color:#9f9f9f;
         }
         
     }
 
-    .card-content-ios{
-        padding: 0px;
-    }
-
-    .img-shop , .btn-shop{
-       // width: 100%;
-        height: $shop-list-H - 18px;
-    }
-
-    .btn-shop-more{
-        height: 18px;
-        width: 4x;
-        display: flex;
-        align-items: center;
-    }
-
     /////////
-
     .scroll-more{
-        margin-left: 5px;
-        margin-right: 5px;
-        height: 107px;
-        display: flex;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        height: 95px;
+        //display: flex;
         background-color:rgba(00,43,63,0.2);
         border-radius: 5px;
-    }
+        font-size:13px;
 
-    .scroll-row-more{
-        display: flex;
-        flex-wrap: inherit;
-        height: 107px;
-    }
 
-    .more-menus{
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        ion-row{
-            //height: 100%;
-        }  
-    }
-
-    .item-more{
-        width: 90px;
-        height: 60px;
-        padding: 0;
-        background-color:rgba(00,43,63,0);
-        ion-avatar{
-            width: 60px;
-            height: 60px;
+        .scroll-row-more{
+            //display: flex;
+            flex-wrap: nowrap;
+            height: 107px;
+            overflow-x: scroll;
+            
         }
-        img{
-            @extend ion-avatar;
-        }
+        ion-col{
+            flex : 0 0 29%;
+            padding-top: 12px;
+            padding-left:0;
+            padding-right: 0;
+            text-align : center;
+            //margin-right: 10px;
+            //flex-wrap: nowrap;
 
-        p{
-            font-size: 11px;
-            font-weight: 600;
+            img{
+                border-radius: 50%;
+                width: 52px;
+                height: 52px;
+            }
 
+            p{
+                margin: 5px;
+                font-size: 11px;
+                font-weight: 600;
+
+            }
         }
+        
     }
-
 }

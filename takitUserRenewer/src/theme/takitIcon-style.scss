@@ -81,7 +81,10 @@
 @include makeIcon(icon-takit_full_logo, $icon-takit_full_logo);
 @include makeIcon(icon-takit_simbol_logo, $icon-takit_simbol_logo);
 @include makeIcon(icon-up, $icon-up);
-
+@include makeIcon(icon-email, $icon-email);
+@include makeIcon(icon-takeOut_2, $icon-takeOut_2);
+@include makeIcon(icon-delivery_2, $icon-delivery_2);
+@include makeIcon(icon-atRestaurant_2, $icon-atRestaurant_2);
 
 // @font-face {
 //   font-family: 'takitIcon';

@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+       캐쉬아이디 설정 
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+      <div padding>
+      <ion-item>
+          <ion-label fixed>캐쉬아이디</ion-label>
+          <ion-input  type="text" placeholder="영문,숫자조합 5~7자리" pattern="[0-9a-zA-Z]{5,7}" [disabled]="storageProvider.cashId.length!=0" [(ngModel)]="cashId"></ion-input>
+      </ion-item>
+      <ion-item [hidden]="cashIdComment">
+          <ion-label class="explain">-영문, 숫자 조합 5~7자리
+          </ion-label>
+      </ion-item>
+      <ion-item>
+          <ion-label fixed>비밀번호</ion-label>
+          <ion-input  type="password" placeholder="6자리 숫자" type="number" pattern="[0-9]{6}" [(ngModel)]="password" ></ion-input>
+      </ion-item>
+      <ion-item [hidden]="passwordComment" >
+          <ion-label class="explain">-6자리 숫자
+          </ion-label>
+      </ion-item>
+      <ion-item>
+          <ion-label fixed>비밀번호확인</ion-label>
+          <ion-input  type="password" placeholder="비밀번호 6자리" type="number" pattern="[0-9]{6}" [(ngModel)]="passwordConfirm"></ion-input>
+      </ion-item>
+      <ion-item [hidden]="passwordMismatch">
+          <ion-label class="explain">-비밀번호가 일치하지 않습니다.
+          </ion-label>
+      </ion-item>
+      <ion-item>
+      <p class="explain">캐쉬아이디는 고객님의 개인 정보로 타인에게 알릴 경우 악용의 소지가 있습니다. 
+                            고객님께서 고의로 타인에게 알려 문제가 발생할 경우 타킷은 법적 책임을 지지 않을수 있습니다.</p>
+      </ion-item>
+<!--
+       <ion-row>
+                <ion-col width-20 style="padding:0px;">
+                <ion-toggle class="onOff" [(ngModel)]="userAgreement"></ion-toggle>
+                </ion-col>
+                <ion-col width-80 style="padding:0px;">
+                <ion-item>
+                <p class="explain">캐쉬아이디는 고객님의 개인 정보로 타인에게 알릴 경우 악용의 소지가 있습니다. 
+                                   고객님께서 고의로 타인에게 알려 문제가 발생할 경우 타킷은 법적 책임을 지지 않을수 있습니다.</p>
+                </ion-item>
+                </ion-col>
+       </ion-row>
+  -->     
+      <button ion-button full (click)="configureCashId()"> 설정 </button> 
+    </div>
+</ion-content>

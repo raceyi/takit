@@ -1,0 +1,216 @@
+<ion-header>
+  <ion-navbar >
+    <ion-title>
+    <ion-row>
+      <ion-col width-80>
+        {{shopname}}
+      </ion-col>
+      <ion-col *ngIf="storageProvider.shopResponse.shopInfo.contactPhone!=null">
+        <a [href]="shopPhoneHref"><ion-icon width-20 color="black" name="call"></ion-icon></a>
+      </ion-col>
+    </ion-row>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content #shopcartPage class="shopcart">
+  <!--
+  <ion-row>    
+    <ion-label></ion-label>
+    <button outline><span style="color:black">전체삭제</span>
+	  </button>
+  </ion-row>
+-->
+   <div [hidden]="nonEmptyCart()">
+    장바구니가 비었습니다.
+  </div>
+  <div [hidden]="emptyCart()">
+  <ion-item class="order5" *ngFor="let menu of cart.menus">
+    <ion-label class="orderInfo">
+    <ion-row class="order2">
+    <ion-item ion-col col-3 class="orderDelete">
+      <button ion-button outline (click)="deleteMenu(menu)">
+        <span style="color:black">삭제</span>
+      </button>
+    </ion-item>
+    <ion-col col-9 class="textSet">
+      <ion-row>
+        <ion-col>
+        {{menu.menuName}}
+        </ion-col>
+        <ion-col class="price">
+        {{menu.price*menu.quantity}}원
+        </ion-col>
+      </ion-row>
+      <ion-row>
+      <ion-col>  
+        수량 : {{menu.quantity}}
+      </ion-col>
+      <ion-col>
+      </ion-col>  
+      </ion-row>  
+      <ion-row *ngFor="let option of menu.options" >  
+      <ion-col>  
+      {{option.name}}(+{{option.price}}) <span *ngIf="option.select!=undefined">{{option.select}}</span>
+      </ion-col>
+      <ion-col class="price">
+       {{menu.quantity*option.price}} 원 
+      </ion-col>    
+      </ion-row>   
+    </ion-col>
+    </ion-row>
+    <ion-row>
+    <ion-col></ion-col>
+    <ion-col class="price">{{menu.amount}}원
+    </ion-col>
+    </ion-row>
+    </ion-label>
+  </ion-item>
+
+<!--
+    <div class="box" #takeoutDiv [hidden]="!takeoutAvailable">
+    <ion-item class="orderToggle">
+      <ion-label class="orderOption">테이크아웃</ion-label>
+      <ion-toggle class="onOff" [(ngModel)]="takeout"></ion-toggle>
+    </ion-item>
+  </div>
+  -->
+  <div class="box" #takeoutDiv [hidden]="!(takeoutAvailable 
+                                           && (storageProvider.shopInfo.freeDelivery==null || storageProvider.shopInfo.freeDelivery==undefined 
+                                               || storageProvider.shopInfo.freeDelivery > amount))">
+   <ion-row>  
+    <ion-item class="orderToggle" ion-col>
+      <ion-label class="orderOption">{{'takeout'|translate}}</ion-label>
+      <ion-toggle class="onOff" [(ngModel)]="takeout" (ionChange)="changeTakeout(1)"></ion-toggle>
+    </ion-item>
+   </ion-row>
+  </div>
+
+  <div class="box" #takeoutDiv [hidden]="!(takeoutAvailable && storageProvider.shopInfo.freeDelivery<=amount
+                                           && (storageProvider.shopInfo.freeDelivery!=null  && storageProvider.shopInfo.freeDelivery!=undefined))">
+   <ion-row style="padding:0px !important;border:1px;"> 
+    <ion-item class="orderToggle" ion-col width-50>
+      <ion-label class="pickupLabel">{{'takeout'|translate}}</ion-label>
+      <ion-toggle class="onOff" [(ngModel)]="takeout" (ionChange)="changeTakeout(1)"></ion-toggle>
+    </ion-item>
+    <ion-item class="orderToggle" ion-col width-50>
+      <ion-label class="pickupLabel">{{'delivery'|translate}}</ion-label>
+      <ion-toggle class="onOff" [(ngModel)]="delivery" (ionChange)="changeTakeout(2)"></ion-toggle>
+    </ion-item>
+   </ion-row>
+   <ion-row [hidden]="!delivery">
+    <ion-col padding width-25> 배달지역 </ion-col>
+    <ion-col padding width-75>{{storageProvider.shopInfo.deliveryArea}}</ion-col> 
+   </ion-row>
+   <ion-row [hidden]="!delivery">    
+     <ion-item>
+     <ion-textarea maxlength="60" type="text" [(ngModel)]="deliveryAddress" placeholder="배달 주소를 입력해 주세요. 예)OO관 101호" ></ion-textarea>
+     </ion-item>
+   </ion-row>
+  </div>
+
+
+
+
+<div id = "payDiv">
+   <div id ="grayDiv">
+    <ion-row class="textrow">
+      <ion-col width-33 class="center">주문금액</ion-col>
+      <ion-col width-33 class="center">할인금액{{storageProvider.shopInfo.discountRate}}</ion-col>
+      <ion-col width-33 class="center">최종결제금액</ion-col>
+    </ion-row>
+
+    <ion-row class="textrow">
+      <ion-col width-33 class="right">{{cart.total}}원</ion-col>
+      <ion-col width-33 class="right">{{discount}}원</ion-col>
+      <ion-col width-33 class="right"><span style="color:#387ef5"></span>{{amount}}원</ion-col>
+    </ion-row>
+
+      <ion-row>
+        <ion-col class="cash">사용가능한 캐쉬</ion-col>
+        <ion-col class="cash">{{storageProvider.cashAmount}}</ion-col>
+      </ion-row>
+<!--
+      <ion-row class="textrow" *ngIf="storageProvider.isAndroid">
+        <ion-col class="password">캐쉬 비밀번호</ion-col>
+        <ion-col class="password0">
+          <ion-item class="cashPassword">
+          <ion-input (focus)="onFocusPassword($event)" pattern="[0-9]{6}" maxlength="6" type="password" class="passwordinput" [(ngModel)]="cashPassword"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="textrow" *ngIf="!storageProvider.isAndroid">
+      <ion-col class="password">캐쉬 비밀번호(6자리)</ion-col>
+      <ion-col class="password0">
+        <ion-item class="cashPassword">
+        <ion-input maxlength="6" type="password" pattern="[0-9]{6}" [(ngModel)]="cashPassword" (blur)="cashPasswordBlur()" (focus)="cashPasswordFocus()" class="passwordinput"></ion-input>
+        </ion-item>
+      </ion-col>
+      </ion-row>
+  
+          
+    <ion-segment *ngIf="!iOSOrderButtonHide">
+    <ion-segment-button (click)="deleteAll()">전체삭제</ion-segment-button>
+    <ion-segment-button (click)="order()" [disabled]="storageProvider.tourMode==true">주문결제하기</ion-segment-button>
+    </ion-segment>
+-->
+   </div> 
+    <div>
+    <ion-row [hidden]="!storageProvider.receiptIssue">
+      <ion-col class="cash">현금영수증 발행 </ion-col>
+      <ion-col class="cash">{{receiptIdMask}}</ion-col>
+      <ion-col class="cash" *ngIf="storageProvider.receiptType=='IncomeDeduction'">소득공제</ion-col>
+      <ion-col class="cash" *ngIf="storageProvider.receiptType=='ExpenseProof'">지출증빙</ion-col>
+    </ion-row>
+    <ion-row [hidden]="storageProvider.receiptIssue">
+      <ion-col class="cash">현금영수증 발행을 원하시면 회원정보에서 설정해주시기 바랍니다</ion-col>
+    </ion-row>
+    <br>
+
+      <div class="orderInfo cancelNoti">
+      주문접수전에는 MyPage에서 주문 취소가 가능합니다. <br>
+    </div>
+      <ion-row>
+        <ion-col width-10 class="collapse">
+          <!--
+        <button [hidden]="!userNotiHidden" (click)="expand($event)" ><ion-icon name="add-circle"></ion-icon></button>
+        <button [hidden]="userNotiHidden" (click)="collapse($event)"><ion-icon name="remove-circle"></ion-icon></button>
+        -->
+        <ion-icon name="add-circle" [hidden]="!userNotiHidden" (click)="expand($event)" ></ion-icon>
+        <ion-icon name="remove-circle" [hidden]="userNotiHidden" (click)="collapse($event)"></ion-icon>
+        </ion-col>
+        <ion-col class="orderInfo title" width-90>
+        원활한 주문을 위해 판매자에게 주문정보가 제공됩니다.
+        </ion-col>
+      </ion-row>
+      <div [hidden]="userNotiHidden">
+          <ion-row>
+            <ion-col width-33 class="orderInfo">제공받는자</ion-col>
+            <ion-col width-66 class="orderInfo1">{{shopname}}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col width-33 class="orderInfo">목적</ion-col>
+            <ion-col width-66 class="orderInfo1">판매자와 구매자의 거래의 원활한 진행, 본인 의사의 확인, 고객상담 및 불만처리 등</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col width-33 class="orderInfo">항목</ion-col>
+            <ion-col width-66 class="orderInfo1">휴대폰번호</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col width-33 class="orderInfo">보유기간</ion-col>
+            <ion-col width-66 class="orderInfo1">거래종료시점</ion-col>
+          </ion-row>
+      </div>
+    </div>
+  </div>
+  </div>
+</ion-content>
+<ion-footer class="shopcart" [hidden]="emptyCart()">
+    <ion-segment *ngIf="iOSOrderButtonHide">
+    <ion-segment-button (click)="deleteAll()">전체삭제</ion-segment-button>
+    <ion-segment-button (click)="order()">주문결제하기</ion-segment-button>
+    </ion-segment>
+</ion-footer>
+
+

@@ -29,7 +29,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content #shophomeContent>
+<ion-content class="no-scroll" #shophomeContent>
     <ion-slides #BestMenusSlides class="btn-bestMenus" [hidden]="menuSlideUp || bestMenus.length===0">
         <ion-slide *ngFor="let menu of bestMenus" >
             <button (click)="showBestMenus()" ion-button full no-padding no-margin class="btn-bestMenus" >
@@ -46,10 +46,18 @@
     <ion-row class="row-shopInfo" [hidden]="menuSlideUp">
         <ion-col>
             
-            <h2 no-margin>{{shopName}}</h2>
-            <!--<p no-margin>{{shopInfo[0].businessType}}</p>-->
+            <p no-margin>{{shopName}}</p>
+            <!-- <p no-margin>{{shop.shopInfo.businessType}}</p> -->
         </ion-col>
     </ion-row>
+    <div>
+        <ion-icon name="icon-atRestaurant" color="mainColor"></ion-icon>
+        <!-- <ion-icon name="icon-atRestaurant" color="grey"></ion-icon> -->
+        <ion-icon name="icon-takeout" color="mainColor" *ngIf="storageProvider.shopInfo.takeout===1 || storageProvider.shopInfo.takeout===2"></ion-icon>
+        <ion-icon name="icon-takeout" color="grey" *ngIf="storageProvider.shopInfo.takeout===0"></ion-icon>
+        <ion-icon name="icon-delivery" color="mainColor" *ngIf="storageProvider.shopInfo.takeout===2"></ion-icon>
+        <ion-icon name="icon-delivery" color="grey" *ngIf="storageProvider.shopInfo.takeout===0 || storageProvider.shopInfo.takeout===1"></ion-icon>
+    </div>
 
 <!--
     <ion-row class="row-takeout" [hidden]="menuSlideUp">
@@ -77,7 +85,7 @@
 
 
 
-    <div [@slideUp]="slideUpState" class="div-menus"  (click)="clickMenuArea()" [hidden]="menuSlideUp">
+    <div [@slideUp]="slideUpState" class="div-menus1"  (click)="clickMenuArea()" [hidden]="menuSlideUp">
         <ion-row (click)="slidePressed()" class="row-scrollbar">
             <ion-col class="col-scrollbar bg-sub1">
                 <ion-icon name="md-menu" color="white">
@@ -89,7 +97,7 @@
                 <ion-scroll scrollY="true" class="scroll-menus no-scroll">
                     <ion-segment [(ngModel)]="categorySelected" *ngFor="let category of categories" class="segment-categories" color="subColor2" no-padding no-margin>
                         <ion-segment-button [value]="category.sequence"  disabled="true">
-                            {{category.categoryName}}
+                            <p>{{category.categoryName}}</p>
                         </ion-segment-button>
                     </ion-segment>
                 </ion-scroll>
@@ -101,8 +109,8 @@
                         <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
                     </div>
                     <div>
-                        <h5>{{menu.menuName}}</h5>
-                        <h5>{{menu.price}}</h5>
+                        <p>{{menu.menuName}}</p>
+                        <p>{{menu.price}}원</p>
                     </div>
                 </ion-list>
                 </ion-scroll>
@@ -110,7 +118,7 @@
         </ion-row>
     </div>
 
-    <div class="div-menus" [hidden]="!menuSlideUp">
+    <div class="div-menus2" [hidden]="!menuSlideUp">
         <ion-row (click)="slidePressed()" class="row-scrollbar ">
             <ion-col class="col-scrollbar bg-sub1">
                 <ion-icon name="md-menu" color="white">
@@ -122,7 +130,7 @@
                 <ion-scroll scrollY="true" class="scroll-categories">
                     <ion-segment [(ngModel)]="categorySelected" *ngFor="let category of categories" class="segment-categories" color="subColor2" no-padding no-margin>
                         <ion-segment-button (click)="categoryChange(category.sequence)" [value]="category.sequence" >
-                            {{category.categoryName}}
+                            <p>{{category.categoryName}}</p>
                         </ion-segment-button>
                     </ion-segment>
                 </ion-scroll>
@@ -134,8 +142,8 @@
                             <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
                         </div>
                         <div>
-                            <h5>{{menu.menuName}}</h5>
-                            <h5>{{menu.price}}</h5>
+                            <p>{{menu.menuName}}</p>
+                            <p>{{menu.price}}원</p>
                         </div>
                     </ion-list>
                 </ion-scroll>
@@ -143,19 +151,20 @@
         </ion-row>
     </div>
 
-    <ion-fab bottom color="subColor3" style="right: 80px">
-        <button ion-fab (click)="enterOldOrder()" >지난주문</button>
-        <!--<ion-fab-list side="top">
-            <button ion-button small>장바구니</button>
-            <button (click)="enterOldOrder()" ion-button small>지난주문</button>
-        </ion-fab-list>-->
-    </ion-fab>
-    <ion-fab bottom right color="subColor3">
-        <button ion-fab (click)="enterCart()">장바구니</button>
-        <!--<ion-fab-list side="top">
-            <button ion-button small>장바구니</button>
-            <button (click)="enterOldOrder()" ion-button small>지난주문</button>
-        </ion-fab-list>-->
+    
+    <ion-fab bottom color="white" bottom right>
+        <button class="fab-btn" ion-fab>
+            <ion-icon name="icon-floating_open">
+            </ion-icon>
+        </button>
+        <ion-fab-list side="left">
+            <button (click)="enterCart()"  ion-button small>
+                <ion-icon name="icon-cart"></ion-icon>
+            </button>
+            <button (click)="enterOldOrder()" ion-button small>
+                <ion-icon name="icon-list_2"></ion-icon>
+            </button>
+        </ion-fab-list>
     </ion-fab>
 
    <!--<ion-row>

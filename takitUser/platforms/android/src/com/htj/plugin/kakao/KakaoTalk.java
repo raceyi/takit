@@ -24,7 +24,11 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.KakaoParameterException;
 import com.kakao.util.exception.KakaoException;
-
+////////kalen.lee-begin////////////
+import com.kakao.auth.AuthService;
+import com.kakao.auth.ApiResponseCallback;
+import com.kakao.auth.network.response.AccessTokenInfoResponse;
+////////kalen.lee-end//////////////
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
@@ -33,6 +37,7 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.kakao.auth.KakaoSDK.AlreadyInitializedException;
 
 import java.util.Iterator;
 
@@ -52,7 +57,13 @@ public class KakaoTalk extends CordovaPlugin {
 		Log.v(LOG_TAG, "kakao : initialize");
 		super.initialize(cordova, webView);
 		currentActivity = this.cordova.getActivity();
-		KakaoSDK.init(new KakaoSDKAdapter());
+		try {
+			KakaoSDK.init(new KakaoSDKAdapter());
+		}catch(AlreadyInitializedException e){ // kalen.lee-begin
+			Log.v(LOG_TAG, "kakao : initialize is already done");
+			return;
+		} // kalen.lee-end
+		return;
 	}
 
 	/**

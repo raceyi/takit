@@ -14,3 +14,15 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+page-menu{
+   .button-md{
+        box-shadow: none;
+    }
+    button.menu{
+        color:gray !important; //Why should I use important here ?
+    }
+}
+
+on-nav, ion-tab, ion-tabs {
+    z-index: -1 !important;
+}

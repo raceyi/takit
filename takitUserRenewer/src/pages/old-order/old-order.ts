@@ -49,13 +49,20 @@ export class OldOrderPage {
   }
 
   enterMenuDetail(order,shopName){
-    let option={menuNO:order.menuNO,menuName:order.menuName};
-    this.serverProvider.post(this.storageProvider.serverAddress+"/getMenu",JSON.stringify(option)).then((res:any)=>{
-        if(res.result==="success"){
+    let getMenuOption={menuNO:order.menuNO,menuName:order.menuName};
 
-            this.navCtrl.push(MenuDetailPage,{menu:res.menu});
-        }else if(res.result === "failure"){
-            console.log("enterMenuDetail server failure:"+res.error);
+    Promise.all([this.serverProvider.post(this.storageProvider.serverAddress+"/getMenu",JSON.stringify(getMenuOption)),
+                this.serverProvider.getShopInfoPost(this.storageProvider.takitId)]).then((values:any)=>{
+        console.log("values0:"+JSON.stringify(values[0]));
+        console.log("values1:"+JSON.stringify(values[1]));
+        if(values[0].result==="success" && values[1].result==="success"){
+            this.storageProvider.shopInfoSet(values[1].shopInfo);
+            this.navCtrl.push(MenuDetailPage,{menu:values[0].menu,shopName:this.storageProvider.shopInfo.shopName});
+        }else if(values[0].result === "failure" || values[1].result === "failure"){
+            console.log("enterMenuDetail server failure:"+JSON.stringify(values));
+            // con/sole.log("enterMenuDetail server failure:"+values[1].error);
+        }else{
+            console.log("what is problem???");
         }
     }).catch(err=>{
         console.log(err);

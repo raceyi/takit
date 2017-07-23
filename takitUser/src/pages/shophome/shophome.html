@@ -1,0 +1,67 @@
+<ion-header class="shophomeHeader">
+  <ion-navbar>
+    <ion-title>
+    <ion-row>
+      <ion-col width-80>
+        {{shopname}}
+      </ion-col>
+      <ion-col *ngIf="storageProvider.shopResponse.shopInfo.contactPhone!=null">
+        <a [href]="shopPhoneHref"><ion-icon width-20 color="black" name="call"></ion-icon></a>
+      </ion-col>
+    </ion-row>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content #shophomeContent>
+<!--
+  <ion-row *ngFor="let row of categoryRows">>
+        <ion-col width-33 *ngFor="let category of row">
+        <ion-segment #categorySegment [(ngModel)]="categorySelected">
+                <ion-segment-button [value]="category.no" (click)="categoryChange(category.no)">
+                  {{category.name}}
+                </ion-segment-button>
+        </ion-segment>        
+        </ion-col>
+  </ion-row>
+-->
+   <ion-row>
+        <ion-col class="segmentButton" width-33 *ngFor="let category of categories">
+        <ion-segment #categorySegment [(ngModel)]="categorySelected">
+                <ion-segment-button [value]="category.no" (click)="categoryChange(category.no)">
+                  {{category.name}}
+                </ion-segment-button>
+        </ion-segment>        
+        </ion-col>
+    </ion-row>
+    <ion-card (swipe)="swipeCategory($event)">
+      <div [ngSwitch]="categorySelected" >
+        <ion-list *ngSwitchCase="categorySelected">
+          <ion-item *ngFor="let row of menuRows">
+            <div>
+              <ion-row> 
+                <ion-col width-33 [hidden]="menu.hide===true" *ngFor="let menu of row.menus">
+                  <button ion-button clear (click)="menuSelected(menu.category_no,menu.menuName)" class="menuImgButton"><img [src]="menu.filename"  class="menuImg" ></button>
+                </ion-col>  
+              </ion-row>
+              <ion-row>
+                <ion-col width-33 [hidden]="menu.hide===true" *ngFor="let menu of row.menus"> 
+                  <p class="MenuText">{{menu.menuName}}</p>
+                  <div [hidden]="hideFlag(menu.descriptionHide)" >
+                  <p class="MenuText">{{menu.description}}</p>
+                  </div>
+                  <p class="MenuText">{{menu.price}}</p>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-item>
+        </ion-list>            
+      </div>
+      <div class="Dummy">
+        <br><br><br><br><br><br><br><br>
+      </div>
+
+    </ion-card>  
+
+</ion-content>
+

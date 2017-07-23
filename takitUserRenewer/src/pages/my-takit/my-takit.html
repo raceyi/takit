@@ -7,13 +7,13 @@
 <ion-header>
     <ion-navbar hideBackButton="true" >
       <ion-buttons start>
-        <button  (click)="goHome()" ion-button color="mainColor" clear>
+        <button  (click)="goHome()" class="hearder-icon" ion-button color="mainColor" clear>
             <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
     <ion-title *ngIf="this.isTestServer==true">검증</ion-title>
     <ion-buttons end>
-        <button ion-button clear>
+        <button class="hearder-icon" ion-button  clear>
             <ion-icon name="search" color="mainColor" ></ion-icon>
         </button>
     </ion-buttons>
@@ -23,9 +23,9 @@
 
 
 <ion-content padding>
-    <ion-row>
+    <ion-row class="row-title">
         <ion-col>
-            <p>최근 주문</p>
+            <p  class="p-title">최근 주문</p>
         </ion-col>
         <ion-col>
             <!-- <ion-item class="item-last" no-lines  [hidden]="!showHistory">
@@ -46,9 +46,7 @@
                 <p>{{order.takitId}}</p>
             </ion-col>
             <ion-col>
-                <button ion-button clear color="mainColor">
-                    <ion-icon name="tab_more" ></ion-icon>
-                </button>
+                <ion-icon color="mainColor" name="icon-cart" ></ion-icon>
             </ion-col>
         </ion-row>
     </div>
@@ -166,7 +164,7 @@
         </button>
     </ion-item>-->
     <div>
-        <p color="white">단골 매장</p>
+        <p class="p-title" color="white">단골 매장</p>
 
         <div class="div-favShop">
             <ion-list *ngFor="let shop of favoriteShops" class="list-favShop">
