@@ -85,6 +85,8 @@ import {PolicyPageModule} from '../pages/policy/policy.module';
 import {UserInfoPageModule} from '../pages/user-info/user-info.module';
 import {MorePageModule} from '../pages/more/more.module';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import {CashWithdrawPageModule} from '../pages/cash-withdraw/cash-withdraw.module';
+import {CashDepositPage} from '../pages/cash-deposit/cash-deposit';
 
 @NgModule({
   declarations: [
@@ -128,6 +130,7 @@ import { BackgroundMode } from '@ionic-native/background-mode';
     MenuDetailPage,
     OrderCompletePage,
     SearchCouponPage,
+    CashDepositPage,
     FocuserDirective
   ],
   imports: [
@@ -142,6 +145,7 @@ import { BackgroundMode } from '@ionic-native/background-mode';
     UserInfoPageModule,
     FaqPageModule,
     MorePageModule,
+    CashWithdrawPageModule,
     //IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,
@@ -190,7 +194,8 @@ import { BackgroundMode } from '@ionic-native/background-mode';
     ShopAboutPage,
     MenuDetailPage,
     OrderCompletePage,
-    SearchCouponPage
+    SearchCouponPage,
+    CashDepositPage
   ],
   
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},

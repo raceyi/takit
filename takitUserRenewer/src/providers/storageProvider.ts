@@ -36,7 +36,8 @@ export class StorageProvider{
     public name:string="";
     public phone:string="";
     public couponList=[];
-    
+    public emailLogin:boolean;
+
     public shopResponse:any;
     public run_in_background=false;
     public order_in_progress_24hours=false;
@@ -66,7 +67,10 @@ export class StorageProvider{
     // cash receipt issue
     public receiptIssue=false;
     public receiptId:string;
-    public receiptType:string="IncomeDeduction";      
+    public receiptType:string="IncomeDeduction";  
+
+    public taxIssueCompanyName:string;
+    public taxIssueEmail:string;
     /////////////////////////////////////
     // 캐쉬정보 수동입력 
     public depositBank;
@@ -79,6 +83,7 @@ export class StorageProvider{
 
     public cashInProgress=[];
     public orderInProgress=[];
+
 
     /* 농협 계좌 이체가능 은행 */
     banklist=[  {name:"국민",value:"004"},
@@ -433,6 +438,14 @@ export class StorageProvider{
         }
         console.log("[userInfoSetFromServer]cashId:"+this.cashId);
         this.tourMode=false;
+
+        if(!userInfo.hasOwnProperty("taxIssueEmail") || userInfo.taxIssueEmail==null || userInfo.taxIssueEmail==undefined){
+            this.taxIssueEmail=userInfo.taxIssueEmail;
+        }
+
+        if(!userInfo.hasOwnProperty("taxIssueCompanyName") || userInfo.taxIssueCompanyName==null || userInfo.taxIssueCompanyName==undefined){
+            this.taxIssueCompanyName=userInfo.taxIssueCompanyName;
+        }
     }
 
     orderExistInProgress(orderId){

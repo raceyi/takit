@@ -18,17 +18,6 @@
   
 <ion-grid>
   <!--
-  <ion-row align-items-center>
-    <ion-col col-6>
-      <ion-input> </ion-input>  
-      휴대폰 번호 
-    </ion-col>
-    <ion-col col-6>
-      <button ion-button [hidden]="" > 수정</button>
-      <button ion-button [hidden]="" >인증하기</button>
-    </ion-col>  
-  </ion-row>
-  -->
 <ion-row align-items-center>
   <ion-col>
     <ion-label>이메일 </ion-label>
@@ -36,7 +25,8 @@
   <ion-col>
     {{email}}
   </ion-col>
-</ion-row>  
+</ion-row>
+-->  
 <ion-row align-items-center>
   <ion-col col-8>
     <ion-label>휴대폰 번호 </ion-label>
@@ -49,6 +39,35 @@
   </ion-col>
 </ion-row>
 
+<ion-row align-items-center [hidden]="!storageProvider.emailLogin">
+  <ion-col col-8>
+    <ion-label> 비밀번호 </ion-label>
+    <ion-input class="cashIdInput" type="password" [disabled]="!passwordChange" [(ngModel)]="oldPassword" placeholder="비밀번호"></ion-input>
+  </ion-col>
+  <ion-col col-4>
+  <button ion-button outline color="skyblue" [hidden]="passwordChange" (click)="changePassword()">수정</button>    
+  <button ion-button outline color="skyblue" [hidden]="!passwordChange" (click)="cancelChangePassword()">취소</button>    
+  </ion-col>
+</ion-row>
+
+<ion-row align-items-center [hidden]="!passwordChange">
+  <ion-col col-8>
+    <ion-label> 새비밀번호</ion-label>
+    <ion-input class="cashIdInput" type="password" [disabled]="!passwordChange" [(ngModel)]="password"  (keyup)="PasswordUp()"></ion-input>
+  </ion-col>
+  <ion-col col-4>
+  </ion-col>  
+</ion-row>
+<p [hidden]="paswordGuideHide">{{paswordGuide}}</p>
+<ion-row align-items-center [hidden]="!passwordChange">
+  <ion-col col-8>
+    <ion-label> 새비밀번호 확인</ion-label>
+    <ion-input class="cashIdInput" type="password" [disabled]="!passwordChange" [(ngModel)]="passwordConfirm"  (keyup)="PasswordConfirmUp()"></ion-input>
+  </ion-col>
+  <ion-col col-4>
+  </ion-col>
+</ion-row>
+<p [hidden]="!passwordChange || (passwordChange && passwordMatch)">비밀번호가 일치하지 않습니다.</p>
 
 <ion-row align-items-center>
   <ion-col col-6>

@@ -141,6 +141,7 @@ export class LoginPage {
                     if(res.userInfo.hasOwnProperty("shopList")){
                         this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
                     }
+                    this.storageProvider.emailLogin=false;
                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                     if(!res.userInfo.hasOwnProperty("cashId") || res.userInfo.cashId==null || res.userInfo.cashId==undefined){
                         console.log("move into signupPaymentPage");
@@ -209,6 +210,7 @@ export class LoginPage {
                         if(res.userInfo.hasOwnProperty("shopList")){
                             this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
                         }
+                        this.storageProvider.emailLogin=false;
                         this.storageProvider.userInfoSetFromServer(res.userInfo);
                         if(!res.userInfo.hasOwnProperty("cashId") || res.userInfo.cashId==null || res.userInfo.cashId==undefined){
                             console.log("move into signupPaymentPage");

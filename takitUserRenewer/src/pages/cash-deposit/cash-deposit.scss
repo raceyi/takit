@@ -1,0 +1,52 @@
+page-cash-deposit {
+    .manualButton >.button-inner{
+            justify-content: flex-start;
+    }
+    .item-ios.item-block .item-inner {
+            border-bottom: 0px; 
+    }
+
+    .bankSelect { 
+        .input-wrapper{
+            //background-color:lightgray;
+            border-bottom: black;
+            border-bottom-style: solid;
+        }
+    }
+
+    .col {
+        padding: 0px; 
+    }
+
+    .account{
+        margin-top: 5vw;
+        margin-bottom: 5vw;
+        margin: 5vw;
+        border-width: 2px;
+        border-color: skyblue;
+        padding-top: 5vw;
+        padding-bottom: 5vw;
+        border-style: solid;
+        border-radius: 10px;
+    }
+
+    .explain{
+        //text-align: justify;
+        white-space: normal;
+        color:#7F7F7F;
+        font-size: 1.3rem; 
+        padding-left:20px;
+        padding-right:20px;
+    }
+   
+    div.cashIn-check {
+        margin-top: 0px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: lightgray;
+        border-radius:10px;
+    }
+}

@@ -64,6 +64,7 @@ export class ErrorPage{
                                     if(res.userInfo.hasOwnProperty("shopList")){
                                         this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
                                     }
+                                    this.storageProvider.emailLogin=false;
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     console.log("shoplist...:"+JSON.stringify(this.storageProvider.shoplist));
                                     this.app.getRootNav().setRoot(TabsPage);
@@ -94,6 +95,7 @@ export class ErrorPage{
                                     if(res.userInfo.hasOwnProperty("shopList")){
                                         this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
                                     }
+                                    this.storageProvider.emailLogin=false;
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     this.app.getRootNav().setRoot(TabsPage);
                                 }else if(res.result=='failure' && res.result=='invalidId'){
@@ -123,6 +125,7 @@ export class ErrorPage{
                                         //save shoplist
                                         this.storageProvider.shoplistSet(JSON.parse(res.userInfo.shopList));
                                     }
+                                    this.storageProvider.emailLogin=true;
                                     this.storageProvider.userInfoSetFromServer(res.userInfo);
                                     this.app.getRootNav().setRoot(TabsPage);
                                 }else if(res.result=='failure'&& res.error=='multiLogin'){

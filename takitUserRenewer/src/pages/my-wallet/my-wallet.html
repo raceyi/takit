@@ -23,6 +23,7 @@
 
 
 <ion-content padding>
+    <!--
     <ion-segment [(ngModel)]="myWalletType" class="wallet-type">
         <ion-segment-button class="segment-type" value="cash">
         캐쉬
@@ -31,17 +32,17 @@
         카드
         </ion-segment-button>
   </ion-segment>
-
+  -->
   <!--mywallet cash-->
   <ion-card *ngIf="myWalletType==='cash'" class="card-cash-card">
       <ion-card-content>
           <br>
-        <p style="font-size:30px;"> Cash ID : TAKIT01</p>
-        <p style="font-size:40px; font-weight:900;"> 100,000 원</p>
+        <p style="font-size:30px;"> 캐쉬아이디: {{storageProvider.cashId}}</p>
+        <p style="font-size:40px; font-weight:900;"> {{ storageProvider.cashAmount}} 원</p>
         <div text-right>
-            <button ion-button color="white" no-padding no-margin large>충전</button>
+            <button ion-button color="white" no-padding no-margin large (click)="deposit()">충전</button>
             <button ion-button color="white" no-padding no-margin large disabled>/</button>
-            <button ion-button color="white" no-padding no-margin large>환불</button>
+            <button ion-button color="white" no-padding no-margin large (click)="withdraw()">환불</button>
         </div>
       </ion-card-content>
   </ion-card>
@@ -64,12 +65,13 @@
 
   <!--<button (click)="showTransactionHistory()" ion-button>거래 내역 조회</button>-->
    <button (click)="showTransactionHistory()" ion-button full no-padding no-margin clear color="subColor">
-       <ion-icon name="icon-history2" ></ion-icon>거래 내역 모두 조회</button>
+       <ion-icon name="icon-history2" ></ion-icon>거래 내역 조회</button>
 
        
   <ion-item-divider color="white">내 쿠폰 </ion-item-divider>
 
   <!---->
+  <!--
   <div class="row-coupon">
   <ion-row >
       <ion-col>
@@ -96,4 +98,5 @@
       </ion-col>
   </ion-row>
   </div>
+  -->
 </ion-content>

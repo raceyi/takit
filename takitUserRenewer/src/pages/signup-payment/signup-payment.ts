@@ -46,10 +46,20 @@ export class SignupPaymentPage {
     console.log("SignupPaymentPage-constructor");    
     this.cashIdGuide="대소문자 구분없음";
 
-    this.email=this.navParams.get("email");
-    this.name=this.navParams.get("name");
-    this.phone=this.navParams.get("phone");
-
+    if(this.navParams.get("email")==undefined ||
+       this.navParams.get("name")==undefined ||
+       this.navParams.get("phone")==undefined){
+            this.email=this.storageProvider.email;
+            this.name=this.storageProvider.name;
+            this.phone=this.storageProvider.phone;
+    }else{
+            this.email=this.navParams.get("email");
+            this.name=this.navParams.get("name");
+            this.phone=this.navParams.get("phone");
+            this.storageProvider.email=this.email;
+            this.storageProvider.name=this.name;
+            this.storageProvider.phone=this.phone;
+    }
   }
 
   ionViewDidLoad() {
@@ -114,6 +124,14 @@ export class SignupPaymentPage {
               alert.present();       
               return false;
             }
+            if(this.issueCompanyName.trim().length>0){
+              let alert = this.alertCtrl.create({
+                        title: '세금계산서 발급 이메일을 입력해주시기 바랍니다.',
+                        buttons: ['OK']
+                    });
+              alert.present();       
+              return false;
+            }
         }
 
         return true;
@@ -164,6 +182,11 @@ export class SignupPaymentPage {
                         this.serverProvider.post(this.storageProvider.serverAddress+"/modifyUserInfo",body).then((res:any)=>{
                             console.log("res:"+JSON.stringify(res));
                             if(res.result=="success"){
+                                    this.storageProvider.receiptIssue=(receiptIssueVal==1)?true:false;
+                                    this.storageProvider.receiptId=this.receiptId;
+                                    this.storageProvider.receiptType=this.receiptType;
+                                    this.storageProvider.taxIssueEmail=this.issueEmail;
+                                    this.storageProvider.taxIssueCompanyName=this.issueCompanyName;
                                     this.navCtrl.setRoot(TabsPage);
                             }
                         },(err)=>{

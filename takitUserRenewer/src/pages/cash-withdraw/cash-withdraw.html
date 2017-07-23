@@ -1,0 +1,85 @@
+<!--
+  Generated template for the CashWithdrawPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar hideBackButton="true" >
+    <ion-buttons start>
+        <button (click)="back()" class="nav-btn" color="subColor2" small ion-button no-margin clear>
+            <ion-icon name="icon-logo"></ion-icon>
+        </button>
+      </ion-buttons>
+       <ion-title class="title">캐쉬 환불</ion-title>
+  </ion-navbar> 
+</ion-header>
+<ion-content>
+
+<div class="account" text-center>
+    <p>환불계좌</p>
+    <p>등록이 필요합니다.</p>
+    <p>농협 301-2424-3636-21</p>
+    <button ion-button outline color="skyblue" style="width:50vw;">환불 계좌 관리</button>
+
+      <ion-row>
+      <ion-item ion-col class="cashOut-text">
+                <ion-label>예금주</ion-label>
+            </ion-item>
+            <ion-item ion-col class="input">
+                <ion-input class="inputBox" type="text" disabled [(ngModel)]="storageProvider.name"></ion-input>
+            </ion-item>
+            </ion-row>
+            <ion-row>
+            <ion-item ion-col class="cashOut-text">
+                <ion-label>은행</ion-label>
+            </ion-item>
+            <ion-item ion-col class="bankSelect">
+                <ion-label></ion-label>
+                <ion-select [(ngModel)]="refundBank">
+                <ion-option *ngFor="let bank of storageProvider.banklist" [disabled]="!refundEditable" value="{{bank.value}}">{{bank.name}}</ion-option>
+                </ion-select>
+            </ion-item>
+            </ion-row>
+
+            <ion-row>
+            <ion-item ion-col class="cashOut-text">
+                <ion-label>계좌번호</ion-label>
+            </ion-item>
+
+            <ion-item ion-col class="input" *ngIf="!refundEditable" >
+                <ion-input class="inputBox"  (click)="focusInput('inputRefundAccount')" disabled [(ngModel)]="refundAccountMask" ></ion-input>
+            </ion-item>
+            <ion-item ion-col class="input"  *ngIf="refundEditable">
+                <ion-input class="inputBox"  (click)="focusInput('inputRefundAccount')"  [(ngModel)]="refundAccount" type="number"></ion-input>
+            </ion-item>
+
+            </ion-row>
+            <p class="explain">
+            &nbsp;&nbsp;"-"를 제외한 숫자만 입력해주시기 바랍니다.
+            </p>
+            <ion-row>
+              <ion-col>
+                  <button ion-button outline> 취소 </button>
+              </ion-col>
+              <ion-col>
+                  <button ion-button outline> 등록 </button>
+              </ion-col>
+            </ion-row>
+
+
+  </div>
+  <p class="explain">
+  *이용제한시간 00:00~00:30,3주월요일23:55~04:00 
+  </p>
+
+           <ion-row>
+            <ion-item ion-col class="cashId">
+                <ion-input class="cashIdValue" [(ngModel)]="refundAmount" [disabled]="verifiedAccount.length==0 || refundEditable" type="number" placeholder="환불금액"></ion-input>
+            </ion-item>
+                <button ion-button (click)="refundCash()" color="skyblue" [disabled]="verifiedAccount.length==0 || refundEditable || storageProvider.tourMode" class="cashOut">
+                    <span>환불신청</span>
+                </button>
+            </ion-row>
+
+</ion-content>

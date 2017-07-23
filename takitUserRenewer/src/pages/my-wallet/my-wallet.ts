@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams,App } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 //import { TransactionHistoryPage } from '../transaction-history/transaction-history';
 import { TransactionHistoryPage } from '../transaction-history/transaction-history';
@@ -24,7 +24,7 @@ export class MyWalletPage {
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-                public storageProvider:StorageProvider) {}
+                public storageProvider:StorageProvider,private app:App) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MyWalletPage');
@@ -35,7 +35,14 @@ export class MyWalletPage {
   }
 
   showTransactionHistory(){
-    this.navCtrl.push(TransactionHistoryPage,{animate:true,animation: 'slide-up', direction: 'forward' });
+    this.app.getRootNav().push(TransactionHistoryPage,{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
+  deposit(){
+    this.app.getRootNav().push( );
+  }
+
+  withdraw(){
+    this.app.getRootNav().push( );
+  }
 }

@@ -20,7 +20,7 @@ export class UserInfoPage {
   taxIssueCompanyName:string="";
   taxIssueEmail:string="";
   phone:string="";
-  email:string="";
+  //email:string="";
 
   phoneModification:boolean=false;
   modification:boolean=false; //Please check phone auth for this flag
@@ -36,18 +36,34 @@ export class UserInfoPage {
 
   saveInProgress:false;
 
+  oldPassword:string;
+  passwordChange:boolean=false;
+  password:string="";
+  passwordConfirm:string="";
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
               private alertCtrl: AlertController, public storageProvider:StorageProvider) {
     this.userPhone=this.storageProvider.phone;
     this.userReceiptId=this.storageProvider.receiptId;
     this.userReceiptType=this.storageProvider.receiptType;
     this.userReceiptIssue=this.storageProvider.receiptIssue;
-   // this.userTaxIssueCompanyName=this.storageProvider.taxIssueCompanyName;
-   // this.userTaxIssueEmail=this.storageProvider.taxIssueEmail;
+    this.userTaxIssueCompanyName=this.storageProvider.taxIssueCompanyName;
+    this.userTaxIssueEmail=this.storageProvider.taxIssueEmail;
+
+    this.receiptIssue=this.storageProvider.receiptIssue;
+    this.receiptId=this.storageProvider.receiptId;
+    this.receiptType=this.storageProvider.receiptType;
+    this.taxIssueCompanyName=this.storageProvider.taxIssueCompanyName;
+    this.taxIssueEmail=this.storageProvider.taxIssueEmail;
+    this.phone=this.storageProvider.phone;
+
+    this.password=this.oldPassword;
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserInfoPage');
+    this.receiptType=this.storageProvider.receiptType;
   }
 
   back(){
@@ -80,7 +96,8 @@ export class UserInfoPage {
         this.userReceiptType==this.receiptType &&
         this.userReceiptIssue==this.receiptIssue &&
         this.userTaxIssueCompanyName==this.taxIssueCompanyName.trim() &&
-        this.userTaxIssueEmail==this.taxIssueEmail.trim())
+        this.userTaxIssueEmail==this.taxIssueEmail.trim() &&
+        (!this.storageProvider.emailLogin || (this.storageProvider.emailLogin && this.oldPassword==this.password)))
         this.modification=false;
     else
         this.modification=true;    
@@ -118,8 +135,25 @@ export class UserInfoPage {
             alert.present();   
             return;
     }  
+    if(this.passwordConfirm!=this.password){
+          let alert = this.alertCtrl.create({
+                        title: '비밀번호가 일치하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();   
+            return;
+    }
     if(this.saveInProgress) return;
-    // this.saveInProgress=true;
-    // this.saveInProgress=false;
   }
+
+    changePassword(){
+    this.passwordChange=true;
+  }
+
+  cancelChangePassword(){
+        this.passwordChange=false;
+        this.password="";
+        this.passwordConfirm="";
+  }
+
 }
