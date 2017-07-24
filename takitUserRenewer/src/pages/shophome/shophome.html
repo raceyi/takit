@@ -47,16 +47,16 @@
         <ion-col>
             
             <p no-margin>{{shopName}}</p>
-            <!-- <p no-margin>{{shop.shopInfo.businessType}}</p> -->
+            <!-- <p no-margin>{{storageProvider.shopInfo.businessType}}</p>   -->
         </ion-col>
     </ion-row>
-    <div>
+    <div [hidden]="menuSlideUp">
         <ion-icon name="icon-atRestaurant" color="mainColor"></ion-icon>
         <!-- <ion-icon name="icon-atRestaurant" color="grey"></ion-icon> -->
-        <ion-icon name="icon-takeout" color="mainColor" *ngIf="storageProvider.shopInfo.takeout===1 || storageProvider.shopInfo.takeout===2"></ion-icon>
+        <!-- <ion-icon name="icon-takeout" color="mainColor" *ngIf="storageProvider.shopInfo.takeout===1 || storageProvider.shopInfo.takeout===2"></ion-icon>
         <ion-icon name="icon-takeout" color="grey" *ngIf="storageProvider.shopInfo.takeout===0"></ion-icon>
         <ion-icon name="icon-delivery" color="mainColor" *ngIf="storageProvider.shopInfo.takeout===2"></ion-icon>
-        <ion-icon name="icon-delivery" color="grey" *ngIf="storageProvider.shopInfo.takeout===0 || storageProvider.shopInfo.takeout===1"></ion-icon>
+        <ion-icon name="icon-delivery" color="grey" *ngIf="storageProvider.shopInfo.takeout===0 || storageProvider.shopInfo.takeout===1"></ion-icon> -->
     </div>
 
 <!--
@@ -110,7 +110,7 @@
                     </div>
                     <div>
                         <p>{{menu.menuName}}</p>
-                        <p>{{menu.price}}원</p>
+                        <p>{{menu.price}}</p>
                     </div>
                 </ion-list>
                 </ion-scroll>
@@ -143,7 +143,7 @@
                         </div>
                         <div>
                             <p>{{menu.menuName}}</p>
-                            <p>{{menu.price}}원</p>
+                            <p>{{menu.price}}</p>
                         </div>
                     </ion-list>
                 </ion-scroll>
@@ -152,13 +152,14 @@
     </div>
 
     
+
     <ion-fab bottom color="white" bottom right>
         <button class="fab-btn" ion-fab>
             <ion-icon name="icon-floating_open">
             </ion-icon>
         </button>
         <ion-fab-list side="left">
-            <button (click)="enterCart()"  ion-button small>
+            <button (click)="enterCart()" ion-button small>
                 <ion-icon name="icon-cart"></ion-icon>
             </button>
             <button (click)="enterOldOrder()" ion-button small>

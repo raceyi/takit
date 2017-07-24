@@ -96,7 +96,8 @@
             <ion-col (click)="getSelected(shop.takitId)" >
                 <p>{{shop.shopName}}</p>
                 <p>{{shop.takitId}}</p>
-                <p>{{shop.discountRate+" "+shop.businessType+" "}}{{shop.reviewList.length}}</p>            </ion-col>
+                <p>{{shop.discountRate+" "+shop.businessType+" "}}{{shop.reviewList.length}}</p>            
+            </ion-col>
             <ion-col col-2>
                 <button (click)="showMoreMenus(shop)" class="btn-shop-more" ion-button clear color="mainColor" *ngIf="shop.bestMenus.length>0">
                     <ion-icon name="md-more"></ion-icon>

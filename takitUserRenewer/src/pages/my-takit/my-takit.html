@@ -169,7 +169,7 @@
         <div class="div-favShop">
             <ion-list *ngFor="let shop of favoriteShops" class="list-favShop">
                 <img [src]="storageProvider.awsS3+shop.imagePath">
-                <p>{{shop.name}}</p>
+                <p>{{shop.shopName}}</p>
             </ion-list>
         </div>
     </div>

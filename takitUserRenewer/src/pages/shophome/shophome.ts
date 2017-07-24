@@ -24,7 +24,7 @@ import {MenuDetailPage} from '../menu-detail/menu-detail';
       })),
       state('up', style({
         opacity: 1,
-        transform: 'translate3d(0, -60vh, 0)'
+        transform: 'translate3d(0, -50vh, 0)'
       })),
       transition('down => up', animate('200ms')),
       transition('up => down', animate('200ms'))
@@ -79,7 +79,8 @@ export class ShopHomePage {
                 this.bestMenus = [];
             }
 
-            console.log("bestMenus:"+this.bestMenus);
+            console.log("bestMenus:"+JSON.stringify(this.bestMenus));
+            
             
   }
 
