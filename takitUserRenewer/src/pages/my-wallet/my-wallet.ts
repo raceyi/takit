@@ -3,6 +3,8 @@ import { NavController, NavParams,App } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 //import { TransactionHistoryPage } from '../transaction-history/transaction-history';
 import { TransactionHistoryPage } from '../transaction-history/transaction-history';
+import {CashDepositPage} from '../cash-deposit/cash-deposit';
+import {CashWithdrawPage} from '../cash-withdraw/cash-withdraw';
 /*
   Generated class for the MyWallet page.
 
@@ -39,10 +41,10 @@ export class MyWalletPage {
   }
 
   deposit(){
-    this.app.getRootNav().push( );
+    this.app.getRootNav().push(CashDepositPage);
   }
 
   withdraw(){
-    this.app.getRootNav().push( );
+    this.app.getRootNav().push(CashWithdrawPage);
   }
 }

@@ -6,7 +6,7 @@
 -->
 <ion-content>
   <ion-buttons end style="margin-top:10px;margin-right:10px;">
-  <button ion-button color="skyblue" clear >취소</button>
+  <button ion-button color="skyblue" clear (click)="dismiss()">취소</button>
   </ion-buttons>
   <div padding>
     <ion-title style="height:15vh;">캐쉬 충전 확인</ion-title>
@@ -34,13 +34,25 @@
      </ion-col>
    </ion-row>
  </div>
- <div [hidden]="agreementShown">
+
+ <div *ngIf="depositAmount>100000">
+<ion-row style="margin-left:30px;margin-right:30px;">
+  <p><span style="color:red">10만원</span> 초과 금액에 대해 입금확인이 불가능합니다.
+  또한 전자금융거래법에 의거 1일 <span style="color:red">200만원</span> 초과의 입금확인은 불가능합니다.</p>
+  <p>고객센터(help@takit.biz,0505-170-3636)에 연락하여 환불처리 바랍니다.</p>
+</ion-row>
+<ion-row style="margin-left:30px;margin-right:30px;">
+<button ion-button class="buttonSkyBlue" full color="skyblue" (click)="confirmDismiss()"> 확인 </button>
+</ion-row>
+</div>
+
+ <div *ngIf="depositAmount<=100000" [hidden]="agreementShown">
  <div text-center style="margin-top:10px;margin-bottom:10px;">
   고객님의 입금 정보와 일치합니까?
  </div>
   <ion-row style="margin-left:10px;margin-right:10px;">
   <ion-col text-center>
-    <button class="buttonSkyBlue" color="skyblue" full ion-button (click)="delete()"> <b> 아니오. <br>충전하지않습니다.</b></button>
+    <button class="buttonSkyBlue" color="skyblue" full ion-button (click)="deleteDeposit()"> <b> 아니오. <br>충전하지않습니다.</b></button>
   </ion-col>
   <ion-col text-center>
     <button class="buttonSkyBlue" color="skyblue" full ion-button (click)="deposit()"> <b> 예. <br>충전합니다.</b> </button>
@@ -56,7 +68,7 @@
   </p>
 </ion-row>
 <ion-row style="margin-left:30px;margin-right:30px;">
-<button ion-button class="buttonSkyBlue" full color="skyblue"> 동의합니다. </button>
+<button ion-button class="buttonSkyBlue" full color="skyblue" (click)="cashInComplete()"> 동의합니다. </button>
 </ion-row>
 </div>
 </div>

@@ -17,13 +17,13 @@ export class TransactionHistoryPage {
    //@ViewChild('infiniteScroll') infiniteScrollRef: InfiniteScroll;
 
     transactions=[
-      {"bg":{'background-color':'yellow'},"transactionType":"deposit","type":"캐쉬충전", "confirm":"0","date":"2017-06-12","bankName":"우리","amount":"5000","nowBalance":"5000"},
-      {"bg":{'background-color':'white'},"transactionType":"deposit","type":"캐쉬충전", "confirm":"1","date":"2017-06-12","bankCode":"032","amount":"5000","nowBalance":"10000"},
-      {"bg":{'background-color':'white'},"transactionType":"payment","type":"캐쉬구매","date":"2017-06-12","amount":"3000","nowBalance":"7000","takitId":"세종대@더큰도시락", "orderName":"매콤 제육 볶음 외 2개................................."},
-      {"bg":{'background-color':'white'},"transactionType":"payment","type":"캐쉬구매","date":"2017-06-12","amount":"3000","nowBalance":"4000","takitId":"세종대@더큰도시락", "orderName":"돈까스 외 2개"},
-      {"bg":{'background-color':'white'},"transactionType":"cancel","type":"캐쉬구매취소","date":"2017-06-12","amount":"1193000","nowBalance":"7000","takitId":"세종대@더큰도시락", "orderName":"돈까스 외 2개"},
-      {"bg":{'background-color':'white'},"transactionType":"refund","type":"캐쉬환불","date":"2017-06-12","amount":"3000","nowBalance":"4000","bankName":"우리", "accountMask":"1002-xxxx-3434"},
-      {"bg":{'background-color':'white'},"transactionType":"refund","type":"캐쉬환불","date":"2017-06-12","amount":"3000","nowBalance":"1000","bankName":"022", "fee":"400","accountMask":"1002-xxxx-3434"}];
+      {"style":{'background-color':'yellow','height':'50px'},"transactionType":"deposit","type":"캐쉬충전", "confirm":"0","date":"2017-06-12","bankName":"우리","amount":"5000","nowBalance":"5000"},
+      {"style":{'background-color':'white','height':'50px'},"transactionType":"deposit","type":"캐쉬충전", "confirm":"1","date":"2017-06-12","bankCode":"032","amount":"5000","nowBalance":"10000"},
+      {"style":{'background-color':'white','height':'100px'},"transactionType":"payment","type":"캐쉬구매","date":"2017-06-12","amount":"3000","nowBalance":"7000","takitId":"세종대@더큰도시락", "orderName":"매콤 제육 볶음 외 2개................................."},
+      {"style":{'background-color':'white','height':'100px'},"transactionType":"payment","type":"캐쉬구매","date":"2017-06-12","amount":"3000","nowBalance":"4000","takitId":"세종대@더큰도시락", "orderName":"돈까스 외 2개"},
+      {"style":{'background-color':'white','height':'100px'},"transactionType":"cancel","type":"캐쉬구매취소","date":"2017-06-12","amount":"1193000","nowBalance":"7000","takitId":"세종대@더큰도시락", "orderName":"돈까스 외 2개"},
+      {"style":{'background-color':'white','height':'100px'},"transactionType":"refund","type":"캐쉬환불","date":"2017-06-12","amount":"3000","nowBalance":"4000","bankName":"우리", "accountMask":"1002-xxxx-3434"},
+      {"style":{'background-color':'white','height':'100px'},"transactionType":"refund","type":"캐쉬환불","date":"2017-06-12","amount":"3000","nowBalance":"1000","bankName":"022", "fee":"400","accountMask":"1002-xxxx-3434"}];
 
   constructor(public navCtrl: NavController, public navParams: NavParams
               ,public storageProvider:StorageProvider) {

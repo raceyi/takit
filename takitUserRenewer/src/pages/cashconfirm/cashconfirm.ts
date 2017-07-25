@@ -11,16 +11,18 @@ import {CashDepositDeletePage} from '../cash-deposit-delete/cash-deposit-delete'
 
 export class CashConfirmPage{
 
+  agreementShown:boolean=false;
+
   depositAmount;
   depositBank;
   depositMemo;
   depositDate;
-  //depositBranch;
   depositHour;
+
   tuno;
-  userAgree=false;
-  inProgress=false;
   customStr;
+
+  inProgress=false;
 
   constructor(params: NavParams,public viewCtrl: ViewController
       ,private alertController:AlertController,public storageProvider:StorageProvider,
@@ -70,15 +72,8 @@ export class CashConfirmPage{
      this.viewCtrl.dismiss();
   }
 
-  agreeChange(flag){
-    console.log("[agreeChange] userAgree:"+flag);
-    this.ngZone.run(()=>{
-        this.userAgree=flag;
-    });
-  }
-
   cashInComplete(){
-      if(this.userAgree && !this.inProgress){
+      if(!this.inProgress){
           this.inProgress=true;
           let body = JSON.stringify({cashId:this.storageProvider.cashId, amount:this.depositAmount, cashTuno:this.tuno});          
           console.log("cashInComplete:"+body);
@@ -145,7 +140,12 @@ export class CashConfirmPage{
   }
 
   deleteDeposit(){
-       var param:any={tuno:this.tuno};
+       var param:any={tuno:this.tuno,
+                        depositAmount:this.depositAmount,
+                        depositBank:this.depositBank,
+                        depositMemo:this.depositMemo,
+                        depositDate:this.depositDate,
+                        depositHour:this.depositHour};
        this.removeDuplicate();      
        this.viewCtrl.dismiss();
        this.app.getRootNav().push(CashDepositDeletePage,param);
@@ -167,6 +167,12 @@ export class CashConfirmPage{
            }
        }
   }
+
+  deposit(){
+        console.log("deposit");
+        this.agreementShown=true;
+  }
+
 }
 
 
