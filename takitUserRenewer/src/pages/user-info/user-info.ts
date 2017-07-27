@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import { NativeStorage } from '@ionic-native/native-storage';
+import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
+import {TranslateService} from 'ng2-translate/ng2-translate';
 
 declare var zxcvbn:any;
 
@@ -24,7 +26,8 @@ export class UserInfoPage {
   taxIssueCompanyName:string="";
   taxIssueEmail:string="";
   phone:string="";
-  //email:string="";
+
+  browserRef;
 
   phoneModification:boolean=false;
   modification:boolean=false; //Please check phone auth for this flag
@@ -53,7 +56,8 @@ export class UserInfoPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               private alertCtrl: AlertController, public storageProvider:StorageProvider,
-              private nativeStorage:NativeStorage,private serverProvider:ServerProvider) {
+              private nativeStorage:NativeStorage,private serverProvider:ServerProvider,
+              private iab: InAppBrowser,public translateService: TranslateService) {
 
     this.getPassword().then((password:string)=>{
           this.existingPassword=password;
@@ -98,13 +102,119 @@ export class UserInfoPage {
   modifyPhone(){
     if(!this.phoneModification){
         this.phoneModification=true;
+        this.phoneModAuth=false;
     }
   }
 
+  doPhoneAuth(){
+  return new Promise((resolve,reject)=>{
+      // move into CertPage and then 
+      if(this.storageProvider.isAndroid){
+            this.browserRef=this.iab.create(this.storageProvider.certUrl,"_blank" ,'toolbar=no');
+      }else{ // ios
+            console.log("ios");
+            this.browserRef=this.iab.create(this.storageProvider.certUrl,"_blank" ,'location=no,closebuttoncaption=종료');
+      }
+              this.browserRef.on("exit").subscribe((event)=>{
+                  console.log("InAppBrowserEvent(exit):"+JSON.stringify(event)); 
+                  this.browserRef.close();
+              });
+              this.browserRef.on("loadstart").subscribe((event:InAppBrowserEvent)=>{
+                  console.log("InAppBrowserEvent(loadstart):"+String(event.url));
+                  if(event.url.startsWith("https://takit.biz/oauthSuccess")){ // Just testing. Please add success and failure into server 
+                        console.log("cert success");
+                        var strs=event.url.split("userPhone=");    
+                        if(strs.length>=2){
+                            var nameStrs=strs[1].split("userName=");
+                            if(nameStrs.length>=2){
+                                var userPhone=nameStrs[0];
+                                var userSexStrs=nameStrs[1].split("userSex=");
+                                var userName=userSexStrs[0];
+                                var userAgeStrs=userSexStrs[1].split("userAge=");
+                                var userSex=userAgeStrs[0];
+                                var userAge=userAgeStrs[1];
+                                console.log("userPhone:"+userPhone+" userName:"+userName+" userSex:"+userSex+" userAge:"+userAge);
+                                let body = JSON.stringify({userPhone:userPhone,userName:userName,userSex:userSex,userAge:userAge});
+                                this.serverProvider.post(this.storageProvider.serverAddress+"/getUserInfo",body).then((res:any)=>{
+                                    console.log("/getUserInfo res:"+JSON.stringify(res));
+                                    if(res.result=="success"){
+                                        // forward into cash id page
+                                        resolve(res);
+                                    }else{
+                                        // change user info
+                                        //    
+                                        reject("invalidUserInfo");
+                                    }
+                                },(err)=>{
+                                    if(err=="NetworkFailure"){
+                                        this.translateService.get('NetworkProblem').subscribe(
+                                        NetworkProblem => {
+                                                this.translateService.get('checkNetwork').subscribe(
+                                                    checkNetwork => {
+                                                        let alert = this.alertCtrl.create({
+                                                            title: NetworkProblem,
+                                                            subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                            buttons: ['OK']
+                                                        });
+                                                        alert.present();
+                                                    });
+                                        });
+                                    }
+                                    reject(err);
+                                });
+                            } 
+                            ///////////////////////////////
+                        }
+                        this.browserRef.close();
+                        return;
+                  }else if(event.url.startsWith("https://takit.biz/oauthFailure")){
+                        console.log("cert failure");
+                        this.browserRef.close();
+                         reject();
+                        return;
+                  }
+              });
+    });
+  }
+
   performAuth(){
-    this.phoneModAuth=true;
-    this.phoneModification=false;
-    this.phoneModAuthNum=this.phone;
+    this.doPhoneAuth().then((res:any)=>{
+      if(this.phone!=res.userPhone){
+              let alert = this.alertCtrl.create({
+                  title: "인증번호와 입력번호가 일치 하지 않습니다. 인증 번호로 진행하시겠습니까?",
+                  buttons: [
+                  {
+                    text: '아니오',
+                    handler: () => {
+                      console.log('Disagree clicked');
+                      return;
+                    }
+                  },
+                  {
+                    text: '네',
+                    handler: () => {
+                      this.phone=res.userPhone;
+                      this.phoneModAuth=true;
+                      this.phoneModification=false;
+                      this.phoneModAuthNum=this.phone;                      
+                      return;   
+                    }
+                  }]
+              });
+              alert.present();
+      }
+      if(this.storageProvider.name!=res.userName){
+              let alert = this.alertCtrl.create({
+                  title: "고객 정보와 다른 이름입니다. 이름 변경이 필요하신 분은 고객센터(0505-170-3636,help@takit.biz)로 연락 바랍니다.",
+                  buttons: ['OK']
+              });
+              alert.present();
+              return;
+      }
+      this.phoneModAuth=true;
+      this.phoneModification=false;
+      this.phoneModAuthNum=this.phone;
+    });
   }
 
   enableModification(){
@@ -249,6 +359,7 @@ export class UserInfoPage {
               alert.present();
               return;
     }
+    console.log("set saveInProgress true ");
     this.saveInProgress=true;
 
     let body;

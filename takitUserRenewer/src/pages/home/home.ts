@@ -5,6 +5,7 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {OldOrderPage } from '../old-order/old-order';
 import {MenuDetailPage} from '../menu-detail/menu-detail';
+import {SearchPage} from '../search/search';
 
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -48,10 +49,15 @@ export class HomePage{
     selectWecook=false;
     nearShops = [];
     reviewCount:number;
+    isTestServer:boolean=false;
 
      constructor(private platform:Platform,private navController: NavController,
         private app: App, menu:MenuController,public storageProvider:StorageProvider,
         private http:Http,private serverProvider:ServerProvider, private splashScreen: SplashScreen){
+        if(this.storageProvider.serverAddress.endsWith('8000')){
+            this.isTestServer=true;
+        }   
+
          console.log("homePage constructor screen:"+ window.screen.availWidth+" "+window.screen.width+" "+window.screen.availHeight+ " "+window.screen.height);
          //console.log("cordova.file.dataDirectory:"+cordova.file.dataDirectory);
          //this.nearShops=storageProvider.shoplist;
@@ -61,6 +67,11 @@ export class HomePage{
      ionViewDidLoad(){
         console.log("HomePage did enter");
         this.splashScreen.hide();
+    }
+
+    search(){
+        console.log("search click");
+        this.app.getRootNav().push(SearchPage);
     }
 
      ionViewWillEnter(){

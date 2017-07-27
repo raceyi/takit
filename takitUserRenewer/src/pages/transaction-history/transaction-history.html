@@ -51,11 +51,14 @@
                         <p style="font-size:14px;margin-top:20px;"><b>{{tr.takitId}}</b></p>
                         <p style="font-size:12px;">{{tr.orderName}}</p>
                     </ion-col>   
-                    <ion-col col-4 text-right *ngIf="tr.transactionType=='cancel' || (tr.transactionType=='deposit' && tr.confirm==1)">
+                    <ion-col col-4 text-right *ngIf="tr.transactionType=='cancel'">
                         <p style="font-size:15;margin-top:40px;color:blue;"><b>+{{tr.amount}}</b></p>
                     </ion-col>
+                    <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==1">
+                        <p style="font-size:15;margin-top:15px;color:blue;"><b>+{{tr.amount}}</b></p>
+                    </ion-col>
                     <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==0">
-                        <p style="font-size:15;margin-top:40px;color:gray;"><b>{{tr.amount}}</b></p>
+                        <p style="font-size:15;margin-top:15px;color:gray;"><b>{{tr.amount}}</b></p>
                     </ion-col>
                     <ion-col col-4 text-right *ngIf="tr.transactionType=='refund' || tr.transactionType=='payment'">
                         <p style="font-size:15;margin-top:40px;color:red;"><b>-{{tr.amount}}</b></p>
