@@ -24,7 +24,7 @@ import {MenuDetailPage} from '../menu-detail/menu-detail';
       })),
       state('up', style({
         opacity: 1,
-        transform: 'translate3d(0, -50vh, 0)'
+        transform: 'translate3d(0, -30vh, 0)'
       })),
       transition('down => up', animate('200ms')),
       transition('up => down', animate('200ms'))
@@ -66,6 +66,7 @@ export class ShopHomePage {
   testSelected="1";
 
   bestMenus;
+  businessType:string;
 
   constructor(private app:App, private navController: NavController
       ,private storageProvider:StorageProvider,private navParams:NavParams
@@ -84,14 +85,17 @@ export class ShopHomePage {
             
   }
 
-  ionViewDidEnter(){ // Be careful that it should be DidEnter not Load 
-      console.log("shophomePage - ionViewDidEnter"); 
+  ionViewWillEnter(){ 
+      console.log("bestMenus:"+this.bestMenus);
         if(this.takitId==undefined){
           this.takitId=this.storageProvider.takitId;
           this.loadShopInfo();
           this.shophomeContentRef.resize();
         }
         this.storageProvider.orderPageEntered=false;
+        console.log("businesstype:"+this.shop.shopInfo.businessType);
+        console.log("businesstype2:"+this.storageProvider.shopInfo.businessType);
+        this.businessType=this.shop.shopInfo.businessType;
   }
 
 //   ionViewWillUnload(){
@@ -148,8 +152,8 @@ export class ShopHomePage {
         //console.log("menus for 0:"+JSON.stringify(this.menuRows));  
         //////////////////////////////////
         //todayMenus
-        if(this.shop.shopInfo.hasOwnProperty("todayMenus"))
-        console.log("todayMenus:"+JSON.stringify(this.shop.shopInfo.todayMenus));
+        // if(this.shop.shopInfo.hasOwnProperty("todayMenus"))
+        // console.log("todayMenus:"+JSON.stringify(this.shop.shopInfo.todayMenus));
 
         //////////////////////////////////
         // Is it correct location? Just assume that the height of recommendation area.

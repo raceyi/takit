@@ -16,18 +16,15 @@ import { ShopCartPage } from '../shopcart/shopcart';
 })
 export class ShopAboutPage {
 
-    shef = [{"img":"UItest/shef1.png"}];
-    keywords = ["맛난도시락","비건도시락","외국인","세종대","맛집"];
     businessTime;
-
+    notice:string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
                 public storageProvider:StorageProvider) {
 
                     this.businessTime=JSON.parse(storageProvider.shopInfo.businessTime);
-                    this.keywords=storageProvider.shopInfo.keywords;
                     storageProvider.shopInfo.blogAddress="www.takit.biz";
-
+                    this.notice = storageProvider.shopInfo.notice;
                     console.log("shopInfo!:"+JSON.stringify(storageProvider.shopInfo));
                 }
 

@@ -71,6 +71,8 @@ export class OrderPage {
   trigger:string;
   cart;
 
+  userMSG:string;
+
   constructor(private app:App,private navController: NavController,
         private navParams:NavParams,private ngZone:NgZone,
         private alertController:AlertController, public serverProvider:ServerProvider,
@@ -176,99 +178,99 @@ export class OrderPage {
       ///get user's couponList 에 해당하는 coupon 정보 가져오기
       
 
-      if(storageProvider.couponList.length > 0 && storageProvider.nowCoupons.length === 0){
-        let option={takitId:storageProvider.takitId,
-                  couponList:storageProvider.couponList};
-        serverProvider.getCoupons(option).then((res:any)=>{
-            console.log("getCoupons result:"+JSON.stringify(res));
-            if(res.result==="success"){
-                for(let i=0; i<res.coupons.length; i++){
-                    if(res.coupons[i].hasOwnProperty("availMenus")){ //coupon db에 쿠폰사용가능메뉴 field가 있고,
-                        if(!res.coupons[i].availMenus.includes(this.menu.menuNO)){ //해당 메뉴가 포함 되어 있을때
-                            res.coupons.splice(i,0);
-                        }
-                    }
+    //   if(storageProvider.couponList.length > 0 && storageProvider.nowCoupons.length === 0){
+    //     let option={takitId:storageProvider.takitId,
+    //               couponList:storageProvider.couponList};
+    //     serverProvider.getCoupons(option).then((res:any)=>{
+    //         console.log("getCoupons result:"+JSON.stringify(res));
+    //         if(res.result==="success"){
+    //             for(let i=0; i<res.coupons.length; i++){
+    //                 if(res.coupons[i].hasOwnProperty("availMenus")){ //coupon db에 쿠폰사용가능메뉴 field가 있고,
+    //                     if(!res.coupons[i].availMenus.includes(this.menu.menuNO)){ //해당 메뉴가 포함 되어 있을때
+    //                         res.coupons.splice(i,0);
+    //                     }
+    //                 }
 
-                    if(res.coupons[i].hasOwnProperty("availCategories")){ //coupon db에 쿠폰사용가능카테고리 field가 있고,
-                        if(!res.coupons[i].availCategories.includes(this.menu.categoryNO)){//해당 카테고리가 포함 되어 있을때
-                            res.coupons.splice(i,1);
-                        }
-                    }
+    //                 if(res.coupons[i].hasOwnProperty("availCategories")){ //coupon db에 쿠폰사용가능카테고리 field가 있고,
+    //                     if(!res.coupons[i].availCategories.includes(this.menu.categoryNO)){//해당 카테고리가 포함 되어 있을때
+    //                         res.coupons.splice(i,1);
+    //                     }
+    //                 }
 
-                    if(res.coupons[i].hasOwnProperty("exceptMenu")){ //coupon db에 쿠폰사용제외 field가 있고,
-                        if(res.coupons[i].exceptMenu.includes(this.menu.menuNO)){
-                            res.coupons.splice(i,1);
-                        }
-                    }
-                }
-            }
-            //this.coupons=res.coupons;
-            storageProvider.nowCoupons = res.coupons;
+    //                 if(res.coupons[i].hasOwnProperty("exceptMenu")){ //coupon db에 쿠폰사용제외 field가 있고,
+    //                     if(res.coupons[i].exceptMenu.includes(this.menu.menuNO)){
+    //                         res.coupons.splice(i,1);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         //this.coupons=res.coupons;
+    //         storageProvider.nowCoupons = res.coupons;
             
-            ///coupon auto complete
+    //         ///coupon auto complete
             
             
 
-        },err=>{
-            console.log("getCoupons error:"+JSON.stringify(err));
-        }).catch(err=>{
-            console.error(err);
-        });
-      }
+    //     },err=>{
+    //         console.log("getCoupons error:"+JSON.stringify(err));
+    //     }).catch(err=>{
+    //         console.error(err);
+    //     });
+    //   }
       
-        console.log("delivery flags:"+this.menu.takeout);
-        console.log(this.storageProvider.shopInfo.freeDelivery,typeof this.storageProvider.shopInfo.freeDelivery);
-        console.log(this.takeoutAvailable && (this.storageProvider.shopInfo.freeDelivery!=null) &&  (this.storageProvider.shopInfo.freeDelivery!=undefined) );
+    //     console.log("delivery flags:"+this.menu.takeout);
+    //     console.log(this.storageProvider.shopInfo.freeDelivery,typeof this.storageProvider.shopInfo.freeDelivery);
+    //     console.log(this.takeoutAvailable && (this.storageProvider.shopInfo.freeDelivery!=null) &&  (this.storageProvider.shopInfo.freeDelivery!=undefined) );
         
-        if(this.storageProvider.shopInfo.freeDelivery===null){
-            console.log("1");
-        }
-        //console.log(this.storageProvider.shopInfo.freeDelivery);
-        if(this.storageProvider.shopInfo.freeDelivery){
-            console.log("2");
-        }
+    //     if(this.storageProvider.shopInfo.freeDelivery===null){
+    //         console.log("1");
+    //     }
+    //     //console.log(this.storageProvider.shopInfo.freeDelivery);
+    //     if(this.storageProvider.shopInfo.freeDelivery){
+    //         console.log("2");
+    //     }
 
-        if(!this.storageProvider.shopInfo.freeDelivery){
-            console.log("3");
-        }
+    //     if(!this.storageProvider.shopInfo.freeDelivery){
+    //         console.log("3");
+    //     }
  }
 
 
  ionViewWillEnter(){
      console.log("orderPage-ionViewWillEnter");
 
-    if(this.storageProvider.nowCoupons.length > 0 && this.storageProvider.nowCoupons[0].takitId===this.takitId){
-        this.coupons=this.storageProvider.nowCoupons;
+    // if(this.storageProvider.nowCoupons.length > 0 && this.storageProvider.nowCoupons[0].takitId===this.takitId){
+    //     this.coupons=this.storageProvider.nowCoupons;
 
-        if(this.coupons.length > 0){
-            let discountCoupon=null;
-            let addCoupon=null;
+    //     if(this.coupons.length > 0){
+    //         let discountCoupon=null;
+    //         let addCoupon=null;
 
-            for(let i=0; i<this.coupons.length-1; i++){
-                if(this.coupons[i].type==="discount"){
-                    if(discountCoupon===null){
-                        discountCoupon=this.coupons[i].couponName;
-                    }else{
-                        if(parseInt(discountCoupon.discountRate.replace("%","")) 
-                            < parseInt(this.coupons[i].discountRate.replace("%",""))){
-                            discountCoupon=this.coupons[i];
-                        }
-                    }
-                }
-                if(this.coupons[i].type==="add" && addCoupon===null){
-                    addCoupon=this.coupons[i];
-                }
-            }
-            if(discountCoupon!==null){
-                this.selectedCoupon = discountCoupon;
-                this.couponDiscount=Math.round(this.amount*(parseInt(discountCoupon.discountRate.replace("%",""))/100.0));
-                this.amount -= this.couponDiscount;
-            }else if(addCoupon!==null){
-                this.selectedCoupon = addCoupon;
-            }
+    //         for(let i=0; i<this.coupons.length-1; i++){
+    //             if(this.coupons[i].type==="discount"){
+    //                 if(discountCoupon===null){
+    //                     discountCoupon=this.coupons[i].couponName;
+    //                 }else{
+    //                     if(parseInt(discountCoupon.discountRate.replace("%","")) 
+    //                         < parseInt(this.coupons[i].discountRate.replace("%",""))){
+    //                         discountCoupon=this.coupons[i];
+    //                     }
+    //                 }
+    //             }
+    //             if(this.coupons[i].type==="add" && addCoupon===null){
+    //                 addCoupon=this.coupons[i];
+    //             }
+    //         }
+    //         if(discountCoupon!==null){
+    //             this.selectedCoupon = discountCoupon;
+    //             this.couponDiscount=Math.round(this.amount*(parseInt(discountCoupon.discountRate.replace("%",""))/100.0));
+    //             this.amount -= this.couponDiscount;
+    //         }else if(addCoupon!==null){
+    //             this.selectedCoupon = addCoupon;
+    //         }
                                 
-        }
-    }
+    //     }
+    //}
 
     if(this.hasOptions==false){
     //console.log(".."+this.optionDivElementRef.nativeElement.style.border);

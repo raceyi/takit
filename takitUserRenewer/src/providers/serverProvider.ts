@@ -225,12 +225,12 @@ export class ServerProvider{
                 console.log("getBalanceCash res:"+JSON.stringify(res));
                 if(res.result=="success"){
                     this.storageProvider.cashAmount=res.balance;
-                    resolve();
+                    resolve(res);
                 }else{
                     reject(res.error);
                 }
             },(err)=>{
-                        reject(err);                                  
+                    reject(err);                                  
             });
         });
     }
@@ -289,13 +289,13 @@ export class ServerProvider{
         });
     }
 
-    getKeywordShops(serviceName){
+    getKeywordShopInfos(serviceName){
         return new Promise((resolve,reject)=>{
             //takitId old-order.ts에서 변경
             let body = JSON.stringify({serviceName:serviceName});
-            console.log("getKeywordShops "+body);
-            this.post(this.storageProvider.serverAddress+"/getKeywordShops",body).then((res:any)=>{
-                console.log("getKeywordShops res:"+JSON.stringify(res));
+            console.log("getKeywordShopInfos "+body);
+            this.post(this.storageProvider.serverAddress+"/getKeywordShopInfos",body).then((res:any)=>{
+                console.log("getKeywordShopInfos res:"+JSON.stringify(res));
                 if(res.result=="success"){
                     //this.storageProvider.=res.balance;
                     resolve(res.shopInfos);

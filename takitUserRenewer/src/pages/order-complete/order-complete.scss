@@ -2,4 +2,102 @@ page-order-complete {
     .div-flex{
         display: flex;
     }
+
+    .div-orderNO{
+        margin-left: 10px;
+        margin-right: 10px;
+        text-align: center;
+
+        p:nth-child(1){
+            margin-top:10px;
+            margin-bottom:10px;
+            color:grey;
+            font-weight: 600;
+        }
+
+        p:nth-child(2){
+            margin: 0;
+            color:#D8263D;
+            font-size: 35px;
+            font-weight: 900;
+        }
+
+        p:nth-child(3){
+            margin-top:10px;
+            margin-bottom:10px;
+            color:$sub3-color;
+            font-size:12px;
+            font-weight: 600;
+        }
+    }
+
+    .div-statusbar{
+        margin:30px 10px 0 50px;
+        display: flex;
+
+        ion-col{
+            display: flex;
+
+            img:nth-child(1){
+               width: 18%;
+            }
+        }
+        
+    }
+
+    .div-statusbar-p{
+        margin-left: 25px;
+        margin-right: 30px;
+        //padding-left:10px;
+        text-align: center;
+        font-size:13px;
+    }
+
+    .div-receipt-container{
+
+        margin-top:10px;
+        padding:10px 20px;
+        .div-receipt-inner{
+            border-top: 20px solid transparent;
+            border-image: url('../../assets/receipt_bg_1.svg') 33 round;
+            text-align: center;
+            
+            .bg-white{
+                padding: 20px;
+            }
+
+            ion-row{
+                margin-top:10px;
+
+                ion-col:nth-child(1){
+                    text-align: left;
+                }
+                ion-col:nth-child(2){
+                    text-align: right;
+                }
+
+                span:nth-child(1){
+                    color:$sub3-color;
+                    font-size:18px;
+                    font-weight: 900;
+                }
+            }
+
+            ion-row:nth-child(2){
+                padding-top:10px;
+                padding-bottom: 10px;
+            }
+
+            ion-row:nth-child(5){
+                padding-bottom:10px;
+            }
+
+        }
+        .div-receipt-inner2{
+            border-bottom: 20px solid transparent;
+            border-image: url('../../assets/receipt_bg_2.svg')33 round;
+
+        }
+    }
+    
 }

@@ -49,13 +49,29 @@ export class HomePage{
     nearShops = [];
     reviewCount:number;
 
+    keywordShops=[];
+
      constructor(private platform:Platform,private navController: NavController,
         private app: App, menu:MenuController,public storageProvider:StorageProvider,
         private http:Http,private serverProvider:ServerProvider, private splashScreen: SplashScreen){
          console.log("homePage constructor screen:"+ window.screen.availWidth+" "+window.screen.width+" "+window.screen.availHeight+ " "+window.screen.height);
          //console.log("cordova.file.dataDirectory:"+cordova.file.dataDirectory);
          //this.nearShops=storageProvider.shoplist;
-         this.getSejong();
+         
+         this.serverProvider.post(storageProvider.serverAddress+"/getKeywordShops",JSON.stringify({}))
+         .then((res:any)=>{
+            console.log("getKewordShops success:"+JSON.stringify(res));
+            if(res.result==="success"){
+                this.keywordShops=res.keywordShops;
+            }else{
+                console.log("getKewordShops failure"+JSON.stringify(res.error));
+            }
+         },err=>{
+            console.log("getKewordShops error:"+err);
+         }).catch(err=>{
+            console.log("getKewordShops error:"+err);
+         });
+        //this.getKeywordShopInfos();
      }
 
      ionViewDidLoad(){
@@ -252,7 +268,7 @@ export class HomePage{
       //and send it oldOrderPage
       //2. or send takitId and can get sorting datas
       console.log("enterOldOrder");
-      this.navController.push(OldOrderPage,{takitId:takitId},{animate:true,animation: 'slide-up',direction: 'forward' });
+      this.app.getRootNav().push(OldOrderPage,{takitId:takitId},{animate:true,animation: 'slide-up',direction: 'forward' });
   }
 
   showMoreMenus(shop){
@@ -296,10 +312,10 @@ export class HomePage{
 
   }
 
-  getSejong(){
+  getKeywordShopInfos(){
       this.selectSejong = true;
       if(this.storageProvider.sejongShops!==undefined){
-          this.serverProvider.getKeywordShops("세종대").then((res:any)=>{
+          this.serverProvider.getKeywordShopInfos("세종대").then((res:any)=>{
 
                 console.log("getSejong success:"+JSON.stringify(res));
                 res.forEach(shop => {
@@ -326,35 +342,6 @@ export class HomePage{
       }
   }
 
-  getWecook(){
-      this.selectWecook = true;
-      if(this.storageProvider.wecookShops!==undefined){
-          this.serverProvider.getKeywordShops("wecook").then((res:any)=>{
-                res.forEach(shop => {
-                    if(shop.bestMenus ===null){
-                        shop.bestMenus=[];
-                    }else{
-                        shop.bestMenus = JSON.parse(shop.bestMenus);
-                    } 
-
-                    console.log("shop.bestMenus:"+shop.bestMenus);
-                    if(shop.reviewList === null){
-                        shop.reviewList=[];
-                    }else{
-                        shop.reviewList = JSON.parse(shop.reviewList);
-                    }
-                    console.log("shop.reviewList:"+shop.reviewList);
-                });
-                this.storageProvider.sejongShops=res;
-                this.nearShops = res;
-                                
-          },(err)=>{
-                console.log("error:"+JSON.stringify(err));
-          });
-      }else{
-          this.nearShops=this.storageProvider.wecookShops;
-      }
-  }
 
   enterMenuDetail(){
     let option={};

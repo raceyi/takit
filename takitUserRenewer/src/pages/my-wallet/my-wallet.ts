@@ -45,4 +45,8 @@ export class MyWalletPage {
   withdraw(){
     this.app.getRootNav().push( );
   }
+
+  getMyCoupon(){
+      
+  }
 }

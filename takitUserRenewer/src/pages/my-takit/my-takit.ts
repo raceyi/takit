@@ -64,7 +64,7 @@ export class MyTakitPage {
         console.log(res);
         if(res.result==="success" && Array.isArray(res.shopInfos)){
             this.favoriteShops=res.shopInfos;
-        }else if(res.result==="success" && res.shopInfos==='0'){
+        }else if(res.result==="success" && res.shopInfos==='not exist shop'){
             this.favoriteShops=[];
         }else{
             let alert = this.alertCtrl.create({

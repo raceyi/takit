@@ -1,49 +1,142 @@
-page-order{
+page-order {
 
-    .segment-ios .segment-button{
+    
+
+    .div-takeout{
+       .segment-ios .segment-button{
         border: none;
-        height: 110px;
+        height: 85px;
         font-size:15px;
+
         p{
             margin: 0;
+            font-weight: 600;
+            font-size:13px;
         }
         ion-icon{
             line-height:5.0rem;
-            font-size:40px;
+            font-size:37px;
+            //font-weight: 600;
         }
 
             
-    }
+        }
 
+
+    }
     .segment-ios .segment-button.segment-activated{
         color:$main-color;
         background-color: white;
+        border:none;
     }
 
-    .div-takeout{
-        border-bottom:1px dashed;
-       
+
+    .top-dashed{
+        margin:15px;
+        margin-top:0;
+
 
     }
 
     .div-userMSG{
-        //border-radius: 20px;
-        //border-top-left-radius: 20px;
+        padding: 5px;
+        padding-left: 12px;
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
         background-color: lightgray;
-        padding: 10px;
+        
     }
 
+    .subtitle{
+        color:grey;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .div-coupon{
+        .subtitle{
+            padding-top:20px;
+        }
+        padding-top: 10px;
+        padding-bottom:10px;
+        padding-right: 10px;
+        button{
+            float: right;
+            //height: 100%;
+            font-size: 13px;
+        }
+    }
+
+    .item-coupon{
+        //text-align: center;
+        width: 90%;
+        height: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
+        margin-bottom:15px;
+        
+        ion-select{
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+    .item-ios.item-block .item-inner{
+        border-color:transparent;
+    }
 
     .div-pay{
-        display: flex;
-        
+        padding-top:10px;
+        .div-cash{
+            padding-top:10px;
+            padding-left: 20px;
+            padding-right: 20px;
+
+            ion-row{
+                padding-bottom: 10px;
+                padding-top:10px;
+                ion-col:nth-child(2){
+                   text-align: right;
+                }
+            }
+        }
     }
     
     .div-discount-inner{
         border-radius: 5px;
-
+        
     }
+
+    .div-amount-container{
+        padding-left: 20px;
+        padding-right:20px;
+        padding-top:10px;
+        padding-bottom: 10px;
+
+        .div-amount-inner{
+            padding:20px;
+            ion-row{
+                padding-bottom: 10px;
+                ion-col:nth-child(2){
+                    text-align: right;
+                    //display: flex;
+                    span:nth-child(1){
+                        color: $sub3-color;
+                        font-weight: 900;
+                        font-size: 18px;
+                    }
+                }
+            }
+
+            ion-row:nth-child(1), ion-row:nth-child(4){
+                margin-bottom: 10px;
+            }
+            
+        }
+    }
+
+    .toolbar-shadow{
+        padding: 0;
+    }
+
 }
