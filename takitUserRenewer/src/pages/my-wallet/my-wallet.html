@@ -37,12 +37,20 @@
   <ion-card *ngIf="myWalletType==='cash'" class="card-cash-card">
       <ion-card-content>
           <br>
-        <p style="font-size:30px;">{{storageProvider.cashId}}</p>
+        <p style="font-size:30px;">{{storageProvider.cashId}}<ion-icon name="icon-setting" color="skyblue"> </ion-icon></p>
+
         <p style="font-size:40px; font-weight:900;"> {{ storageProvider.cashAmount}} 원</p>
-        <div text-right>
-            <button ion-button color="white" no-padding no-margin large (click)="deposit()">충전</button>
-            <button ion-button color="white" no-padding no-margin large disabled>/</button>
-            <button ion-button color="white" no-padding no-margin large (click)="withdraw()">환불</button>
+        <div text-center>
+            <ion-row text-center>
+                <ion-col>
+                    <button ion-button style="width:30%" color="white" large (click)="deposit()">충전</button>
+                </ion-col>
+                <ion-col>
+                </ion-col>
+                <ion-col>
+                    <button ion-button style="width:30%" color="white" large (click)="withdraw()">환불</button>
+                </ion-col>    
+            </ion-row>
         </div>
       </ion-card-content>
   </ion-card>
