@@ -20,8 +20,8 @@ export class MenuDetailPage {
     options:any;
     shopName:string;
     choice; 
-    discount:number;
-    discountPrice:number; //when only 1 quantity selected dicounting amount
+    discount:number=0;
+    discountPrice:number=0; //when only 1 quantity selected dicounting amount
     optionAmount:number=0;  // 
     // 갯수가 올라간 상태에서 option을 선택했을 경우 -> option이 선택될 때 그 갯수 만큼 가격이 더해져야함.
     // option이 선택된 상태에서 갯수가 올라간 경우  -> 갯수가 올라갈 때 option 가격도 *갯수 만큼 올라가야 함.
@@ -35,15 +35,17 @@ export class MenuDetailPage {
      this.shopName=navParams.get('shopName');
      this.discount = this.calcDiscountAmount(this.menu.price);
      this.amount = this.discountPrice=this.menu.price-this.discount;
-     this.options=JSON.parse(this.menu.options);
-     this.menu.quantity = 1;
-     console.log("menu options1:"+this.menu.options);
-     console.log("menu options:"+JSON.stringify(this.options));
+     console.log("options:"+this.menu.options);
+     console.log("options type:"+typeof this.menu.options);
 
-     if(this.options!==undefined && this.options.length>0){
+     console.log("2");
+     this.menu.quantity = 1;
+     
+
+     if(this.menu.options){
           console.log("hum...-1.1");
           //this.hasOptions=true;                   
-          
+          this.options=JSON.parse(this.menu.options);
           this.options.forEach((option)=>{
               option.flag=false;
               if(option.hasOwnProperty("choice") && Array.isArray(option.choice)){
@@ -66,6 +68,9 @@ export class MenuDetailPage {
               }
           });
       }
+
+      console.log("menu options1:"+this.menu.options);
+     console.log("menu options:"+JSON.stringify(this.options));
   }
 
   ionViewDidLoad() {

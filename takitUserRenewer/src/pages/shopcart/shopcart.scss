@@ -1,43 +1,98 @@
 page-shopcart{
-    .div-cart-menu{
-        //display: flex;
-        border:3px solid;
-        border-radius: 5px;
-        border-color:$sub-color;
-
-        .span-amount{
-            color:$sub3-color;
-        }
-        .div-amount-container{
-            display: flex;
-        }
+    .div-empty{
+        text-align: center;
+        vertical-align: center;
     }
 
-    .div-count{
-        display: flex;
-        width: 30%;
-        ion-input, .text-input-ios{
-            width: 20px;
-        }
-        button{
-            padding: 0;
+    .div-cart-menu{
+        //display: flex;
+        border:2px solid;
+        border-radius: 5px;
+        border-color:$sub-color;
+        margin: 10px;
+        padding: 15px;
+        padding-top: 15px;
+        padding-bottom: 0px;
+
+        p:nth-child(1){
             margin: 0;
+            font-weight: 600;
+        }
+
+        .span-amount{
+            font-size:18px;
+            font-weight: 900;
+            color:$sub3-color;
+            margin-right: 10px;
+        }
+        span:nth-child(2){
+            font-weight: 600;
+        }
+
+        .div-amount-container{
+            display: flex;
+            margin-top: 3px;
+            margin-bottom: 5px;
+            align-items: center;
+            .div-count{
+                display: flex;
+                width: 44%;
+                margin-left: 36%;
+                ion-input, .text-input-ios{
+                    width: 32px;
+                    font-size:17px;
+                    font-weight: 600;
+                    margin-right: 0;
+                    margin-top:5px;
+                    text-align: center;
+                }
+                button{
+                    padding: 0;
+                    margin: 0;
+                    margin-right: 10px;
+                    margin-left: 10px;
+                    font-size: 14px;
+                    ion-icon{
+                        font-weight: 600;
+                    }
+                }
+            }
         }
     }
 
     ion-footer{
+        .toolbar-shadow{
+            padding: 0;
+        }
         .toolbar-content-ios{
             display: flex;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
-            div{
-                width: 50%;
-                color:$sub-color;
-                
+
+            .span-total-amount{
+                //width: 50%;
+                color:$sub3-color;
+                font-size: 18px;
+                font-weight: 900;
+                margin-right: 10px;
+                text-align: left;
+
             }
+
+            .span-total-won{
+                font-weight: 600;
+                margin-right: 25px;
+            }
+
             button{
+                margin: 0;
+
                 width: 50%;
+                font-weight: 900;
             }
+            
+            
         }
     }
+
 }

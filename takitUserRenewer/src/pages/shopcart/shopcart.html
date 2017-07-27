@@ -17,7 +17,7 @@
 	  </button>
   </ion-row>
 -->
-  <div [hidden]="nonEmptyCart()">
+  <div class="div-empty" [hidden]="nonEmptyCart()">
     장바구니가 비었습니다.
   </div>
   <div [hidden]="emptyCart()">
@@ -227,7 +227,7 @@
 </ion-content>
 <ion-footer>
     <ion-toolbar class="toolbar-shadow">
-        <div color="subColor3">{{amount+"원"}}</div>
+        <span color="subColor3">{{amount.toLocaleString('en')}}</span><span>원</span>
         <button (click)="enterOrder()" color="white" ion-button full>주문하기</button>
     </ion-toolbar>
 </ion-footer>

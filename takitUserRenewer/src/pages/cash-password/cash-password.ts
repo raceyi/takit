@@ -75,6 +75,7 @@ export class CashPassword {
 
   confirm(){
     console.log("confirm");
+    if(this.callback){
         for(let i=0;i<6;i++){
             if(this.passwordInput[i]==' '){
                 let alert = this.alertController.create({
@@ -93,7 +94,6 @@ export class CashPassword {
             this.navCtrl.pop();
         });
         return;
-/*        
     }else{
             if(!this.confirmInProgress){
             this.confirmInProgress=true;
@@ -239,7 +239,6 @@ export class CashPassword {
                 })      
             }
     }
-    */
   }
 
   back(){

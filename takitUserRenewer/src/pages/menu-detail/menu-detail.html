@@ -25,14 +25,14 @@
     <div class="div-amount">
         <div class="flex-container">
             <p>가격</p>
-            <p class="sub3-color">{{menu.price}}</p><p>원</p>
+            <p class="sub3-color">{{menu.price.toLocaleString('en')}}</p><p>원</p>
         </div>
         <div class="div-options">
             <p>추가옵션</p>
             <div *ngFor="let option of options">
                  <ion-item class="bg-sub1" no-lines>
                     <ion-label>{{option.name}}</ion-label>
-                    <ion-label class="sub3-color">+{{option.price}}</ion-label>
+                    <ion-label class="sub3-color">+{{option.price.toLocaleString('en')}}</ion-label>
                     <ion-toggle [(ngModel)]="option.flag" (ionChange)="changeOption(option)" color="subColor2"></ion-toggle>
                  </ion-item>
 

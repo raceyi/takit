@@ -115,8 +115,11 @@
     </div>
 
     <div>
-        <button (click)="getSejong()" ion-button clear>#세종대</button>
-        <button (click)="getWecook()" ion-button clear>#서울시창업허브</button>
+        <button *ngFor="let keyword of keywordShops" (click)="showKeywordShops()" ion-button clear>
+            {{keyword}}
+        </button>
+        <!-- <button (click)="getSejong()" ion-button clear>#세종대</button>
+        <button (click)="getWecook()" ion-button clear>#서울시창업허브</button> -->
     </div>
     
 </ion-content>

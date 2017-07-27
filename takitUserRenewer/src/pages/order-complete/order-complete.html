@@ -19,40 +19,72 @@
 
 
 <ion-content padding>
-    <div class="border-sub1">
+    <div class="div-orderNO border-sub1">
         <p color="lightgrey">주문번호</p>
         <p color="mainColor">{{order.orderNO}}}</p>
         <p color="subColor3">{{order.takitId}}</p>
     </div>
 
-    <div>
-    </div>
+    <ion-row class="div-statusbar">
+        <ion-col>
+            <img src="../../assets/history_bar_1_on.svg">
+            <img src="../../assets/history_bar_2_on.svg">
+        </ion-col>
+        <ion-col>
+            <img src="../../assets/history_bar_1_on.svg">
+            <img src="../../assets/history_bar_2_on.svg">
+        </ion-col>
+        <ion-col>
+            <img src="../../assets/history_bar_1_on.svg">
+            <img src="../../assets/history_bar_2_on.svg">
+        </ion-col>
+        <ion-col>
+            <img src="../../assets/history_bar_1_on.svg">
+        </ion-col>
+    </ion-row>
+    <ion-row class="div-statusbar-p">
+        <ion-col>
+            <p>주문</p>
+        </ion-col>
+        <ion-col>
+            <p>접수</p>
+        </ion-col>
+        <ion-col>
+            <p>준비</p>
+        </ion-col>
+        <ion-col>
+            <p>완료</p>
+        </ion-col>
+    </ion-row>
 
-    <div class="bg-sub1">
-        <div class="bg-white">
-            <img [src]="">
-        
-            <div class="top-dashed bottom-solid">
-                <span>주문 금액</span>
-                <span>{{order.amount}}</span>
+    <div class="div-receipt-container bg-sub1">
+        <div class="div-receipt-inner">
+            <div class="bg-white">
+                <img src="../../assets/takit_full_logo.svg">
+                <ion-row class="top-dashed bottom-solid">
+                    <ion-col>주문 금액</ion-col>
+                    <ion-col>{{order.amount}}</ion-col>
+                </ion-row>
+                 <ion-row>
+                    <ion-col>타킷 할인 금액</ion-col>
+                    <ion-col>-{{orderList.takitDiscount}}</ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>쿠폰 할인 금액</ion-col>
+                    <ion-col>-{{orderList.couponDiscount}}</ion-col>
+                </ion-row>
+                
+                <ion-row class="bottom-solid">
+                    <ion-col>총 할인 금액</ion-col>
+                    <ion-col>-{{totalDiscount}}</ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>총 결제 금액</ion-col>
+                    <ion-col color="sub3-color"><span>{{order.amount}}</span><span>원</span></ion-col>
+                </ion-row>
             </div>
-            <!-- <div>
-                <span>타킷 할인 금액</span>
-                <span>-{{order.takitDiscount}}</span>
-            </div>
-            <div>
-                <span>쿠폰 할인 금액</span>
-                <span>-{{order.couponDiscount}}</span>
-            </div>
-             -->
-            <div class="bottom-solid">
-                <p>총 할인 금액</p>
-                <p>-{{totalDiscount}}</p>
-            </div>
-            <div>
-                <p>총 결제 금액</p>
-                <p color="sub3-color">{{order.amount}}</p>
-            </div>
+        </div>
+        <div class="div-receipt-inner2">
         </div>
     </div>
 

@@ -75,36 +75,13 @@
    <button (click)="showTransactionHistory()" ion-button full no-padding no-margin clear color="subColor">
        <ion-icon name="icon-history2" ></ion-icon>거래 내역 조회</button>
 
-       
-  <ion-item-divider color="white">내 쿠폰 </ion-item-divider>
-
-  <!---->
-  <!--
   <div class="row-coupon">
-  <ion-row >
-      <ion-col>
-          <ion-card no-margin>
-              <img [src]="storageProvider.awsS3OCR+events[0]">
-          </ion-card>
-      </ion-col>
-      <ion-col>
-          <ion-card  no-margin>
-              <img [src]="storageProvider.awsS3OCR+events[1]">
-          </ion-card>
-      </ion-col>
-  </ion-row>
-  <ion-row>
-      <ion-col>
-          <ion-card  no-margin>
-              <img [src]="storageProvider.awsS3OCR+events[2]">
-          </ion-card>
-      </ion-col>
-      <ion-col>
-          <ion-card  no-margin>
-              <img [src]="storageProvider.awsS3OCR+events[3]">
-          </ion-card>
-      </ion-col>
-  </ion-row>
+      <p>내 쿠폰</p>
+      <div *ngFor="let coupon of strageProvider.couponList">
+          <img [src]="storageProvider.awsS3+coupon.imagePath">
+          <p>{{coupon.couponName}}</p>
+          <p>~{{coupon.expireTime}}</p>
+      </div>
   </div>
-  -->
+    
 </ion-content>
