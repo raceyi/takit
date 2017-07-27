@@ -24,7 +24,7 @@ import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 //import {UserInfoPage} from '../pages/user-info/user-info';
 import { CashPage } from '../pages/cash/cash';
 import { OrderPage } from '../pages/order/order';
-import { SearchPage } from '../pages/search/search';
+//import { SearchPage } from '../pages/search/search';
 import { ShopCartPage } from '../pages/shopcart/shopcart';
 import { ShopExitPage } from '../pages/shopexit/shopexit';
 import { ShopHomePage } from '../pages/shophome/shophome';
@@ -87,6 +87,8 @@ import {MorePageModule} from '../pages/more/more.module';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import {CashWithdrawPageModule} from '../pages/cash-withdraw/cash-withdraw.module';
 import {CashDepositPage} from '../pages/cash-deposit/cash-deposit';
+import {CashConfigurePageModule} from '../pages/cash-configure/cash-configure.module';
+import {SearchPageModule} from '../pages/search/search.module';
 
 @NgModule({
   declarations: [
@@ -99,7 +101,6 @@ import {CashDepositPage} from '../pages/cash-deposit/cash-deposit';
     //UserInfoPage,
     CashPage,
     OrderPage,
-    SearchPage,
     ShopCartPage,
     ShopExitPage,
     ShopHomePage,
@@ -146,6 +147,8 @@ import {CashDepositPage} from '../pages/cash-deposit/cash-deposit';
     FaqPageModule,
     MorePageModule,
     CashWithdrawPageModule,
+    CashConfigurePageModule,
+    SearchPageModule,
     //IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,
@@ -164,7 +167,6 @@ import {CashDepositPage} from '../pages/cash-deposit/cash-deposit';
    // UserInfoPage,
     CashPage,
     OrderPage,
-    SearchPage,
     ShopCartPage,
     ShopExitPage,
     ShopHomePage,

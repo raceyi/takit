@@ -25,13 +25,15 @@ export class CashDepositPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
         public translateService: TranslateService,
         public storageProvider:StorageProvider) {
-
+          
+    this.cashId=this.storageProvider.cashId;
     let d = new Date();
-   // console.log(" moment:"+moment().format("YYYY-MM-DDThh:mmZ"));
+    console.log("[CashDepositPage]moment:"+moment().format("YYYY-MM-DDThh:mmZ"));
+
     let mm = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1); // getMonth() is zero-based
     let dd  = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
     let hh = d.getHours() <10? "0"+d.getHours(): d.getHours();
-    let dString=d.getFullYear()+'-'+(mm)+'-'+dd+'T'+hh+":00";//+moment().format("Z");
+    let dString=d.getFullYear()+'-'+(mm)+'-'+dd+'T'+hh+":00";+moment().format("Z");
 
     this.transferDate=dString;          
   }

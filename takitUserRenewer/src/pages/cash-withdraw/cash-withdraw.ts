@@ -15,7 +15,8 @@ import {StorageProvider} from '../../providers/storageProvider';
 })
 export class CashWithdrawPage {
   verifiedAccount:string="";
-
+  showAccount:boolean=false;
+  
   constructor(public navCtrl: NavController, public navParams: NavParams
         ,public storageProvider:StorageProvider) {
   }
@@ -26,5 +27,9 @@ export class CashWithdrawPage {
 
   back(){
       this.navCtrl.pop();
+  }
+
+  manageRefundAccount(){
+      this.showAccount=!this.showAccount;
   }
 }

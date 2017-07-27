@@ -19,9 +19,8 @@
 <div class="account" text-center>
     <p>환불계좌</p>
     <p>등록이 필요합니다.</p>
-    <p>농협 301-2424-3636-21</p>
-    <button ion-button outline color="skyblue" style="width:50vw;">환불 계좌 관리</button>
-
+    <button ion-button outline color="skyblue" style="width:50vw;" (click)="manageRefundAccount()">환불 계좌 관리</button>
+    <div [hidden]="!showAccount">
       <ion-row>
       <ion-item ion-col class="cashOut-text">
                 <ion-label>예금주</ion-label>
@@ -66,8 +65,7 @@
                   <button ion-button outline> 등록 </button>
               </ion-col>
             </ion-row>
-
-
+    </div>
   </div>
   <p class="explain">
   *이용제한시간 00:00~00:30,3주월요일23:55~04:00 

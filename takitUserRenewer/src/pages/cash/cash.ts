@@ -19,6 +19,8 @@ import {FaqPage} from '../faq/faq';
 import { Clipboard } from '@ionic-native/clipboard';
 import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
 import { DepositCashTutorialPage } from '../deposit-cash-tutorial/deposit-cash-tutorial';
+import {CashDepositPage} from '../cash-deposit/cash-deposit';
+import {CashWithdrawPage} from '../cash-withdraw/cash-withdraw';
 
 //declare var cordova:any;
 declare var moment:any;

@@ -23,15 +23,15 @@
                     <p style="margin-bottom:0px;">{{tr.nowBalance}}</p>
                     </ion-col>
                 </ion-row>
-                <ion-row style="height:100px;" [ngStyle]="tr.bg" class="radius-5">
+                <ion-row [ngStyle]="tr.style" class="radius-5">
                     <ion-col col-8 *ngIf="tr.transactionType=='deposit' && tr.confirm==0"> 
-                        <button ion-button clear style="font-size:14px;margin-top:30px;" [disabled]="storageProvider.tourMode" (click)="addCash(tr)">
+                        <button ion-button clear style="font-size:14px;margin-top:5px;" [disabled]="storageProvider.tourMode" (click)="addCash(tr)">
                             <b>캐쉬충전확인</b>&nbsp;&nbsp;
                             <ion-icon name="ios-cash-outline"></ion-icon>    
                         </button>
                     </ion-col>
                     <ion-col col-8 *ngIf="tr.transactionType=='deposit' && tr.confirm==1">
-                        <p style="font-size:14px;margin-top:40px;"><b>캐쉬충전</b></p>
+                        <p style="font-size:14px;margin-top:10px;"><b>캐쉬충전</b></p>
                     </ion-col>
                     <ion-col col-8 *ngIf="tr.transactionType=='refund' && tr.fee==undefined">
                         <p style="font-size:14px;margin-top:20px;"><b>캐쉬환불</b></p>
@@ -51,11 +51,14 @@
                         <p style="font-size:14px;margin-top:20px;"><b>{{tr.takitId}}</b></p>
                         <p style="font-size:12px;">{{tr.orderName}}</p>
                     </ion-col>   
-                    <ion-col col-4 text-right *ngIf="tr.transactionType=='cancel' || (tr.transactionType=='deposit' && tr.confirm==1)">
+                    <ion-col col-4 text-right *ngIf="tr.transactionType=='cancel'">
                         <p style="font-size:15;margin-top:40px;color:blue;"><b>+{{tr.amount}}</b></p>
                     </ion-col>
+                    <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==1">
+                        <p style="font-size:15;margin-top:15px;color:blue;"><b>+{{tr.amount}}</b></p>
+                    </ion-col>
                     <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==0">
-                        <p style="font-size:15;margin-top:40px;color:gray;"><b>{{tr.amount}}</b></p>
+                        <p style="font-size:15;margin-top:15px;color:gray;"><b>{{tr.amount}}</b></p>
                     </ion-col>
                     <ion-col col-4 text-right *ngIf="tr.transactionType=='refund' || tr.transactionType=='payment'">
                         <p style="font-size:15;margin-top:40px;color:red;"><b>-{{tr.amount}}</b></p>

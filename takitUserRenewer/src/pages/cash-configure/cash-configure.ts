@@ -2,27 +2,23 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
- * Generated class for the SearchPage page.
+ * Generated class for the CashConfigurePage page.
  *
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
 @IonicPage()
 @Component({
-  selector: 'page-search',
-  templateUrl: 'search.html',
+  selector: 'page-cash-configure',
+  templateUrl: 'cash-configure.html',
 })
-export class SearchPage {
+export class CashConfigurePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    console.log("searchPage");
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SearchPage');
+    console.log('ionViewDidLoad CashConfigurePage');
   }
 
-  back(){
-      this.navCtrl.pop();  
-  }
 }

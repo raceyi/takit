@@ -105,7 +105,7 @@ export class KakaoProvider {
                                     console.log('Successful kakaotalk login with'+profile.id);
                                     handler(profile.id,kakaoProvider).then(
                                         (result:any)=>{
-                                                    console.log("result comes:"+result);
+                                                    console.log("result comes:"+JSON.stringify(result));
                                                     result.id="kakao_"+profile.id; 
                                                     resolve(result);
                                         },serverlogin_err=>{

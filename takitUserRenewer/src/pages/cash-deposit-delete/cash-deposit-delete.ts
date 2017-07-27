@@ -15,12 +15,22 @@ import {StorageProvider} from '../../providers/storageProvider';
 })
 export class CashDepositDeletePage {
   tuno;
+  depositAmount;
+  depositBank;
+  depositMemo;
+  depositDate;
+  depositHour;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,private app:App, 
       private serverProvider:ServerProvider,public storageProvider:StorageProvider, params: NavParams
       ,private alertController:AlertController) {
       console.log("CashDepositDeletePage constructor "+JSON.stringify(params.get('tuno')));
       this.tuno=params.get('tuno');
+      this.depositAmount=params.get('depositAmount');
+      this.depositBank=params.get('depositBank');
+      this.depositMemo=params.get('depositMemo');
+      this.depositDate=params.get('depositDate');
+      this.depositHour=params.get('depositHour');
   }
 
   ionViewDidLoad() {

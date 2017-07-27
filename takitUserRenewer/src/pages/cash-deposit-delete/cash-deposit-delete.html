@@ -4,55 +4,45 @@
   See http://ionicframework.com/docs/v2/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
+<ion-content>
+  <ion-buttons end style="margin-top:10px;margin-right:10px;">
+  <button ion-button color="skyblue" clear (click)="dismiss()" >취소</button>
+  </ion-buttons>
+  <div padding>
+    <ion-title style="height:15vh;">캐쉬 충전 삭제</ion-title>
 
-  <ion-navbar>
-    <ion-title>확인</ion-title>
-  </ion-navbar>
+ <div class="memo" text-center style="font-size:larger;color:#cde5e6;height:20vh;">
+          <p><b>{{depositMemo}}</b></p>
+          <p><b>{{depositAmount}}원 충전</b></p>
+ </div>
+ 
+ <div class="time">
+   <ion-row>
+     <ion-col>
+      입금시간   
+     </ion-col>
+     <ion-col text-right>
+       <b>{{depositDate}}일 {{depositHour}} 시</b>
+     </ion-col>
+   </ion-row>
+   <ion-row>
+     <ion-col>
+      은행   
+     </ion-col>
+     <ion-col text-right>
+       <b>{{depositBank}}</b>
+     </ion-col>
+   </ion-row>
+ </div>
 
-</ion-header>
-
-<ion-content padding>
-<div class="upper">
-</div>
-<ion-row>
-  <ion-col width-33>
-  </ion-col>
-  <ion-col width-33>
-    <ion-icon class="alertIcon" name="warning"></ion-icon>
-  </ion-col>
-  <ion-col width-33>
-  </ion-col>
+<ion-row style="margin-left:30px;margin-right:30px;">
+  <p> 타인의 캐쉬 입금임으로 거래내역으로 부터 캐쉬충전확인을 삭제합니다.</p>
+  <p> 본인입금이 맞을 경우 고객센터로 연락주시면 다시 캐쉬충전확인이 가능합니다.</p>
 </ion-row>
 
-<ion-row>
-  <ion-col width-20>
-  </ion-col>
-  <ion-col width-60 style="text-align:center;">
-  <span class="msg">캐쉬입금을 삭제합니다.</span>
-  </ion-col>
-  <ion-col width-20>
-  </ion-col>
- </ion-row>
-<ion-row>
-  <ion-col width-10>
-  </ion-col>
-  <ion-col width-80  style="text-align:center;">
-  <span class="msg">본인입금일 경우 고객센터로 연락주시면 다시 입금가능합니다.</span>
-  </ion-col>
-  <ion-col width-10>
-  </ion-col>
- </ion-row>
- <ion-row>
-   <ion-col padding>  
-      <button full color="gray" ion-button (click)="dismiss()">
-        <span>취소</span>
-      </button>
-   </ion-col>   
-   <ion-col padding>  
-      <button full color="gray" ion-button (click)="deleteDepositInput()">
-        <span >확인</span>
-      </button>
-   </ion-col>   
-</ion-row>      
+<ion-row style="margin-left:30px;margin-right:30px;">
+<button ion-button class="buttonSkyBlue" full color="skyblue" (click)="deleteDepositInput()"> 확인 </button>
+</ion-row>
+  </div>
+
 </ion-content>
