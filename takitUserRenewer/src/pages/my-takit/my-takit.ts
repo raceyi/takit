@@ -4,6 +4,7 @@ import { App, ViewController } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {OrderHistoryPage} from '../order-history/order-history';
+import {SearchPage} from '../search/search';
 /*
   Generated class for the MyTakit page.
 
@@ -26,7 +27,7 @@ export class MyTakitPage {
      lastOrderMonth:string="1개월"
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-                public alertCtrl : AlertController,
+                public alertCtrl : AlertController,private app:App,
                 public viewCtrl: ViewController,public serverProvider:ServerProvider,
                  public appCtrl: App,public storageProvider:StorageProvider) {
                    
@@ -110,5 +111,10 @@ export class MyTakitPage {
    goHome(){
       this.navCtrl.parent.select(0);
   }
+
+    search(){
+        console.log("search click");
+        this.app.getRootNav().push(SearchPage);
+    }
 
 }

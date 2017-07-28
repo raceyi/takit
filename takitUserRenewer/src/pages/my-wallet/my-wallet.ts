@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams,App } from 'ionic-angular';
-import {StorageProvider} from '../../providers/storageProvider';
-//import { TransactionHistoryPage } from '../transaction-history/transaction-history';
+import { StorageProvider } from '../../providers/storageProvider';
 import { TransactionHistoryPage } from '../transaction-history/transaction-history';
-import {CashDepositPage} from '../cash-deposit/cash-deposit';
-import {CashWithdrawPage} from '../cash-withdraw/cash-withdraw';
+import { CashDepositPage } from '../cash-deposit/cash-deposit';
+import { CashWithdrawPage } from '../cash-withdraw/cash-withdraw';
+import {SearchPage} from '../search/search';
 /*
   Generated class for the MyWallet page.
 
@@ -16,6 +16,8 @@ import {CashWithdrawPage} from '../cash-withdraw/cash-withdraw';
   templateUrl: 'my-wallet.html'
 })
 export class MyWalletPage {
+
+    isTestServer:boolean=false;
     myWalletType:string = "cash";
     cardList = [{"name":"신한","img":"UItest/card1.png"},
                 {"name":"삼성","img":"UItest/card2.png"},
@@ -26,7 +28,13 @@ export class MyWalletPage {
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-                public storageProvider:StorageProvider,private app:App) {}
+                public storageProvider:StorageProvider,private app:App) {
+
+        if(this.storageProvider.serverAddress.endsWith('8000')){
+            this.isTestServer=true;
+        }  
+
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MyWalletPage');
@@ -51,4 +59,9 @@ export class MyWalletPage {
   getMyCoupon(){
       
   }
+
+      search(){
+        console.log("search click");
+        this.app.getRootNav().push(SearchPage);
+    }
 }

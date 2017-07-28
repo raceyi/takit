@@ -89,6 +89,9 @@ import {CashWithdrawPageModule} from '../pages/cash-withdraw/cash-withdraw.modul
 import {CashDepositPage} from '../pages/cash-deposit/cash-deposit';
 import {CashConfigurePageModule} from '../pages/cash-configure/cash-configure.module';
 import {SearchPageModule} from '../pages/search/search.module';
+import {AlertPageModule} from '../pages/alert/alert.module';
+
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -149,6 +152,8 @@ import {SearchPageModule} from '../pages/search/search.module';
     CashWithdrawPageModule,
     CashConfigurePageModule,
     SearchPageModule,
+    AlertPageModule,
+    NoopAnimationsModule,
     //IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,

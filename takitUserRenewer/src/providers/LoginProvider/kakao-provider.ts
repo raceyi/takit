@@ -27,6 +27,7 @@ export class KakaoProvider {
   login(){
     return new Promise((resolve,reject)=>{
           this.kakaologin(this.kakaoServerLogin,this).then((res:any)=>{
+              console.log("kakaologin returns "+JSON.stringify(res));
               resolve(res);
           }, (err)=>{
               reject(err);
@@ -61,7 +62,7 @@ export class KakaoProvider {
                         console.log('Successful kakaotalk login with'+id);
                         handler(id,kakaoProvider).then(
                         (result:any)=>{
-                                    console.log("result comes:"+JSON.stringify(result)); 
+                                    console.log("result comes-kakaoApp:"+JSON.stringify(result)); 
                                     result.id="kakao_"+id;
                                     resolve(result);
                         },serverlogin_err=>{
@@ -105,7 +106,7 @@ export class KakaoProvider {
                                     console.log('Successful kakaotalk login with'+profile.id);
                                     handler(profile.id,kakaoProvider).then(
                                         (result:any)=>{
-                                                    console.log("result comes:"+JSON.stringify(result));
+                                                    console.log("result comes--kakaoWeb:"+JSON.stringify(result));
                                                     result.id="kakao_"+profile.id; 
                                                     resolve(result);
                                         },serverlogin_err=>{

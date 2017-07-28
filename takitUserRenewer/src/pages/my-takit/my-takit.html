@@ -13,7 +13,7 @@
       </ion-buttons>
     <ion-title *ngIf="this.isTestServer==true">검증</ion-title>
     <ion-buttons end>
-        <button class="hearder-icon" ion-button  clear>
+        <button class="hearder-icon" ion-button  clear (click)="search()">
             <ion-icon name="search" color="mainColor" ></ion-icon>
         </button>
     </ion-buttons>

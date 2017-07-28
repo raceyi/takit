@@ -11,9 +11,9 @@
             <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
-    <ion-title *ngIf="this.isTestServer==true">검증</ion-title>
+    <ion-title *ngIf="isTestServer==true">검증</ion-title>
     <ion-buttons end>
-        <button class="hearder-icon" ion-button clear>
+        <button class="hearder-icon" ion-button clear (click)="search()">
             <ion-icon name="search" color="mainColor" ></ion-icon>
         </button>
     </ion-buttons>
@@ -33,7 +33,7 @@
         </ion-segment-button>
   </ion-segment>
   -->
-  <!--mywallet cash-->
+  
   <ion-card *ngIf="myWalletType==='cash'" class="card-cash-card">
       <ion-card-content>
           <br>
@@ -56,6 +56,7 @@
   </ion-card>
 
   <!--mywallet credit-card-->
+  <!--
   <ion-card *ngIf="myWalletType==='card'" class="card-cash-card" >
       <ion-card-content no-padding>
           <ion-scroll scrollX="true" class="scroll-cardList" >
@@ -70,11 +71,12 @@
           </ion-scroll>
       </ion-card-content>
   </ion-card>
+-->
 
   <!--<button (click)="showTransactionHistory()" ion-button>거래 내역 조회</button>-->
    <button (click)="showTransactionHistory()" ion-button full no-padding no-margin clear color="subColor">
        <ion-icon name="icon-history2" ></ion-icon>거래 내역 조회</button>
-
+<!--
   <div class="row-coupon">
       <p>내 쿠폰</p>
       <div *ngFor="let coupon of strageProvider.couponList">
@@ -83,5 +85,5 @@
           <p>~{{coupon.expireTime}}</p>
       </div>
   </div>
-    
+-->    
 </ion-content>

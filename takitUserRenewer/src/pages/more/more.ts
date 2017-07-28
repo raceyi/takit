@@ -11,6 +11,7 @@ import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import {SearchPage} from '../search/search';
 
 /**
  * Generated class for the MorePage page.
@@ -329,4 +330,9 @@ export class MorePage {
     });
     confirm.present();
   }
+
+      search(){
+        console.log("search click");
+        this.app.getRootNav().push(SearchPage);
+    }
 }
