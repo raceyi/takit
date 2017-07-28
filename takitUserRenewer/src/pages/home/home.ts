@@ -69,6 +69,7 @@ export class HomePage{
             console.log("getKewordShops success:"+JSON.stringify(res));
             if(res.result==="success"){
                 this.keywordShops=res.keywordShops;
+                this.showKeywordShops(this.keywordShops[0]);
             }else{
                 console.log("getKewordShops failure"+JSON.stringify(res.error));
             }
@@ -323,10 +324,10 @@ export class HomePage{
 
   }
 
-  getKeywordShopInfos(){
+  showKeywordShops(keyword){
       this.selectSejong = true;
       if(this.storageProvider.sejongShops!==undefined){
-          this.serverProvider.getKeywordShopInfos("세종대").then((res:any)=>{
+          this.serverProvider.getKeywordShopInfos(keyword).then((res:any)=>{
 
                 console.log("getSejong success:"+JSON.stringify(res));
                 res.forEach(shop => {

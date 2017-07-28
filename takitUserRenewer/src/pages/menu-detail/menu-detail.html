@@ -20,7 +20,7 @@
     <div class="div-menu-detail">
         <img [src]="storageProvider.awsS3+menu.imagePath">
         <p class="p-name">{{menu.menuName}}</p>
-        <p class="p-description">{{"메뉴 간단 설명"+menu.explanation}}</p>
+        <p class="p-description" *ngIf="menu.explanation">{{"메뉴 간단 설명"+menu.explanation}}</p>
     </div>
     <div class="div-amount">
         <div class="flex-container">

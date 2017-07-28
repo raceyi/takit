@@ -315,7 +315,7 @@ export class StorageProvider{
           }else{
               console.log(" getCartInfo:none");
               // 장바구니가 비었습니다. 
-              this.cart={menus:[],total:0};
+              this.cart={menus:[],total:0,prevAmount:0,takitDiscount:0,couponDiscount:0};
           }
         },(err)=>{
             console.log("loadCart error");

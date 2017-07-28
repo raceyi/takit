@@ -24,9 +24,14 @@ export class MyWalletPage {
                 {"name":"IBK","img":"UItest/card5.jpg"}];
     events=["UItest/coupon1.png","UItest/coupon2.png","UItest/event1.jpg","UItest/event2.jpg"];
 
-
+    isTestServer:boolean=false;
   constructor(public navCtrl: NavController, public navParams: NavParams,
-                public storageProvider:StorageProvider,private app:App) {}
+                public storageProvider:StorageProvider,private app:App) {
+                    if(this.storageProvider.serverAddress.endsWith('8000')){
+                        this.isTestServer=true;
+                    }   
+
+                }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MyWalletPage');
@@ -42,6 +47,7 @@ export class MyWalletPage {
 
   deposit(){
     this.app.getRootNav().push(CashDepositPage);
+    //error?
   }
 
   withdraw(){

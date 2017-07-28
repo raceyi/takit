@@ -73,7 +73,7 @@
                 <p>{{receiptIdMask}}</p>
             </ion-col>
             <ion-col>
-                <ion-checkbox></ion-checkbox>
+                <ion-checkbox [(ngModel)]="receiptChecked"></ion-checkbox>
             </ion-col>
             <span  *ngIf="storageProvider.receiptType=='IncomeDeduction'">소득공제</span>
             <span *ngIf="storageProvider.receiptType=='ExpenseProof'">지출증빙</span>

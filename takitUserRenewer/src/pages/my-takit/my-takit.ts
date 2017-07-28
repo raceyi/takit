@@ -4,6 +4,7 @@ import { App, ViewController } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {OrderHistoryPage} from '../order-history/order-history';
+import { ShopHomePage } from '../shophome/shophome';
 /*
   Generated class for the MyTakit page.
 
@@ -83,6 +84,8 @@ export class MyTakitPage {
         alert.present();
     });
 
+    //this.shopSelected=false;
+
   }
 
   showAllHistory(){
@@ -109,6 +112,25 @@ export class MyTakitPage {
 
    goHome(){
       this.navCtrl.parent.select(0);
+  }
+
+  enterShopHome(shopInfo){
+      if(!this.storageProvider.shopSelected){
+        console.log("this.shopSelected true");
+        this.storageProvider.shopSelected=true;
+        this.serverProvider.getShopInfo(shopInfo.takitId).then((res:any)=>{
+            this.storageProvider.shopResponse=res;
+            console.log("push ShopHomePage at home.ts");
+            console.log("this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
+            this.appCtrl.getRootNav().push(ShopHomePage,{takitId:shopInfo.takitId, bestMenus:JSON.parse(res.shopInfo.bestMenus)});
+        },(err)=>{
+            console.log("error:"+JSON.stringify(err));
+                this.storageProvider.shopSelected=false;
+        });
+    }else{
+        console.log("this.shopSelected works!");
+    }
+
   }
 
 }

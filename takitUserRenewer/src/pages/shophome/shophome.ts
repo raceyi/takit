@@ -68,6 +68,8 @@ export class ShopHomePage {
   bestMenus;
   businessType:string;
 
+  takeout;
+
   constructor(private app:App, private navController: NavController
       ,private storageProvider:StorageProvider,private navParams:NavParams
       ,private alertController:AlertController,private serverProvider:ServerProvider) {
@@ -96,6 +98,7 @@ export class ShopHomePage {
         console.log("businesstype:"+this.shop.shopInfo.businessType);
         console.log("businesstype2:"+this.storageProvider.shopInfo.businessType);
         this.businessType=this.shop.shopInfo.businessType;
+        this.takeout=parseInt(this.storageProvider.shopInfo.takeout);
   }
 
 //   ionViewWillUnload(){
@@ -104,7 +107,8 @@ export class ShopHomePage {
 //   }
 
    showShopAbout(){
-    this.navController.push(ShopAboutPage, {},{animate:true,animation: 'slide-up', direction: 'forward' });
+    //this.navController.push(ShopAboutPage, {},{animate:true,animation: 'slide-up', direction: 'forward' });
+    this.navController.push(ShopAboutPage);
   }
   
   configureShopInfo(){
@@ -333,7 +337,7 @@ export class ShopHomePage {
       setTimeout(() => {
          this.menuSlideUp=true;
          console.log("slide up");
-       }, 200);     
+       }, 250);     
     }
   }
 
@@ -344,7 +348,7 @@ export class ShopHomePage {
       this.slideUpState='down';
        setTimeout(() => {
           console.log("slide down");
-       }, 200);
+       }, 250);
     }
   }
 

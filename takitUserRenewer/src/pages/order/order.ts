@@ -73,6 +73,8 @@ export class OrderPage {
 
   userMSG:string;
 
+  receiptChecked=1;
+
   constructor(private app:App,private navController: NavController,
         private navParams:NavParams,private ngZone:NgZone,
         private alertController:AlertController, public serverProvider:ServerProvider,
@@ -233,6 +235,12 @@ export class OrderPage {
     //     if(!this.storageProvider.shopInfo.freeDelivery){
     //         console.log("3");
     //     }
+
+    if(storageProvider.receiptIssue){
+        this.receiptChecked=1;
+    }else{
+        this.receiptChecked=0;
+    }
  }
 
 
@@ -358,12 +366,6 @@ cashPasswordBlur(){
                 takeout=2;
             }else
             takeout=0;
-            let receiptIssueVal;
-            if(this.storageProvider.receiptIssue){
-                receiptIssueVal=1;
-            }else{
-                receiptIssueVal=0;
-            }
             /*
             let body = JSON.stringify({paymethod:"cash",
                                     takitId:this.takitId,
@@ -395,14 +397,14 @@ cashPasswordBlur(){
                             orderedTime:new Date().toISOString(),
                             cashId: this.storageProvider.cashId,
                             //password:this.cashPassword,
-                            receiptIssu:receiptIssueVal,
+                            receiptIssue:this.receiptChecked,
                             receiptId:this.storageProvider.receiptId,
                             receiptType:this.storageProvider.receiptType,
                             //couponNO:this.selectedCoupon.couponName,
-                            takitDiscount:this.takitDiscount,
-                            couponDiscount:this.couponDiscount
-
+                            shopName:this.shopName,
+                            userMSG:this.userMSG
                         };
+
             console.log("sendOrder:"+JSON.stringify(body));                          
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
@@ -459,7 +461,7 @@ cashPasswordBlur(){
 
   sendOrder(){
     // check cash password
-           var cart={menus:[],total:0};
+           var cart={menus:[],total:0,prevAmount:0,takitDiscount:0,couponDiscount:0};
            var options=[];
            if(this.options!=undefined){
                 this.options.forEach((option)=>{
@@ -476,14 +478,22 @@ cashPasswordBlur(){
         //         menuName+=this.menu.description;
             
            if(this.trigger==="order"){
+               //orderList
                 cart.menus.push({menuNO:this.menu.menuNO,
                                 menuName:this.menu.menuName,
                                 quantity:this.quantity,
                                 options: options,
                                 price: this.amount});
-                cart.total=this.amount;
+                cart.total=this.totalAmount;
+                cart.prevAmount=this.amount;
+                cart.couponDiscount=this.couponDiscount;
+                cart.takitDiscount=this.takitDiscount;
                 this.sendSaveOrder(cart,this.menu.menuName); 
            }else if(this.trigger==="cart"){
+                this.storageProvider.cart.prevAmount=this.amount;
+                this.storageProvider.cart.couponDiscount= this.couponDiscount;
+                this.storageProvider.cart.takitDiscount=this.takitDiscount;
+                this.storageProvider.cart.total = this.totalAmount;
                 this.sendSaveOrder(this.storageProvider.cart,undefined); 
            }
            

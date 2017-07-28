@@ -167,7 +167,7 @@
         <p class="p-title" color="white">단골 매장</p>
 
         <div class="div-favShop">
-            <ion-list *ngFor="let shop of favoriteShops" class="list-favShop">
+            <ion-list (click)="enterShopHome(shop)" *ngFor="let shop of favoriteShops" class="list-favShop">
                 <img [src]="storageProvider.awsS3+shop.imagePath">
                 <p>{{shop.shopName}}</p>
             </ion-list>

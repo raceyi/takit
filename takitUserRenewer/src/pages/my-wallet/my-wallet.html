@@ -11,7 +11,7 @@
             <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
-    <ion-title *ngIf="this.isTestServer==true">검증</ion-title>
+    <ion-title *ngIf="isTestServer">검증</ion-title>
     <ion-buttons end>
         <button class="hearder-icon" ion-button clear>
             <ion-icon name="search" color="mainColor" ></ion-icon>
@@ -33,17 +33,18 @@
         </ion-segment-button>
   </ion-segment>
   -->
+  <p>캐쉬</p>
   <!--mywallet cash-->
   <ion-card *ngIf="myWalletType==='cash'" class="card-cash-card">
       <ion-card-content>
           <br>
         <p style="font-size:30px;">{{storageProvider.cashId}}</p>
         <p style="font-size:40px; font-weight:900;"> {{ storageProvider.cashAmount}} 원</p>
-        <div text-right>
-            <button ion-button color="white" no-padding no-margin large (click)="deposit()">충전</button>
-            <button ion-button color="white" no-padding no-margin large disabled>/</button>
-            <button ion-button color="white" no-padding no-margin large (click)="withdraw()">환불</button>
-        </div>
+         <div text-right>
+            <button ion-button color="white" large clear (click)="deposit()">충전</button>
+            <span>/</sapn>
+            <button ion-button color="white" large clear (click)="withdraw()">환불</button>
+        </div> 
       </ion-card-content>
   </ion-card>
 
@@ -69,11 +70,11 @@
 
   <div class="row-coupon">
       <p>내 쿠폰</p>
-      <div *ngFor="let coupon of strageProvider.couponList">
+      <!-- <div *ngFor="let coupon of strageProvider.couponList">
           <img [src]="storageProvider.awsS3+coupon.imagePath">
           <p>{{coupon.couponName}}</p>
           <p>~{{coupon.expireTime}}</p>
-      </div>
+      </div> -->
   </div>
     
 </ion-content>

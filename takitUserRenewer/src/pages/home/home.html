@@ -5,7 +5,7 @@
             <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
-    <ion-title *ngIf="this.isTestServer==true">검증</ion-title>
+    <ion-title *ngIf="isTestServer==true">검증</ion-title>
     <ion-buttons end>
         <button ion-button class="hearder-icon" clear (click)="search()">
             <ion-icon name="search" color="mainColor" ></ion-icon>
@@ -28,7 +28,7 @@
             <ion-col *ngFor="let shop of storageProvider.shoplist"  class="scroll-col-latest"  no-padding>
                 <ion-row  class="scroll-row-shop">
                     <ion-col (click)="getSelected(shop.takitId)" >
-                        <p class="scroll-p-shop">{{shop.shopName}}</p>
+                        <p class="scroll-p-shop">{{shop.takitId}}</p>
                     </ion-col>
                     <ion-col col-2 (click)="enterOldOrder(shop.takitId)" >
                         <!-- <button  ion-button class="scroll-btn-latest" color="mainColor" clear> -->
@@ -115,8 +115,8 @@
     </div>
 
     <div>
-        <button *ngFor="let keyword of keywordShops" (click)="showKeywordShops()" ion-button clear>
-            {{keyword}}
+        <button *ngFor="let keyword of keywordShops" (click)="showKeywordShops(keyword)" ion-button clear>
+            #{{keyword}}
         </button>
         <!-- <button (click)="getSejong()" ion-button clear>#세종대</button>
         <button (click)="getWecook()" ion-button clear>#서울시창업허브</button> -->
