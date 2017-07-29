@@ -11,9 +11,10 @@
             <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
-    <ion-title *ngIf="isTestServer">검증</ion-title>
+
+    <ion-title *ngIf="isTestServer==true">검증</ion-title>
     <ion-buttons end>
-        <button class="hearder-icon" ion-button clear>
+        <button class="hearder-icon" ion-button clear (click)="search()">
             <ion-icon name="search" color="mainColor" ></ion-icon>
         </button>
     </ion-buttons>
@@ -22,7 +23,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="bg-sub1" padding>
     <!--
     <ion-segment [(ngModel)]="myWalletType" class="wallet-type">
         <ion-segment-button class="segment-type" value="cash">
@@ -33,22 +34,29 @@
         </ion-segment-button>
   </ion-segment>
   -->
-  <p>캐쉬</p>
-  <!--mywallet cash-->
-  <ion-card *ngIf="myWalletType==='cash'" class="card-cash-card">
-      <ion-card-content>
-          <br>
-        <p style="font-size:30px;">{{storageProvider.cashId}}</p>
-        <p style="font-size:40px; font-weight:900;"> {{ storageProvider.cashAmount}} 원</p>
-         <div text-right>
-            <button ion-button color="white" large clear (click)="deposit()">충전</button>
-            <span>/</sapn>
-            <button ion-button color="white" large clear (click)="withdraw()">환불</button>
-        </div> 
-      </ion-card-content>
-  </ion-card>
+<div class="bg-white">
+    <p class="p-title" >캐쉬</p>
 
+  <!--mywallet cash-->
+
+  <div *ngIf="myWalletType==='cash'" class="div-cashInfo">
+    <div class="div-cashId-area">
+        <span class="span-cashId">{{storageProvider.cashId}}</span>
+        <button no-margin no-padding ion-button clear color="white" click="enterCashConfigure()"><ion-icon name="icon-setting"></ion-icon></button>
+    </div>
+    <div class="div-cash-amount-area">
+        <span class="span-cash-amount">{{ storageProvider.cashAmount.toLocaleString('en')}}</span> <span>원</span>
+    </div>
+     <div class="div-btn-area">
+        <button (click)="deposit()" ion-button color="white" no-margin small outline>충전</button>
+        <button (click)="withdraw()" ion-button color="white" no-margin small outline>환불</button>
+    </div>
+  </div>
+ <button (click)="showTransactionHistory()" ion-button full no-padding no-margin clear color="subColor">
+       <ion-icon name="icon-history2" ></ion-icon>거래 내역 모두 조회</button>
+</div>
   <!--mywallet credit-card-->
+  <!--
   <ion-card *ngIf="myWalletType==='card'" class="card-cash-card" >
       <ion-card-content no-padding>
           <ion-scroll scrollX="true" class="scroll-cardList" >
@@ -63,18 +71,14 @@
           </ion-scroll>
       </ion-card-content>
   </ion-card>
-
-  <!--<button (click)="showTransactionHistory()" ion-button>거래 내역 조회</button>-->
-   <button (click)="showTransactionHistory()" ion-button full no-padding no-margin clear color="subColor">
-       <ion-icon name="icon-history2" ></ion-icon>거래 내역 조회</button>
-
-  <div class="row-coupon">
-      <p>내 쿠폰</p>
+-->
+<!--
+  <div class="div-coupon">
+      <p class="p-title">내 쿠폰</p>
       <!-- <div *ngFor="let coupon of strageProvider.couponList">
           <img [src]="storageProvider.awsS3+coupon.imagePath">
           <p>{{coupon.couponName}}</p>
           <p>~{{coupon.expireTime}}</p>
-      </div> -->
-  </div>
-    
+      </div> 
+  </div>-->
 </ion-content>

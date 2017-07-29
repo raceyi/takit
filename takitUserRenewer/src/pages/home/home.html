@@ -65,11 +65,10 @@
         </button>
     </ion-item>
 
-    <hr color="subColor">
 
-    <ion-row>
+    <ion-row class="row-shop-title">
         <ion-col no-padding>
-        <p class="p-title">주변 매장</p>
+        <p class="p-title">매장 보기</p>
         </ion-col>
         <ion-col col-4>
 
@@ -86,6 +85,14 @@
         </ion-col>
     </ion-row>
     <!--거리별 shoplist가 되어야 함-->
+    <div>
+        <ion-segment>
+            <ion-segment-button *ngFor="let keyword of keywordShops" (click)="showKeywordShops(keyword)" clear>
+                #{{keyword}}
+            </ion-segment-button>
+        </ion-segment>
+    </div>
+
     <div *ngFor="let shop of nearShops; let i=index">
         <ion-row class="row-nearShop" >
             <ion-col no-padding (click)="getSelected(shop.takitId)" >
@@ -114,13 +121,7 @@
         </ion-scroll>
     </div>
 
-    <div>
-        <button *ngFor="let keyword of keywordShops" (click)="showKeywordShops(keyword)" ion-button clear>
-            #{{keyword}}
-        </button>
-        <!-- <button (click)="getSejong()" ion-button clear>#세종대</button>
-        <button (click)="getWecook()" ion-button clear>#서울시창업허브</button> -->
-    </div>
+    
     
 </ion-content>
 

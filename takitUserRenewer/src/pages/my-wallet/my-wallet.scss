@@ -17,10 +17,57 @@ page-my-wallet {
         border-radius: 64px;
     }
 
-
-    .card-cash-card{
-        height: 200px;
+    .p-title{
+        margin-top:0;
+        padding-top:10px;
+        background-color: transparent;
     }
+
+    .div-cashInfo{
+        height: 155px;
+        //border-radius: 10px;
+        padding:10px 30px 0 30px;
+        background-image: url('../assets/cashbg.png');
+        background-repeat: no-repeat;
+        background-size:90% 100%;
+        background-position: center; 
+        color:white;
+        
+        .div-cashId-area{
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-right: 40px;
+            .span-cashId{
+                font-size:17px;
+                margin-right: 10px;
+            }
+        }
+        
+        .div-cash-amount-area{
+            margin-right: 38px;
+            text-align: right;
+            .span-cash-amount{
+                font-size:40px;
+                font-weight: 900;
+                
+            }   
+            span:nth-child(2){
+                font-size:25px;
+                font-weight: 900;
+            }
+        }
+        .div-btn-area{
+            text-align: center;
+            button{
+                margin:10px;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+        
+    }
+
     .scroll-cardList{
         height: 200px;
     }

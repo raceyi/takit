@@ -13,13 +13,13 @@
       </ion-buttons>
     <ion-buttons end>
         <button class="hearder-icon" ion-button clear>
-            <ion-icon name="search" color="mainColor" ></ion-icon>
+            <ion-icon name="search" color="mainColor" (click)="search()" ></ion-icon>
         </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content style="background-color: lightgray;">
+<ion-content style="background-color:#f7f7f7;">
   <ion-grid  style="background-color: white; padding:0px;">
   <ion-row>
     <ion-col>
@@ -35,7 +35,7 @@
       </ion-buttons>
     </ion-col>    
   </ion-row>
-  <ion-row style="background-color: lightgray;">
+  <ion-row style="background-color:#f7f7f7;">
     <ion-col>
       &nbsp;&nbsp;
     </ion-col>
@@ -63,7 +63,7 @@
   </ion-row>
   </ion-grid>
   <br>
-  <div text-center>
+  <div text-center style="background-color:#f7f7f7;">
         <button  ion-button color="mainColor" clear (click)="openLogout()">
             <b>로그아웃</b>
         </button>
@@ -72,7 +72,7 @@
         </button>
   </div>
 </ion-content>
-<ion-footer style="height:20vh;background-color: lightgray;font-size:xx-small;">
+<ion-footer style="height:20vh;background-color:#f7f7f7;font-size:xx-small;">
     <div class="extender">
        <div class="padder-center">
           <div text-left>

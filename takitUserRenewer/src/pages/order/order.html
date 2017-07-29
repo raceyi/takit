@@ -61,27 +61,28 @@
             <ion-segment-button value="cash">타킷캐쉬</ion-segment-button>
             <!-- <ion-segment-button value="card" >카드결제</ion-segment-button> -->
         </ion-segment>
+        <div class="div-cash border-sub1">
+            <ion-row class="bottom-solid">
+                <ion-col>사용가능금액</ion-col>
+                <ion-col>{{storageProvider.cashAmount.toLocaleString('en')}}원</ion-col>
+            </ion-row>
+            <ion-row [hidden]="!storageProvider.receiptIssue">
+                <ion-col>
+                    <span>현금 영수증 발행</span>
+                    <p>{{receiptIdMask}}</p>
+                </ion-col>
+                <ion-col>
+                    <ion-checkbox [(ngModel)]="receiptChecked"></ion-checkbox>
+                </ion-col>
+                <p  *ngIf="storageProvider.receiptType=='IncomeDeduction'">소득공제</p>
+                <p *ngIf="storageProvider.receiptType=='ExpenseProof'">지출증빙</p>
+            </ion-row>
+            <ion-row [hidden]="storageProvider.receiptIssue">
+                <ion-col class="cash">현금영수증 발행을 원하시면 회원정보에서 설정해주시기 바랍니다</ion-col>
+            </ion-row>
+        </div>
     </div>
-    <div class="div-cash border-sub1">
-        <ion-row class="bottom-solid">
-            <ion-col>사용가능금액</ion-col>
-            <ion-col>{{storageProvider.cashAmount.toLocaleString('en')}}</ion-col>
-        </ion-row>
-        <ion-row [hidden]="!storageProvider.receiptIssue">
-            <ion-col>
-                <span>현금 영수증 발행</span>
-                <p>{{receiptIdMask}}</p>
-            </ion-col>
-            <ion-col>
-                <ion-checkbox [(ngModel)]="receiptChecked"></ion-checkbox>
-            </ion-col>
-            <span  *ngIf="storageProvider.receiptType=='IncomeDeduction'">소득공제</span>
-            <span *ngIf="storageProvider.receiptType=='ExpenseProof'">지출증빙</span>
-        </ion-row>
-        <ion-row [hidden]="storageProvider.receiptIssue">
-            <ion-col class="cash">현금영수증 발행을 원하시면 회원정보에서 설정해주시기 바랍니다</ion-col>
-        </ion-row>
-    </div>
+    
     <div class="div-amount-container bg-sub1">
         <div class="div-amount-inner radius-5 bg-white">
             <ion-row class="bottom-solid">
@@ -171,7 +172,7 @@
       원활한 주문을 위해 판매자에게 주문정보가 제공됩니다.
       </ion-col>
     </ion-row>-->
-    <div>
+    <div class="div-agreement">
         <ion-row>
           <ion-col width-33 class="orderInfo">제공받는자</ion-col>
           <ion-col width-66 class="orderInfo1">{{shopName}}</ion-col>

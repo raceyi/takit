@@ -40,7 +40,7 @@ export class OrderCompletePage {
 	      console.log("OrderCompletePage constructor");
         
         this.shopname=this.storageProvider.currentShopname();
-
+        console.log("order:"+navParams.get('order'));
         this.order=navParams.get('order');
         this.orderList=JSON.parse(this.order.orderList);
          console.log("orderList:"+this.orderList);

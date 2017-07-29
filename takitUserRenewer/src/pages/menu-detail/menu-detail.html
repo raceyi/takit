@@ -20,12 +20,13 @@
     <div class="div-menu-detail">
         <img [src]="storageProvider.awsS3+menu.imagePath">
         <p class="p-name">{{menu.menuName}}</p>
-        <p class="p-description" *ngIf="menu.explanation">{{"메뉴 간단 설명"+menu.explanation}}</p>
+        <p class="p-description" *ngIf="menu.explanation">{{"메뉴 간단 설명:"+menu.explanation}}</p>
     </div>
     <div class="div-amount">
-        <div class="flex-container">
-            <p>가격</p>
-            <p class="sub3-color">{{menu.price.toLocaleString('en')}}</p><p>원</p>
+        <div class="div-price-area">
+            <span>가격</span>
+            <span>원</span>
+            <span class="sub3-color">{{menu.price.toLocaleString('en')}}</span><span>원</span>
         </div>
         <div class="div-options">
             <p>추가옵션</p>

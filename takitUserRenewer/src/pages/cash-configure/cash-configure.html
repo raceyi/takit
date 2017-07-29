@@ -35,7 +35,7 @@
 <ion-row align-items-center>
   <ion-col col-9>
     새캐쉬비밀번호
-    <ion-input class="underline" type="password" disabled>******</ion-input>
+    <ion-input class="underline" type="password" disabled [(ngModel)]="passwordString" ></ion-input>
   </ion-col>
   <ion-col col-3>
   <button ion-button outline color="skyblue" (click)="passwordInput()">입력</button>    
@@ -44,7 +44,7 @@
 <ion-row align-items-center>
   <ion-col col-9>
     캐쉬비밀번호 확인
-    <ion-input class="underline" type="password" disabled>******</ion-input>
+    <ion-input class="underline" type="password" disabled [(ngModel)]="passwordConfirmString" ></ion-input>
   </ion-col>
   <ion-col col-3>
   <button ion-button outline color="skyblue" (click)="passwordInput()">입력</button>    
@@ -54,7 +54,7 @@
 </ion-grid>
 </ion-content>
 <ion-footer>
-  <button full ion-button>
+  <button full ion-button (click)="modify()">
   비밀번호 변경하기
   </button>
 </ion-footer>

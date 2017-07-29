@@ -117,11 +117,12 @@ export class LoginPage {
        let loading = this.loadingCtrl.create({
             content: '로그인 중입니다.'
         });
+      /*  
       loading.present();
         setTimeout(() => {
             loading.dismiss();
         }, 5000);
-
+        */
       this.fbProvider.login().then((res:any)=>{
                 loading.dismiss();
                 console.log("facebookLogin-login page:"+JSON.stringify(res));
@@ -170,6 +171,7 @@ export class LoginPage {
                     alert.present();
                 }
             },(login_err) =>{
+                    this.loginInProgress=false;
                     loading.dismiss();
                     console.log("login_err"+JSON.stringify(login_err));
                     let alert = this.alertController.create({
@@ -188,13 +190,15 @@ export class LoginPage {
        let loading = this.loadingCtrl.create({
             content: '로그인 중입니다.'
         });
+/*
       loading.present();
         setTimeout(() => {
             loading.dismiss();
         }, 5000);      
+*/
       this.kakaoProvider.login().then((res:any)=>{
-                    loading.dismiss();
                     console.log("kakaoProvider-login page:"+JSON.stringify(res));
+                    //loading.dismiss();
                     if(res.result=="success"){
                         if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                             let alert = this.alertController.create({
@@ -236,6 +240,7 @@ export class LoginPage {
                         //this.navController.setRoot(ErrorPage);
                     }
                 },login_err =>{
+                    this.loginInProgress=false;
                     loading.dismiss();
                     console.log(JSON.stringify(login_err));
                     //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');

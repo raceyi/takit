@@ -2,28 +2,23 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
- * Generated class for the CashConfigurePage page.
+ * Generated class for the AlertPage page.
  *
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
 @IonicPage()
 @Component({
-  selector: 'page-cash-configure',
-  templateUrl: 'cash-configure.html',
+  selector: 'page-alert',
+  templateUrl: 'alert.html',
 })
-export class CashConfigurePage {
+export class AlertPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CashConfigurePage');
+    console.log('ionViewDidLoad AlertPage');
   }
-
-  phoneAuth(){
-    
-  }
-
 
 }
