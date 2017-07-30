@@ -30,6 +30,10 @@ page-order {
         border:none;
     }
 
+    .segment-ios-grey .segment-button:hover:not(.segment-activated){
+        background-color: white;
+    }
+
 
     .top-dashed{
         margin:15px;

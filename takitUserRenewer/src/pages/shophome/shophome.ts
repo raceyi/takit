@@ -20,11 +20,11 @@ import {MenuDetailPage} from '../menu-detail/menu-detail';
     trigger('slideUp', [
       state('down', style({
         opacity: 1,
-        transform: 'translate3d(0, 0, 0)' // x,y,z
+        transform: 'translateY(0, 0, 0)' // x,y,z
       })),
       state('up', style({
         opacity: 1,
-        transform: 'translate3d(0, -30vh, 0)'
+        transform: 'translateY(0, -45vh, 0)'
       })),
       transition('down => up', animate('200ms')),
       transition('up => down', animate('200ms'))
@@ -95,16 +95,15 @@ export class ShopHomePage {
           this.shophomeContentRef.resize();
         }
         this.storageProvider.orderPageEntered=false;
-        console.log("businesstype:"+this.shop.shopInfo.businessType);
-        console.log("businesstype2:"+this.storageProvider.shopInfo.businessType);
         this.businessType=this.shop.shopInfo.businessType;
         this.takeout=parseInt(this.storageProvider.shopInfo.takeout);
   }
 
-//   ionViewWillUnload(){
-//        console.log("ionViewWillUnload-ShopTabsPage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
-//        this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
-//   }
+  ionViewWillUnload(){
+       console.log("ionViewWillUnload-ShopHomePage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
+       this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
+       this.storageProvider.shoplist[0].visitedDiff=0;
+  }
 
    showShopAbout(){
     //this.navController.push(ShopAboutPage, {},{animate:true,animation: 'slide-up', direction: 'forward' });
@@ -325,10 +324,10 @@ export class ShopHomePage {
         return flag;
     }
 
-    ionViewWillUnload(){
-       //Please update shoplist of storageProvider...
-       console.log("ionViewWillUnload-ShopHomePage");
-     }
+    // ionViewWillUnload(){
+    //    //Please update shoplist of storageProvider...
+    //    console.log("ionViewWillUnload-ShopHomePage");
+    //  }
 
     clickMenuArea(){
     console.log("clickMenuArea "+this.menuSlideUp);
@@ -337,7 +336,7 @@ export class ShopHomePage {
       setTimeout(() => {
          this.menuSlideUp=true;
          console.log("slide up");
-       }, 250);     
+       }, 200);     
     }
   }
 
@@ -348,7 +347,7 @@ export class ShopHomePage {
       this.slideUpState='down';
        setTimeout(() => {
           console.log("slide down");
-       }, 250);
+       }, 200);
     }
   }
 

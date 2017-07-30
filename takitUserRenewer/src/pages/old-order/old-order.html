@@ -21,8 +21,9 @@
     <div *ngFor="let order of oldOrders">
         <ion-list (click)="enterMenuDetail(order)" class="list-oldOrder border-sub1">
             <p>{{order.menuName}}</p>
-            <span class="amount-highlight">{{order.amount.toLocaleString('en')}}</span><span>원</span>
+            <p class="p-count">{{order.orderCount}}회 주문</p>
+            <!-- <span class="amount-highlight">{{parseInt(order.amount).toLocaleString('en')}}</span><span>원</span> -->
         </ion-list>
-        <p class="p-count">{{order.orderCount}}회 주문</p>
+        
     </div>
 </ion-content>

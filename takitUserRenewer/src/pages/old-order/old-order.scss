@@ -16,12 +16,14 @@ page-old-order {
         span:nth-child(3){
             font-weight: 600;
         }
+
+        .p-count{
+            margin-top:10px;
+            margin-bottom: 0;
+            color:grey;
+            font-weight: 600;
+        }
     }
 
-    .p-count{
-        margin-left: 25px;
-        margin-top:10px;
-        color:grey;
-        font-weight: 600;
-    }
+    
 }

@@ -85,8 +85,8 @@
         </ion-col>
     </ion-row>
     <!--거리별 shoplist가 되어야 함-->
-    <div>
-        <ion-segment>
+    <div class="div-keyword">
+        <ion-segment [(ngModel)]="nowKeyword">
             <ion-segment-button *ngFor="let keyword of keywordShops" (click)="showKeywordShops(keyword)" clear>
                 #{{keyword}}
             </ion-segment-button>

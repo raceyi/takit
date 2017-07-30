@@ -39,14 +39,15 @@ export class OrderCompletePage {
           private serverProvider:ServerProvider, public appCtrl:App){
 	      console.log("OrderCompletePage constructor");
         
-        this.shopname=this.storageProvider.currentShopname();
+        //this.shopname=this.storageProvider.currentShopname(); //mytakit에서 바로 들어올 경우, 없음.
         console.log("order:"+navParams.get('order'));
         this.order=navParams.get('order');
         this.orderList=JSON.parse(this.order.orderList);
-         console.log("orderList:"+this.orderList);
-        this.totalDiscount = parseInt(this.orderList.taktiDiscount)+parseInt(this.orderList.couponDiscount);
-        console.log("orderList:"+this.orderList);
+        console.log("orderList:"+JSON.stringify(this.orderList));
 
+        if(this.orderList.taktiDiscount && this.orderList.couponDiscount){
+            this.totalDiscount = this.orderList.taktitDiscount+this.orderList.couponDiscount;
+        }
         // if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
         //     this.shopPhoneHref="tel:"+this.storageProvider.shopResponse.shopInfo.shopPhone;
         

@@ -13,7 +13,7 @@
   </ion-navbar>
 </ion-header>-->
 
-<ion-header >
+<ion-header>
   <ion-navbar hideBackButton="true" >
     <ion-buttons start>
         <button (click)="back()" class="nav-btn" color="subColor2" small ion-button no-margin clear>
@@ -30,17 +30,17 @@
 </ion-header>
 
 <ion-content class="no-scroll" #shophomeContent>
-    <ion-slides #BestMenusSlides class="btn-bestMenus" [hidden]="menuSlideUp || bestMenus.length===0">
+    <ion-slides #BestMenusSlides class="slides-bestMenus" [hidden]="menuSlideUp || bestMenus.length===0">
         <ion-slide *ngFor="let menu of bestMenus" >
-            <button (click)="showBestMenus()" ion-button full no-padding no-margin class="btn-bestMenus" >
-            <ion-card>
+            <!-- <button (click)="showBestMenus()" ion-button full no-padding no-margin class="btn-bestMenus" > -->
+            <div class="div-bestMenus-container" [ngStyle]="{'background':'url('+storageProvider.awsS3+menu.imagePath+') no-repeat','background-size':'100% 200px'}">
                 <!--<button (click)="showLeftBest()" class="btn-prev" ion-button color="transparent" ><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>-->
                 <!--<button class="slide-button" (click)="showLeftBest()" ion-button color="transparent" style="margin-right:60%; font-size:50px;"><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>-->
-                <img [src]="storageProvider.awsS3+menu.imagePath">
-                <div class="card-title">{{menu.menuName}}</div>
+                <!-- <img [src]="storageProvider.awsS3+menu.imagePath"> -->
+                <div class="p-name">{{menu.menuName}}</div>
                 <!--<button (click)="showRightBest()" class="btn-next" ion-button color="transparent" no-padding><ion-icon name="ios-arrow-forward" color="grey"></ion-icon></button>-->
-            </ion-card>
-            </button>
+            </div>
+            <!-- </button> -->
         </ion-slide>
     </ion-slides>
     <ion-row class="row-shopInfo" [hidden]="menuSlideUp">
@@ -110,7 +110,7 @@
                     </div>
                     <div>
                         <p>{{menu.menuName}}</p>
-                        <p>{{menu.price.toLocaleString('en')}}</p>
+                        <p>{{(menu.price*1).toLocaleString('en')}}</p>
                     </div>
                 </ion-list>
                 </ion-scroll>
@@ -143,7 +143,7 @@
                         </div>
                         <div>
                             <p>{{menu.menuName}}</p>
-                            <p>{{menu.price.toLocaleString('en')}}</p>
+                            <p>{{(menu.price*1).toLocaleString('en')}}</p>
                         </div>
                     </ion-list>
                 </ion-scroll>

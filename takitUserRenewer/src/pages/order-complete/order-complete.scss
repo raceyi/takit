@@ -59,7 +59,7 @@ page-order-complete {
         padding:10px 20px;
         .div-receipt-inner{
             border-top: 20px solid transparent;
-            border-image: url('../../assets/receipt_bg_1.svg') 33 round;
+            border-image: url('../assets/receipt_bg_1.png') 33 round;
             text-align: center;
             
             .bg-white{
@@ -95,7 +95,7 @@ page-order-complete {
         }
         .div-receipt-inner2{
             border-bottom: 20px solid transparent;
-            border-image: url('../../assets/receipt_bg_2.svg')33 round;
+            border-image : url('../assets/receipt_bg_2.png')33 round;
 
         }
     }

@@ -52,6 +52,7 @@ export class HomePage{
     isTestServer:boolean=false;
 
     keywordShops=[];
+    nowKeyword:string;
 
      constructor(private platform:Platform,private navController: NavController,
         private app: App, menu:MenuController,public storageProvider:StorageProvider,
@@ -69,6 +70,7 @@ export class HomePage{
             console.log("getKewordShops success:"+JSON.stringify(res));
             if(res.result==="success"){
                 this.keywordShops=res.keywordShops;
+                this.nowKeyword=this.keywordShops[0];
                 this.showKeywordShops(this.keywordShops[0]);
             }else{
                 console.log("getKewordShops failure"+JSON.stringify(res.error));

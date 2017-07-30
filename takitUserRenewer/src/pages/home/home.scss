@@ -136,6 +136,23 @@ page-home {
         height: 10px;
     }
 
+    .div-keyword{
+        .segment-ios .segment-button{
+            border: none;
+            font-size:15px;
+        }
+
+        .segment-ios .segment-button.segment-activated{
+            color:$main-color;
+            background-color: white;
+            border:none;
+        }
+        .segment-ios-grey .segment-button:hover:not(.segment-activated){
+            background-color: white;
+        }
+
+    }
+
     .row-shop-title{
         border-top:0.1rem solid;
         border-color:lightgray;

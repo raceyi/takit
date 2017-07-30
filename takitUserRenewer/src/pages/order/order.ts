@@ -381,10 +381,12 @@ cashPasswordBlur(){
                                     receiptType:this.storageProvider.receiptType
                                 });
             */
-            let orderName=menuName+"("+this.quantity+")";
-
-            if(menuName===undefined){
-                orderName=cart.menus[0].menuName+"이외"+ cart.menus.length+"종";
+            let orderName;
+            
+            if(this.trigger==="order"){
+                orderName=menuName+"("+this.menu.quantity+")";
+            }else if(this.trigger==="cart"){
+                orderName=cart.menus[0].menuName+"이외"+ cart.menus.length+"종";            
             }
 
             let body = {    paymethod:"cash",
@@ -481,9 +483,10 @@ cashPasswordBlur(){
                //orderList
                 cart.menus.push({menuNO:this.menu.menuNO,
                                 menuName:this.menu.menuName,
-                                quantity:this.quantity,
+                                quantity:this.menu.quantity,
                                 options: options,
-                                price: this.amount});
+                                price: this.menu.price, //menu's original price
+                                amount:this.amount});   //menu's discount price
                 cart.total=this.totalAmount;
                 cart.prevAmount=this.amount;
                 cart.couponDiscount=this.couponDiscount;
@@ -823,38 +826,38 @@ cashPasswordBlur(){
 //      }
 //    }
 
-  onBlur($event){
-      console.log("onBlur this.quantity:"+this.quantity);
-    if(this.quantity==undefined || this.quantity==0 || this.quantity.toString().length==0){
-        this.focusQunatityNum.emit(true);  
-        /*
-           let alert = this.alertController.create({
-                    title: '수량을 입력해주시기바랍니다.',
-                    buttons: ['OK']
-                    });
-                    alert.present().then(()=>{
-                        console.log("alert done");
-                        //this.focusQunatityNum.emit(true);  
-                    });
-           */         
-    }else{
-        var unitPrice=this.menu.price;
-        this.options.forEach(option=>{
-            if(option.flag){
-                unitPrice+=option.price;
-            }
-        });
-        console.log("unitPrice:"+unitPrice);
-          this.price=unitPrice*this.quantity;
-          this.discount=this.calcDiscountAmount(this.price);
-          this.amount=this.price-this.discount;
-        if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
-                this.delivery=false;
-                this.takeout=false;
-                this.here=true;
-        }
-    }      
-  }
+//   onBlur($event){
+//       console.log("onBlur this.quantity:"+this.quantity);
+//     if(this.quantity==undefined || this.quantity==0 || this.quantity.toString().length==0){
+//         this.focusQunatityNum.emit(true);  
+//         /*
+//            let alert = this.alertController.create({
+//                     title: '수량을 입력해주시기바랍니다.',
+//                     buttons: ['OK']
+//                     });
+//                     alert.present().then(()=>{
+//                         console.log("alert done");
+//                         //this.focusQunatityNum.emit(true);  
+//                     });
+//            */         
+//     }else{
+//         var unitPrice=this.menu.price;
+//         this.options.forEach(option=>{
+//             if(option.flag){
+//                 unitPrice+=option.price;
+//             }
+//         });
+//         console.log("unitPrice:"+unitPrice);
+//           this.price=unitPrice*this.quantity;
+//           this.discount=this.calcDiscountAmount(this.price);
+//           this.amount=this.price-this.discount;
+//         if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
+//                 this.delivery=false;
+//                 this.takeout=false;
+//                 this.here=true;
+//         }
+//     }      
+//   }
 
   closePage(event){
       console.log("close Order Page");
