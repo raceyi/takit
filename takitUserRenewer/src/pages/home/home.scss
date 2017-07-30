@@ -4,9 +4,9 @@ page-home {
     //}
 
 
-    $scroll-H:90px; 
+    $scroll-H:100px; 
     $latest-W : 129px;
-    $latest-H : 70px;
+    $latest-H : 80px;
     $shop-name-H : 50px;
     $shop-list-H : 71px;
 
@@ -43,15 +43,15 @@ page-home {
 
     .scroll-col-latest {
         //overflow: inherit;
-        width : $latest-W;
+        width : 160px;
         height: $latest-H;
         margin-right: 9px;
         
     }
 
     .scroll-row-shop{
-        width: $latest-W;
-        height: 50px;
+        width: 160px;
+        height: 55px;
         padding: 0;
         margin: 0;
         text-align: center;
@@ -63,7 +63,7 @@ page-home {
 
         ion-col{
             padding: 0;
-            height: 44px;
+            height: 49px;
             display: flex;
             align-items: center;
         }
@@ -136,9 +136,20 @@ page-home {
         height: 10px;
     }
 
+    .row-shop-title{
+        border-top:0.1rem solid;
+        border-color:lightgray;
+        margin-left: 10px;
+        margin-right: 10px;
+        .p-title{
+            margin-left: 4px;
+
+        }
+    }
+
     //
     .row-nearShop {
-        height: $shop-list-H;
+        height: $shop-list-H+10px;
         margin-left: 10px;
         margin-right: 10px;
         margin-bottom: 10px;
@@ -147,7 +158,7 @@ page-home {
             border-top-left-radius: 10px;
             border-bottom-left-radius: 10px; 
             width: 100%;
-            height: 100%;
+            height: $shop-list-H+10px;
         }
         
         ion-col{

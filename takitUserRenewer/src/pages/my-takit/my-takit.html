@@ -46,7 +46,7 @@
                 <p>{{order.takitId}}</p>
             </ion-col>
             <ion-col>
-                <ion-icon color="mainColor" name="icon-cart" ></ion-icon>
+                <!-- <ion-icon color="mainColor" name="icon-cart" ></ion-icon> -->
             </ion-col>
         </ion-row>
     </div>
@@ -167,7 +167,7 @@
         <p class="p-title" color="white">단골 매장</p>
 
         <div class="div-favShop">
-            <ion-list *ngFor="let shop of favoriteShops" class="list-favShop">
+            <ion-list (click)="enterShopHome(shop)" *ngFor="let shop of favoriteShops" class="list-favShop">
                 <img [src]="storageProvider.awsS3+shop.imagePath">
                 <p>{{shop.shopName}}</p>
             </ion-list>

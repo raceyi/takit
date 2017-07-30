@@ -1,6 +1,27 @@
 page-old-order {
-    .card-oldOrder{
-        margin: 3%;
-        width:44%; 
+    .list-oldOrder{
+        margin: 10px;
+        //width:100%; 
+        padding: 13px;
+        p:nth-child(1){
+            font-size:15px;
+            font-weight: 600;
+            margin:0;
+            margin-bottom:10px;
+        }
+
+        .amount-highlight{
+            font-size:17px;
+        }
+        span:nth-child(3){
+            font-weight: 600;
+        }
+    }
+
+    .p-count{
+        margin-left: 25px;
+        margin-top:10px;
+        color:grey;
+        font-weight: 600;
     }
 }

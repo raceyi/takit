@@ -8,8 +8,8 @@
 
   <ion-navbar hideBackButton="true">
     <ion-buttons start>
-      <button navPop class="nav-btn" small ion-button no-margin clear>
-          <p>< </p>
+      <button (click)="back()" class="nav-btn" small ion-button no-margin clear>
+          <ion-icon name="icon-cance"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title>주문확인</ion-title>
@@ -21,25 +21,25 @@
 <ion-content padding>
     <div class="div-orderNO border-sub1">
         <p color="lightgrey">주문번호</p>
-        <p color="mainColor">{{order.orderNO}}}</p>
+        <p color="mainColor">{{order.orderNO}}</p>
         <p color="subColor3">{{order.takitId}}</p>
     </div>
 
     <ion-row class="div-statusbar">
         <ion-col>
-            <img src="../../assets/history_bar_1_on.svg">
-            <img src="../../assets/history_bar_2_on.svg">
+            <img src="./assets/history_bar_1_on.svg">
+            <img src="./assets/history_bar_2_on.svg">
         </ion-col>
         <ion-col>
-            <img src="../../assets/history_bar_1_on.svg">
-            <img src="../../assets/history_bar_2_on.svg">
+            <img src="./assets/history_bar_1_on.svg">
+            <img src="./assets/history_bar_2_on.svg">
         </ion-col>
         <ion-col>
-            <img src="../../assets/history_bar_1_on.svg">
-            <img src="../../assets/history_bar_2_on.svg">
+            <img src="./assets/history_bar_1_on.svg">
+            <img src="./assets/history_bar_2_on.svg">
         </ion-col>
         <ion-col>
-            <img src="../../assets/history_bar_1_on.svg">
+            <img src="./assets/history_bar_1_on.svg">
         </ion-col>
     </ion-row>
     <ion-row class="div-statusbar-p">
@@ -60,10 +60,10 @@
     <div class="div-receipt-container bg-sub1">
         <div class="div-receipt-inner">
             <div class="bg-white">
-                <img src="../../assets/takit_full_logo.svg">
+                <img src="./assets/takit_full_logo.svg">
                 <ion-row class="top-dashed bottom-solid">
                     <ion-col>주문 금액</ion-col>
-                    <ion-col>{{order.amount}}</ion-col>
+                    <ion-col>{{orderList.prevAmount}}</ion-col>
                 </ion-row>
                  <ion-row>
                     <ion-col>타킷 할인 금액</ion-col>

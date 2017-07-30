@@ -23,10 +23,10 @@
   <div [hidden]="emptyCart()">
 
     <div *ngFor="let menu of storageProvider.cart.menus" class="div-cart-menu">
-        <p>{{menu.menuName}}</p>
-        <span><ion-icon (click)="deleteMenu(menu)" name="icon-delete"></ion-icon></span>
+        <ion-icon class="icon-menu-delete" (click)="deleteMenu(menu)" name="icon-delete"></ion-icon>
+        <p class="p-menuName">{{menu.menuName}}</p>
         <div class="div-amount-container">
-            <span class="span-amount">{{menu.price*menu.quantity}}</span><span>원</span>
+            <span class="amount-highlight">{{menu.price*menu.quantity}}</span><span>원</span>
             <div class="div-count">
                 <button (click)="decreaseCount(menu)" color="black" ion-button clear icon-only>
                     <ion-icon  name="ios-remove-circle-outline">
@@ -227,7 +227,7 @@
 </ion-content>
 <ion-footer>
     <ion-toolbar class="toolbar-shadow">
-        <span color="subColor3">{{amount.toLocaleString('en')}}</span><span>원</span>
+        <span class="span-total-amount">{{amount.toLocaleString('en')}}</span><span>원</span>
         <button (click)="enterOrder()" color="white" ion-button full>주문하기</button>
     </ion-toolbar>
 </ion-footer>

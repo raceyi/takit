@@ -12,35 +12,17 @@
           <ion-icon name="icon-prev"></ion-icon>
         </button>
       </ion-buttons>
-    <ion-title>{{storageProvider.takitId}}</ion-title>
+    <ion-title>지난 주문</ion-title>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
-    <div *ngFor="let order of oldOrders" class="flex-container">
-        <ion-card (click)="enterMenuDetail(order)" class="card-oldOrder">
-            <h2>{{order.menuName}}</h2>
-            <p>{{order.amount}}</p>
-            <p>{{"주문횟수:"+order.orderCount}}</p>
-        </ion-card>
+    <div *ngFor="let order of oldOrders">
+        <ion-list (click)="enterMenuDetail(order)" class="list-oldOrder border-sub1">
+            <p>{{order.menuName}}</p>
+            <span class="amount-highlight">{{order.amount.toLocaleString('en')}}</span><span>원</span>
+        </ion-list>
+        <p class="p-count">{{order.orderCount}}회 주문</p>
     </div>
-    <!-- <ion-row *ngFor="let arr of array; let i=index; " *ngIf="oldOrders.length>=1">
-        <ion-col>
-            <ion-card class="card-oldOrder">
-                <h2>{{oldOrders[i*2].orderName}}</h2>
-                <p>{{oldOrders[i*2].amount}}</p>
-                <p>{{"주문횟수:"+oldOrders[i*2].orderCount}}</p>
-            </ion-card>
-        </ion-col>
-            
-        <ion-col>
-            <ion-card class="card-oldOrder">
-                 <h2>{{oldOrders[i*2+1].orderName}}</h2>
-                 <p>{{oldOrders[i*2+1].amount}}</p>
-                <p>{{"주문횟수:"+oldOrders[i*2+1].orderCount}}</p>
-            </ion-card>
-        </ion-col>
-    </ion-row>  -->
-
 </ion-content>

@@ -3,6 +3,7 @@ import {ViewController,NavParams,NavController,AlertController,App} from 'ionic-
 import {ServerProvider} from '../../providers/serverProvider';
 import {StorageProvider} from '../../providers/storageProvider';
 import {CashDepositDeletePage} from '../cash-deposit-delete/cash-deposit-delete';
+import { Events } from 'ionic-angular';
 
 @Component({
   selector: 'page-cashconfirm',
@@ -23,12 +24,15 @@ export class CashConfirmPage{
   customStr;
 
   inProgress=false;
+  //seq:number;
 
   constructor(params: NavParams,public viewCtrl: ViewController
       ,private alertController:AlertController,public storageProvider:StorageProvider,
       private serverProvider:ServerProvider,private ngZone:NgZone,
-      private navController: NavController,public app:App) {
+      private navController: NavController,public app:App,
+      public events: Events) {
       console.log('CashConfirmPage -constructor custom:'+ JSON.stringify(params.get('custom')));
+      //let seq=params.get('seq');
       let custom=params.get('custom');
       this.customStr=JSON.stringify(custom); 
 
@@ -80,7 +84,8 @@ export class CashConfirmPage{
           this.serverProvider.post(this.storageProvider.serverAddress+"/addCash",body).then((res:any)=>{
                     console.log("addCash:"+JSON.stringify(res));
                     if(res.result=="success"){
-                      this.storageProvider.cashInfoUpdateEmitter.emit("all");
+                      //this.events.publish("cash:update",[{seq:this.seq}]); duplicate events delivered
+                      this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
                       this.removeDuplicate();
                       this.viewCtrl.dismiss();
                     }else{ 
@@ -132,7 +137,7 @@ export class CashConfirmPage{
           });         
       }else{
             let alert = this.alertController.create({
-                title: "법적 경고 사항에 동의해 주시기 바랍니다.",
+                title: "서버에 충전확인 요청 중입니다.",
                 buttons: ['OK']
             });
             alert.present();
@@ -169,8 +174,10 @@ export class CashConfirmPage{
   }
 
   deposit(){
-        console.log("deposit");
-        this.agreementShown=true;
+        console.log("deposit...");
+        this.ngZone.run(()=>{
+            this.agreementShown=true;
+        });
   }
 
 }

@@ -24,16 +24,19 @@ import {MenuDetailPage} from '../menu-detail/menu-detail';
       })),
       state('up', style({
         opacity: 1,
-        transform: 'translate3d(0, -45vh, 0)'
+        transform: 'translate3d(0, -30vh, 0)'
       })),
-      transition('down => up', animate('100ms')),
-      transition('up => down', animate('100ms'))
+      transition('down => up', animate('200ms')),
+      transition('up => down', animate('200ms'))
     ])
   ]
 })
 
 export class ShopHomePage {
- 
+ // @ViewChild('segmentBar') segmentBarRef: Content;
+ // @ViewChild('menusContent') menusContentRef: Content;
+ // @ViewChild('recommendation') recommendationRef: Content;
+ // @ViewChild('categorySegment') categorySegmentRef: Segment;
 @ViewChild('shophomeContent') shophomeContentRef:Content;
 @ViewChild('BestMenusSlides') slides: Slides;
   shopName:string;
@@ -65,6 +68,8 @@ export class ShopHomePage {
   bestMenus;
   businessType:string;
 
+  takeout;
+
   constructor(private app:App, private navController: NavController
       ,private storageProvider:StorageProvider,private navParams:NavParams
       ,private alertController:AlertController,private serverProvider:ServerProvider) {
@@ -93,15 +98,17 @@ export class ShopHomePage {
         console.log("businesstype:"+this.shop.shopInfo.businessType);
         console.log("businesstype2:"+this.storageProvider.shopInfo.businessType);
         this.businessType=this.shop.shopInfo.businessType;
+        this.takeout=parseInt(this.storageProvider.shopInfo.takeout);
   }
 
-   ionViewWillUnload(){
-        console.log("ionViewWillUnload-ShopTabsPage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
-        this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
-   }
+//   ionViewWillUnload(){
+//        console.log("ionViewWillUnload-ShopTabsPage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
+//        this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
+//   }
 
    showShopAbout(){
-    this.navController.push(ShopAboutPage, {},{animate:true,animation: 'slide-up', direction: 'forward' });
+    //this.navController.push(ShopAboutPage, {},{animate:true,animation: 'slide-up', direction: 'forward' });
+    this.navController.push(ShopAboutPage);
   }
   
   configureShopInfo(){
@@ -139,10 +146,32 @@ export class ShopHomePage {
             this.categories.push({sequence:parseInt(category.sequence),categoryNO:parseInt(category.categoryNO),categoryName:category.categoryNameEn,menus:menus});
         }else // Korean
             this.categories.push({sequence:parseInt(category.sequence),categoryNO:parseInt(category.categoryNO),categoryName:category.categoryName,menus:menus});
+
+        //console.log("[categories]:"+JSON.stringify(this.categories));
+        //console.log("menus.length:"+menus.length);
     });
+        //console.log("categories len:"+this.categories.length);
      
         this.categorySelected=1; // hum...
-        
+        //console.log("menus for 0:"+JSON.stringify(this.menuRows));  
+        //////////////////////////////////
+        //todayMenus
+        // if(this.shop.shopInfo.hasOwnProperty("todayMenus"))
+        // console.log("todayMenus:"+JSON.stringify(this.shop.shopInfo.todayMenus));
+
+        //////////////////////////////////
+        // Is it correct location? Just assume that the height of recommendation area.
+        //console.log("segmentBar:"+JSON.stringify(this.segmentBarRef.getDimensions()));
+        //console.log("recommendation:"+JSON.stringify(this.recommendationRef.getDimensions()));
+        /*
+        let menusDimensions=this.menusContentRef.getContentDimensions();
+        let menusHeight=this.menusContentRef.getNativeElement().parentElement.offsetHeight-menusDimensions.contentTop;
+        if(this.shop.shopInfo.hasOwnProperty("todayMenu")){
+            menusHeight=menusHeight-(100+20); //100: button height, 20:name,price height
+        }
+        console.log("pageHeight:"+this.menusContentRef.getNativeElement().parentElement.offsetHeight+"top:"+menusDimensions.contentTop+"menusHeight:"+menusHeight);
+        this.menusContentRef.getScrollElement().setAttribute("style","height:"+menusHeight+"px;margin-top:0px;");
+        /////////////////////////////////*/
         if(navigator.language.startsWith("ko") && this.shop.shopInfo.hasOwnProperty("notice") && this.shop.shopInfo.notice!=null){
             let alert = this.alertController.create({
                         title: this.shop.shopInfo.notice,
@@ -230,6 +259,18 @@ export class ShopHomePage {
         //this.categorySelected=sequence; //Please check if this code is correct.
     // }
     this.shophomeContentRef.resize();
+/*
+        this.shophomeContentRef.getScrollElement().setAttribute("style","height:"+menusHeight+"px;margin-top:0px;margin-bottom:0px");
+    console.log("this.menuRows:"+JSON.stringify(this.menuRows));
+    console.log("row num :"+this.menuRows.length+" menus:"+JSON.stringify(this.menuRows));
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //console.log("segmentBar:"+JSON.stringify(this.segmentBarRef.getDimensions()));
+    //console.log("recommendation:"+JSON.stringify(this.recommendationRef.getDimensions()));
+    let menusDimensions=this.menusContentRef.getContentDimensions();
+    let menusHeight=this.menusContentRef.getNativeElement().parentElement.offsetHeight-menusDimensions.contentTop+100;
+    console.log("pageHeight:"+this.menusContentRef.getNativeElement().parentElement.offsetHeight+"top:"+menusDimensions.contentTop+"menusHeight:"+menusHeight);
+    this.menusContentRef.getScrollElement().setAttribute("style","height:"+menusHeight+"px;margin-top:0px;margin-bottom:0px");
+    //////////////////////////////////////////////////////////*/    
 
     console.log("categorySelected:"+this.categorySelected);
   }
@@ -255,9 +296,39 @@ export class ShopHomePage {
     this.storageProvider.orderPageEntered=true;
   }
 
+//   swipeCategory(event){
+//         console.log("event.direction:"+event.direction+ "categories.length:"+this.categories.length);
+//         /*
+//         if(this.categories.length>3){
+//             let dimensions=this.segmentBarRef.getContentDimensions();
+//             if(this.categorySelected>=3 && event.direction==2){ // increase this.categorySelected
+//                 console.log("call scrollTo with "+(dimensions.contentWidth/3)*(this.categorySelected-1));
+//                 this.segmentBarRef.scrollTo((dimensions.contentWidth/3)*(this.categorySelected-1),0,500);
+//             }else if(this.categorySelected>=3 && event.direction==4){ //decrease this.categorySelected
+//                  console.log("call scrollTo with "+(dimensions.contentWidth/3)*(this.categorySelected-3));
+//                  this.segmentBarRef.scrollTo((dimensions.contentWidth/3)*(this.categorySelected-3),0,500);
+//             }    
+//         }
+//         */
+//         if(event.direction==4){ //DIRECTION_LEFT = 2
+//             if(this.categorySelected>1){
+//                 this.categoryChange(this.categorySelected-1);
+//             }
+//         }else if(event.direction==2){//DIRECTION_RIGHT = 4
+//             if(this.categorySelected < this.categories.length){
+//                 this.categoryChange(this.categorySelected+1);
+//             }
+//         }        
+//   }
+
     hideFlag(flag){
         return flag;
     }
+
+    ionViewWillUnload(){
+       //Please update shoplist of storageProvider...
+       console.log("ionViewWillUnload-ShopHomePage");
+     }
 
     clickMenuArea(){
     console.log("clickMenuArea "+this.menuSlideUp);
@@ -266,18 +337,18 @@ export class ShopHomePage {
       setTimeout(() => {
          this.menuSlideUp=true;
          console.log("slide up");
-       }, 100);     
+       }, 250);     
     }
   }
 
     slidePressed(){
     console.log("slidePressed "+this.menuSlideUp);
-    if(this.menuSlideUp){      
+    if(this.menuSlideUp){
+      this.menuSlideUp=false;
       this.slideUpState='down';
-       this.menuSlideUp=false;
        setTimeout(() => {
           console.log("slide down");
-       }, 100);
+       }, 250);
     }
   }
 

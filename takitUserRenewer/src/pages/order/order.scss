@@ -135,6 +135,15 @@ page-order {
         }
     }
 
+    .div-agreement{
+        margin:10px;
+        ion-col:nth-child(1){
+            flex: 0 0 25%;
+            font-weight: 600;
+        }
+    }
+
+
     .toolbar-shadow{
         padding: 0;
     }

@@ -13,7 +13,7 @@ import {MyWalletPage} from '../my-wallet/my-wallet';
 import { MorePage } from '../more/more';
 
 import {Platform,IonicApp,MenuController,Tabs} from 'ionic-angular';
-import {NavParams,ViewController,App,NavController,AlertController,ModalController} from 'ionic-angular';
+import {NavParams,ViewController,App,NavController,AlertController,ModalController,Events} from 'ionic-angular';
 import {Device} from '@ionic-native/device';
 import {Http,Headers} from '@angular/http';
 import {StorageProvider} from '../../providers/storageProvider';
@@ -52,7 +52,7 @@ export class TabsPage {
     public storageProvider:StorageProvider,private http:Http, private alertController:AlertController,private ionicApp: IonicApp,
     private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider,
     private nativeStorage: NativeStorage, private push: Push,private navParams: NavParams,
-    private device:Device,private backgroundMode:BackgroundMode) {
+    private device:Device,private backgroundMode:BackgroundMode,public events: Events) {
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
         }    
@@ -114,51 +114,6 @@ export class TabsPage {
                         console.log("Hum...getBalanceCash-HttpError");
                     } 
         });
-        //check if the lastest deposit without confirmation exists or not.
-
-         body = JSON.stringify({cashId:this.storageProvider.cashId,
-                                lastTuno: -1,
-                                limit: this.storageProvider.TransactionsInPage});
-            console.log("getCashList:"+body);                    
-            this.serverProvider.post( this.storageProvider.serverAddress+"/getCashList",body).then((res:any)=>{
-                if(res.result=="success"){
-                    if(res.cashList!="0"){
-                        for(var i=0;i<res.cashList.length;i++){
-                            //console.log("cash item:"+JSON.stringify(cashList[i]));
-                            if(res.cashList[i].transactionType=="deposit" && res.cashList[i].confirm==0){
-                                break;
-                            }
-                        }
-                        //console.log("checkDepositInLatestCashlist i:"+i +"length:"+cashList.length);
-                        if(i==res.cashList.length){
-                            this.storageProvider.deposit_in_latest_cashlist=false;
-                        }else{    
-                            this.storageProvider.deposit_in_latest_cashlist=true;
-                        }
-                    }
-                }else{
-                    let alert = this.alertController.create({
-                        title: '캐쉬 내역을 가져오지 못했습니다.',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-                }
-            },(err)=>{
-                if(err=="NetworkFailure"){
-                    let alert = this.alertController.create({
-                        title: '서버와 통신에 문제가 있습니다',
-                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-                }else{
-                    let alert = this.alertController.create({
-                        title: '캐쉬 내역을 가져오지 못했습니다.',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-                }
-            });
     }
   }
 
@@ -362,8 +317,9 @@ export class TabsPage {
             console.log("pause event comes");
             this.storageProvider.backgroundMode=true;
         }); //How about reporting it to server?
+
         this.platform.resume.subscribe(()=>{
-            console.log("resume event comes");
+            console.log("resume event comes.send app:foreground");
             this.storageProvider.backgroundMode=false;
         }); //How about reporting it to server?
 
@@ -382,7 +338,7 @@ export class TabsPage {
             ticker: '주문알림 대기',
             text:   '타킷이 실행중입니다'
         });
-
+        
         //get the orders in progress within 24 hours from server
         this.serverProvider.orderNoti().then((orders:any)=>{
             if(orders==undefined || orders==null ||orders.length==0){

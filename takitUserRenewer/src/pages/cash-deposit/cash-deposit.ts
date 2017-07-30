@@ -4,6 +4,7 @@ import {TranslateService} from 'ng2-translate/ng2-translate';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {AlertPage} from '../alert/alert';
+import { Clipboard } from '@ionic-native/clipboard';
 
 declare var moment:any;
 
@@ -30,7 +31,7 @@ export class CashDepositPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
         public translateService: TranslateService,public serverProvider:ServerProvider,
         public storageProvider:StorageProvider,private alertController:AlertController,
-        public modalCtrl: ModalController) {
+        public modalCtrl: ModalController,private clipboard: Clipboard) {
           
     this.cashId=this.storageProvider.cashId;
     this.depositMemo=this.storageProvider.name;
@@ -236,4 +237,20 @@ export class CashDepositPage {
                                 });
       }
     }
+
+  copyAccountInfo(){
+    console.log("copyAccountInfo");
+    var account = "3012424363621";
+    this.clipboard.copy(account);
+    this.translateService.get('AccountNumberClipbaordCopy').subscribe(
+        value => {
+            let alert = this.alertController.create({
+                title: value,
+                buttons: ['OK']
+            });
+            alert.present();
+        }
+    );
+  }
+    
 }

@@ -38,7 +38,7 @@ export class OldOrderPage {
     console.log('ionViewDidEnter OldOrderPage');
     this.serverProvider.getOldOrders().then((res:any)=>{
         if(res.result === "success" && Array.isArray(res.oldOrders)){
-            console.log("getOldOrders success");
+            console.log("getOldOrders success:"+JSON.stringify(res.oldOrders));
             this.oldOrders=res.oldOrders;
         }else{
             console.log(JSON.stringify(res));

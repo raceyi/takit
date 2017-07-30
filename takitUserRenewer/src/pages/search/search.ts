@@ -19,7 +19,8 @@ export class SearchPage {
 
   identifier:string;
   brand:string;
-
+  nearShops=[];
+  
   constructor(public navCtrl: NavController, public navParams: NavParams,
           private serverProvider:ServerProvider,public storageProvider:StorageProvider,
           private translateService:TranslateService,private alertController:AlertController) {

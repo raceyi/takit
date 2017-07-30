@@ -50,13 +50,13 @@
             <p no-margin>{{businessType}}</p>   
         </ion-col>
     </ion-row>
-    <div [hidden]="menuSlideUp">
-        <!-- <ion-icon name="icon-atRestaurant" color="mainColor"></ion-icon> -->
-        <!-- <ion-icon name="icon-atRestaurant" color="grey"></ion-icon> -->
-        <!-- <ion-icon name="icon-takeout" color="mainColor" *ngIf="storageProvider.shopInfo.takeout===1 || storageProvider.shopInfo.takeout===2"></ion-icon>
-        <ion-icon name="icon-takeout" color="grey" *ngIf="storageProvider.shopInfo.takeout===0"></ion-icon>
-        <ion-icon name="icon-delivery" color="mainColor" *ngIf="storageProvider.shopInfo.takeout===2"></ion-icon>
-        <ion-icon name="icon-delivery" color="grey" *ngIf="storageProvider.shopInfo.takeout===0 || storageProvider.shopInfo.takeout===1"></ion-icon> -->
+    <div class="icon-shopInfo" [hidden]="menuSlideUp">
+        <ion-icon name="icon-atRestaurant" color="mainColor" *ngIf="(takeout < 3)"></ion-icon> 
+        <ion-icon name="icon-atRestaurant" color="grey" *ngIf="!(takeout < 3)"></ion-icon> 
+        <ion-icon name="icon-takeout" color="mainColor" *ngIf="takeout>=1"></ion-icon>
+        <ion-icon name="icon-takeout" color="grey" *ngIf="takeout===0"></ion-icon>
+        <ion-icon name="icon-delivery" color="mainColor" *ngIf="takeout===2 || takeout===4"></ion-icon>
+        <ion-icon name="icon-delivery" color="grey" *ngIf="takeout<=1 || takeout===3"></ion-icon> 
     </div>
 
 <!--
@@ -154,15 +154,15 @@
     
 
     <ion-fab bottom color="white" bottom right>
-        <button class="fab-btn" ion-fab>
+        <button class="fab-btn" ion-fab color="white">
             <ion-icon name="icon-floating_open">
             </ion-icon>
         </button>
         <ion-fab-list side="left">
-            <button (click)="enterCart()" ion-button small>
+            <button (click)="enterCart()" ion-button color="white">
                 <ion-icon name="icon-cart"></ion-icon>
             </button>
-            <button (click)="enterOldOrder()" ion-button small>
+            <button (click)="enterOldOrder()" ion-button color="white">
                 <ion-icon name="icon-list_2"></ion-icon>
             </button>
         </ion-fab-list>

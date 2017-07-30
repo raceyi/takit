@@ -95,7 +95,7 @@ export class CashPassword {
         });
         return;
     }else{
-            if(!this.confirmInProgress){
+        if(!this.confirmInProgress){
             this.confirmInProgress=true;
 
             for(let i=0;i<6;i++){
@@ -153,11 +153,12 @@ export class CashPassword {
                                             console.log('Disagree clicked');
                                             // report it to tabs page
                                             this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti"); 
-                                            this.navCtrl.pop();
-                                            if(this.trigger=="order"){
-                                                this.app.getRootNav().pop();
-                                            }
-                                            this.storageProvider.shopTabRef.select(3);
+                                            this.navCtrl.push(OrderCompletePage,{order:res.order});
+                                            //this.app.getRootNav().pop();
+                                            // if(this.trigger=="order"){
+                                            //     this.app.getRootNav().pop();
+                                            // }
+                                            //this.storageProvider.shopTabRef.select(3);
                                             this.confirmInProgress=false;    
                                             return;
                                         }
@@ -166,11 +167,13 @@ export class CashPassword {
                                         text: '네',
                                         handler: () => {
                                             this.storageProvider.tabMessageEmitter.emit("wakeupNoti");
-                                            this.navCtrl.pop();
-                                            if(this.trigger=="order"){
-                                                this.app.getRootNav().pop();
-                                            }
-                                            this.storageProvider.shopTabRef.select(3);
+                                            //this.navCtrl.pop();
+                                            //this.app.getRootNav().pop();
+                                            // if(this.trigger=="order"){
+                                            //     this.app.getRootNav().pop();
+                                            // }
+                                             this.navCtrl.push(OrderCompletePage,{order:res.order});
+                                            //this.storageProvider.shopTabRef.select(3);
                                             this.confirmInProgress=false;
                                             return;
                                         }
@@ -186,12 +189,14 @@ export class CashPassword {
                                         buttons: ['OK']
                                 });
                                 alert.present().then(()=>{
-                                    this.navCtrl.pop();
-                                    if(this.trigger=="order"){
-                                        this.app.getRootNav().pop();
-                                        this.confirmInProgress=false;
-                                    }
-                                    this.storageProvider.shopTabRef.select(3);
+                                    this.navCtrl.push(OrderCompletePage,{order:res.order});
+                                    //this.app.getRootNav().pop();
+                                    // if(this.trigger=="order"){
+                                    //     this.app.getRootNav().pop();
+                                    //     this.confirmInProgress=false;
+                                    // }
+                                    //this.storageProvider.shopTabRef.select(3);
+                                    this.confirmInProgress=false;
                                 });  
                             }
                             
@@ -204,6 +209,7 @@ export class CashPassword {
                             });
                             alert.present();
                             this.navCtrl.pop();
+                            //this.app.getRootNav().pop();
                             this.confirmInProgress=false;
                         }
                 },(error)=>{

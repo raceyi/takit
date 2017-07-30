@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams , AlertController} from 'ionic-angular';
+import { IonicPage, NavController, NavParams , AlertController, App} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -36,14 +36,17 @@ export class OrderCompletePage {
      constructor(private http:Http, private navController: NavController, 
           public storageProvider:StorageProvider,public navParams:NavParams,
           private alertController:AlertController, private ngZone:NgZone,
-          private serverProvider:ServerProvider){
+          private serverProvider:ServerProvider, public appCtrl:App){
 	      console.log("OrderCompletePage constructor");
         
         this.shopname=this.storageProvider.currentShopname();
-
+        console.log("order:"+navParams.get('order'));
         this.order=navParams.get('order');
         this.orderList=JSON.parse(this.order.orderList);
-        
+         console.log("orderList:"+this.orderList);
+        this.totalDiscount = parseInt(this.orderList.taktiDiscount)+parseInt(this.orderList.couponDiscount);
+        console.log("orderList:"+this.orderList);
+
         // if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
         //     this.shopPhoneHref="tel:"+this.storageProvider.shopResponse.shopInfo.shopPhone;
         
@@ -335,5 +338,8 @@ export class OrderCompletePage {
         this.getOrders(-1);
     }
 */    
-
+    back(){
+        this.navController.popToRoot();
+        //this.appCtrl.goToRoot();
+    }
 }

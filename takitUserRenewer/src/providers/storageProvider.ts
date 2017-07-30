@@ -86,7 +86,9 @@ export class StorageProvider{
 
 
     /* 농협 계좌 이체가능 은행 */
-    banklist=[  {name:"국민",value:"004"},
+    banklist=[  {name:"토스",value:"-1"},
+                {name:"카카오페이",value:"-2"},
+                {name:"국민",value:"004"},
                 {name:"기업",value:"003"},
                 {name:"농협",value:"011"},
                 {name:"신한",value:"088"},
@@ -142,7 +144,6 @@ export class StorageProvider{
     ///////////////////////////////////////////////////////////////////
     public tutorialShownFlag=true; // If tutorial is shown or not,initialized as true. 
     public orderDoneFlag=false;
-
 
     public sejongShops=[];
     public wecookShops=[];
@@ -315,7 +316,7 @@ export class StorageProvider{
           }else{
               console.log(" getCartInfo:none");
               // 장바구니가 비었습니다. 
-              this.cart={menus:[],total:0};
+              this.cart={menus:[],total:0,prevAmount:0,takitDiscount:0,couponDiscount:0};
           }
         },(err)=>{
             console.log("loadCart error");

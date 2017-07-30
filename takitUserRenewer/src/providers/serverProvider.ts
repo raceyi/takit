@@ -289,10 +289,10 @@ export class ServerProvider{
         });
     }
 
-    getKeywordShopInfos(serviceName){
+    getKeywordShopInfos(keyword){
         return new Promise((resolve,reject)=>{
             //takitId old-order.ts에서 변경
-            let body = JSON.stringify({serviceName:serviceName});
+            let body = JSON.stringify({keyword:keyword});
             console.log("getKeywordShopInfos "+body);
             this.post(this.storageProvider.serverAddress+"/getKeywordShopInfos",body).then((res:any)=>{
                 console.log("getKeywordShopInfos res:"+JSON.stringify(res));

@@ -5,6 +5,7 @@ import { TransactionHistoryPage } from '../transaction-history/transaction-histo
 import { CashDepositPage } from '../cash-deposit/cash-deposit';
 import { CashWithdrawPage } from '../cash-withdraw/cash-withdraw';
 import {SearchPage} from '../search/search';
+import {CashConfigurePage } from '../cash-configure/cash-configure';
 /*
   Generated class for the MyWallet page.
 
@@ -17,7 +18,6 @@ import {SearchPage} from '../search/search';
 })
 export class MyWalletPage {
 
-    isTestServer:boolean=false;
     myWalletType:string = "cash";
     cardList = [{"name":"신한","img":"UItest/card1.png"},
                 {"name":"삼성","img":"UItest/card2.png"},
@@ -26,7 +26,7 @@ export class MyWalletPage {
                 {"name":"IBK","img":"UItest/card5.jpg"}];
     events=["UItest/coupon1.png","UItest/coupon2.png","UItest/event1.jpg","UItest/event2.jpg"];
 
-
+    isTestServer:boolean=false;
   constructor(public navCtrl: NavController, public navParams: NavParams,
                 public storageProvider:StorageProvider,private app:App) {
 
@@ -35,7 +35,6 @@ export class MyWalletPage {
         }  
 
   }
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad MyWalletPage');
   }
@@ -50,10 +49,15 @@ export class MyWalletPage {
 
   deposit(){
     this.app.getRootNav().push(CashDepositPage);
+    //error?
   }
 
   withdraw(){
     this.app.getRootNav().push(CashWithdrawPage);
+  }
+
+  enterCashConfigure(){
+      this.app.getRootNav().push(CashConfigurePage);
   }
 
   getMyCoupon(){

@@ -7,11 +7,12 @@ page-shophome{
             height: 100%;
             padding: 0;
             margin: 0;
-            position: relative;
+            position: relative !important;
             text-align: center;
             display: flex;
 
             img{
+                position: relative;
                 width: 100%;
                 height: 100%;
                 max-width: 100%;
@@ -20,21 +21,22 @@ page-shophome{
                 margin: 0;
             }
 
-             .card-title {
-                position: absolute;
-                top: 50%;
+             
+        }
+        .card-title {
+                position: absolute !important;
+                z-index: 999  !important;
+                top: 30%;
                 height: 40%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                // display: flex;
+                // align-items: center;
+                // justify-content: center;
                 font-size: 2.0em;
                 width: 100%;
                 font-weight: bold;
                 background:linear-gradient(transparent, $sub2-color);
                 color: #fff;
             }
-        }
-
         
     }
 
@@ -69,6 +71,11 @@ page-shophome{
     // .row-takeout >ion-col > ion-icon {
     //     font-size: 1.7em;
     // }
+
+    .icon-shopInfo{
+        margin-left: 10px;
+        font-size:30px;
+    }
 
     .no-scroll >.scroll-content{
         overflow: hidden;
@@ -159,7 +166,7 @@ page-shophome{
         }
 
         .segment-ios-subColor2 .segment-button.segment-activated{
-            background: url('../../assets/store_menu.svg');
+            background: url('./assets/store_menu.svg');
             background-size: 100% 45px;
             background-color: transparent;
         }

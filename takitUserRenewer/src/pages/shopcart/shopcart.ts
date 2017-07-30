@@ -65,7 +65,7 @@ export class ShopCartPage{
         //     this.shopPhoneHref="tel:"+this.storageProvider.shopResponse.shopInfo.shopPhone;
 
         if(this.cart!=undefined){
-            this.price=parseInt(this.cart.total);
+            //this.price=parseInt(this.cart.total);
             //this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
             this.amount=parseInt(this.cart.total);
             if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
@@ -157,9 +157,9 @@ export class ShopCartPage{
       var cart={menus:[],total:0};
       this.storageProvider.saveCartInfo(this.storageProvider.takitId,JSON.stringify(cart)).then(()=>{
           this.cart=this.storageProvider.cart;
-          this.price=this.cart.total;
+          //this.price=this.cart.total;
           this.discount=Math.round(this.cart.total*(parseFloat(this.storageProvider.shopInfo.discountRate)/100.0));
-          this.amount=this.price-this.discount;
+          this.amount=this.cart.total;
           if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
                 this.delivery=false;
                 this.takeout=false;

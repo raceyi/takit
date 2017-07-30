@@ -21,17 +21,18 @@ page-menu-detail {
         margin-left: 5px;
         margin-right: 5px;
         height: 48%;
-
+        position: relative;
         img{
             margin-top: 20px;
             width: 35%;
             height: 55%;
             border-radius: 100%;
-
+            position: relative;
         }
 
         .p-name{
-            position: absolute;
+            position: absolute !important;
+            z-index: 999;
             top : 22.5%;
             background-color: white;
             padding-top: 20px;
