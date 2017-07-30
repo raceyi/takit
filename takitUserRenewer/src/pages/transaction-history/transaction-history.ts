@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams,AlertController } from 'ionic-angular';
+import { Component ,NgZone,ViewChild} from '@angular/core';
+import { NavController, NavParams,AlertController,ModalController,InfiniteScroll } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {TranslateService} from 'ng2-translate/ng2-translate';
+import {CashConfirmPage} from '../cashconfirm/cashconfirm';
+import { Events } from 'ionic-angular';
 
 declare var moment:any;
 
@@ -20,6 +22,7 @@ declare var moment:any;
 export class TransactionHistoryPage {
    //@ViewChild('infiniteScroll') infiniteScrollRef: InfiniteScroll;
     public lastTuno:number=-1;
+    //private seq:number=0;
 /*
     transactions=[
       {"style":{'background-color':'yellow','height':'50px'},"transactionType":"deposit","type":"캐쉬충전", "confirm":"0","date":"2017-06-12","bankName":"우리","amount":"5000","nowBalance":"5000"},
@@ -33,37 +36,87 @@ export class TransactionHistoryPage {
   lang;
   public transactions=[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams
+  constructor(public navCtrl: NavController, public navParams: NavParams,private ngZone:NgZone
               ,private alertCtrl:AlertController,public translateService: TranslateService
-              ,public storageProvider:StorageProvider,public serverProvider:ServerProvider) {
+              ,public storageProvider:StorageProvider,public serverProvider:ServerProvider
+              ,public modalCtrl: ModalController,public events: Events) {
     if(navigator.language.startsWith("ko"))
         this.lang="ko";
     else
-        this.lang="en";    
+        this.lang="en";   
+
+    this.storageProvider.cashInfoUpdateEmitter.subscribe((option) => {
+        console.log("[TransactionHistoryPage]cashupdate comes");
+        if(option=="cashupdate")
+            this.updateTransactionHistory();
+    });
+/*
+    events.subscribe('app:foreground',()=>{
+        console.log('[TransactionHistoryPage] foreground');
+        this.updateTransactionHistory();
+    });
+*/    
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad TransactionHistoryPage');
-    //this.infiniteScrollRef.enable(false);
+    console.log('ionViewDidLoad TransactionHistoryPage...');
+    this.updateTransactionHistory();
   }
 
-  toggleTransaction(tr){
+/*
+  ionViewDidEnter(){
+    console.log('ionViewDidEnter TransactionHistoryPage');
+  }
+*/
+  updateTransactionHistory(){
+      console.log("updateTransactionHistory");
+      this.lastTuno=-1;
+      this.transactions=[];
+       this.getTransactions(this.lastTuno,true).then((res:any)=>{
+        console.log("updateTransactionHistory-res:"+JSON.stringify(res));
+        if(res.cashList=="0"){
 
+        }else{
+            this.updateTransaction(res.cashList);
+        }
+    },(err)=>{
+                if(err=="NetworkFailure"){
+                        this.translateService.get('NetworkProblem').subscribe(
+                            NetworkProblem => {
+                                     this.translateService.get('checkNetwork').subscribe(
+                                        checkNetwork => {
+                                            let alert = this.alertCtrl.create({
+                                                title: NetworkProblem,
+                                                subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                            });
+                }else{
+                    this.translateService.get('failedGetCashHistory').subscribe(
+                                        failedGetCashHistory => {
+                                            let alert = this.alertCtrl.create({
+                                                title: failedGetCashHistory, //'캐쉬 내역을 가져오지 못했습니다.',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        });
+                }
+    });
   }
 
   doInfinite(infiniteScroll){
- 
     this.getTransactions(this.lastTuno,true).then((res:any)=>{
         //console.log("res:"+JSON.stringify(res));
         if(res.cashList=="0"){
-            console.log("res:"+JSON.stringify(res));
+            //console.log("res:"+JSON.stringify(res));
             infiniteScroll.enable(false);
-            //this.infiniteScroll=false;
         }else{
+            infiniteScroll.enable(true); //?? 
             this.updateTransaction(res.cashList);
             console.log("call complete");
             infiniteScroll.complete();
-            //this.infiniteScrollRef=infiniteScroll;
         }
     },(err)=>{
                 if(err=="NetworkFailure"){
@@ -102,7 +155,7 @@ export class TransactionHistoryPage {
             console.log("getCashList:"+body+"lastTunoUpdate:"+lastTunoUpdate);
             this.serverProvider.post( this.storageProvider.serverAddress+"/getCashList",body).then((res:any)=>{
                 if(res.result=="success"){
-                    console.log("res:"+JSON.stringify(res));
+                    //console.log("res:"+JSON.stringify(res));
                     if(lastTunoUpdate==true)
                         this.lastTuno=res.cashList[res.cashList.length-1].cashTuno;
                      resolve(res);
@@ -182,6 +235,8 @@ export class TransactionHistoryPage {
                 //console.log("tr:"+JSON.stringify(tr));
                 this.transactions.push(tr);
             });
+
+            console.log("before sort transactions:"+JSON.stringify(this.transactions));
   
             // sort last transactions with transactionTime
   
@@ -201,6 +256,8 @@ export class TransactionHistoryPage {
             else
                 this.transactions=[];
             this.transactions=this.transactions.concat(subtransactions);
+            
+            console.log("after sort transactions:"+JSON.stringify(this.transactions));
   }
 
   maskAccount(account:string){
@@ -224,4 +281,25 @@ export class TransactionHistoryPage {
     });
    }
 
+    addCash(transaction){
+      let custom:any={};
+
+      custom.amount=transaction.amount.toString();
+      custom.cashId=transaction.cashId;
+      custom.transactionTime=transaction.transactionTime;
+      custom.cashTuno=transaction.cashTuno;
+      custom.bankName=transaction.bankName;
+      if(transaction.hasOwnProperty("depositDate") && transaction.depositDate!=null){
+          console.log("addCash-depositDate, depositHour");
+          custom.depositDate=transaction.depositDate;
+          custom.depositHour=transaction.depositHour;
+      }
+      if(transaction.branchName!=undefined)
+          custom.branchName=transaction.branchName;
+      else
+          custom.branchCode=transaction.branchCode;
+        //console.log("addCash:"+JSON.stringify(transaction));
+        let cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: custom});
+        cashConfirmModal.present();
+  }
 }

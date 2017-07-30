@@ -13,7 +13,7 @@ import {MyWalletPage} from '../my-wallet/my-wallet';
 import { MorePage } from '../more/more';
 
 import {Platform,IonicApp,MenuController,Tabs} from 'ionic-angular';
-import {NavParams,ViewController,App,NavController,AlertController,ModalController} from 'ionic-angular';
+import {NavParams,ViewController,App,NavController,AlertController,ModalController,Events} from 'ionic-angular';
 import {Device} from '@ionic-native/device';
 import {Http,Headers} from '@angular/http';
 import {StorageProvider} from '../../providers/storageProvider';
@@ -52,7 +52,7 @@ export class TabsPage {
     public storageProvider:StorageProvider,private http:Http, private alertController:AlertController,private ionicApp: IonicApp,
     private menuCtrl: MenuController,public ngZone:NgZone,private serverProvider:ServerProvider,
     private nativeStorage: NativeStorage, private push: Push,private navParams: NavParams,
-    private device:Device,private backgroundMode:BackgroundMode) {
+    private device:Device,private backgroundMode:BackgroundMode,public events: Events) {
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
         }    
@@ -114,51 +114,6 @@ export class TabsPage {
                         console.log("Hum...getBalanceCash-HttpError");
                     } 
         });
-        //check if the lastest deposit without confirmation exists or not.
-
-         body = JSON.stringify({cashId:this.storageProvider.cashId,
-                                lastTuno: -1,
-                                limit: this.storageProvider.TransactionsInPage});
-            console.log("getCashList:"+body);                    
-            this.serverProvider.post( this.storageProvider.serverAddress+"/getCashList",body).then((res:any)=>{
-                if(res.result=="success"){
-                    if(res.cashList!="0"){
-                        for(var i=0;i<res.cashList.length;i++){
-                            //console.log("cash item:"+JSON.stringify(cashList[i]));
-                            if(res.cashList[i].transactionType=="deposit" && res.cashList[i].confirm==0){
-                                break;
-                            }
-                        }
-                        //console.log("checkDepositInLatestCashlist i:"+i +"length:"+cashList.length);
-                        if(i==res.cashList.length){
-                            this.storageProvider.deposit_in_latest_cashlist=false;
-                        }else{    
-                            this.storageProvider.deposit_in_latest_cashlist=true;
-                        }
-                    }
-                }else{
-                    let alert = this.alertController.create({
-                        title: '캐쉬 내역을 가져오지 못했습니다.',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-                }
-            },(err)=>{
-                if(err=="NetworkFailure"){
-                    let alert = this.alertController.create({
-                        title: '서버와 통신에 문제가 있습니다',
-                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-                }else{
-                    let alert = this.alertController.create({
-                        title: '캐쉬 내역을 가져오지 못했습니다.',
-                        buttons: ['OK']
-                    });
-                    alert.present();
-                }
-            });
     }
   }
 
@@ -243,10 +198,6 @@ export class TabsPage {
                             alert.present();
                         }
                 });
-            }else if(cmd=="moveCashConfiguration"){
-                //move into cashTab and then select deposit segment.
-                this.tabRef.select(2);
-                this.storageProvider.cashInfoUpdateEmitter.emit("moveCashConfiguration");
             }else if(cmd=="invalidVersion"){
                  console.log("invalid app version");
                 let alert = this.alertController.create({
@@ -366,8 +317,9 @@ export class TabsPage {
             console.log("pause event comes");
             this.storageProvider.backgroundMode=true;
         }); //How about reporting it to server?
+
         this.platform.resume.subscribe(()=>{
-            console.log("resume event comes");
+            console.log("resume event comes.send app:foreground");
             this.storageProvider.backgroundMode=false;
         }); //How about reporting it to server?
 
@@ -386,7 +338,7 @@ export class TabsPage {
             ticker: '주문알림 대기',
             text:   '타킷이 실행중입니다'
         });
-
+        
         //get the orders in progress within 24 hours from server
         this.serverProvider.orderNoti().then((orders:any)=>{
             if(orders==undefined || orders==null ||orders.length==0){
@@ -485,72 +437,7 @@ export class TabsPage {
 
   cash(event){
      console.log("cash tab selected"); 
-     /*
-     if(this.storageProvider.cashId==undefined || this.storageProvider.cashId.length==0){
-         this.storage.get("cashDetailAlert").then((value)=>{
-            console.log("cashDetailAlert:"+value);
-            if(value==null){
-                let alert = this.alertController.create({
-                        title: "타킷 고유의 캐쉬 서비스",
-                        message: "충전방법보기를 클릭하여 캐쉬아이디에 대해 알아보세요",
-                        inputs: [
-                                    {
-                                    name: 'getLink',
-                                    label: '다시 보지 않음',
-                                    type: "checkbox",
-                                    value: "true",
-                                    checked: false
-                                    }
-                                ],
-                        buttons: [
-                                    {
-                                    text: '확인',//'Ok',
-                                    handler: data => {
-                                        console.log(data);
-                                        if(data=="true"){
-                                            this.storage.set("cashDetailAlert","false");
-                                            console.log("Do not show Alert again.");
-                                        }else{
-                                            console.log("Show Alert again.");
-                                        }
-                                    }
-                                    }
-                                ]
-                    });
-                    alert.present();
-            }
-         },(err)=>{
-             let alert = this.alertController.create({
-                        title: "타킷 고유의 캐쉬 서비스",
-                        message: "자세히 보기를 클릭하여 캐쉬아이디에 대해 알아보세요",
-                        inputs: [
-                                    {
-                                    name: 'getLink',
-                                    label: '다시 보지 않음',
-                                    type: "checkbox",
-                                    value: "true",
-                                    checked: false
-                                    }
-                                ],
-                        buttons: [
-                                    {
-                                    text: '확인',//'Ok',
-                                    handler: data => {
-                                        console.log(data);
-                                        if(data=="true"){
-                                            this.storage.set("cashDetailAlert","false");
-                                            console.log("Do not show Alert again.");
-                                        }else{
-                                            console.log("Show Alert again.");
-                                        }
-                                    }
-                                    }
-                                ]
-                    });
-                    alert.present();
-         });
-         
-    }*/
+     
   }
 
     registerPushService(){ // Please move this code into tabs.ts
@@ -870,15 +757,9 @@ export class TabsPage {
       this.navController.parent.select(0);
   }
 
-  moveToCashListPage(){
-      console.log("moveToCashListPage");
-      this.storageProvider.cashMenu='cashHistory';
-      this.storageProvider.cashInfoUpdateEmitter.emit("listOnly");
-      this.tabRef.select(2);
-  }
-
  ionViewWillEnter(){
      console.log("ionViewWillEnter-tabsPage ");
+
  }
 
  ionViewDidEnter(){

@@ -86,7 +86,9 @@ export class StorageProvider{
 
 
     /* 농협 계좌 이체가능 은행 */
-    banklist=[  {name:"국민",value:"004"},
+    banklist=[  //{name:"토스",value:"-1"},
+                //{name:"카카오페이",value:"-2"},
+                {name:"국민",value:"004"},
                 {name:"기업",value:"003"},
                 {name:"농협",value:"011"},
                 {name:"신한",value:"088"},
@@ -143,10 +145,11 @@ export class StorageProvider{
     public tutorialShownFlag=true; // If tutorial is shown or not,initialized as true. 
     public orderDoneFlag=false;
 
-
     public sejongShops=[];
     public wecookShops=[];
     public nearShops=[];
+
+   // public alertViewCtrls=[];
 
 //"이외 금융기관 => 직접 입력(숫자)"  
 //"지점 코드=>직접 입력(숫자)" http://www.kftc.or.kr/kftc/data/EgovBankList.do 금융회사명으로 조회하기 
@@ -527,6 +530,15 @@ export class StorageProvider{
         for(let i=0;i<this.cashInProgress.length;i++)
             console.log("Remove-cashInProgress["+i+"]:"+this.cashInProgress[i].cashStr);
     }    
+
+    bankName(bankcode){
+        for(var i=0;i<this.banklist.length;i++){
+            if(this.banklist[i].value==bankcode){
+                return this.banklist[i].name;
+            }
+        }
+        return "";
+    }
 }
 
 

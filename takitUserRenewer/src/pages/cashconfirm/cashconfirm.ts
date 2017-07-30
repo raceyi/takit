@@ -3,6 +3,7 @@ import {ViewController,NavParams,NavController,AlertController,App} from 'ionic-
 import {ServerProvider} from '../../providers/serverProvider';
 import {StorageProvider} from '../../providers/storageProvider';
 import {CashDepositDeletePage} from '../cash-deposit-delete/cash-deposit-delete';
+import { Events } from 'ionic-angular';
 
 @Component({
   selector: 'page-cashconfirm',
@@ -27,7 +28,8 @@ export class CashConfirmPage{
   constructor(params: NavParams,public viewCtrl: ViewController
       ,private alertController:AlertController,public storageProvider:StorageProvider,
       private serverProvider:ServerProvider,private ngZone:NgZone,
-      private navController: NavController,public app:App) {
+      private navController: NavController,public app:App,
+      public events: Events) {
       console.log('CashConfirmPage -constructor custom:'+ JSON.stringify(params.get('custom')));
       let custom=params.get('custom');
       this.customStr=JSON.stringify(custom); 
@@ -58,13 +60,23 @@ export class CashConfirmPage{
       
       console.log("tuno:"+this.tuno);
 
-      this.storageProvider.cashAddInProgress(this.customStr,viewCtrl);      
+      this.storageProvider.cashAddInProgress(this.customStr,viewCtrl);  
+
+      //this.events.publish("cash:confirm"); 
+      /*   
+      for(var i=0;i<this.storageProvider.alertViewCtrls.length;i++)
+      {
+            console.log("remove alertView");
+            this.navController.removeView(this.storageProvider.alertViewCtrls[i]);
+      }  
+      this.storageProvider.alertViewCtrls=[];
+      */
   }
 
   dismiss() {
     this.removeDuplicate();
     this.viewCtrl.dismiss();
-    this.storageProvider.cashInfoUpdateEmitter.emit("listOnly");
+    this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
   }
 
   confirmDismiss(){
@@ -80,7 +92,7 @@ export class CashConfirmPage{
           this.serverProvider.post(this.storageProvider.serverAddress+"/addCash",body).then((res:any)=>{
                     console.log("addCash:"+JSON.stringify(res));
                     if(res.result=="success"){
-                      this.storageProvider.cashInfoUpdateEmitter.emit("all");
+                      this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
                       this.removeDuplicate();
                       this.viewCtrl.dismiss();
                     }else{ 
@@ -132,7 +144,7 @@ export class CashConfirmPage{
           });         
       }else{
             let alert = this.alertController.create({
-                title: "법적 경고 사항에 동의해 주시기 바랍니다.",
+                title: "서버에 충전확인 요청 중입니다.",
                 buttons: ['OK']
             });
             alert.present();
@@ -169,8 +181,10 @@ export class CashConfirmPage{
   }
 
   deposit(){
-        console.log("deposit");
-        this.agreementShown=true;
+        console.log("deposit...");
+        this.ngZone.run(()=>{
+            this.agreementShown=true;
+        });
   }
 
 }

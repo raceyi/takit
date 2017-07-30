@@ -297,7 +297,7 @@ export class SignupPaymentPage {
 
  myCallbackConfirmFunction = (_params) => {
       return new Promise((resolve, reject) => {
-          console.log("password params:"+_params);
+          console.log("password confirm params:"+_params);
           this.cashIdPasswordConfirm=_params;
           this.passwordConfirmString="******";
           resolve();
