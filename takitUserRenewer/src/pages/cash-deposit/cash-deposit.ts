@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component,NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams,AlertController,ModalController } from 'ionic-angular';
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {AlertPage} from '../alert/alert';
 import { Clipboard } from '@ionic-native/clipboard';
+import { ToastController } from 'ionic-angular';
 
 declare var moment:any;
 
@@ -21,7 +22,7 @@ declare var moment:any;
 export class CashDepositPage {
   manualCheckHidden:boolean=true;
   transferDate;
-  depositBank;
+  //depositBank;
   depositMemo:string;
   cashId:string;
   depositAmount:number=0;
@@ -31,7 +32,8 @@ export class CashDepositPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
         public translateService: TranslateService,public serverProvider:ServerProvider,
         public storageProvider:StorageProvider,private alertController:AlertController,
-        public modalCtrl: ModalController,private clipboard: Clipboard) {
+        public modalCtrl: ModalController,private clipboard: Clipboard,
+        public toastCtrl: ToastController,public ngZone:NgZone) {
           
     this.cashId=this.storageProvider.cashId;
     this.depositMemo=this.storageProvider.name;
@@ -44,7 +46,7 @@ export class CashDepositPage {
     let mm = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1); // getMonth() is zero-based
     let dd  = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
     let hh = d.getHours() <10? "0"+d.getHours(): d.getHours();
-    let dString=d.getFullYear()+'-'+(mm)+'-'+dd+'T'+hh+":00";+moment().format("Z");
+    let dString=d.getFullYear()+'-'+(mm)+'-'+dd+'T'+hh+":00"+moment().format("Z");
 
     this.transferDate=dString;          
   }
@@ -62,11 +64,13 @@ export class CashDepositPage {
   }
 
   manualCheckClose(){
-    this.manualCheckHidden=true;
-    this.transferDate=this.defaultTransferDate();
-    this.depositMemo=this.storageProvider.name;
-    this.depositAmount=0;
-    this.depositBank=undefined;
+      this.ngZone.run(()=>{
+          //  this.transferDate=this.defaultTransferDate();
+            this.depositMemo=this.storageProvider.name;
+            this.depositAmount=0;
+         //   this.storageProvider.depositBank=undefined;
+            this.manualCheckHidden=true;
+      });
   }
 
 
@@ -135,8 +139,13 @@ export class CashDepositPage {
                                     console.log("res:"+JSON.stringify(res));
                                     if(res.result=="success"){
                                             this.manualCheckHidden=true;
-                                            let alertPage = this.modalCtrl.create(AlertPage);
-                                            alertPage.present();
+
+                                            let toast = this.toastCtrl.create({
+                                                message: '입금 확인을 요청했습니다. 5초 이내로 응답이 없을 경우 내지갑->거래내역 선택->충전 확인을 클릭 하시면 충전 확인 메시지를 보실수 있습니다.',
+                                                duration: 5000
+                                                });
+                                                toast.present();
+
                                             this.cashInEnable = true;
                                             this.manualCheckClose();
                                     }else if(res.result=="failure" && res.error=="gcm:400"){

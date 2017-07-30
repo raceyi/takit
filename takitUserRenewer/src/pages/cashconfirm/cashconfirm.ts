@@ -24,7 +24,6 @@ export class CashConfirmPage{
   customStr;
 
   inProgress=false;
-  //seq:number;
 
   constructor(params: NavParams,public viewCtrl: ViewController
       ,private alertController:AlertController,public storageProvider:StorageProvider,
@@ -32,7 +31,6 @@ export class CashConfirmPage{
       private navController: NavController,public app:App,
       public events: Events) {
       console.log('CashConfirmPage -constructor custom:'+ JSON.stringify(params.get('custom')));
-      //let seq=params.get('seq');
       let custom=params.get('custom');
       this.customStr=JSON.stringify(custom); 
 
@@ -62,13 +60,23 @@ export class CashConfirmPage{
       
       console.log("tuno:"+this.tuno);
 
-      this.storageProvider.cashAddInProgress(this.customStr,viewCtrl);      
+      this.storageProvider.cashAddInProgress(this.customStr,viewCtrl);  
+
+      //this.events.publish("cash:confirm"); 
+      /*   
+      for(var i=0;i<this.storageProvider.alertViewCtrls.length;i++)
+      {
+            console.log("remove alertView");
+            this.navController.removeView(this.storageProvider.alertViewCtrls[i]);
+      }  
+      this.storageProvider.alertViewCtrls=[];
+      */
   }
 
   dismiss() {
     this.removeDuplicate();
     this.viewCtrl.dismiss();
-    this.storageProvider.cashInfoUpdateEmitter.emit("listOnly");
+    this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
   }
 
   confirmDismiss(){
@@ -84,7 +92,6 @@ export class CashConfirmPage{
           this.serverProvider.post(this.storageProvider.serverAddress+"/addCash",body).then((res:any)=>{
                     console.log("addCash:"+JSON.stringify(res));
                     if(res.result=="success"){
-                      //this.events.publish("cash:update",[{seq:this.seq}]); duplicate events delivered
                       this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
                       this.removeDuplicate();
                       this.viewCtrl.dismiss();

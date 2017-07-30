@@ -25,7 +25,8 @@ export class CashWithdrawPage {
   public verifiedBank:string="";
   public verifiedAccount:string="";
 
-  public refundEditable=true;
+  public refundBankName:string="";  
+  //public refundEditable=true;
 
   public refundAmount:number=undefined;
   public refundFee:number=undefined;
@@ -47,7 +48,8 @@ export class CashWithdrawPage {
                     //console.log("refundEditable:"+this.refundEditable);
                     //console.log("refundAccountMask:"+this.refundAccountMask);
                     this.refundAccountMask=this.maskAccount(this.refundAccount); /* mask except 3 digits at front and 5 digits at end */
-                    this.refundEditable=false;
+                    this.refundBankName=this.storageProvider.bankName(this.refundBank);
+                    //this.refundEditable=false;
                     //console.log("..refundEditable:"+this.refundEditable);
                     //console.log("..refundAccountMask:"+this.refundAccountMask);
                 }
@@ -83,8 +85,13 @@ export class CashWithdrawPage {
   }
 
   manageRefundAccount(){
+      console.log("manageRefundAccount");      
       this.showAccount=!this.showAccount;
-            console.log("refundBank:"+this.refundBank);
+      //this.refundEditable=true;
+  }
+
+  checkWithrawAccount(){    
+      console.log("refundBank:"+this.refundBank);
       if(this.refundBank.length==0){
             let alert = this.alertController.create({
                 title: '은행을 선택해 주시기 바랍니다.',
@@ -107,6 +114,7 @@ export class CashWithdrawPage {
       this.serverProvider.post(this.storageProvider.serverAddress+"/registRefundAccount",body).then((res:any)=>{
           console.log("registRefundAccount res:"+JSON.stringify(res));
           if(res.result=="success"){
+              this.refundBankName=this.storageProvider.bankName(this.refundBank);
               // store info into local storage and convert button from registration into modification
               var encryptedBank:string=this.storageProvider.encryptValue('refundBank',this.refundBank);
               this.nativeStorage.setItem('refundBank',encodeURI(encryptedBank));
@@ -115,7 +123,8 @@ export class CashWithdrawPage {
               this.verifiedBank=this.refundBank;
               this.verifiedAccount=this.refundAccount.trim();
               this.refundAccountMask=this.maskAccount(this.refundAccount);
-              this.refundEditable=false;
+              this.showAccount=false;
+              //this.refundEditable=false;
               return;
           }
           if(res.result=="failure"){
@@ -261,24 +270,7 @@ export class CashWithdrawPage {
           console.log("refundCash res:"+JSON.stringify(res));
           if(res.result=="success"){
               //console.log("cashAmount:"+res.cashAmount);
-              this.serverProvider.updateCashAvailable().then((res)=>{
-                  //do nothing;
-                  this.storageProvider.cashInfoUpdateEmitter.emit("all");
-               },(err)=>{
-                    if(err=="NetworkFailure"){
-                                    let alert = this.alertController.create({
-                                        title: "서버와 통신에 문제가 있습니다.",
-                                        buttons: ['OK']
-                                    });
-                                    alert.present();
-                        }else{
-                        let alert = this.alertController.create({
-                                title: "캐쉬정보를 가져오지 못했습니다.",
-                                buttons: ['OK']
-                            });
-                                alert.present();
-                        }
-              });
+              this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
                let alert = this.alertController.create({
                     title: '환불요청에 성공했습니다.',
                     buttons: ['OK']
@@ -319,16 +311,17 @@ export class CashWithdrawPage {
   }
 
   enableRefundEditable(){
-      this.refundEditable=true;
+      //this.refundEditable=true;
       this.refundBank="";
       this.refundAccount="";
   }
 
   cancelRefundEditable(){
-      this.refundEditable=false;
+      //this.refundEditable=false;
       this.refundBank=this.verifiedBank;
       this.refundAccount=this.verifiedAccount;
       this.refundAccountMask=this.maskAccount(this.refundAccount);
+      this.showAccount=false;
   }
 
 }

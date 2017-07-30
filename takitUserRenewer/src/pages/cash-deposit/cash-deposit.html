@@ -78,7 +78,9 @@
               <ion-col>
                 <ion-item class="bankSelect" >
                     <ion-label></ion-label>
-                    <ion-select style="width:40vw;" class="depositBankSelect" [(ngModel)]="depositBank">
+                    <ion-select style="width:40vw;" class="depositBankSelect" [(ngModel)]="storageProvider.depositBank">
+                      <ion-option value="-1" >토스</ion-option>
+                      <ion-option value="-2" >카카오페이</ion-option> 
                       <ion-option *ngFor="let bank of storageProvider.banklist" value="{{bank.value}}">{{bank.name}}</ion-option>
                       <ion-option value="0" >은행코드직접입력</ion-option>
                     </ion-select>
