@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams,AlertController } from 'ionic-angular';
+import { Component ,NgZone,ViewChild} from '@angular/core';
+import { NavController, NavParams,AlertController,ModalController,InfiniteScroll } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {TranslateService} from 'ng2-translate/ng2-translate';
+import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 
 declare var moment:any;
 
@@ -18,7 +19,7 @@ declare var moment:any;
   templateUrl: 'transaction-history.html',
 })
 export class TransactionHistoryPage {
-   //@ViewChild('infiniteScroll') infiniteScrollRef: InfiniteScroll;
+   @ViewChild('infiniteScroll') infiniteScrollRef: InfiniteScroll;
     public lastTuno:number=-1;
 /*
     transactions=[
@@ -33,9 +34,10 @@ export class TransactionHistoryPage {
   lang;
   public transactions=[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams
+  constructor(public navCtrl: NavController, public navParams: NavParams,private ngZone:NgZone
               ,private alertCtrl:AlertController,public translateService: TranslateService
-              ,public storageProvider:StorageProvider,public serverProvider:ServerProvider) {
+              ,public storageProvider:StorageProvider,public serverProvider:ServerProvider
+              ,public modalCtrl: ModalController) {
     if(navigator.language.startsWith("ko"))
         this.lang="ko";
     else
@@ -44,7 +46,49 @@ export class TransactionHistoryPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TransactionHistoryPage');
-    //this.infiniteScrollRef.enable(false);
+  }
+
+  ionViewDidEnter(){
+    console.log('ionViewDidEnter TransactionHistoryPage');
+        this.getTransactions(-1,true).then((res:any)=>{
+                this.ngZone.run(()=>{
+                        //console.log("res:"+JSON.stringify(res));
+                        if(res.cashList=="0"){
+                            console.log("res:"+JSON.stringify(res));
+                            this.infiniteScrollRef.enable(false);
+                        }else{
+                            this.transactions=[];
+                            this.updateTransaction(res.cashList);
+                            //this.checkDepositInLatestCashlist(res.cashList);
+                            console.log("call complete()");
+                            this.infiniteScrollRef.complete();
+                        }
+                });
+            },(err)=>{
+                if(err=="NetworkFailure"){
+                    this.translateService.get('NetworkProblem').subscribe(
+                    NetworkProblem => {
+                                this.translateService.get('checkNetwork').subscribe(
+                                checkNetwork => {
+                                    let alert = this.alertCtrl.create({
+                                        title: NetworkProblem,
+                                        subTitle: checkNetwork,//'네트웍상태를 확인해 주시기바랍니다',
+                                        buttons: ['OK']
+                                    });
+                                    alert.present();
+                                });
+                    });
+                }else{
+                    this.translateService.get('failedGetCashHistory').subscribe(
+                    failedGetCashHistory => {
+                        let alert = this.alertCtrl.create({
+                            title: failedGetCashHistory, //'캐쉬 내역을 가져오지 못했습니다.',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                    });
+                }
+            });                
   }
 
   toggleTransaction(tr){
@@ -224,4 +268,25 @@ export class TransactionHistoryPage {
     });
    }
 
+    addCash(transaction){
+      let custom:any={};
+
+      custom.amount=transaction.amount.toString();
+      custom.cashId=transaction.cashId;
+      custom.transactionTime=transaction.transactionTime;
+      custom.cashTuno=transaction.cashTuno;
+      custom.bankName=transaction.bankName;
+      if(transaction.hasOwnProperty("depositDate") && transaction.depositDate!=null){
+          console.log("addCash-depositDate, depositHour");
+          custom.depositDate=transaction.depositDate;
+          custom.depositHour=transaction.depositHour;
+      }
+      if(transaction.branchName!=undefined)
+          custom.branchName=transaction.branchName;
+      else
+          custom.branchCode=transaction.branchCode;
+        console.log("addCash:"+JSON.stringify(transaction));
+        let cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: custom });
+        cashConfirmModal.present();
+  }
 }

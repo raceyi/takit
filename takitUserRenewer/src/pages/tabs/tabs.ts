@@ -243,10 +243,6 @@ export class TabsPage {
                             alert.present();
                         }
                 });
-            }else if(cmd=="moveCashConfiguration"){
-                //move into cashTab and then select deposit segment.
-                this.tabRef.select(2);
-                this.storageProvider.cashInfoUpdateEmitter.emit("moveCashConfiguration");
             }else if(cmd=="invalidVersion"){
                  console.log("invalid app version");
                 let alert = this.alertController.create({
@@ -485,72 +481,7 @@ export class TabsPage {
 
   cash(event){
      console.log("cash tab selected"); 
-     /*
-     if(this.storageProvider.cashId==undefined || this.storageProvider.cashId.length==0){
-         this.storage.get("cashDetailAlert").then((value)=>{
-            console.log("cashDetailAlert:"+value);
-            if(value==null){
-                let alert = this.alertController.create({
-                        title: "타킷 고유의 캐쉬 서비스",
-                        message: "충전방법보기를 클릭하여 캐쉬아이디에 대해 알아보세요",
-                        inputs: [
-                                    {
-                                    name: 'getLink',
-                                    label: '다시 보지 않음',
-                                    type: "checkbox",
-                                    value: "true",
-                                    checked: false
-                                    }
-                                ],
-                        buttons: [
-                                    {
-                                    text: '확인',//'Ok',
-                                    handler: data => {
-                                        console.log(data);
-                                        if(data=="true"){
-                                            this.storage.set("cashDetailAlert","false");
-                                            console.log("Do not show Alert again.");
-                                        }else{
-                                            console.log("Show Alert again.");
-                                        }
-                                    }
-                                    }
-                                ]
-                    });
-                    alert.present();
-            }
-         },(err)=>{
-             let alert = this.alertController.create({
-                        title: "타킷 고유의 캐쉬 서비스",
-                        message: "자세히 보기를 클릭하여 캐쉬아이디에 대해 알아보세요",
-                        inputs: [
-                                    {
-                                    name: 'getLink',
-                                    label: '다시 보지 않음',
-                                    type: "checkbox",
-                                    value: "true",
-                                    checked: false
-                                    }
-                                ],
-                        buttons: [
-                                    {
-                                    text: '확인',//'Ok',
-                                    handler: data => {
-                                        console.log(data);
-                                        if(data=="true"){
-                                            this.storage.set("cashDetailAlert","false");
-                                            console.log("Do not show Alert again.");
-                                        }else{
-                                            console.log("Show Alert again.");
-                                        }
-                                    }
-                                    }
-                                ]
-                    });
-                    alert.present();
-         });
-         
-    }*/
+     
   }
 
     registerPushService(){ // Please move this code into tabs.ts
@@ -870,15 +801,9 @@ export class TabsPage {
       this.navController.parent.select(0);
   }
 
-  moveToCashListPage(){
-      console.log("moveToCashListPage");
-      this.storageProvider.cashMenu='cashHistory';
-      this.storageProvider.cashInfoUpdateEmitter.emit("listOnly");
-      this.tabRef.select(2);
-  }
-
  ionViewWillEnter(){
      console.log("ionViewWillEnter-tabsPage ");
+
  }
 
  ionViewDidEnter(){

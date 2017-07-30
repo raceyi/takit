@@ -24,8 +24,8 @@
                     </ion-col>
                 </ion-row>
                 <ion-row [ngStyle]="tr.style" class="radius-5">
-                    <ion-col col-8 *ngIf="tr.transactionType=='deposit' && tr.confirm==0"> 
-                        <button ion-button clear style="font-size:14px;margin-top:5px;" [disabled]="storageProvider.tourMode" (click)="addCash(tr)">
+                    <ion-col col-8 *ngIf="tr.transactionType=='deposit' && tr.confirm==0" (click)="addCash(tr)"> 
+                        <button ion-button clear style="font-size:14px;margin-top:5px;" [disabled]="storageProvider.tourMode" >
                             <b>캐쉬충전확인</b>&nbsp;&nbsp;
                             <ion-icon name="ios-cash-outline"></ion-icon>    
                         </button>
@@ -43,13 +43,19 @@
                         <p style="font-size:12px;" *ngIf="tr.bankName!=undefined" > {{tr.bankName}} &nbsp;&nbsp; 수수료:{{tr.fee}} </p>
                         <p style="font-size:12px;" *ngIf="tr.bankName==undefined && tr.bankCode!=undefined" > {{tr.bankCode}} &nbsp;&nbsp; 수수료:{{tr.fee}} </p>
                     </ion-col>
-                    <ion-col col-8 *ngIf="tr.transactionType=='payment'"> 
+                    <ion-col col-8 *ngIf="tr.transactionType=='payment' && tr.takitId!=undefined"> 
                         <p style="font-size:14px;margin-top:20px;"><b>{{tr.takitId}}</b></p>
                         <p style="font-size:12px;">{{tr.orderName}}</p>
                     </ion-col>   
-                    <ion-col col-8 *ngIf="tr.transactionType=='cancel'"> 
+                    <ion-col col-8 *ngIf="tr.transactionType=='payment' && tr.takitId==undefined"> 
+                        <p style="font-size:14px;margin-top:20px;"><b>주문</b></p>
+                    </ion-col>                       
+                    <ion-col col-8 *ngIf="tr.transactionType=='cancel' && tr.takitId!=undefined"> 
                         <p style="font-size:14px;margin-top:20px;"><b>{{tr.takitId}}</b></p>
                         <p style="font-size:12px;">{{tr.orderName}}</p>
+                    </ion-col>   
+                    <ion-col col-8 *ngIf="tr.transactionType=='cancel' && tr.takitId==undefined"> 
+                        <p style="font-size:14px;margin-top:20px;"><b>주문취소</b></p>
                     </ion-col>   
                     <ion-col col-4 text-right *ngIf="tr.transactionType=='cancel'">
                         <p style="font-size:15;margin-top:40px;color:blue;"><b>+{{tr.amount}}</b></p>
@@ -57,7 +63,7 @@
                     <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==1">
                         <p style="font-size:15;margin-top:15px;color:blue;"><b>+{{tr.amount}}</b></p>
                     </ion-col>
-                    <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==0">
+                    <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==0" (click)="addCash(tr)">
                         <p style="font-size:15;margin-top:15px;color:gray;"><b>{{tr.amount}}</b></p>
                     </ion-col>
                     <ion-col col-4 text-right *ngIf="tr.transactionType=='refund' || tr.transactionType=='payment'">

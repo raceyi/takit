@@ -1,35 +1,3 @@
-<!--<ion-header>
-    <ion-navbar hideBackButton="true" >
-      <ion-buttons start>
-        <button  (click)="goHome()" ion-button color="mainColor" clear>
-            <ion-icon name="icon-logo" color="mainColor"></ion-icon>
-        </button>
-      </ion-buttons>
-    <ion-title *ngIf="this.isTestServer==true">검증</ion-title>
-    <ion-buttons end>
-        <button ion-button clear>
-            <ion-icon name="search" color="mainColor" ></ion-icon>
-        </button>
-    </ion-buttons>
-  </ion-navbar>
-
-</ion-header>-->
-<!--<ion-tabs  #myTabs>
-  <ion-tab [root]="tabHome" [tabTitle]="homeTitle" (ionSelect)="home($event)" tabIcon="home"></ion-tab>
-  <ion-tab [root]="tabSearch" [tabTitle]="searchTitle" (ionSelect)="search($event)" tabIcon="search"></ion-tab>
-  <ion-tab [root]="tabCash" [tabTitle]="cashTitle" (ionSelect)="cash($event)" tabIcon="cash"></ion-tab>
-  <ion-tab *ngIf="!storageProvider.orderDoneFlag ||storageProvider.tourMode" [root]="tabTutorial" tabTitle="가이드" tabIcon="information-circle"></ion-tab>-->
-
-    <!--
-  <ion-tab *ngIf="lang=='ko-KR' || lang=='ko-kr'" [root]="tabHome" tabTitle="홈" (ionSelect)="home($event)" tabIcon="home"></ion-tab>
-  <ion-tab *ngIf="lang=='ko-KR' || lang=='ko-kr'" [root]="tabSearch" tabTitle="상점인식" (ionSelect)="search($event)" tabIcon="search"></ion-tab>
-  <ion-tab *ngIf="lang=='ko-KR' || lang=='ko-kr'" [root]="tabCash" tabTitle="캐쉬" (ionSelect)="cash($event)" tabIcon="cash"></ion-tab>
-  <ion-tab *ngIf="lang!='ko-KR' && lang!='ko-kr'" [root]="tabHome" tabTitle="Home" (ionSelect)="home($event)" tabIcon="home"></ion-tab>
-  <ion-tab *ngIf="lang!='ko-KR' && lang!='ko-kr'" [root]="tabSearch" tabTitle="Search" (ionSelect)="search($event)" tabIcon="search"></ion-tab>
-  <ion-tab *ngIf="lang!='ko-KR' && lang!='ko-kr'" [root]="tabCash" tabTitle="Cash" (ionSelect)="cash($event)" tabIcon="cash"></ion-tab>
-   --> 
-<!--</ion-tabs>-->
-
 <ion-tabs #myTabs style="background-color:white">
   <ion-tab [root]="tabHome" tabIcon="icon-tab_home"  tabTitle="홈"></ion-tab>
   <ion-tab [root]="tabMyTakit"  tabIcon="icon-tab_mytakit"  tabTitle="나의 타킷"></ion-tab>

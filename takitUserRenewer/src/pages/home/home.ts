@@ -231,7 +231,7 @@ export class HomePage{
     }
 
     getSelected(takitId){
-         console.log("getSelected:"+takitId);
+         console.log("!!!!!!!!!getSelected:"+takitId);
 
 /*      below code doesn't work. 
         var views=this.app.getRootNav().getViews();

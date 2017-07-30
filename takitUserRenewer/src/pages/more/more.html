@@ -12,8 +12,8 @@
         </button>
       </ion-buttons>
     <ion-buttons end>
-        <button class="hearder-icon" ion-button clear>
-            <ion-icon name="search" color="mainColor" (click)="search()" ></ion-icon>
+        <button class="hearder-icon" ion-button clear (click)="search()">
+            <ion-icon name="search" color="mainColor"></ion-icon>
         </button>
     </ion-buttons>
   </ion-navbar>
@@ -62,7 +62,7 @@
         <p [hidden]="!serviceInfoShow" style="padding-left:20px;">{{serviceVersion}}</p>
   </ion-row>
   </ion-grid>
-  <br>
+  <br style="background-color:#f7f7f7;">
   <div text-center style="background-color:#f7f7f7;">
         <button  ion-button color="mainColor" clear (click)="openLogout()">
             <b>로그아웃</b>
