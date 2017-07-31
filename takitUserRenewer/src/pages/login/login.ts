@@ -277,7 +277,10 @@ export class LoginPage {
                     }
                     // show user cashId
                     this.storageProvider.cashId=res.userInfo.cashId;
-
+                    this.storageProvider.name="타킷주식회사";
+                    this.storageProvider.email="help@takit.biz";
+                    this.storageProvider.phone="05051703636";
+                    
                     if(!navigator.language.startsWith("ko")){
                         // please select food you avoid 
                         // pork, beef, chicken

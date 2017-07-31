@@ -119,6 +119,16 @@ export class MorePage {
   }
 
   openLogout(){
+
+    if(this.storageProvider.tourMode){
+            let alert = this.alertCtrl.create({
+                title: '둘러보기 모드입니다.',
+                buttons: ['OK']
+            });
+            alert.present()
+            return;
+    }
+
     console.log("logout");
     let confirm = this.alertCtrl.create({
       title: '로그아웃하시겠습니까?',
@@ -261,6 +271,16 @@ export class MorePage {
   }
 
   openUnregister(){
+
+    if(this.storageProvider.tourMode){
+            let alert = this.alertCtrl.create({
+                title: '둘러보기 모드입니다.',
+                buttons: ['OK']
+            });
+            alert.present()
+            return;
+    }
+          
     console.log("unregister");
      let confirm = this.alertCtrl.create({
       title: '회원탈퇴를 하시겠습니까?',

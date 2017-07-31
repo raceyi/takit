@@ -316,6 +316,15 @@ export class UserInfoPage {
   }
 
   saveInfo(){
+    if(this.storageProvider.tourMode){
+            let alert = this.alertCtrl.create({
+                        title: '둘러보기 모드입니다.',
+                        buttons: ['OK']
+                    });
+            alert.present(); 
+            return;          
+    }  
+
     if(this.saveInProgress) return;
     if(!this.enableModification()){
           console.log("no modification");
