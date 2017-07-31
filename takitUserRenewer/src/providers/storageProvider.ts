@@ -84,6 +84,7 @@ export class StorageProvider{
     public cashInProgress=[];
     public orderInProgress=[];
 
+    public events=[];
 
     /* 농협 계좌 이체가능 은행 */
     banklist=[  //{name:"토스",value:"-1"},

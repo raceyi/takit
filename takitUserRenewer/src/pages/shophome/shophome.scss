@@ -147,13 +147,13 @@ page-shophome{
             border: none;
         }
 
-        .segment-ios-subColor2 .segment-button.segment-activated{
-            background-image: url('../assets/store_menu.png') no-repeat;
+        .segment-button.segment-activated{
+            background-image: url('../assets/store_menu.svg'); 
             background-size: 100% 45px;
             background-color: transparent;
         }
 
-        .segment-ios-subColor2 .segment-button:hover:not(.segment-activated){
+        .segment-button:hover:not(.segment-activated){
             background-color: $sub-color;
         }
     }

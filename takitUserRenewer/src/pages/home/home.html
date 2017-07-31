@@ -51,19 +51,19 @@
     
 
     <ion-slides #Slides (ionSlideDidChange)="eventChanged()" >
-        <ion-slide *ngFor="let event of events; let i=index" class="slide-event">
+        <ion-slide *ngFor="let event of storageProvider.events; let i=index" class="slide-event">
             <div class="div-event">
-            <img [src]="storageProvider.awsS3OCR+event.img">
+            <img [src]="storageProvider.awsS3+event.imagePath">
             </div>
         </ion-slide>
     </ion-slides>
 
-    <ion-item no-lines text-center >
-        <button ion-button color="white" *ngFor="let event of events">
+     <ion-item no-lines text-center >
+        <button ion-button color="white" *ngFor="let event of storageProvider.events">
             <img *ngIf="!event.selected" [src]="storageProvider.awsS3OCR+circle[0]" class="slidebar">
             <img *ngIf="event.selected" [src]="storageProvider.awsS3OCR+circle[1]" class="slidebar">
         </button>
-    </ion-item>
+    </ion-item> 
 
 
     <ion-row class="row-shop-title">

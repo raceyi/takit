@@ -64,7 +64,7 @@
         <div class="div-cash border-sub1">
             <ion-row class="bottom-solid">
                 <ion-col>사용가능금액</ion-col>
-                <ion-col>{{storageProvider.cashAmount.toLocaleString('en')}}원</ion-col>
+                <ion-col>{{(storageProvider.cashAmount*1).toLocaleString('en')}}원</ion-col>
             </ion-row>
             <ion-row [hidden]="!storageProvider.receiptIssue">
                 <ion-col>
