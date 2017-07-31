@@ -19,7 +19,7 @@ export class OldOrderPage {
 
     oldOrders = [];
     array=new Array(4);
-    takitId:string;
+    //takitId:string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public storageProvider:StorageProvider, public serverProvider:ServerProvider) {
@@ -49,25 +49,38 @@ export class OldOrderPage {
   }
 
   enterMenuDetail(order,shopName){
-    let getMenuOption={menuNO:order.menuNO,menuName:order.menuName};
+    let option={menuNO:order.menuNO,menuName:order.menuName,cashId:this.storageProvider.cashId,takitId:this.storageProvider.takitId};
 
-    Promise.all([this.serverProvider.post(this.storageProvider.serverAddress+"/getMenu",JSON.stringify(getMenuOption)),
-                this.serverProvider.getShopInfoPost(this.storageProvider.takitId)]).then((values:any)=>{
-        console.log("values0:"+JSON.stringify(values));
-        console.log("values1:"+JSON.stringify(values[1]));
-        if(values[0].result==="success" && values[1].result==="success"){
-            this.storageProvider.shopInfoSet(values[1].shopInfo);
-            console.log("shopName:"+this.storageProvider.shopInfo.shopName);
-            this.navCtrl.push(MenuDetailPage,{menu:values[0].menu,shopName:this.storageProvider.shopInfo.shopName});
-        }else if(values[0].result === "failure" || values[1].result === "failure"){
-            console.log("enterMenuDetail server failure:"+JSON.stringify(values));
-            // con/sole.log("enterMenuDetail server failure:"+values[1].error);
+    this.serverProvider.post(this.storageProvider.serverAddress+"/enterMenuDetail",JSON.stringify(option))
+    .then((res:any)=>{
+        if(res.result === "success"){
+            this.storageProvider.shopInfoSet(res.shopInfo);
+            this.storageProvider.cashAmount=res.balance;
+            this.navCtrl.push(MenuDetailPage,{menu:res.menu,shopName:this.storageProvider.shopInfo.shopName});
         }else{
-            console.log("what is problem???");
+            console.log("enterMenuDetail server failure:"+JSON.stringify(res.error));
         }
     }).catch(err=>{
-        console.log(err);
+        console.log("enterMenuDetail:"+JSON.stringify(err));
     });
+
+    // Promise.all([this.serverProvider.post(this.storageProvider.serverAddress+"/getMenu",JSON.stringify(getMenuOption)),
+    //             this.serverProvider.getShopInfoPost(this.storageProvider.takitId),]).then((values:any)=>{
+    //     console.log("values0:"+JSON.stringify(values));
+    //     console.log("values1:"+JSON.stringify(values[1]));
+    //     if(values[0].result==="success" && values[1].result==="success"){
+    //         this.storageProvider.shopInfoSet(values[1].shopInfo);
+    //         console.log("shopName:"+this.storageProvider.shopInfo.shopName);
+    //         this.navCtrl.push(MenuDetailPage,{menu:values[0].menu,shopName:this.storageProvider.shopInfo.shopName});
+    //     }else if(values[0].result === "failure" || values[1].result === "failure"){
+    //         console.log("enterMenuDetail server failure:"+JSON.stringify(values));
+    //         // con/sole.log("enterMenuDetail server failure:"+values[1].error);
+    //     }else{
+    //         console.log("what is problem???");
+    //     }
+    // }).catch(err=>{
+    //     console.log(err);
+    // });
   }
 
    closePage(){

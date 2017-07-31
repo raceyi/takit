@@ -12,7 +12,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
 
 import {BankBranchPage} from '../bankbranch/bankbranch';
 import {CashConfirmPage} from '../cashconfirm/cashconfirm';
-import {IOSAlertPage} from '../ios-alert/ios-alert';
+//import {IOSAlertPage} from '../ios-alert/ios-alert';
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import {FaqPage} from '../faq/faq';
 //import {TutorialPage} from '../tutorial/tutorial';
@@ -256,8 +256,8 @@ ionViewDidEnter() {
       this.serverProvider.post(this.storageProvider.serverAddress+"/checkCashInstantly",body).then((res:any)=>{
           console.log("checkCashInstantly res:"+JSON.stringify(res));
           if(res.result=="success"){
-                  let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
-                  iOSAlertPage.present();
+                //   let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
+                //   iOSAlertPage.present();
           }else if(res.result=="failure" && res.error=="gcm:400"){
                     this.translateService.get('confirmDepositInHistory').subscribe(
                         confirmDepositInHistory => {
@@ -419,8 +419,8 @@ ionViewDidEnter() {
                                             
                                     if(res.result=="success"){
                                             this.manualCheckHidden=true;                   
-                                            let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
-                                            iOSAlertPage.present();
+                                            // let iOSAlertPage = this.modalCtrl.create(IOSAlertPage);
+                                            // iOSAlertPage.present();
                                             this.cashInEnable = true;
                                     }else if(res.result=="failure" && res.error=="gcm:400"){
                                                 this.manualCheckHidden=true; 

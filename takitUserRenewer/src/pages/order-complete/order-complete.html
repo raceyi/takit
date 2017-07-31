@@ -14,7 +14,7 @@
     </ion-buttons>
     <ion-title>주문확인</ion-title>
     <ion-buttons end>
-      <button *ngIf="order.orderStatus==='paid'" (click)="cancelOrder()" navPop class="nav-btn" small ion-button no-margin clear>
+      <button *ngIf="order.orderStatus==='paid'" (click)="cancelOrder()" class="nav-btn" small ion-button no-margin clear>
           <p style="font-size:14px;">주문 취소</p>
       </button>
     </ion-buttons>
@@ -35,9 +35,13 @@
             <img src="./assets/history_bar_1_on.svg">
             <img src="./assets/history_bar_2_on.svg">
         </ion-col>
-        <ion-col>
+        <ion-col *ngIf="order.orderStatus===''">
             <img src="./assets/history_bar_1_on.svg">
             <img src="./assets/history_bar_2_on.svg">
+        </ion-col>
+        <ion-col>
+            <img src="./assets/history_bar_1_off.svg">
+            <img src="./assets/history_bar_2_off.svg">
         </ion-col>
         <ion-col>
             <img src="./assets/history_bar_1_on.svg">
