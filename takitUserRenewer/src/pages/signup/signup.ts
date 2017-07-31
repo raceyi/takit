@@ -419,8 +419,9 @@ phoneAuth(){
                         encrypted=this.storageProvider.encryptValue('password',this.password);// save email id 
                         this.nativeStorage.setItem('password',encodeURI(encrypted));
                         this.storageProvider.shoplist=[];
+                        this.storageProvider.emailLogin=true;
                         this.storageProvider.userInfoSet(this.email,this.name,this.phone,false,"","IncomeDeduction");
-                        this.navCtrl.setRoot(SignupPaymentPage,{email:this.email,name:this.name,phone:this.phone});
+                        this.navCtrl.setRoot(SignupPaymentPage,{email:this.email,name:this.name,phone:this.phone,password:this.password});
                     }else if(output == "duplication"){ // result.result=="exist"
                         let alert = this.alertCtrl.create({
                             title: '이미존재하는 아이디입니다.',

@@ -83,6 +83,7 @@ export class EmailLoginPage {
                                             alert.present();
                                 }
                                 if(res.result=="success"){
+                                    this.storageProvider.emailLogin=true;
                                     var encrypted:string=this.storageProvider.encryptValue('id',this.email);
                                     this.nativeStorage.setItem('id',encodeURI(encrypted));
                                     encrypted=this.storageProvider.encryptValue('password',this.password);
