@@ -166,7 +166,9 @@ export class OrderPage {
         this.totalAmount=this.cart.total;
       }
 
-      this.storageProvider.shopInfo.freeDelivery=parseInt(this.storageProvider.shopInfo.freeDelivery);
+      if(this.storageProvider.shopInfo.freeDelivery){
+        this.storageProvider.shopInfo.freeDelivery=parseInt(this.storageProvider.shopInfo.freeDelivery);
+      }
 
       if(this.delivery==true && this.amount<this.storageProvider.shopInfo.freeDelivery){
             this.delivery=false;
@@ -176,6 +178,8 @@ export class OrderPage {
 
       console.log(this.takeoutAvailable);
       console.log(this.storageProvider.shopInfo.freeDelivery);      
+      console.log(this.storageProvider.cashAmount);
+      console.log(storageProvider.shopInfo.deliveryArea);
         //this.autoCompleteCoupon.couponNO="";
       ///get user's couponList 에 해당하는 coupon 정보 가져오기
       

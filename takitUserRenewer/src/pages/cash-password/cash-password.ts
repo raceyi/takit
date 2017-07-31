@@ -140,7 +140,8 @@ export class CashPassword {
                             this.storageProvider.order_in_progress_24hours=true;
                             this.storageProvider.messageEmitter.emit(res.order);
                             console.log("storageProvider.run_in_background: "+this.storageProvider.run_in_background);
-                            this.storageProvider.cashInfoUpdateEmitter.emit("all");
+                            //this.storageProvider.cashInfoUpdateEmitter.emit("all");
+                            this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
                             if(this.storageProvider.run_in_background==false){
                                 //refresh cashAmount
                                 let confirm = this.alertController.create({

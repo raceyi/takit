@@ -34,7 +34,6 @@ import { PasswordPage } from '../pages/password/password';
 import {CashConfirmPage} from '../pages/cashconfirm/cashconfirm';
 import {CashIdPage} from '../pages/cashid/cashid';
 import {BankBranchPage} from '../pages/bankbranch/bankbranch';
-import {IOSAlertPage} from '../pages/ios-alert/ios-alert';
 import {CashDepositDeletePage} from '../pages/cash-deposit-delete/cash-deposit-delete';
 import {MultiloginPage} from '../pages/multilogin/multilogin';
 //import {FaqPage} from '../pages/faq/faq';
@@ -89,7 +88,6 @@ import {CashWithdrawPageModule} from '../pages/cash-withdraw/cash-withdraw.modul
 import {CashDepositPage} from '../pages/cash-deposit/cash-deposit';
 import {CashConfigurePageModule} from '../pages/cash-configure/cash-configure.module';
 import {SearchPageModule} from '../pages/search/search.module';
-import {AlertPageModule} from '../pages/alert/alert.module';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -113,7 +111,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     CashConfirmPage,
     CashIdPage,
     BankBranchPage,
-    IOSAlertPage,
     CashDepositDeletePage,
     MultiloginPage,
     //FaqPage,
@@ -152,7 +149,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     CashWithdrawPageModule,
     CashConfigurePageModule,
     SearchPageModule,
-    AlertPageModule,
     NoopAnimationsModule,
     //IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
@@ -181,7 +177,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     CashConfirmPage,
     CashIdPage,
     BankBranchPage,
-    IOSAlertPage,
     CashDepositDeletePage,
     MultiloginPage,
     //FaqPage,

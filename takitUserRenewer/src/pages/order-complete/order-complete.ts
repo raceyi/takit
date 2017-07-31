@@ -337,8 +337,93 @@ export class OrderCompletePage {
         if(this.infiniteScroll!=undefined)
             this.infiniteScroll.enable(true);
         this.getOrders(-1);
-    }
-*/    
+    }*/
+
+    cancelOrder(){
+        console.log("cancel order:"+JSON.stringify(this.order));
+        // alert dialog
+        let confirm = this.alertController.create({
+                title: '주문을 취소하시겠습니까?',
+                buttons: [{
+                            text: '아니오',
+                            handler: () => {
+                              console.log('Disagree clicked');
+                            }
+                          },
+                          {
+                            text: '네',
+                            handler: () => {
+                                    let headers = new Headers();
+                                    headers.append('Content-Type', 'application/json');
+                                    console.log("server:"+ this.storageProvider.serverAddress);
+                                    let body  = JSON.stringify({ orderId:this.order.orderId,
+                                                                cancelReason:"고객접수취소",
+                                                                cashId:this.storageProvider.cashId});
+                                    
+                                    this.serverProvider.post(this.storageProvider.serverAddress+"/cancelOrder",body).then((res:any)=>{
+                                        console.log("cancelOrder-res:"+JSON.stringify(res));
+                                        var result:string=res.result;
+                                        if(result==="success"){
+                                            //this.storageProvider.cashInfoUpdateEmitter.emit("all");
+                                            this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
+                                            let alert = this.alertController.create({
+                                                title: '주문 취소가 정상 처리 되었습니다.',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        //update order status
+                                            this.ngZone.run(()=>{
+                                                // var i;
+                                                // for(i=0;i<this.orders.length;i++){
+                                                //     if(this.orders[i].orderId==order.orderId){
+                                                        this.order.orderStatus="cancelled";  
+                                                        this.order.statusString=this.getStatusString("cancelled");
+                                                //         break;
+                                                //     }
+                                                // }
+                                            });
+                                            this.serverProvider.orderNoti().then((orders:any)=>{
+                                                    if(orders==undefined || orders==null || orders.length==0){
+                                                    // off run_in_background 
+                                                    console.log("no more order in progress within 24 hours");
+                                                    this.storageProvider.order_in_progress_24hours=false;   
+                                                    this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti");                         
+                                                    }
+                                            },(err)=>{
+                                                if(err=="NetworkFailure"){
+                                                    let alert = this.alertController.create({
+                                                                title: "서버와 통신에 문제가 있습니다.",
+                                                                buttons: ['OK']
+                                                            });
+                                                            alert.present();
+                                                }else{
+                                                    console.log("orderNotiMode error");
+                                                } 
+                                            });
+
+                                        }else{
+                                            //Please give user a notification
+                                            let alert = this.alertController.create({
+                                                title: '주문취소에 실패했습니다.',
+                                                subTitle: '주문 상태를 확인해 주시기바랍니다',
+                                                buttons: ['OK']
+                                            });
+                                            alert.present();
+                                        }
+                                    },(err)=>{
+                                    let alert = this.alertController.create({
+                                            title: '서버와 통신에 문제가 있습니다',
+                                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                                            buttons: ['OK']
+                                        });
+                                        alert.present();
+                                    });
+                            }
+                      }]});
+        confirm.present();        
+      }
+
+
     back(){
         this.navController.popToRoot();
         //this.appCtrl.goToRoot();

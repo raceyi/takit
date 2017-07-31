@@ -95,7 +95,7 @@ page-home {
     //
     ion-slides{
         display: flex;
-        height: 105px;
+        height: 100px;
         flex-wrap: wrap; 
     }
     ion-slide{
@@ -104,13 +104,13 @@ page-home {
     }
     .slide-event {
         @include calc(width, "100% - 112px");
-        height: 105px;
+        height: 100px;
     } 
 
     .div-event{
         width: 100%;
         //@include calc(width, "100% - 112px");
-        height: 105px;
+        height: 100px;
         // border: 3px solid;
         // border-radius: 5px;
         background: url('../assets/event_coupun_bg.svg');
@@ -132,8 +132,8 @@ page-home {
     }
 
     .slidebar{
-        width:10px;
-        height: 10px;
+        width:7px;
+        height: 7px;
     }
 
     .div-keyword{
@@ -147,7 +147,8 @@ page-home {
             background-color: white;
             border:none;
         }
-        .segment-ios-grey .segment-button:hover:not(.segment-activated){
+        
+        .segment-button:hover:not(.segment-activated){
             background-color: white;
         }
 
@@ -155,7 +156,7 @@ page-home {
 
     .row-shop-title{
         border-top:0.1rem solid;
-        border-color:lightgray;
+        border-color:#f4f4f4;
         margin-left: 10px;
         margin-right: 10px;
         .p-title{
