@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams,AlertController,ModalController } f
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
-import {AlertPage} from '../alert/alert';
+//import {AlertPage} from '../alert/alert';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastController } from 'ionic-angular';
 

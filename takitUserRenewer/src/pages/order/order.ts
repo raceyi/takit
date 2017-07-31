@@ -17,8 +17,8 @@ import {SearchCouponPage} from '../search-coupon/search-coupon';
 })
 export class OrderPage {
   @ViewChild('orderPage') orderPageRef: Content;
-  @ViewChild('optionDiv')  optionDivElementRef:ElementRef;
-  @ViewChild('takeoutDiv') takeoutDivElementRef:ElementRef;
+  //@ViewChild('optionDiv')  optionDivElementRef:ElementRef;
+  //@ViewChild('takeoutDiv') takeoutDivElementRef:ElementRef;
 
   userNotiHidden:boolean=false;
   shopName:string;
@@ -284,15 +284,15 @@ export class OrderPage {
     //     }
     //}
 
-    if(this.hasOptions==false){
-    //console.log(".."+this.optionDivElementRef.nativeElement.style.border);
-    this.optionDivElementRef.nativeElement.style.border="none";
+    // if(this.hasOptions==false){
+    // //console.log(".."+this.optionDivElementRef.nativeElement.style.border);
+    //     this.optionDivElementRef.nativeElement.style.border="none";
 
-    }
-    if(this.takeoutAvailable==false){
-        //console.log(".."+this.takeoutDivElementRef.nativeElement.style.border);
-        this.takeoutDivElementRef.nativeElement.style.border="none";
-    }
+    // }
+    // if(this.takeoutAvailable==false){
+    //     //console.log(".."+this.takeoutDivElementRef.nativeElement.style.border);
+    //     this.takeoutDivElementRef.nativeElement.style.border="none";
+    // }
 
  }
 

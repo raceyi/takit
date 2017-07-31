@@ -76,29 +76,29 @@ export class HomePage{
             console.log("getKewordShops error:"+err);
          });
 
-
-        this.serverProvider.post(storageProvider.serverAddress+"/getEvents",JSON.stringify({}))
-        .then((res:any)=>{
-            console.log("getEvents success:"+JSON.stringify(res));
-            if(res.result==="success"){
-                //this.storageProvider.events=res.events;
-                for(let i=0; i<res.events.length; i++){
-                    this.storageProvider.events[i]={};
-                    this.storageProvider.events[i].imagePath=res.events[i];
-                    this.storageProvider.events[i].selected=false;
+         if(storageProvider.events.length===0){
+            this.serverProvider.post(storageProvider.serverAddress+"/getEvents",JSON.stringify({}))
+            .then((res:any)=>{
+                console.log("getEvents success:"+JSON.stringify(res));
+                if(res.result==="success"){
+                    for(let i=0; i<res.events.length; i++){
+                        this.storageProvider.events[i]={};
+                        this.storageProvider.events[i].imagePath=res.events[i];
+                        this.storageProvider.events[i].selected=false;
+                    }
+                    this.storageProvider.events[0].selected=true;
+                    console.log("events:"+JSON.stringify(this.storageProvider.events));
+                }else{
+                    console.log("getEvents failure"+JSON.stringify(res.error));
                 }
-                this.storageProvider.events[0].selected=true;
-                console.log("events:"+JSON.stringify(this.storageProvider.events));
-            }else{
-                console.log("getEvents failure"+JSON.stringify(res.error));
-            }
-        },err=>{
-            console.log("getEvents error:"+err);
-        }).catch(err=>{
-            console.log("getEvents error:"+err);
-        });
-        //this.getKeywordShopInfos();
-     }
+            },err=>{
+                console.log("getEvents error:"+err);
+            }).catch(err=>{
+                console.log("getEvents error:"+err);
+            });
+            //this.getKeywordShopInfos();
+        }
+    }
 
      ionViewDidLoad(){
         console.log("HomePage did enter");
