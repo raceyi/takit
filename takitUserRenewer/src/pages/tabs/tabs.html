@@ -1,7 +1,7 @@
-<ion-tabs #myTabs style="background-color:white" selectedIndex="1">
-  <ion-tab [root]="tabHome" tabIcon="ios-exit-outline" *ngIf="storageProvider.tourMode" (ionSelect)="exitTour()" tabTitle="나가기"></ion-tab>
+<ion-tabs #myTabs style="background-color:white">
   <ion-tab [root]="tabHome" tabIcon="icon-tab_home" selected tabTitle="홈"></ion-tab>
   <ion-tab [root]="tabMyTakit"  tabIcon="icon-tab_mytakit"  tabTitle="나의 타킷"></ion-tab>
   <ion-tab [root]="tabMyWallet" tabIcon="icon-tab_mywallet" tabTitle="내 지갑"></ion-tab>
   <ion-tab [root]="tabMore" tabIcon="icon-tab_more" tabTitle="더보기"></ion-tab>
+  <ion-tab [root]="tabHome" tabIcon="ios-exit-outline" *ngIf="storageProvider.tourMode" (ionSelect)="exitTour()" tabTitle="나가기"></ion-tab>
 </ion-tabs>

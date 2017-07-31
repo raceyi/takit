@@ -35,6 +35,8 @@ export class SignupPaymentPage {
   name:string;
   phone:string;
 
+  oldpassword:string;
+
   passwordConfirmString:string="";
   passwordString:string="";
 
@@ -60,6 +62,8 @@ export class SignupPaymentPage {
             this.storageProvider.name=this.name;
             this.storageProvider.phone=this.phone;
     }
+    this.oldpassword=this.navParams.get("password");
+
   }
 
   ionViewDidLoad() {
@@ -168,7 +172,20 @@ export class SignupPaymentPage {
                         console.log(" taxIssueEmail:"+this.issueEmail);
                         console.log(" taxIssueCompanyName:"+this.issueCompanyName);
                         */
-                        body= JSON.stringify({email:this.email.trim(),
+                        if(this.storageProvider.emailLogin){
+
+                            body= JSON.stringify({email:this.email.trim(),
+                                              phone:this.phone.trim(), 
+                                              name:this.name.trim(),
+                                              receiptIssue:receiptIssueVal,
+                                              receiptId:this.receiptId,
+                                              receiptType:this.receiptType,
+                                              taxIssueEmail:this.issueEmail,
+                                              taxIssueCompanyName:this.issueCompanyName,
+                                              oldPassword:this.oldpassword
+                                            });
+                        }else{
+                            body= JSON.stringify({email:this.email.trim(),
                                               phone:this.phone.trim(), 
                                               name:this.name.trim(),
                                               receiptIssue:receiptIssueVal,
@@ -177,7 +194,7 @@ export class SignupPaymentPage {
                                               taxIssueEmail:this.issueEmail,
                                               taxIssueCompanyName:this.issueCompanyName
                                             });
-                                            
+                        }              
                         console.log("modifyUserInfo:"+body);
                         this.serverProvider.post(this.storageProvider.serverAddress+"/modifyUserInfo",body).then((res:any)=>{
                             console.log("res:"+JSON.stringify(res));
