@@ -767,4 +767,7 @@ export class TabsPage {
      console.log("ionViewDidEnter-tabsPage shopSelected is false");
  }
  
+ exitTour(){
+    this.navController.pop();     
+ }
 }

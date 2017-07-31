@@ -127,6 +127,6 @@ export class EmailLoginPage {
   }
 
   signup(){
-    this.navCtrl.push(SignupPage, {email:true});
+    this.navCtrl.push(SignupPage, { login:"email"});
   }
 }
