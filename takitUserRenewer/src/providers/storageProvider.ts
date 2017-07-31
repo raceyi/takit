@@ -114,8 +114,8 @@ export class StorageProvider{
                 {name:"HSBC",value:"054"},
                 {name:"제이피모간체이스",value:"057"},
                 {name:"중국공상",value:"062"},
-                {name:"비엔피파리바",value:"061"}];
-
+                {name:"비엔피파리바",value:"061"},
+                {name:"카카오뱅크", value:"089"}];
 
     public serverAddress:string= this.configProvider.getServerAddress();
 
