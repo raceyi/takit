@@ -374,16 +374,20 @@ export class HomePage{
   }
 
 
-  enterMenuDetail(){
-    let option={};
-    this.serverProvider.post(this.storageProvider.serverAddress+"/getMenu",JSON.stringify(option)).then((res:any)=>{
-        if(res.result==="success"){
-            this.navController.push(MenuDetailPage,{menu:res.menu});
-        }else if(res.result === "failure"){
-            console.log("enterMenuDetail server failure:"+res.error);
+  enterMenuDetail(menu,shop){
+    let option={menuNO:menu.menuNO,menuName:menu.menuName,cashId:this.storageProvider.cashId,takitId:shop.takitId};
+
+    this.serverProvider.post(this.storageProvider.serverAddress+"/enterMenuDetail",JSON.stringify(option))
+    .then((res:any)=>{
+        if(res.result === "success"){
+            this.storageProvider.shopInfoSet(res.shopInfo);
+            this.storageProvider.cashAmount=res.balance;
+            this.app.getRootNav().push(MenuDetailPage,{menu:res.menu,shopName:shop.shopName});
+        }else{
+            console.log("enterMenuDetail server failure:"+JSON.stringify(res.error));
         }
     }).catch(err=>{
-        console.log(err);
+        console.log("enterMenuDetail:"+JSON.stringify(err));
     });
   }
 }

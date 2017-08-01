@@ -8,8 +8,8 @@
 
   <ion-navbar hideBackButton="true" >
       <ion-buttons start>
-        <button (click)="closePage()" class="nav-btn" small ion-button no-margin clear>
-          <ion-icon name="icon-prev"></ion-icon>
+        <button (click)="closePage()" class="cancel-icon" color="black" ion-button no-margin clear>
+          <ion-icon name="icon-cancel"></ion-icon>
         </button>
       </ion-buttons>
     <ion-title>지난 주문</ion-title>
@@ -25,5 +25,8 @@
             <!-- <span class="amount-highlight">{{parseInt(order.amount).toLocaleString('en')}}</span><span>원</span> -->
         </ion-list>
         
+    </div>
+    <div *ngIf="!oldOrders || oldOrders.length===0">
+        <p>지난 주문 내역이 없습니다.</p>
     </div>
 </ion-content>

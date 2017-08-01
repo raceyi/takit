@@ -63,24 +63,6 @@ export class OldOrderPage {
     }).catch(err=>{
         console.log("enterMenuDetail:"+JSON.stringify(err));
     });
-
-    // Promise.all([this.serverProvider.post(this.storageProvider.serverAddress+"/getMenu",JSON.stringify(getMenuOption)),
-    //             this.serverProvider.getShopInfoPost(this.storageProvider.takitId),]).then((values:any)=>{
-    //     console.log("values0:"+JSON.stringify(values));
-    //     console.log("values1:"+JSON.stringify(values[1]));
-    //     if(values[0].result==="success" && values[1].result==="success"){
-    //         this.storageProvider.shopInfoSet(values[1].shopInfo);
-    //         console.log("shopName:"+this.storageProvider.shopInfo.shopName);
-    //         this.navCtrl.push(MenuDetailPage,{menu:values[0].menu,shopName:this.storageProvider.shopInfo.shopName});
-    //     }else if(values[0].result === "failure" || values[1].result === "failure"){
-    //         console.log("enterMenuDetail server failure:"+JSON.stringify(values));
-    //         // con/sole.log("enterMenuDetail server failure:"+values[1].error);
-    //     }else{
-    //         console.log("what is problem???");
-    //     }
-    // }).catch(err=>{
-    //     console.log(err);
-    // });
   }
 
    closePage(){

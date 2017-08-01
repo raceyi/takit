@@ -9,7 +9,6 @@ import {MultiloginPage} from '../pages/multilogin/multilogin';
 import {FaqPage} from '../pages/faq/faq';
 import {TutorialPage} from '../pages/tutorial/tutorial';
 
-import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 import {UserInfoPage} from '../pages/user-info/user-info';
 import {SignupPaymentPage} from '../pages/signup-payment/signup-payment';
 
@@ -228,10 +227,10 @@ export class MyApp {
     this.app.getRootNav().push(FaqPage);
   }
 
-  openServiceInfo(){
-    console.log("serviceInfo");
-    this.app.getRootNav().push(ServiceInfoPage);
-  }
+//   openServiceInfo(){
+//     console.log("serviceInfo");
+//     this.app.getRootNav().push(ServiceInfoPage);
+//   }
      
  openUserInfo(){
     console.log("openUserInfo");

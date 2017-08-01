@@ -8,17 +8,17 @@
 
   <ion-navbar hideBackButton="true" >
     <ion-buttons start>
-        <button navPop class="nav-btn" small ion-button no-margin clear>
+        <button navPop class="nav-btn" color="subColor2" small ion-button no-margin clear>
             <ion-icon name="icon-prev"></ion-icon>
         </button>
     </ion-buttons>
-    <ion-title>shopAbout</ion-title>
+    <ion-title>{{storageProvider.shopName}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="bg-sub1" padding>
     <div>
         <ion-row class="row-about">
             <ion-col style="text-align: -webkit-center;">
@@ -33,7 +33,7 @@
             </ion-col>
         </ion-row>
     </div>
-    <ion-row class="row-business">
+    <ion-row class="row-business bg-white">
         <ion-col>
             <p>영업시간</p>
             <p></p>
@@ -51,20 +51,29 @@
             <p>{{notice}}</p>
         </ion-col>
     </ion-row>
-    <div class="bg-sub1">
+    <div>
         <h6> REVIEW</h6>
         <ion-list *ngIf="storageProvider.shopInfo.reviewList">
             
         </ion-list>
-        <ion-list *ngIf="!storageProvider.shopInfo.reviewList">
+        <ion-list *ngIf="!storageProvider.shopInfo.reviewList || storageProvider.shopInfo.reviewList.length===0">
             <p>작성된 리뷰가 없습니다.</p>
         </ion-list>
     </div>
-     <ion-fab bottom right>
-        <button ion-fab >주문</button>
-        <ion-fab-list side="top">
-            <button (click)="enterShopCart()" ion-button small>장바구니</button>
-            <button (click)="enterOldOrder()" ion-button small>지난주문</button>
+     
+    
+    <ion-fab bottom color="white" bottom right>
+        <button class="fab-btn" ion-fab color="white">
+            <ion-icon name="icon-floating_open">
+            </ion-icon>
+        </button>
+        <ion-fab-list side="left">
+            <button class="btn-shadow" (click)="enterCart()" ion-button color="white">
+                <ion-icon name="icon-cart"></ion-icon>
+            </button>
+            <button class="btn-shadow" (click)="enterOldOrder()" ion-button color="white">
+                <ion-icon name="icon-list_2"></ion-icon>
+            </button>
         </ion-fab-list>
     </ion-fab>
 </ion-content>

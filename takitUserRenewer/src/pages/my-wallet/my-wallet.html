@@ -42,7 +42,7 @@
   <div *ngIf="myWalletType==='cash'" class="div-cashInfo">
     <div class="div-cashId-area">
         <span class="span-cashId">{{storageProvider.cashId}}</span>
-        <button no-margin no-padding ion-button clear color="white" click="enterCashConfigure()"><ion-icon name="icon-setting"></ion-icon></button>
+        <button no-margin no-padding ion-button clear color="white" (click)="enterCashConfigure()"><ion-icon name="icon-setting"></ion-icon></button>
     </div>
     <div class="div-cash-amount-area">
         <span class="span-cash-amount">{{(storageProvider.cashAmount*1).toLocaleString('en')}}</span> <span>원</span>
@@ -52,7 +52,7 @@
         <button (click)="withdraw()" ion-button color="white" no-margin small outline>환불</button>
     </div>
   </div>
- <button (click)="showTransactionHistory()" ion-button full no-padding no-margin clear color="subColor">
+ <button (click)="showTransactionHistory()" ion-button full no-padding no-margin icon-start clear color="mainColor">
        <ion-icon name="icon-history2" ></ion-icon>거래 내역 모두 조회</button>
 </div>
   <!--mywallet credit-card-->

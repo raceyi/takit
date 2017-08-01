@@ -81,7 +81,7 @@ export class CashWithdrawPage {
   }
 
   back(){
-      this.navCtrl.pop();
+    this.navCtrl.pop({animate:true,animation: 'slide-up', direction:'back' });
   }
 
   manageRefundAccount(){

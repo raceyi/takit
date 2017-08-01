@@ -377,5 +377,18 @@ export class ShopHomePage {
      this.app.getRootNav().pop();
   }
 
-     
+    bestMenuClick(menu){
+        let findMenu;
+        for(let i=0; i<this.categories.length; i++){
+            for(let j=0; j<this.categories[i].menus.length; j++){
+                if(this.categories[i].menus[j].menuNO===menu.menuNO && this.categories[i].menus[j].menuName===menu.menuName){
+                    findMenu=this.categories[i].menus[j];
+                //console.log(this.categories[category_no-1].menus[i].options);
+                }
+                break;
+        }
+        this.navController.push(MenuDetailPage,{menu:findMenu, shopName:this.shopName});
+    }
+        
+    }
 }

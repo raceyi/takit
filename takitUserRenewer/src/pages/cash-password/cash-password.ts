@@ -154,7 +154,7 @@ export class CashPassword {
                                             console.log('Disagree clicked');
                                             // report it to tabs page
                                             this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti"); 
-                                            this.navCtrl.push(OrderCompletePage,{order:res.order});
+                                            this.navCtrl.push(OrderCompletePage,{order:res.order,trigger:"order"});
                                             //this.app.getRootNav().pop();
                                             // if(this.trigger=="order"){
                                             //     this.app.getRootNav().pop();
@@ -173,7 +173,7 @@ export class CashPassword {
                                             // if(this.trigger=="order"){
                                             //     this.app.getRootNav().pop();
                                             // }
-                                             this.navCtrl.push(OrderCompletePage,{order:res.order});
+                                             this.navCtrl.push(OrderCompletePage,{order:res.order,trigger:"order"});
                                             //this.storageProvider.shopTabRef.select(3);
                                             this.confirmInProgress=false;
                                             return;
@@ -190,7 +190,7 @@ export class CashPassword {
                                         buttons: ['OK']
                                 });
                                 alert.present().then(()=>{
-                                    this.navCtrl.push(OrderCompletePage,{order:res.order});
+                                    this.navCtrl.push(OrderCompletePage,{order:res.order,trigger:"order"});
                                     //this.app.getRootNav().pop();
                                     // if(this.trigger=="order"){
                                     //     this.app.getRootNav().pop();

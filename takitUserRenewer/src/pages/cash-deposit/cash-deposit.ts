@@ -60,7 +60,7 @@ export class CashDepositPage {
   }
 
   back(){
-    this.navCtrl.pop();
+    this.navCtrl.pop({animate:true,animation: 'slide-up', direction:'back' });
   }
 
   manualCheckClose(){

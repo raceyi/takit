@@ -44,20 +44,21 @@ export class MyWalletPage {
   }
 
   showTransactionHistory(){
-    this.app.getRootNav().push(TransactionHistoryPage,{animate:true,animation: 'slide-up', direction: 'forward' });
+    this.app.getRootNav().push(TransactionHistoryPage,{},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
   deposit(){
-    this.app.getRootNav().push(CashDepositPage);
+    this.app.getRootNav().push(CashDepositPage,{},{animate:true,animation: 'slide-up', direction: 'forward' });
     //error?
   }
 
   withdraw(){
-    this.app.getRootNav().push(CashWithdrawPage);
+    this.app.getRootNav().push(CashWithdrawPage,{},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
   enterCashConfigure(){
-      this.app.getRootNav().push(CashConfigurePage);
+      console.log("enterCashConfigure");
+      this.app.getRootNav().push(CashConfigurePage,{},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
   getMyCoupon(){

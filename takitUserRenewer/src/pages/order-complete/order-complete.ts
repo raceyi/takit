@@ -32,6 +32,7 @@ export class OrderCompletePage {
 
      amount:number=0;
      totalDiscount:number=0;
+     trigger:string="order";
 
      constructor(private http:Http, private navController: NavController, 
           public storageProvider:StorageProvider,public navParams:NavParams,
@@ -43,11 +44,28 @@ export class OrderCompletePage {
         console.log("order:"+navParams.get('order'));
         this.order=navParams.get('order');
         this.orderList=JSON.parse(this.order.orderList);
+        this.trigger = navParams.get('trigger');
         console.log("orderList:"+JSON.stringify(this.orderList));
+
+        //
+        if(!this.orderList.taktiDiscount){
+            this.orderList.taktiDiscount=0;
+        }
+        if(!this.orderList.couponDiscount){
+            this.orderList.couponDiscount=0;
+        }
+        if(!this.orderList.prevAmount){
+            this.orderList.prevAmount=this.order.quantity*this.order.price;
+        }
+        if(!this.orderList.taktiDiscount){
+            this.orderList.taktiDiscount=0;
+        }
 
         if(this.orderList.taktiDiscount && this.orderList.couponDiscount){
             this.totalDiscount = this.orderList.taktitDiscount+this.orderList.couponDiscount;
         }
+
+
         // if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
         //     this.shopPhoneHref="tel:"+this.storageProvider.shopResponse.shopInfo.shopPhone;
         
@@ -425,7 +443,12 @@ export class OrderCompletePage {
 
 
     back(){
-        this.navController.popToRoot();
+        if(this.trigger==="order"){
+            this.navController.popToRoot();
+        }else{
+            this.navController.pop({animate:true,animation: 'slide-up', direction:'back' });
+        }
+        
         //this.appCtrl.goToRoot();
     }
 }

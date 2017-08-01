@@ -32,15 +32,18 @@ page-order-complete {
     }
 
     .div-statusbar{
-        margin:30px 10px 0 50px;
+        margin:30px 0px 0 82px;
         display: flex;
 
         ion-col{
             display: flex;
+            padding: 0;
 
             img:nth-child(1){
-               width: 18%;
+               width: 11px;
+               height: 11px;
             }
+            
         }
         
     }
@@ -48,7 +51,8 @@ page-order-complete {
     .div-statusbar-p{
         margin-left: 25px;
         margin-right: 30px;
-        //padding-left:10px;
+        padding-left:10px;
+        padding-right: 10px;
         text-align: center;
         font-size:13px;
     }
@@ -58,8 +62,8 @@ page-order-complete {
         margin-top:10px;
         padding:10px 20px;
         .div-receipt-inner{
-            border-top: 20px solid transparent;
-            border-image: url('../assets/receipt_bg_1.png') 33 round;
+            // border-top: 15px solid transparent;
+            // border-image: url('../assets/receipt_bg_1.png') 33 round;
             text-align: center;
             
             .bg-white{
@@ -93,11 +97,11 @@ page-order-complete {
             }
 
         }
-        .div-receipt-inner2{
-            border-bottom: 20px solid transparent;
-            border-image : url('../assets/receipt_bg_2.png')33 round;
+        // .div-receipt-inner2{
+        //     border-bottom: 15px solid transparent;
+        //     border-image : url('../assets/receipt_bg_2.png') 30 round;
 
-        }
+        // }
     }
     
 }

@@ -1,38 +1,10 @@
 page-transaction-history {
 
-     .header-ios .toolbar-ios:last-child .toolbar-background-ios{
+    .header-ios .toolbar-ios:last-child .toolbar-background-ios{
         background-color: $sub-color;
         border-bottom: none;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
-    }
-
-    .div-transaction{
-        display: flex;
-        height: 100%;
-    }
-    
-    .div-statusbar{
-        padding-left: 10px;
-        margin-left: 10px;
-        border-left: 1px;
-    }
-
-    .content-container{
-       // width: 100%;
-        //@include calc(width, "100% - 112px");
-        //@include calc(height,'100% - 53px');
-        // height: calc(100%-35px);
-        //display: flex;
-        //justify-content: center;
-        background-color: $sub-color;
-    }
-    .inner{
-        margin-left: 20px;
-        //margin-right: 30px;
-        //width: 200px;
-        height: 100%;
-        border-left:0.1em solid;
     }
 
     .icon-spot{
@@ -44,7 +16,51 @@ page-transaction-history {
         z-index: 1;
     }
 
-    .bg-sub1{
-        width:80vw;
+    .div-transaction{
+        margin-right: 20px;
+        margin-left: 20px;
+        padding-bottom:15px;
+        border-left: 25px solid transparent;
+        p{
+            margin:0;
+        }
+    }
+
+    .row1-cashHistory{
+        ion-col{
+            padding:0;
+            padding-bottom:10px;
+            padding-right:10px;
+            padding-left: 10px;
+            font-size:14px;
+        }
+
+        ion-col:nth-child(1){
+            flex: 0 0 75%;
+        }
+    }
+    
+    .row2-cashHistory{
+        border-radius: 10px;
+        height:70px;
+        background-color: white;
+        padding-left: 10px;
+        padding-right: 10px;
+
+        ion-col{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            p{
+                padding-top:5px;
+                padding-bottom:5px;
+            }
+
+            button{
+                padding:0;
+            }
+        }
+
     }
 }

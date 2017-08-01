@@ -95,7 +95,7 @@ page-home {
     //
     ion-slides{
         display: flex;
-        height: 100px;
+        height: 110px;
         flex-wrap: wrap; 
     }
     ion-slide{
@@ -104,17 +104,17 @@ page-home {
     }
     .slide-event {
         @include calc(width, "100% - 112px");
-        height: 100px;
+        height: 110px;
     } 
 
     .div-event{
         width: 100%;
         //@include calc(width, "100% - 112px");
-        height: 100px;
+        height: 110px;
         // border: 3px solid;
         // border-radius: 5px;
-        background: url('../assets/event_coupun_bg.svg');
-        background-size: 75%;
+        background: url('../assets/coupun_shadow_bg.png');
+        background-size: 70% 110px;
         background-attachment: local;
         background-position: center;
         background-repeat: repeat-x;
@@ -123,9 +123,9 @@ page-home {
         justify-content: center;
         img{
             width: 50%;
-            height: 85px;
+            height: 100px;
             opacity: 0.9;
-            box-shadow: 0px 13px 10px -10px #888888;
+            // box-shadow: 0px 13px 10px -10px #888888;
 
             
         }
@@ -147,7 +147,7 @@ page-home {
             background-color: white;
             border:none;
         }
-        
+
         .segment-button:hover:not(.segment-activated){
             background-color: white;
         }

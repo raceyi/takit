@@ -20,7 +20,6 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import {ServerProvider} from '../providers/serverProvider';
 
 import {ConfigProvider} from '../providers/configProvider';
-import {ServiceInfoPage} from '../pages/serviceinfo/serviceinfo';
 //import {UserInfoPage} from '../pages/user-info/user-info';
 import { CashPage } from '../pages/cash/cash';
 import { OrderPage } from '../pages/order/order';
@@ -98,7 +97,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     TabsPage,
     LoginPage,    
     ErrorPage,
-    ServiceInfoPage,
     //UserInfoPage,
     CashPage,
     OrderPage,
@@ -164,7 +162,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     TabsPage,
     LoginPage,
     ErrorPage,
-    ServiceInfoPage,
    // UserInfoPage,
     CashPage,
     OrderPage,

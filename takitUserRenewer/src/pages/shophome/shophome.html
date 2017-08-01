@@ -33,7 +33,7 @@
     <ion-slides #BestMenusSlides class="slides-bestMenus" [hidden]="menuSlideUp || bestMenus.length===0">
         <ion-slide *ngFor="let menu of bestMenus" >
             <!-- <button (click)="showBestMenus()" ion-button full no-padding no-margin class="btn-bestMenus" > -->
-            <div class="div-bestMenus-container" [ngStyle]="{'background':'url('+storageProvider.awsS3+menu.imagePath+') no-repeat','background-size':'100% 200px'}">
+            <div class="div-bestMenus-container" (click)="bestMenuClick(menu)" [ngStyle]="{'background':'url('+storageProvider.awsS3+menu.imagePath+') no-repeat','background-size':'100% 200px'}">
                 <!--<button (click)="showLeftBest()" class="btn-prev" ion-button color="transparent" ><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>-->
                 <!--<button class="slide-button" (click)="showLeftBest()" ion-button color="transparent" style="margin-right:60%; font-size:50px;"><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>-->
                 <!-- <img [src]="storageProvider.awsS3+menu.imagePath"> -->
@@ -51,12 +51,12 @@
         </ion-col>
     </ion-row>
     <div class="icon-shopInfo" [hidden]="menuSlideUp">
-        <ion-icon name="icon-atRestaurant" color="mainColor" *ngIf="(takeout < 3)"></ion-icon> 
-        <ion-icon name="icon-atRestaurant" color="grey" *ngIf="!(takeout < 3)"></ion-icon> 
-        <ion-icon name="icon-takeout" color="mainColor" *ngIf="takeout>=1"></ion-icon>
-        <ion-icon name="icon-takeout" color="grey" *ngIf="takeout===0"></ion-icon>
-        <ion-icon name="icon-delivery" color="mainColor" *ngIf="takeout===2 || takeout===4"></ion-icon>
-        <ion-icon name="icon-delivery" color="grey" *ngIf="takeout<=1 || takeout===3"></ion-icon> 
+        <ion-icon name="icon-atRestaurant_2" color="mainColor" *ngIf="(takeout < 3)"></ion-icon> 
+        <ion-icon name="icon-atRestaurant_2" color="grey" *ngIf="!(takeout < 3)"></ion-icon> 
+        <ion-icon name="icon-takeOut_2" color="mainColor" *ngIf="takeout>=1"></ion-icon>
+        <ion-icon name="icon-takeOut_2" color="grey" *ngIf="takeout===0"></ion-icon>
+        <ion-icon name="icon-delivery_2" color="mainColor" *ngIf="takeout===2 || takeout===4"></ion-icon>
+        <ion-icon name="icon-delivery_2" color="grey" *ngIf="takeout<=1 || takeout===3"></ion-icon> 
     </div>
 
 <!--
@@ -159,10 +159,10 @@
             </ion-icon>
         </button>
         <ion-fab-list side="left">
-            <button (click)="enterCart()" ion-button color="white">
+            <button class="btn-shadow" (click)="enterCart()" ion-button color="white">
                 <ion-icon name="icon-cart"></ion-icon>
             </button>
-            <button (click)="enterOldOrder()" ion-button color="white">
+            <button class="btn-shadow" (click)="enterOldOrder()" ion-button color="white">
                 <ion-icon name="icon-list_2"></ion-icon>
             </button>
         </ion-fab-list>

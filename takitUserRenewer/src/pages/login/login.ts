@@ -41,7 +41,7 @@ export class LoginPage {
                 private alertController:AlertController,private ionicApp: IonicApp,
                 private menuCtrl: MenuController,private http:Http,public viewCtrl: ViewController,
                 private translateService:TranslateService, private splashScreen: SplashScreen,
-                private device: Device,public loadingCtrl: LoadingController){
+                private device: Device){
                     
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
@@ -114,9 +114,9 @@ export class LoginPage {
       console.log('facebookLogin comes');
       if(this.loginInProgress) return;
       this.loginInProgress=true;
-       let loading = this.loadingCtrl.create({
-            content: '로그인 중입니다.'
-        });
+    //    let loading = this.loadingCtrl.create({
+    //         content: '로그인 중입니다.'
+    //     });
       /*  
       loading.present();
         setTimeout(() => {
@@ -124,7 +124,7 @@ export class LoginPage {
         }, 5000);
         */
       this.fbProvider.login().then((res:any)=>{
-                loading.dismiss();
+                //loading.dismiss();
                 console.log("facebookLogin-login page:"+JSON.stringify(res));
                 if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
                         let alert = this.alertController.create({
@@ -172,7 +172,7 @@ export class LoginPage {
                 }
             },(login_err) =>{
                     this.loginInProgress=false;
-                    loading.dismiss();
+                    //loading.dismiss();
                     console.log("login_err"+JSON.stringify(login_err));
                     let alert = this.alertController.create({
                         title: '로그인 에러가 발생했습니다',
@@ -187,9 +187,9 @@ export class LoginPage {
       console.log('kakaoLogin comes');
       if(this.loginInProgress) return;
       this.loginInProgress=true;
-       let loading = this.loadingCtrl.create({
-            content: '로그인 중입니다.'
-        });
+    //    let loading = this.loadingCtrl.create({
+    //         content: '로그인 중입니다.'
+    //     });
 /*
       loading.present();
         setTimeout(() => {
@@ -241,7 +241,7 @@ export class LoginPage {
                     }
                 },login_err =>{
                     this.loginInProgress=false;
-                    loading.dismiss();
+                    //loading.dismiss();
                     console.log(JSON.stringify(login_err));
                     //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                     //this.navController.setRoot(ErrorPage); 

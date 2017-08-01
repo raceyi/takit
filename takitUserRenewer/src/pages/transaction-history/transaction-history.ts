@@ -201,16 +201,24 @@ export class TransactionHistoryPage {
   }
 
   addStyle(tr:any){
-      if(tr.transactionType=="deposit"){
-          if(tr.confirm=="0"){
-            tr.style={'background-color':'yellow','height':'50px'};
-          }else{
-            tr.style={'background-color':'white','height':'50px'};
-          }
-      }else{
-            tr.style={'background-color':'white','height':'100px'};
-      } 
-  }
+    if(tr.transactionType=="deposit"){
+        if(tr.confirm=="0"){
+        tr.style={'background-color':'yellow'};
+        }
+        tr.borderStyle={"border-image": "url('assets/cash_history_2.png') 12 round",
+                        "border-image-outset": "0px 100px 0px 0px",
+                        "border-image-width": "8px"}
+    }else if(tr.transactionType=="cancel"){
+        tr.borderStyle={"border-image": "url('assets/cash_history_2.png') 12 round",
+                        "border-image-outset": "0px 100px 0px 0px",
+                        "border-image-width": "8px"}
+    }else{
+        tr.borderStyle={"border-image": "url('assets/cash_history_1.png') 12 round",
+                        "border-image-outset": "0px 100px 0px 0px",
+                        "border-image-width": "8px"}
+    }
+  } 
+  
 
   updateTransaction(cashList){
             cashList.forEach((transaction)=>{
@@ -302,4 +310,12 @@ export class TransactionHistoryPage {
         let cashConfirmModal= this.modalCtrl.create(CashConfirmPage, { custom: custom});
         cashConfirmModal.present();
   }
+
+  back(){
+        
+        this.navCtrl.pop({animate:true,animation: 'slide-up', direction:'back' });
+        
+        
+        //this.appCtrl.goToRoot();
+    }
 }

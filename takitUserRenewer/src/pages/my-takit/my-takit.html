@@ -50,10 +50,17 @@
             </ion-col>
         </ion-row>
     </div>
+    <div *ngIf="!historyOrders || historyOrders.length ===0 " class="div-history">
+        <ion-row>
+            <ion-col>
+                <p>최근 주문 내역이 없습니다.</p>
+            </ion-col>
+        </ion-row>
+    </div>
 
-    <button (click)="showAllHistory()" class="btn-all" ion-button no-padding full clear color="subColor"> 
+    <button (click)="showAllHistory()" class="btn-all" ion-button no-padding full icon-start clear color="mainColor"> 
         <ion-icon name="icon-history2"></ion-icon>
-        <p>최근주문 모두보기</p>
+        <p color="mainColor">최근주문 모두보기</p>
     </button> 
 
 
@@ -170,6 +177,9 @@
             <ion-list (click)="enterShopHome(shop)" *ngFor="let shop of favoriteShops" class="list-favShop">
                 <img [src]="storageProvider.awsS3+shop.imagePath">
                 <p>{{shop.shopName}}</p>
+            </ion-list>
+            <ion-list *ngIf="!favoriteShops || favoriteShops.length===0" class="list-favShop">
+                <p>단골 매장이 없습니다.</p>
             </ion-list>
         </div>
     </div>

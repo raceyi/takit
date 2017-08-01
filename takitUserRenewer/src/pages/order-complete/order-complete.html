@@ -8,7 +8,7 @@
 
   <ion-navbar hideBackButton="true">
     <ion-buttons start>
-      <button (click)="back()" class="nav-btn" color="mainColor"  small ion-button no-margin clear>
+      <button (click)="back()"  class="cancel-icon" color="black"  small ion-button no-margin clear>
           <ion-icon name="icon-cancel"></ion-icon>
       </button>
     </ion-buttons>
@@ -30,39 +30,52 @@
         <p color="subColor3">{{order.takitId}}</p>
     </div>
 
-    <ion-row class="div-statusbar">
+    <ion-row class="div-statusbar" *ngIf="order.orderStatus!=='cancelled'">
         <ion-col>
             <img src="./assets/history_bar_1_on.svg">
             <img src="./assets/history_bar_2_on.svg">
         </ion-col>
-        <ion-col *ngIf="order.orderStatus===''">
-            <img src="./assets/history_bar_1_on.svg">
-            <img src="./assets/history_bar_2_on.svg">
-        </ion-col>
-        <ion-col>
+        <ion-col *ngIf="order.orderStatus==='paid'">
             <img src="./assets/history_bar_1_off.svg">
             <img src="./assets/history_bar_2_off.svg">
         </ion-col>
-        <ion-col>
+        <ion-col *ngIf="order.orderStatus!=='paid'">
             <img src="./assets/history_bar_1_on.svg">
             <img src="./assets/history_bar_2_on.svg">
         </ion-col>
-        <ion-col>
+        <ion-col *ngIf="order.orderStatus!=='completed'">
+            <img src="./assets/history_bar_1_off.svg">
+            <img src="./assets/history_bar_2_off.svg" *ngIf="order.takeout==2">
+        </ion-col>
+        <ion-col *ngIf="order.orderStatus==='completed'">
+            <img src="./assets/history_bar_1_on.svg">
+            <img src="./assets/history_bar_2_on.svg" *ngIf="order.takeout==2">
+        </ion-col>
+        <ion-col *ngIf="order.takeout==2 && order.orderStatus!=='completed'">
+            <img src="./assets/history_bar_1_off.svg">
+        </ion-col>
+        <ion-col *ngIf="order.takeout==2 &&  order.orderStatus==='completed'">
             <img src="./assets/history_bar_1_on.svg">
         </ion-col>
     </ion-row>
-    <ion-row class="div-statusbar-p">
+    <ion-row class="div-statusbar-p" *ngIf="order.orderStatus!=='cancelled'">
         <ion-col>
-            <p>주문</p>
+            <p>결제완료</p>
         </ion-col>
         <ion-col>
-            <p>접수</p>
+            <p>주문접수</p>
         </ion-col>
         <ion-col>
-            <p>준비</p>
+            <p>준비완료</p>
         </ion-col>
+        <ion-col *ngIf="order.takeout==2">
+            <p>배달출발</p>
+        </ion-col>
+    </ion-row>
+     <ion-row class="div-statusbar-p" *ngIf="order.orderStatus==='cancelled'">
         <ion-col>
-            <p>완료</p>
+            <p>주문 취소</p>
+            <p *ngIf="order.cancelReason">취소 사유:{{order.cancelReason}}</p>
         </ion-col>
     </ion-row>
 
@@ -70,7 +83,12 @@
         <div class="div-receipt-inner">
             <div class="bg-white">
                 <img src="./assets/takit_full_logo.svg">
-                <ion-row class="top-dashed bottom-solid">
+                <ion-row *ngFor="let order of orderList.menus" class="top-dashed">
+                    <ion-col>{{order.menuName}}</ion-col>
+                    <ion-col>x{{order.quantity}}</ion-col>
+                    <ion-col>{{order.price.toLocaleString('en')}}원</ion-col>
+                </ion-row>
+                <ion-row class="bottom-solid">
                     <ion-col>주문 금액</ion-col>
                     <ion-col>{{orderList.prevAmount.toLocaleString('en')}}원</ion-col>
                 </ion-row>

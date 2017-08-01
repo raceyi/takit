@@ -53,7 +53,7 @@ export class MorePage {
 
   configureUserInfo(){
     console.log("configureUserInfo");
-    this.app.getRootNav().push(UserInfoPage);
+    this.app.getRootNav().push(UserInfoPage,{},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
   serviceInfo(){
@@ -63,7 +63,7 @@ export class MorePage {
 
   faq(){
     console.log("faq");
-    this.app.getRootNav().push(FaqPage);
+    this.app.getRootNav().push(FaqPage,{},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
   tutorial(){
@@ -73,17 +73,13 @@ export class MorePage {
 
   policyInfo(){
     console.log("policy");
-    this.app.getRootNav().push(PolicyPage);
+    this.app.getRootNav().push(PolicyPage,{},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
   goHome(){
       this.navCtrl.parent.select(0);
   }
 
-    openFaq(){
-    console.log("openFaqPage...");
-    this.app.getRootNav().push(FaqPage);
-  }
 
   removeStoredInfo(){
         this.nativeStorage.clear(); 

@@ -28,7 +28,7 @@ export class PolicyPage {
   }
 
   back(){
-    this.navCtrl.pop();  
+    this.navCtrl.pop({animate:true,animation: 'slide-up', direction:'back' });  
   }
 
   transactionAgreement(){

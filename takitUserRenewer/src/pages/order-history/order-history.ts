@@ -83,7 +83,7 @@ export class OrderHistoryPage {
 
   enterOrderComplete(order){
       
-    this.navCtrl.push(OrderCompletePage,{order:order});
+    this.navCtrl.push(OrderCompletePage,{order:order,trigger:"history"},{animate:true,animation: 'slide-up',direction: 'forward' });
   }
 
   goHome(){

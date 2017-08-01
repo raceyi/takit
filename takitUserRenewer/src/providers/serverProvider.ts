@@ -338,10 +338,6 @@ export class ServerProvider{
         });
     }
 
-    getBestMenus(){
-        
-    }
-
     getCoupons(option){
 
         return new Promise((resolve,reject)=>{
