@@ -50,9 +50,9 @@ export class UserInfoPage {
   password:string="";
   passwordConfirm:string="";
 
-  paswordGuideHide;
-  passwordMatch;
-  paswordGuide;
+  passwordGuideHide:boolean=true;
+  passwordMatch:boolean=true;
+  passwordGuide;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               private alertCtrl: AlertController, public storageProvider:StorageProvider,
@@ -70,7 +70,12 @@ export class UserInfoPage {
     this.userReceiptIssue=this.storageProvider.receiptIssue;
     this.userTaxIssueCompanyName=this.storageProvider.taxIssueCompanyName;
     this.userTaxIssueEmail=this.storageProvider.taxIssueEmail;
-
+    if(this.userTaxIssueCompanyName==undefined){
+        this.userTaxIssueCompanyName="";
+    }
+    if(this.userTaxIssueEmail==undefined){
+        this.userTaxIssueEmail="";
+    }
     this.receiptIssue=this.storageProvider.receiptIssue;
     this.receiptId=this.storageProvider.receiptId;
     this.receiptType=this.storageProvider.receiptType;
@@ -78,8 +83,14 @@ export class UserInfoPage {
     this.taxIssueEmail=this.storageProvider.taxIssueEmail;
     this.phone=this.storageProvider.phone;
 
-    this.password=this.oldPassword;
+    if(this.taxIssueCompanyName==undefined){
+        this.taxIssueCompanyName="";
+    }
+    if(this.taxIssueEmail==undefined){
+        this.taxIssueEmail="";
+    }
 
+    this.password=this.oldPassword;
   }
 
   ionViewDidLoad() {
@@ -218,19 +229,26 @@ export class UserInfoPage {
   }
 
   enableModification(){
-    if(this.userPhone==this.phone.trim() &&
+      console.log("...existingPassword: "+this.existingPassword+" password:"+this.password);
+      console.log("this.storageProvider.emailLogin:"+this.storageProvider.emailLogin);
+      
+      console.log("this.phone: "+this.phone);
+      console.log("this.receiptId:"+this.receiptId);
+      console.log("this.taxIssueCompanyName: "+this.taxIssueCompanyName);
+      console.log("this.taxIssueEmail: "+this.taxIssueEmail);
+
+    if( this.userPhone==this.phone.trim() &&
         this.userReceiptId==this.receiptId.trim() &&
         this.userReceiptType==this.receiptType &&
         this.userReceiptIssue==this.receiptIssue &&
         this.userTaxIssueCompanyName==this.taxIssueCompanyName.trim() &&
         this.userTaxIssueEmail==this.taxIssueEmail.trim() &&
         (!this.storageProvider.emailLogin || (this.storageProvider.emailLogin 
-              && this.existingPassword==this.password))){
+              && this.existingPassword===this.password))){
+
         this.modification=false;
-        return false;
     }else{
         this.modification=true;
-        return true;    
     }
   }
 
@@ -257,12 +275,32 @@ export class UserInfoPage {
     this.enableModification();
   }
 
-  passwordUp(){
+  passwordUpNoti(){
+    console.log("passwordUpNoti");  
+    if(this.password===this.passwordConfirm){
+            console.log("passwordGuideHide true");
+            this.passwordMatch=true;
+    }else{
+            console.log("passwordGuideHide false");
+            this.passwordMatch=false;
+    }
+    this.enableModification();
 
+    console.log("passwordUp-modification:"+this.modification);
   }
 
   passwordConfirmUp(){
+    console.log("password:"+this.password+" passwordConfirm:"+this.passwordConfirm);
 
+    if(this.password===this.passwordConfirm){
+            console.log("passwordGuideHide true");
+            this.passwordMatch=true;
+    }else{
+            console.log("passwordGuideHide false");
+            this.passwordMatch=false;
+    }
+    this.enableModification();
+    console.log("passwordConfirmUp-modification:"+ this.modification);
   }
 
   validateEmail(email){   //http://www.w3resource.com/javascript/form/email-validation.php
@@ -294,12 +332,12 @@ export class UserInfoPage {
           return true;
         }
         else{
-          this.paswordGuide = "영문대문자,영문소문자,특수문자,숫자 중 3개 이상 선택, 8자리 이상으로 구성하세요";
+          this.passwordGuide = "영문대문자,영문소문자,특수문자,숫자 중 3개 이상 선택, 8자리 이상으로 구성하세요";
           return false;
         }
       }
       else{
-        this.paswordGuide ="비밀번호는 연속문자,숫자 및 영단어를 사용할 수 없습니다.";
+        this.passwordGuide ="비밀번호는 연속문자,숫자 및 영단어를 사용할 수 없습니다.";
         return false;
       }
   }
@@ -326,7 +364,10 @@ export class UserInfoPage {
     }  
 
     if(this.saveInProgress) return;
-    if(!this.enableModification()){
+
+    this.enableModification();
+
+    if(!this.modification){
           console.log("no modification");
           return;
     }

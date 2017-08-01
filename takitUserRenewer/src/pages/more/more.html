@@ -55,12 +55,14 @@
         타킷 정책
         </button>
   </ion-row>
+  <!--
   <ion-row text-left class="buttonRow">
-        <button  ion-button full color="black" clear (click)="serviceInfo()">
-        서비스 정보
+        <button  ion-button full color="black" clear >
+        서비스 정보 {{serviceVersion}}
         </button>
         <p [hidden]="!serviceInfoShow" style="padding-left:20px;">{{serviceVersion}}</p>
   </ion-row>
+  -->
   </ion-grid>
   <br style="background-color:#f7f7f7;">
   <div text-center style="background-color:#f7f7f7;">
@@ -72,16 +74,16 @@
         </button>
   </div>
 </ion-content>
-<ion-footer style="height:20vh;background-color:#f7f7f7;font-size:xx-small;">
+<ion-footer style="height:23vh;background-color:#f7f7f7;font-size:xx-small;">
     <div class="extender">
        <div class="padder-center">
           <div text-left>
-          <b>타킷 주식회사</b><br>
-          <p>대표: 이경주</p>
+          <b>타킷 주식회사</b>대표: 이경주<br>
           <p>사업자 등록번호 142-88-00447 |통신판매 신고번호: 2016 서울성북-0938</p>
           <p>서울특별시 성북구 동소문로 63, 6층 31호 (동소문동 4가 드림트리)</p>
           <p><a style="color:black;" href="mailto:help@takit.biz">메일: help@takit.biz</a>| 대표번호: 0505-170-3636</p>
           <p><a style="color:black;" href="http://www.facebook.com/takitKorea"> www.facebook.com/takitKorea </a></p>
+          <p>타킷 버전 {{serviceVersion}} </p>
           </div>
        </div>
     </div>

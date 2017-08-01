@@ -53,12 +53,12 @@
 <ion-row align-items-center [hidden]="!passwordChange">
   <ion-col col-8>
     <ion-label> 새비밀번호</ion-label>
-    <ion-input class="cashIdInput" type="password" [disabled]="!passwordChange" [(ngModel)]="password"  (keyup)="passwordUp()"></ion-input>
+    <ion-input class="cashIdInput" type="password" [disabled]="!passwordChange" [(ngModel)]="password"  (keyup)="passwordUpNoti()"></ion-input>
   </ion-col>
   <ion-col col-4>
   </ion-col>  
 </ion-row>
-<p [hidden]="paswordGuideHide">{{paswordGuide}}</p>
+<p [hidden]="passwordGuideHide">{{passwordGuide}}</p>
 <ion-row align-items-center [hidden]="!passwordChange">
   <ion-col col-8>
     <ion-label> 새비밀번호 확인</ion-label>
