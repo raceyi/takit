@@ -148,103 +148,7 @@ export class HomePage{
                 });
          });
      }
-/*
-    insertShop(takitId,s3key,filenamefullpath){
-         var filename=filenamefullpath.substr(cordova.file.dataDirectory.length);
-         var queryString="INSERT INTO shoplist (takitId, s3key,filename) VALUES (?,?,?)";
-         console.log("queryString:"+queryString);
-         this.storageProvider.db.executeSql.query(queryString,[takitId,s3key,filename]).then((resp)=>{
-             console.log("resp:"+JSON.stringify(resp));
-         },(error)=>{
-             console.log("shop insert error");
-             //console.log(JSON.stringify(error));
-         });
-    }
 
-    updateShop(takitId,s3key,filenamefullpath){
-        var filename=filenamefullpath.substr(cordova.file.dataDirectory.length);
-         return new Promise((resolve,reject)=>{
-            var queryString="UPDATE shoplist SET filename=?, s3key=? WHERE takitId=?";
-            console.log("queryString:"+queryString);
-            this.storageProvider.db.executeSql.query(queryString,[filename,s3key,takitId]).then((resp)=>{
-                console.log("resp:"+JSON.stringify(resp));
-                resolve(resp);
-            },(error)=>{
-                console.log("shop update error");
-                //console.log(JSON.stringify(error));
-                reject(error);
-            });
-         });
-    }
-
-    fileDownload(takitId,s3uri,foldername,filename){
-        return new Promise((resolve,reject)=>{
-            var ft = new Transfer();
-            var uri = encodeURI(s3uri);
-
-            console.log("call Transfer.download s3uri:"+s3uri+" filename:"+filename);
-
-            ft.download(
-                uri,
-                foldername+filename,
-                false).then((result:any)=>{
-                   console.log("result:"+JSON.stringify(result));
-                   var dirname=moment().format("YYYY-MM-DD-HH-mm-ss-SSS")+'/';
-                   var options ={
-                    uri: foldername+filename,
-                    folderName:foldername+dirname,
-                    quality: this.storageProvider.homeJpegQuality,
-                    width:480,
-                    height:160};
-                    //width:window.innerWidth,// 200,
-                    //height:window.innerHeight/5};
-
-                   ImageResizer.resize(options, // Any other plugins? or please change plugin.
-                     function(image){
-                            console.log("resize: success "+image);
-                            console.log("length:"+ cordova.file.dataDirectory.length); 
-                            console.log("result:"+JSON.stringify(result));
-
-                            var idx=image.lastIndexOf('/');
-                            var reduceddirname=image.substring(0,idx);
-                            var reducedfilename=image.substr(idx+1);
-                            console.log("reduceddirname:"+reduceddirname +" reducedfilename:"+reducedfilename);
-
-                            File.removeFile(cordova.file.dataDirectory,filename) // Humm... how about iphone? Please check platform and directory
-                                .then(result=>{
-                                            console.log("removeFile("+filename+") success reducedfilename:"+reducedfilename);
-                                            console.log("prevdir:"+foldername+dirname+"prevfile:"+reducedfilename+" nextdir:"+foldername+"next filename:"+filename);
-                                            File.moveFile(reduceddirname//foldername+dirname
-                                            ,reducedfilename,foldername,filename) // Humm... how about iphone? Please check platform and directory 
-                                                .then(result=>{
-                                                        console.log("moveFile success:"+filename);
-                                                        resolve(foldername+filename);
-                                                        File.removeDir(foldername, dirname)
-                                                        .then(result=>{
-                                                            console.log("remove "+dirname);
-                                                        },err=>{
-                                                            console.log("removeDir error:"+JSON.stringify(err));
-                                                        });
-                                                    },err=>{
-                                                        console.log("moveFile err:"+JSON.stringify(err)+" "+filename);
-                                                        reject({reason:"moveFile",error:err});
-                                                    });
-                                            
-                                        },err=>{
-                                            console.log("removeFile err:"+JSON.stringify(err));
-                                            reject({reason:"removeFile",error:err});
-                                        }); 
-                     },function(){
-                         console.log("resize: false");
-                         reject({reason:"resize"});
-                     });
-                }).catch((error:any)=>{
-                    console.log("error:"+JSON.stringify(error));
-                    reject({reason:"download",error:error}); 
-                });
-            });
-    }
-*/
     removeSelected(takitId){
         console.log("removeSelected:"+takitId);
         //this.storageProvider.shoplist.findIndex( );
@@ -252,19 +156,15 @@ export class HomePage{
 
     getSelected(takitId){
          console.log("!!!!!!!!!getSelected:"+takitId);
-
-/*      below code doesn't work. 
-        var views=this.app.getRootNav().getViews();
-        for(var i=0;i<views.length;i++){
-            if(views[i] instanceof ShopTabsPage){
-                console.log("ShopTabs already is pushed");
-                return;
-            }
-        }
-*/      
+   
         if(!this.storageProvider.shopSelected){
             console.log("this.shopSelected true");
             this.storageProvider.shopSelected=true;
+             setTimeout(() => {
+                console.log("reset shopSelected:"+this.storageProvider.shopSelected);
+                this.storageProvider.shopSelected=false;
+            }, 1000); //  seconds     
+
             this.serverProvider.getShopInfo(takitId).then((res:any)=>{
                 this.storageProvider.shopResponse=res;
                 console.log("push ShopHomePage at home.ts");

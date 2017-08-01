@@ -87,6 +87,11 @@ export class PasswordPage {
              });
          });
     }
+
+    back(){
+        console.log("back() comes");
+        this.navController.pop();
+    }
 }
 
 
