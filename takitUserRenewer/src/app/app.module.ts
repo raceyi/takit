@@ -21,7 +21,7 @@ import {ServerProvider} from '../providers/serverProvider';
 
 import {ConfigProvider} from '../providers/configProvider';
 //import {UserInfoPage} from '../pages/user-info/user-info';
-import { CashPage } from '../pages/cash/cash';
+//import { CashPage } from '../pages/cash/cash';
 import { OrderPage } from '../pages/order/order';
 //import { SearchPage } from '../pages/search/search';
 import { ShopCartPage } from '../pages/shopcart/shopcart';
@@ -98,7 +98,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     LoginPage,    
     ErrorPage,
     //UserInfoPage,
-    CashPage,
+    //CashPage,
     OrderPage,
     ShopCartPage,
     ShopExitPage,
@@ -137,6 +137,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     BrowserAnimationsModule,
     HttpModule,
     IonicModule.forRoot(MyApp,{mode:'ios'}),
+    /*
+     IonicModule.forRoot(MyApp,{ animate: false,swipeBackEnabled:false }),
+     */
     EmailLoginPageModule,
     SignupPageModule,
     SignupPaymentPageModule,
@@ -163,7 +166,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     LoginPage,
     ErrorPage,
    // UserInfoPage,
-    CashPage,
+    //CashPage,
     OrderPage,
     ShopCartPage,
     ShopExitPage,
