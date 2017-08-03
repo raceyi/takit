@@ -33,14 +33,14 @@
 
   <ion-item [hidden]="!emailLogin">
     <ion-label floating>비밀번호<span class="required"> **</span></ion-label>
-    <ion-input type="password" [(ngModel)]="password"></ion-input>
+    <ion-input style="font-family: sans-serif;" type="password" [(ngModel)]="password"></ion-input>
   </ion-item>
   <ion-item class="description" [hidden]="paswordGuideHide || !emailLogin">
     {{paswordGuide}} 
   </ion-item>
   <ion-item [hidden]="!emailLogin">
     <ion-label floating>비밀번호 확인<span class="required"> **</span></ion-label>
-    <ion-input type="password" [(ngModel)]="passwordConfirm"></ion-input>
+    <ion-input style="font-family: sans-serif;" type="password" [(ngModel)]="passwordConfirm"></ion-input>
   </ion-item>
   <ion-item class="description" [hidden]="passwordMatch">
     {{paswordMismatch}}

@@ -1,4 +1,11 @@
 page-search {
+
+    $scroll-H:100px; 
+    $latest-W : 129px;
+    $latest-H : 80px;
+    $shop-name-H : 50px;
+    $shop-list-H : 71px;
+
     .underline{
         border-bottom-width:1px;
         border-bottom-style: solid;
@@ -23,4 +30,118 @@ page-search {
     .text-input-ios {
         text-align:center;
     }
+
+//////////////////////////
+    .row-shop-title{
+        border-top:0.1rem solid;
+        border-color:#f4f4f4;
+        margin-left: 10px;
+        margin-right: 10px;
+        .p-title{
+            margin-left: 4px;
+
+        }
+    }    
+//////////////////////////
+    .row-nearShop {
+        height: $shop-list-H+10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+
+        img{
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px; 
+            width: 100%;
+            height: $shop-list-H+10px;
+        }
+        
+        ion-col{
+            height: 100%;
+            padding: 0;
+            //display: flex;
+            
+        }
+
+        ion-col:nth-child(2){
+            padding-left:10px;
+            flex-basis: 30%;
+            p:nth-child(1) {
+                font-family: 나눔고딕;
+                font-size: 16px;
+                font-weight: 900;
+                color : #4c4c4c;
+                margin-top: 8px;
+                margin-bottom: 3px;
+            }
+            p:nth-child(2) {
+                font-size: 14px;
+                //font-weight: 600;
+                color:#4c4c4c;
+                margin-top:3px;
+                margin-bottom: 10px;
+            }
+            p:nth-child(3) {
+                font-size: 14px;
+                //font-weight: 600;
+                color:#9f9f9f;
+            }
+        } 
+
+        .btn-shop-more{
+            margin: 0;
+            //padding: 0;
+            height: 100%;
+            width: 4px;
+            display: flex;
+            align-items: center;
+            font-size: 25px;
+
+        }
+        
+    }
+    
+//////////////////////////
+    .scroll-more{
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        height: 95px;
+        //display: flex;
+        background-color:rgba(00,43,63,0.2);
+        border-radius: 5px;
+        font-size:13px;
+
+
+        .scroll-row-more{
+            //display: flex;
+            flex-wrap: nowrap;
+            height: 107px;
+            overflow-x: scroll;
+            
+        }
+        ion-col{
+            flex : 0 0 29%;
+            padding-top: 12px;
+            padding-left:0;
+            padding-right: 0;
+            text-align : center;
+            //margin-right: 10px;
+            //flex-wrap: nowrap;
+
+            img{
+                border-radius: 50%;
+                width: 52px;
+                height: 52px;
+            }
+
+            p{
+                margin: 5px;
+                font-size: 11px;
+                font-weight: 600;
+
+            }
+        }
+        
+    }    
 }
