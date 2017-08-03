@@ -21,32 +21,36 @@
   
 <ion-content #homeContent class="home">
      <p class="p-title">최근 방문</p>
-
-    
+     
     <ion-scroll scrollX="true" class="scroll-latest">
         <ion-row class="scroll-row-latest">
             <ion-col *ngFor="let shop of storageProvider.shoplist" class="scroll-col-latest"  no-padding>
-                <ion-row  class="scroll-row-shop">
-                    <ion-col>
-                        <button (click)="getSelected(shop.takitId)" clear ion-button>
-                            <p class="scroll-p-shop">{{shop.takitId}}</p>
-                        </button>
-                    </ion-col>
-                    <ion-col col-2>
-                        <button (click)="enterOldOrder(shop.takitId)" ion-button class="scroll-btn-latest" color="mainColor" clear>
-                            <ion-icon name="icon-menu" class="scroll-icon-latest" color="mainColor"></ion-icon>
-                        </button> 
-                    </ion-col>
-                </ion-row>
                 <ion-row >
                     <ion-col no-padding>
-                        <p *ngIf="shop.visitedDiff===0" class="scroll-p-visit">오늘 방문</p>
-                        <p *ngIf="shop.visitedDiff!==0" class="scroll-p-visit">{{shop.visitedDiff+"일 전 방문"}}</p>
+                        <p *ngIf="shop.visitedDiff===0" class="scroll-p-visit">오늘</p>
+                        <p *ngIf="shop.visitedDiff!==0" class="scroll-p-visit">{{shop.visitedDiff+"일전"}}</p>
+                    </ion-col>
+                </ion-row>
+                <ion-row  class="scroll-row-shoplist">
+                    <ion-col>
+                        <button (click)="getSelected(shop.takitId)" class="scroll-btn-shoplist" color="black" no-padding no-margin clear ion-button>
+                            <p class="scroll-p-shoplist" *ngIf="shop.takitId.length<=18">{{shop.takitId}}</p>
+                            <p class="scroll-p-shoplist" *ngIf="shop.takitId.length>18">{{shop.takitId.substring(0,17)}} ...</p>
+                        </button>
+                    </ion-col>
+                    
+                </ion-row>
+                <ion-row class="scroll-row-oldOrder">
+                    <ion-col>
+                        <button (click)="enterOldOrder(shop.takitId)" class="scroll-btn-oldOrder" color="black" ion-button icon-end clear>
+                            지난 주문
+                            <ion-icon name="icon-menu"  color="mainColor"></ion-icon>
+                        </button> 
                     </ion-col>
                 </ion-row>
             </ion-col>
             <ion-col *ngIf="storageProvider.shoplist.length===0 || !storageProvider.shoplist"  class="scroll-col-latest"  no-padding>
-                <p></p>
+                <p>매장 보기에서 매장을 찾아보세요.</p>
             </ion-col>
         </ion-row>
     </ion-scroll>
@@ -101,14 +105,14 @@
     <div *ngFor="let shop of nearShops; let i=index">
         <ion-row class="row-nearShop" >
             <ion-col no-padding>
-                <button (click)="getSelected(shop.takitId)" class="btn-shop" color="white" ion-button full no-padding no-margin> 
+                <button (click)="getSelected(shop.takitId)" class="btn-img-nearShop"  color="white" ion-button full no-padding no-margin> 
                     <img class="img-shop" [src]="storageProvider.awsS3+shop.imagePath" >
                 </button>      
             </ion-col>
             <ion-col> 
-            <button (click)="getSelected(shop.takitId)" ion-button clear>
+            <button (click)="getSelected(shop.takitId)"  class="btn-content-nearShop" no-padding no-margin ion-button clear>
                 <p>{{shop.shopName}}</p>
-                <p>{{shop.takitId}}</p>
+                <p>#{{shop.takitId}}#</p>
                 <p>{{shop.discountRate+" "+shop.businessType+" "}}
                     <!-- {{shop.reviewList.length}} -->
                 </p> 

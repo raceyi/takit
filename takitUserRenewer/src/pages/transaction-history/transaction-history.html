@@ -23,8 +23,8 @@
             </ion-col>
         </ion-row>
         <ion-row [ngStyle]="tr.style" class="row2-cashHistory">
-            <ion-col col-8 *ngIf="tr.transactionType=='deposit' && tr.confirm==0" (click)="addCash(tr)"> 
-                <button ion-button clear style="font-size:14px;" [disabled]="storageProvider.tourMode" >
+            <ion-col col-8 *ngIf="tr.transactionType=='deposit' && tr.confirm==0" > 
+                <button (click)="addCash(tr)" ion-button clear style="font-size:14px;" [disabled]="storageProvider.tourMode" >
                     <b>캐쉬충전확인</b>&nbsp;&nbsp;
                     <ion-icon name="ios-cash-outline"></ion-icon>    
                 </button>
@@ -62,8 +62,10 @@
             <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==1">
                 <p style="font-size:15px;color:blue;"><b>+{{(tr.amount*1).toLocaleString('en')}}</b></p>
             </ion-col>
-            <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==0" (click)="addCash(tr)">
-                <p style="font-size:15px;color:gray;"><b>{{(tr.amount*1).toLocaleString('en')}}</b></p>
+            <ion-col col-4 text-right *ngIf="tr.transactionType=='deposit' && tr.confirm==0">
+                <button  (click)="addCash(tr)" no-padding clear ion-button>
+                    <p style="font-size:15px;color:gray;"><b>{{(tr.amount*1).toLocaleString('en')}}</b></p>
+                </button>
             </ion-col>
             <ion-col col-4 text-right *ngIf="tr.transactionType=='refund' || tr.transactionType=='payment'">
                 <p style="font-size:15px;color:red;"><b>-{{(tr.amount*1).toLocaleString('en')}}</b></p>

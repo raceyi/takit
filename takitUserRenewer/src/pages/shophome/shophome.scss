@@ -80,16 +80,37 @@ page-shophome{
         // border-top-right-radius: 10px;
         margin-left:10px;
         margin-right:10px;
+
+        .btn-menus1{
+            width: 100%;
+            height: 100%;
+
+            .button-inner{
+                display: block;
+            }
+        }
     }
     .div-menus2{
          height: 100%;
     }
 
-    .row-scrollbar{
+    .btn-menubar{
+        display: block;
+        height: 35px;
+        width: 100%;
+        background-color: $sub-color;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        //height: 100%;
+    }
+
+    .row-menubar{
         height: 35px;
     }
 
-    .col-scrollbar {
+    .col-menubar {
         padding: 5px 0px 5px 0px;
         font-size: 1.7em;
         text-align: center;
