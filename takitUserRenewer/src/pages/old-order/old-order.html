@@ -19,10 +19,12 @@
 
 <ion-content padding>
     <div *ngFor="let order of oldOrders">
-        <ion-list (click)="enterMenuDetail(order)" class="list-oldOrder border-sub1">
-            <p>{{order.menuName}}</p>
-            <p class="p-count">{{order.orderCount}}회 주문</p>
-            <!-- <span class="amount-highlight">{{parseInt(order.amount).toLocaleString('en')}}</span><span>원</span> -->
+        <ion-list class="list-oldOrder border-sub1">
+            <button (click)="enterMenuDetail(order)"  clear ion-button>
+                <p>{{order.menuName}}</p>
+                <p class="p-count">{{order.orderCount}}회 주문</p>
+                <!-- <span class="amount-highlight">{{parseInt(order.amount).toLocaleString('en')}}</span><span>원</span> -->
+            </button>
         </ion-list>
         
     </div>

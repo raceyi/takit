@@ -27,8 +27,10 @@
   <br>
   <ion-list>
     <ion-item *ngFor="let question of questions">
-      <ion-row class="question" (click)="showAnswerToggle(question)">
-        {{question.question}}
+      <ion-row class="question">
+          <button (click)="showAnswerToggle(question)" ion-button clear small>
+            {{question.question}}
+          </button>
       </ion-row>
       <ion-row class="answer" [hidden]="question.hidden">
         <p [innerHTML]="question.answer">

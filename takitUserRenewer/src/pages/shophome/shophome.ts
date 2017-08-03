@@ -88,6 +88,7 @@ export class ShopHomePage {
   }
 
   ionViewWillEnter(){ 
+      //this.storageProvider.shopSelected=false;
       console.log("bestMenus:"+this.bestMenus);
         if(this.takitId==undefined){
           this.takitId=this.storageProvider.takitId;
@@ -97,13 +98,14 @@ export class ShopHomePage {
         this.storageProvider.orderPageEntered=false;
         this.businessType=this.shop.shopInfo.businessType;
         this.takeout=parseInt(this.storageProvider.shopInfo.takeout);
+
   }
 
-  ionViewWillUnload(){
-       console.log("ionViewWillUnload-ShopHomePage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
-       this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
-       this.storageProvider.shoplist[0].visitedDiff=0;
-  }
+//   ionViewWillUnload(){
+//        console.log("ionViewWillUnload-ShopHomePage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
+//        this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
+//        this.storageProvider.shoplist[0].visitedDiff=0;
+//   }
 
    showShopAbout(){
     //this.navController.push(ShopAboutPage, {},{animate:true,animation: 'slide-up', direction: 'forward' });
@@ -217,6 +219,10 @@ export class ShopHomePage {
         this.storageProvider.loadCart(this.takitId);
         this.storageProvider.shoplistCandidate=this.storageProvider.shoplist;
         this.storageProvider.shoplistCandidateUpdate(thisShop);
+        console.log("loadShopInfo-ShopHomePage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
+        this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
+        this.storageProvider.shoplist[0].visitedDiff=0;
+
         let body = JSON.stringify({shopList:JSON.stringify(this.storageProvider.shoplistCandidate)});
         console.log("!!shopEnter-body:",body);
         let headers = new Headers();
@@ -293,6 +299,10 @@ export class ShopHomePage {
     console.log("menu info:"+JSON.stringify(menu));
     this.navController.push(MenuDetailPage,{menu:menu, shopName:this.shopName});
     this.storageProvider.orderPageEntered=true;
+        setTimeout(() => {
+        console.log("reset orderPageEntered:"+this.storageProvider.orderPageEntered);
+        this.storageProvider.orderPageEntered=false;
+    }, 1000); //  seconds  
   }
 
 //   swipeCategory(event){
@@ -323,11 +333,6 @@ export class ShopHomePage {
     hideFlag(flag){
         return flag;
     }
-
-    // ionViewWillUnload(){
-    //    //Please update shoplist of storageProvider...
-    //    console.log("ionViewWillUnload-ShopHomePage");
-    //  }
 
     clickMenuArea(){
     console.log("clickMenuArea "+this.menuSlideUp);
@@ -378,6 +383,7 @@ export class ShopHomePage {
   }
 
     bestMenuClick(menu){
+        console.log("bestMenuClick start"+JSON.stringify(menu));
         let findMenu;
         for(let i=0; i<this.categories.length; i++){
             for(let j=0; j<this.categories[i].menus.length; j++){

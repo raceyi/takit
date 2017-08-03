@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams,App } from 'ionic-angular';
 import { StorageProvider } from '../../providers/storageProvider';
+import {ServerProvider} from '../../providers/serverProvider';
 import { TransactionHistoryPage } from '../transaction-history/transaction-history';
 import { CashDepositPage } from '../cash-deposit/cash-deposit';
 import { CashWithdrawPage } from '../cash-withdraw/cash-withdraw';
@@ -28,11 +29,18 @@ export class MyWalletPage {
 
     isTestServer:boolean=false;
   constructor(public navCtrl: NavController, public navParams: NavParams,
-                public storageProvider:StorageProvider,private app:App) {
+                public storageProvider:StorageProvider,private app:App,
+                public serverProvider:ServerProvider) {
 
         if(this.storageProvider.serverAddress.endsWith('8000')){
             this.isTestServer=true;
         }  
+
+        this.storageProvider.cashInfoUpdateEmitter.subscribe((option) => {
+            console.log("[MyWalletPage]cashAmountUpdate comes");
+            if(option=="cashAmountUpdate")
+                this.serverProvider.updateCashAvailable();
+        });
 
   }
   ionViewDidLoad() {

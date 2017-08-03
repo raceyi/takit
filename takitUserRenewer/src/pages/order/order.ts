@@ -38,7 +38,7 @@ export class OrderPage {
   quantity:number=1;
 
   discount:number;
-  amount:number; //price*quantity
+  amount:number=0; //price*quantity
   price:number;
   receiptIdMask:string;
 
@@ -96,11 +96,15 @@ export class OrderPage {
             this.receiptIdMask=this.storageProvider.receiptId.substr(0,3)+"****"+this.storageProvider.receiptId.substr(7,this.storageProvider.receiptId.length-7);
             console.log("recpitIdMask:"+this.receiptIdMask);
       }
+
+      this.shopName=navParams.get("shopName");
+      this.takitId = this.storageProvider.takitId;
+
       console.log("trigger:"+this.trigger);
       if(this.trigger==="order"){
         console.log("menudetail page->order page");
         this.menu=navParams.get("menu");
-        this.shopName=navParams.get("shopName");
+        
         console.log("OrderPage-param(menu):"+navParams.get("menu"));
         console.log("OrderPage-param(shopName):"+navParams.get("shopName"));
         var splits=this.menu.menuNO.split(";");
@@ -128,20 +132,20 @@ export class OrderPage {
                 }
             });
 
-         console.log("optionAmount:"+optionAmount);
-        console.log("optionDiscount:"+optionDiscount);
-        
-        this.amount=(parseInt(this.menu.price)+optionAmount)*this.menu.quantity;
-        console.log("amount:"+this.amount);
-        
-        this.totalDiscount=this.takitDiscount+this.couponDiscount;
-        this.totalAmount=this.amount-this.totalDiscount; //? 할인된 금액이 만원이 넘어야 하는 것인가?
+            console.log("optionAmount:"+optionAmount);
+            console.log("optionDiscount:"+optionDiscount);
+            
+            this.amount=(parseInt(this.menu.price)+optionAmount)*this.menu.quantity;
+            console.log("amount:"+this.amount);
+            
+            this.totalDiscount=this.takitDiscount+this.couponDiscount;
+            this.totalAmount=this.amount-this.totalDiscount; //? 할인된 금액이 만원이 넘어야 하는 것인가?
 
-        console.log(" ["+this.menu.hasOwnProperty("takeout")+"][ "+(this.menu.takeout!=null) +"] ["+ (this.menu.takeout!=false)+"]");
-        if(this.menu.hasOwnProperty("takeout") && (this.menu.takeout!=null) && (this.menu.takeout!=false)){ // humm... please add takeout field into all menus...
-            this.takeoutAvailable=true;
-            this.takeout=false;
-        }
+            console.log(" ["+this.menu.hasOwnProperty("takeout")+"][ "+(this.menu.takeout!=null) +"] ["+ (this.menu.takeout!=false)+"]");
+            if(this.menu.hasOwnProperty("takeout") && (this.menu.takeout!=null) && (this.menu.takeout!=false)){ // humm... please add takeout field into all menus...
+                this.takeoutAvailable=true;
+                this.takeout=false;
+            }
 
       }else if(this.trigger==="cart"){
           console.log("cart page->order page");
@@ -150,7 +154,12 @@ export class OrderPage {
         console.log("cart:"+JSON.stringify(this.cart));
 
         this.cart.menus.forEach(menu => {
-            this.amount+=parseInt(menu.price)*parseInt(menu.quantity);
+            console.log("menu price:"+menu.price);
+            console.log("menu quantity:"+menu.quantity);
+            console.log("menu price type:"+typeof menu.price);
+            console.log("menu quantity type:"+typeof menu.quantity);
+
+            this.amount+=menu.price*menu.quantity;
             this.takitDiscount+=menu.quantity*this.calcDiscountAmount(menu.price);
             this.totalDiscount=this.takitDiscount+this.couponDiscount;
             menu.options.forEach(option => {
@@ -163,6 +172,8 @@ export class OrderPage {
                 this.takeout=false;
             }
         });
+
+        console.log("주문금액:"+this.amount);
         this.totalAmount=this.cart.total;
       }
 
@@ -363,7 +374,7 @@ cashPasswordBlur(){
   sendSaveOrder(cart,menuName){
       if(this.storageProvider.tourMode==false){
              //check if cash and cashpassword exist             
-            var takeout;
+            let takeout;
             if(this.takeout==true){
                 takeout=1;
             }else if(this.delivery==true){

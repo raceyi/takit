@@ -118,7 +118,13 @@ export class MyTakitPage {
   enterShopHome(shopInfo){
       if(!this.storageProvider.shopSelected){
         console.log("this.shopSelected true");
+
         this.storageProvider.shopSelected=true;
+        setTimeout(() => {
+            console.log("reset shopSelected:"+this.storageProvider.shopSelected);
+            this.storageProvider.shopSelected=false;
+        }, 1000); //  seconds     
+
         this.serverProvider.getShopInfo(shopInfo.takitId).then((res:any)=>{
             this.storageProvider.shopResponse=res;
             console.log("push ShopHomePage at home.ts");

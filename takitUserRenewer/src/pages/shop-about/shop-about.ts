@@ -26,6 +26,8 @@ export class ShopAboutPage {
                     storageProvider.shopInfo.blogAddress="www.takit.biz";
                     this.notice = storageProvider.shopInfo.notice;
                     console.log("shopInfo!:"+JSON.stringify(storageProvider.shopInfo));
+
+                    console.log("reviewList length:"+storageProvider.shopInfo.reviewList.length);
                 }
 
   ionViewDidLoad() {
@@ -36,7 +38,7 @@ export class ShopAboutPage {
       this.navCtrl.push(OldOrderPage,{takitId:"세종대@더큰도시락"});
   }
 
-  enterShopCart(){
-      this.navCtrl.push(ShopCartPage);
+  enterCart(){
+    this.navCtrl.push(ShopCartPage);
   }
 }

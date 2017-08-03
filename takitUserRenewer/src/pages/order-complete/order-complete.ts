@@ -46,6 +46,13 @@ export class OrderCompletePage {
         this.orderList=JSON.parse(this.order.orderList);
         this.trigger = navParams.get('trigger');
         console.log("orderList:"+JSON.stringify(this.orderList));
+        
+        
+        this.orderList.menus.forEach(menu => {
+            if(menu.option && typeof menu.option==="string"){
+                menu.option=JSON.parse(menu.option);
+            }
+        });
 
         //
         if(!this.orderList.taktiDiscount){
@@ -337,12 +344,12 @@ export class OrderCompletePage {
         order.hidden=(!order.hidden);
       }
 
-      ionViewWillUnload(){
-          console.log("ionViewWillUnload-ShopMyPage");
-           if(this.messageEmitterSubscription) {
-              this.messageEmitterSubscription.unsubscribe();
-           }
-     }
+    //   ionViewWillUnload(){
+    //       console.log("ionViewWillUnload-ShopMyPage");
+    //        if(this.messageEmitterSubscription) {
+    //           this.messageEmitterSubscription.unsubscribe();
+    //        }
+    //  }
 
      refresh(){
             // refresh status of orders at front 
@@ -406,7 +413,8 @@ export class OrderCompletePage {
                                                     console.log("no more order in progress within 24 hours");
                                                     this.storageProvider.order_in_progress_24hours=false;   
                                                     this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti");                         
-                                                    }
+                                                    this.storageProvider.cashInfoUpdateEmitter.emit("cashAmountUpdate");
+                                                }
                                             },(err)=>{
                                                 if(err=="NetworkFailure"){
                                                     let alert = this.alertController.create({

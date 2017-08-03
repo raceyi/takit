@@ -83,16 +83,23 @@
         <div class="div-receipt-inner">
             <div class="bg-white">
                 <img src="./assets/takit_full_logo.svg">
-                <ion-row *ngFor="let order of orderList.menus" class="top-dashed">
-                    <ion-col>{{order.menuName}}</ion-col>
-                    <ion-col>x{{order.quantity}}</ion-col>
-                    <ion-col>{{order.price.toLocaleString('en')}}원</ion-col>
-                </ion-row>
+                <div *ngFor="let order of orderList.menus; let i=index" class="div-menuInfo">
+                    <ion-row  class="top-dashed" class="row-menu">
+                        <ion-col>{{order.menuName}} x{{order.quantity}}</ion-col>
+                        <ion-col>{{(order.price*1).toLocaleString('en')}}원</ion-col>
+                    </ion-row>
+                    <ion-row *ngFor="let option of order.options" class="row-option">
+                        <ion-col>+{{option.name}}</ion-col>
+                        <ion-col *ngIf="option.select">({{option.select}})</ion-col>
+                        <ion-col>{{(option.price*1).toLocaleString('en')}}</ion-col>
+                    </ion-row>
+                </div>
+                
                 <ion-row class="bottom-solid">
                     <ion-col>주문 금액</ion-col>
                     <ion-col>{{orderList.prevAmount.toLocaleString('en')}}원</ion-col>
                 </ion-row>
-                 <ion-row>
+                 <ion-row class="row-discount">
                     <ion-col>타킷 할인 금액</ion-col>
                     <ion-col>-{{orderList.takitDiscount.toLocaleString('en')}}원</ion-col>
                 </ion-row>
@@ -105,7 +112,7 @@
                     <ion-col>총 할인 금액</ion-col>
                     <ion-col>-{{totalDiscount.toLocaleString('en')}}원</ion-col>
                 </ion-row>
-                <ion-row>
+                <ion-row class="row-total">
                     <ion-col>총 결제 금액</ion-col>
                     <ion-col color="sub3-color"><span>{{(order.amount*1).toLocaleString('en')}}</span><span>원</span></ion-col>
                 </ion-row>

@@ -66,6 +66,22 @@ page-order-complete {
             // border-image: url('../assets/receipt_bg_1.png') 33 round;
             text-align: center;
             
+            .div-menuInfo{
+                .row-menu{
+                    text-align: right;
+
+                    ion-col:nth-child(1){
+                        text-align: left;
+                    }
+                }
+                .row-option{
+                    ion-col:nth-child(3){
+                        text-align: right;
+                    }
+                }
+            }
+
+
             .bg-white{
                 padding: 20px;
             }
@@ -87,12 +103,12 @@ page-order-complete {
                 }
             }
 
-            ion-row:nth-child(2){
+            .row-discount{
                 padding-top:10px;
                 padding-bottom: 10px;
             }
 
-            ion-row:nth-child(5){
+            .row-total{
                 padding-bottom:10px;
             }
 

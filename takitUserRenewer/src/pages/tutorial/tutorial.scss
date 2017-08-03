@@ -1,10 +1,26 @@
 page-tutorial {
+    .div-tuto-container{
+        position:relative;
 
-    ion-title>div{
-            text-align: center;
-    }
+        .btn-start{
+            position: absolute;
+            z-index: 999;
+            top:50%;
+        }
+        .btn-cashTutorial{
+            position: absolute;
+            z-index: 999;
+            top:63%;
+        }
 
-    ion-col{
-        padding:0px !important;
+        .btn-start, .btn-cashTutorial{
+            border-radius: 5px;
+            box-shadow: 0px 0px 6px 1px #4c4c4c; 
+            color:$main-color;
+            font-weight: 900;
+            font-size: 18px;
+
+        }
+
     }
 }

@@ -6,6 +6,7 @@ import {ServerProvider} from '../../providers/serverProvider';
 import {OldOrderPage } from '../old-order/old-order';
 import {MenuDetailPage} from '../menu-detail/menu-detail';
 import {SearchPage} from '../search/search';
+import { FaqPage } from '../faq/faq';
 
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -177,6 +178,7 @@ export class HomePage{
         }else{
             console.log("this.shopSelected works!");
         }
+        //this.app.getRootNav().push(FaqPage);
     }    
 
 
@@ -200,7 +202,8 @@ export class HomePage{
       //2. or send takitId and can get sorting datas
       console.log("enterOldOrder");
       this.app.getRootNav().push(OldOrderPage,{takitId:takitId},{animate:true,animation: 'slide-up',direction: 'forward' });
-  }
+  
+    }
 
   showMoreMenus(shop){
     if(shop.showMore===undefined || shop.showMore===false){

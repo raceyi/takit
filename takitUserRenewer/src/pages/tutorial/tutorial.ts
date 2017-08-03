@@ -1,5 +1,5 @@
 import { Component ,ViewChild} from '@angular/core';
-import { App,NavController, NavParams ,Content} from 'ionic-angular';
+import { App,NavController, NavParams ,Content, Slides} from 'ionic-angular';
 import { StorageProvider} from '../../providers/storageProvider';
 //import { Storage } from '@ionic/storage';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -7,6 +7,7 @@ import { ConfigureCashTutorialPage } from '../configure-cash-tutorial/configure-
 import { DepositCashTutorialPage } from '../deposit-cash-tutorial/deposit-cash-tutorial';
 import { OrderTutorialPage } from '../order-tutorial/order-tutorial';
 import { NotifierTutorialPage } from '../notifier-tutorial/notifier-tutorial';
+import {CashTutorialPage} from '../cash-tutorial/cash-tutorial';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {LoginPage} from '../login/login';
@@ -22,6 +23,11 @@ import {LoginPage} from '../login/login';
 })
 export class TutorialPage {
   @ViewChild('tutorialContent') tutorialContentRef: Content;
+  @ViewChild(Slides) slides: Slides;
+
+    tutorialImg = ['assets/01_main.png','assets/02_main.png',
+                    'assets/03_my_takit.png','assets/04_cash.png','assets/05_cash_bg.png'];
+    tutorialIdx=0;
 
   stage="configureCash";
   
@@ -67,5 +73,18 @@ notifier(){
     //save each stage into storage
       this.navCtrl.push(NotifierTutorialPage);
       this.stage="startTakit";
+  }
+    slideTap(){
+        this.slides.slideNext();
+        this.tutorialIdx=this.slides.getActiveIndex();
+        console.log(this.tutorialIdx);
+    }
+    slideChanged(){
+        this.tutorialIdx=this.slides.getActiveIndex();
+        console.log("eventChanged:"+this.tutorialIdx);
+    }
+
+  enterCashTutorial(){
+    this.app.getRootNav().setRoot(CashTutorialPage);   
   }
 }

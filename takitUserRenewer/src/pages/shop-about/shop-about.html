@@ -44,14 +44,10 @@
         </ion-col>
     </ion-row>
     <ion-row *ngIf="notice">
-        <ion-col>
-            알림
-        </ion-col>
-        <ion-col>
-            <p>{{notice}}</p>
-        </ion-col>
+        <p>알림</p>
+        <p>{{notice}}</p>
     </ion-row>
-    <div>
+    <!-- <div>
         <h6> REVIEW</h6>
         <ion-list *ngIf="storageProvider.shopInfo.reviewList">
             
@@ -60,7 +56,7 @@
             <p>작성된 리뷰가 없습니다.</p>
         </ion-list>
     </div>
-     
+      -->
     
     <ion-fab bottom color="white" bottom right>
         <button class="fab-btn" ion-fab color="white">

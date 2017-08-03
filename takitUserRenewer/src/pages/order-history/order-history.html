@@ -40,15 +40,17 @@
     </ion-row>
 
     <div *ngFor="let order of historyOrders; let i=index;" class="div-history">
-        <ion-row (click)="enterOrderComplete(order)">
-            <ion-col >
-                <p>{{order.orderName}}</p>
-                <p>{{order.takitId}}</p>
-            </ion-col>
-            <ion-col>
-                <ion-icon color="mainColor" name="icon-review" ></ion-icon>
-            </ion-col>
-        </ion-row>
+        <button (click)="enterOrderComplete(order)" clear ion-button>
+            <ion-row> >
+                <ion-col >
+                    <p>{{order.orderName}}</p>
+                    <p>{{order.takitId}}</p>
+                </ion-col>
+                <ion-col>
+                    <ion-icon color="mainColor" name="icon-review" ></ion-icon>
+                </ion-col>
+            </ion-row>
+        </button>
     </div>
 
 </ion-content>

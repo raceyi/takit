@@ -402,9 +402,6 @@ export class TabsPage {
  }
 }
 
-  ionViewWillLeave(){
-
-  }
 
   ionViewWillUnload(){
     console.log("!!!ionViewWillUnload-tabs-tourMode:"+this.storageProvider.tourMode);
@@ -759,13 +756,13 @@ export class TabsPage {
 
  ionViewWillEnter(){
      console.log("ionViewWillEnter-tabsPage ");
+      this.storageProvider.shopSelected=false;
 
  }
 
- ionViewDidEnter(){
-     this.storageProvider.shopSelected=false;
-     console.log("ionViewDidEnter-tabsPage shopSelected is false");
- }
+//  ionViewDidEnter(){
+//      console.log("ionViewDidEnter-tabsPage shopSelected is false");
+//  }
  
  exitTour(){
     this.navController.pop();     
