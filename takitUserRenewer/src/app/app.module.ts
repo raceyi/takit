@@ -89,7 +89,7 @@ import {CashWithdrawPageModule} from '../pages/cash-withdraw/cash-withdraw.modul
 import {CashDepositPage} from '../pages/cash-deposit/cash-deposit';
 import {CashConfigurePageModule} from '../pages/cash-configure/cash-configure.module';
 import {SearchPageModule} from '../pages/search/search.module';
-
+import {TutorialLastPageModule} from '../pages/tutorial-last/tutorial-last.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -154,6 +154,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     CashConfigurePageModule,
     SearchPageModule,
     NoopAnimationsModule,
+    TutorialLastPageModule,
     //IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,

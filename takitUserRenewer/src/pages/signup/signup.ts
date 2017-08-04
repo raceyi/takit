@@ -163,7 +163,7 @@ phoneAuth(){
       this.name=res.userName;
       console.log("sex:"+this.sex+"birthYear:"+this.birthYear+"name:"+this.name+" phone:"+this.phone);
   },(err)=>{
-      
+      console.log("[phoneAuth] err:"+JSON.stringify(err));
   });  
 }
 
@@ -432,6 +432,12 @@ phoneAuth(){
                     }else{ //result.result=="exist"
                         console.log("unknown result:"+output);
                         this.signupInProgress=false;
+                        let alert = this.alertCtrl.create({
+                            title: '가입에 실패했습니다.',
+                            subTitle: output,
+                            buttons: ['OK']
+                        });
+                        alert.present();
                     }
                   },(error)=>{
                     this.signupInProgress=false;

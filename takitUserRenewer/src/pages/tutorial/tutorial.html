@@ -4,9 +4,16 @@
         <ion-slide *ngFor="let img of tutorialImg; let i=index" class="slide-event">
             <div class="div-tuto-container">
                 <img [src]="img">
-                <button *ngIf="tutorialIdx===4" class="btn-start" (click)="enterCashTutorial()" color="white" ion-button full >캐쉬 충전 알아보기  ></button>
-                <button *ngIf="tutorialIdx===4" class="btn-cashTutorial" (click)="startTakit()" color="white" ion-button full >타킷으로 주문 시작  ></button>            
             </div>
         </ion-slide>
+        <!--
+         <ion-slide class="slide-event">
+            <div class="div-tuto-container">
+                <img [src]="tutorialImg[4]">
+            </div>
+                <button  class="btn-start" (click)="enterCashTutorial()" color="white" ion-button full >캐쉬 충전 알아보기  ></button>
+                <button  class="btn-cashTutorial" (click)="startTakit()" color="white" ion-button full >타킷으로 주문 시작  ></button>            
+         </ion-slide>
+         -->
     </ion-slides>
 </ion-content>

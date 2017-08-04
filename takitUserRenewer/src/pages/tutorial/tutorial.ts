@@ -11,6 +11,8 @@ import {CashTutorialPage} from '../cash-tutorial/cash-tutorial';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {LoginPage} from '../login/login';
+import {TutorialLastPage} from '../tutorial-last/tutorial-last';
+
 /*
   Generated class for the Tutorial page.
 
@@ -26,7 +28,8 @@ export class TutorialPage {
   @ViewChild(Slides) slides: Slides;
 
     tutorialImg = ['assets/01_main.png','assets/02_main.png',
-                    'assets/03_my_takit.png','assets/04_cash.png','assets/05_cash_bg.png'];
+                    'assets/03_my_takit.png','assets/04_cash.png'];
+    //tutorialLastImg = 'assets/05_cash_bg.png';                
     tutorialIdx=0;
 
   stage="configureCash";
@@ -43,7 +46,7 @@ export class TutorialPage {
         this.splashScreen.hide();
         this.tutorialContentRef.resize();
     }
-
+/*
  startTakit(){
     console.log("startTakit");
     this.storageProvider.tutorialShownFlag=true;
@@ -52,6 +55,7 @@ export class TutorialPage {
     else
         this.app.getRootNav().setRoot(LoginPage);    
   }
+*/
 
   configureCash(){
       this.navCtrl.push(ConfigureCashTutorialPage);
@@ -79,12 +83,19 @@ notifier(){
         this.tutorialIdx=this.slides.getActiveIndex();
         console.log(this.tutorialIdx);
     }
+
     slideChanged(){
         this.tutorialIdx=this.slides.getActiveIndex();
         console.log("eventChanged:"+this.tutorialIdx);
-    }
 
+        if(this.tutorialIdx==(this.tutorialImg.length-1)){
+            console.log("move into tutorial last page");
+            this.navCtrl.push(TutorialLastPage, {}, {animate: false});
+        }
+    }
+/*
   enterCashTutorial(){
     this.app.getRootNav().setRoot(CashTutorialPage);   
   }
+  */
 }
