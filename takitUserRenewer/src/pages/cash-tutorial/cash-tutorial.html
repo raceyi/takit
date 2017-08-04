@@ -17,7 +17,7 @@
 
 </ion-header>
 <ion-content padding>
-    <ion-slides #Slides (ionSlideTap)="slideTap()" (ionSlideDidChange)="slideChanged()" effect="fade" >
+    <ion-slides #Slides (ionSlideTap)="slideTap()" (ionSlideDidChange)="slideChanged()" effect="fade" pager=true paginationType="bullet">
         <ion-slide *ngFor="let tt of tutorials; let i=index" class="slide-tt">
             <div class="div-tuto-container">
                 <img  [hidden]="tutorialIdx!==i" [src]="tt.img">

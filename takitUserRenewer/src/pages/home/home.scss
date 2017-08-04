@@ -4,8 +4,8 @@ page-home {
     //}
 
 
-    $scroll-H:100px; 
-    $latest-W : 129px;
+    $scroll-H:150px; 
+    $latest-W : 135px;
     $latest-H : 80px;
     $shop-name-H : 50px;
     $shop-list-H : 71px;
@@ -35,23 +35,30 @@ page-home {
         height: $latest-H;
         margin-left: 10px;
         margin-right: 10px;
+
+
+        .scroll-col-latest {
+            //overflow: inherit;
+            width : $latest-W;
+            height: $latest-H;
+            margin-right: 9px;
+            
+        }
+
+        .scroll-p-visit{
+            margin-top:0;
+            margin-bottom:10px;
+            margin-right:10px;
+            text-align: right;
+            font-size: 12px;
+            
+        }
+
     }
 
-    .card-ios{
-        margin: 3px 2px 2px 3px;
-    }
-
-    .scroll-col-latest {
-        //overflow: inherit;
-        width : 160px;
-        height: $latest-H;
-        margin-right: 9px;
-        
-    }
-
-    .scroll-row-shop{
-        width: 160px;
-        height: 55px;
+    .scroll-row-shoplist{
+        width: $latest-W;
+        height: 70px;
         padding: 0;
         margin: 0;
         text-align: center;
@@ -59,37 +66,51 @@ page-home {
         border : solid 3px;
         border-radius: 10px;
         border-color : $sub-color;
-        padding : 0px 14px 0px 14px;
-
+        padding : 0px 10px 0px 10px;
+        background-color: white;
         ion-col{
             padding: 0;
             height: 49px;
             display: flex;
-            align-items: center;
+
+            .scroll-btn-shoplist{
+                height: 70px;
+                width: 115px;
+                padding:0;
+                margin:0;
+                .button-inner{
+                    justify-content: flex-start;
+                    white-space: normal;
+                }
+            
+                .scroll-p-shoplist{
+                    margin: 0;
+                    line-height: 25px;
+                    font-size : 16px;
+                    font-weight: 900;
+                    word-break: break-all;
+
+                }
+            }
         }
     }
 
-    .scroll-p-shop{
-        display: flex;
-        align-items: center;
-        margin: 0;
-        padding-right: 20px;
-        font-size : 13px;
-        font-weight: 800;
-        line-height : 18px;
-        word-break: break-all;
-
+    .scroll-row-oldOrder{
+        ion-col{
+            .scroll-btn-oldOrder{
+                padding:0;
+                margin:0;
+                margin-left:10px;
+                font-size: 13px;
+                font-weight: 600;
+                //justify-content: flex-start;
+                ion-icon{
+                    color:$main-color;
+                }
+            }
+        }
     }
 
-    .scroll-icon-latest{
-        vertical-align: center;
-    }
-
-    .scroll-p-visit{
-        margin-left : 12px;
-        margin-top: 9px;
-        text-align: left;
-    }
 
 
     //
@@ -124,7 +145,7 @@ page-home {
         img{
             width: 50%;
             height: 100px;
-            opacity: 0.9;
+            //opacity: 0.9;
             // box-shadow: 0px 13px 10px -10px #888888;
 
             
@@ -168,17 +189,11 @@ page-home {
     //
     .row-nearShop {
         height: $shop-list-H+10px;
+        
         margin-left: 10px;
         margin-right: 10px;
         margin-bottom: 10px;
 
-        img{
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px; 
-            width: 100%;
-            height: $shop-list-H+10px;
-        }
-        
         ion-col{
             height: 100%;
             padding: 0;
@@ -186,39 +201,79 @@ page-home {
             
         }
 
+        .button-inner{
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+
+        }
+
+        ion-col:nth-child(1){
+            flex: 0 0 28%;
+
+
+            .btn-img-nearShop{
+                height: 100%;
+                width: 100%;
+
+                img{
+                    width: 100%;
+                    height: 100%;
+                    //height: $shop-list-H+10px;
+                    border-top-left-radius: 10px;
+                    border-bottom-left-radius: 10px; 
+                
+                }
+            }
+
+        }
+
         ion-col:nth-child(2){
-            padding-left:10px;
-            flex-basis: 30%;
-            p:nth-child(1) {
-                font-family: 나눔고딕;
-                font-size: 16px;
-                font-weight: 900;
-                color : #4c4c4c;
-                margin-top: 8px;
-                margin-bottom: 3px;
+            padding-left:11px;
+            //flex: 0 0 53%;
+
+            .btn-content-nearShop{
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+
+                p:nth-child(1) {
+                    font-family: 나눔고딕;
+                    font-size: 15px;
+                    font-weight: 900;
+                    color : #4c4c4c;
+                    margin-top: 8px;
+                    margin-bottom: 3px;
+                }
+                p:nth-child(2) {
+                    font-size: 13px;
+                    //font-weight: 600;
+                    color:#4c4c4c;
+                    margin-top:3px;
+                    margin-bottom: 10px;
+                }
+                p:nth-child(3) {
+                    font-size: 13px;
+                    //font-weight: 600;
+                    color:#9f9f9f;
+                }
             }
-            p:nth-child(2) {
-                font-size: 14px;
-                //font-weight: 600;
-                color:#4c4c4c;
-                margin-top:3px;
-                margin-bottom: 10px;
-            }
-            p:nth-child(3) {
-                font-size: 14px;
-                //font-weight: 600;
-                color:#9f9f9f;
-            }
-        } 
+        }
+
+        ion-col:nth-child(3){
+            flex: 0 0 12%;
+        }
+
 
         .btn-shop-more{
             margin: 0;
-            //padding: 0;
+            padding: 0px 19px 0px 19px;
             height: 100%;
-            width: 4px;
+            //width: 3px;
             display: flex;
             align-items: center;
-            font-size: 25px;
+            font-size: 28px;
 
         }
         

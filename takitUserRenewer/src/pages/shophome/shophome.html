@@ -33,12 +33,14 @@
     <ion-slides #BestMenusSlides class="slides-bestMenus" [hidden]="menuSlideUp || bestMenus.length===0">
         <ion-slide *ngFor="let menu of bestMenus" >
             <!-- <button (click)="showBestMenus()" ion-button full no-padding no-margin class="btn-bestMenus" > -->
-            <div class="div-bestMenus-container" (click)="bestMenuClick(menu)" [ngStyle]="{'background':'url('+storageProvider.awsS3+menu.imagePath+') no-repeat','background-size':'100% 200px'}">
+            <div class="div-bestMenus-container" [ngStyle]="{'background':'url('+storageProvider.awsS3+menu.imagePath+') no-repeat','background-size':'100% 200px'}">
+                <button (click)="bestMenuClick(menu)" clear ion-button>
                 <!--<button (click)="showLeftBest()" class="btn-prev" ion-button color="transparent" ><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>-->
                 <!--<button class="slide-button" (click)="showLeftBest()" ion-button color="transparent" style="margin-right:60%; font-size:50px;"><ion-icon name="ios-arrow-back" color="grey" ></ion-icon></button>-->
                 <!-- <img [src]="storageProvider.awsS3+menu.imagePath"> -->
                 <div class="p-name">{{menu.menuName}}</div>
                 <!--<button (click)="showRightBest()" class="btn-next" ion-button color="transparent" no-padding><ion-icon name="ios-arrow-forward" color="grey"></ion-icon></button>-->
+                </button>
             </div>
             <!-- </button> -->
         </ion-slide>
@@ -85,46 +87,50 @@
 
 
 
-    <div [@slideUp]="slideUpState" class="div-menus1"  (click)="clickMenuArea()" [hidden]="menuSlideUp">
-        <ion-row (click)="slidePressed()" class="row-scrollbar">
-            <ion-col class="col-scrollbar bg-sub1">
-                <ion-icon name="md-menu" color="white">
-                </ion-icon>
-            </ion-col>
-        </ion-row>
-        <ion-row class="row-categories-menus bg-sub1">
-            <ion-col class="col-categories">
-                <ion-scroll scrollY="true" class="scroll-menus no-scroll">
-                    <ion-segment [(ngModel)]="categorySelected" *ngFor="let category of categories" class="segment-categories" color="subColor2" no-padding no-margin>
-                        <ion-segment-button [value]="category.sequence"  disabled="true">
-                            <p>{{category.categoryName}}</p>
-                        </ion-segment-button>
-                    </ion-segment>
-                </ion-scroll>
-            </ion-col>
-            <ion-col  class="col-menus">
-                <ion-scroll scrollY="true" class="scroll-menus no-scroll">
-                <ion-list class="radius-5" *ngFor="let menu of nowMenus">
-                    <div>
-                        <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
-                    </div>
-                    <div>
-                        <p>{{menu.menuName}}</p>
-                        <p>{{(menu.price*1).toLocaleString('en')}}</p>
-                    </div>
-                </ion-list>
-                </ion-scroll>
-            </ion-col>
-        </ion-row>
+    <div [@slideUp]="slideUpState" class="div-menus1" [hidden]="menuSlideUp">
+        <button (click)="clickMenuArea()" class="btn-menus1" no-padding no-margin clear ion-button>
+            <ion-row (click)="slidePressed()" class="row-menubar">
+                <ion-col class="col-menubar bg-sub1">
+                    <ion-icon name="md-menu" color="white">
+                    </ion-icon>
+                </ion-col>
+            </ion-row>
+            <ion-row class="row-categories-menus bg-sub1">
+                <ion-col class="col-categories">
+                    <ion-scroll scrollY="true" class="scroll-menus no-scroll">
+                        <ion-segment [(ngModel)]="categorySelected" *ngFor="let category of categories" class="segment-categories" color="subColor2" no-padding no-margin>
+                            <ion-segment-button [value]="category.sequence"  disabled="true">
+                                <p>{{category.categoryName}}</p>
+                            </ion-segment-button>
+                        </ion-segment>
+                    </ion-scroll>
+                </ion-col>
+                <ion-col  class="col-menus">
+                    <ion-scroll scrollY="true" class="scroll-menus no-scroll">
+                    <ion-list class="radius-5" *ngFor="let menu of nowMenus">
+                        <div>
+                            <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
+                        </div>
+                        <div>
+                            <p>{{menu.menuName}}</p>
+                            <p>{{(menu.price*1).toLocaleString('en')}}</p>
+                        </div>
+                    </ion-list>
+                    </ion-scroll>
+                </ion-col>
+            </ion-row>
+        </button>
     </div>
 
     <div class="div-menus2" [hidden]="!menuSlideUp">
-        <ion-row (click)="slidePressed()" class="row-scrollbar ">
-            <ion-col class="col-scrollbar bg-sub1">
-                <ion-icon name="md-menu" color="white">
-                </ion-icon>
-            </ion-col>
-        </ion-row>
+        <button (click)="slidePressed()" class="btn-menubar"  no-padding no-margin clear ion-button>
+            <ion-row  class="row-menubar ">
+                <ion-col class="col-menubar bg-sub1">
+                        <ion-icon name="md-menu" color="white">
+                        </ion-icon>
+                </ion-col>
+            </ion-row>
+        </button>
         <ion-row class="row-categories-menus bg-sub1">
             <ion-col class="col-categories">
                 <ion-scroll scrollY="true" class="scroll-categories">
@@ -137,14 +143,16 @@
             </ion-col>
             <ion-col class="col-menus">
                 <ion-scroll scrollY="true" class="scroll-menus">
-                    <ion-list (click)="menuSelected(menu.menuName)" *ngFor="let menu of nowMenus" class="radius-5" >
-                        <div>
-                            <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
-                        </div>
-                        <div>
-                            <p>{{menu.menuName}}</p>
-                            <p>{{(menu.price*1).toLocaleString('en')}}</p>
-                        </div>
+                    <ion-list  *ngFor="let menu of nowMenus" class="radius-5" >
+                        <button (click)="menuSelected(menu.menuName)" clear ion-button>
+                            <div>
+                                <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
+                            </div>
+                            <div>
+                                <p>{{menu.menuName}}</p>
+                                <p>{{(menu.price*1).toLocaleString('en')}}</p>
+                            </div>
+                        </button>
                     </ion-list>
                 </ion-scroll>
             </ion-col> 
