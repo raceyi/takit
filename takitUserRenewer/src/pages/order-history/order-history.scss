@@ -15,7 +15,14 @@ page-order-history {
         }
     }
 
-    .div-history{
+     .div-history{
+        button{
+            width: 100%;
+            height: 100%;
+        }
+        .button-inner{
+            display: block;
+        }
         ion-row{
             height: 50px;
             // @in/clude calc(height, "100% - 80px"); //안됨
@@ -27,12 +34,14 @@ page-order-history {
             border: solid 1px;
             border-radius: 10px;
             border-color: $sub-color;
+            text-align: left;
 
             ion-col:nth-child(1){
                 flex: 0 0 83%;
                 p:nth-child(1){
                     margin: 3px;
                     margin-left: 10px;
+                    margin-top: 4px;
                     font-size:15px;
                     font-weight: 900;
                     color:#4c4c4c;
@@ -40,7 +49,7 @@ page-order-history {
                 p:nth-child(2){
                     font-size: 13px;
                     margin: 5px;
-                    margin-top: 0px;
+                    //margin-top: 0px;
                     margin-left: 10px;
                     color:grey;
                 }

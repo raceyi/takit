@@ -20,8 +20,8 @@
 </ion-header>
 
 <ion-content style="background-color:#f7f7f7;">
-  <ion-grid  style="background-color: white; padding:0px;">
-  <ion-row>
+
+  <ion-row class="row-userInfo">
     <ion-col>
       <p>{{name}}님</p>
       <p>{{email}}</p>
@@ -29,17 +29,14 @@
     </ion-col>
     <ion-col>
       <ion-buttons end>
-        <button ion-button clear (click)="configureUserInfo()">
+        <button ion-button clear large (click)="configureUserInfo()">
             <ion-icon name="icon-setting" color="mainColor" ></ion-icon>
         </button>
       </ion-buttons>
     </ion-col>    
   </ion-row>
-  <ion-row style="background-color:#f7f7f7;">
-    <ion-col>
-      &nbsp;&nbsp;
-    </ion-col>
-  </ion-row>
+
+  <div class="div-btn-container">
   <ion-row text-left class="buttonRow">
         <button ion-button full color="black" icon-left text-left clear (click)="faq()">
         자주묻는 질문
@@ -55,6 +52,7 @@
         타킷 정책
         </button>
   </ion-row>
+  </div>
   <!--
   <ion-row text-left class="buttonRow">
         <button  ion-button full color="black" clear >
@@ -63,7 +61,6 @@
         <p [hidden]="!serviceInfoShow" style="padding-left:20px;">{{serviceVersion}}</p>
   </ion-row>
   -->
-  </ion-grid>
   <br style="background-color:#f7f7f7;">
   <div text-center style="background-color:#f7f7f7;">
         <button  ion-button color="mainColor" clear (click)="openLogout()">

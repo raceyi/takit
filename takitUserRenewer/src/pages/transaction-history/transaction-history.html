@@ -24,9 +24,9 @@
         </ion-row>
         <ion-row [ngStyle]="tr.style" class="row2-cashHistory">
             <ion-col col-8 *ngIf="tr.transactionType=='deposit' && tr.confirm==0" > 
-                <button (click)="addCash(tr)" ion-button clear style="font-size:14px;" [disabled]="storageProvider.tourMode" >
-                    <b>캐쉬충전확인</b>&nbsp;&nbsp;
-                    <ion-icon name="ios-cash-outline"></ion-icon>    
+                <button (click)="addCash(tr)" ion-button clear style="font-size:14px;" [disabled]="storageProvider.tourMode" no-padding no-margin >
+                    <b>캐쉬충전확인</b>
+                    <ion-icon style="float:right;" name="ios-cash-outline"></ion-icon>    
                 </button>
             </ion-col>
             <ion-col col-8 *ngIf="tr.transactionType=='deposit' && tr.confirm==1">
@@ -73,7 +73,7 @@
         </ion-row>
     </div>
     <div *ngIf="!transactions || transactions.length === 0">
-        <p>거래 내역이 없습니다.</p>
+        <p text-center>거래 내역이 없습니다.</p>
     </div>
 <!--
  <ion-infinite-scroll #infiniteScroll (ionInfinite)="doInfinite($event)">

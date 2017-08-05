@@ -44,7 +44,7 @@ export class SlideUpTransition extends PageTransition {
       const leavingPageEle: Element = leavingView.pageRef().nativeElement;
       const leavingContent = new Animation( this.plt,leavingView.pageRef());
 
-    //this.add(leavingContent);
+      this.add(leavingContent);
 
       if (backDirection) {
          leavingContent.fromTo(OPACITY, OPAQUE, OPAQUE, true);

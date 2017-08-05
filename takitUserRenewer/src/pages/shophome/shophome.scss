@@ -7,6 +7,16 @@ page-shophome{
             height: 200px;
             display: flex;
             align-items: flex-end;
+
+            .btn-bestMenus{
+                width: 100%;
+                height: 100%;
+                border-radius: 0px;
+
+                .button-inner{
+                    align-items: flex-end;
+                }
+            }
         }
 
         .p-name {
@@ -201,27 +211,44 @@ page-shophome{
             background-color: white;
             margin-bottom: 5px;
             display: flex;
+            align-items: flex-start;
             padding: 5px;
+            color:black;
+
+            .btn-list-menus{
+                width: 100%;
+                height: 100%;
+
+                .button-inner{
+                    //display: block;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                }
+            }
 
             div:nth-child(1){
                 width: 80px;
             }
 
-        }
-       
-        .img-shop{
-            //width:100%;
-            border-radius: 5px;
-            height:70px;
+            .img-shop{
+                width:70px;
+                height:70px;
+                border-radius: 5px;
+            }
+
+            P{
+                margin: 0;
+                margin-top: 12px;
+                margin-left: 10px;
+                text-align: left;
+                font-size:15px;
+                font-weight: 400;
+                color:black;
+            }
+
         }
 
         
-        P{
-            margin: 0;
-            margin-top: 12px;
-            font-size:15px;
-            font-weight: 400;
-        }
     }
 
     .scroll-fix{

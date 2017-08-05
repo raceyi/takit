@@ -49,27 +49,22 @@ export class OrderCompletePage {
         
         
         this.orderList.menus.forEach(menu => {
-            if(menu.option && typeof menu.option==="string"){
-                menu.option=JSON.parse(menu.option);
+            if(menu.options && typeof menu.options==="string"){
+                console.log("option parsing");
+                menu.options=JSON.parse(menu.options);
             }
+
         });
 
-        //
-        if(!this.orderList.taktiDiscount){
-            this.orderList.taktiDiscount=0;
-        }
-        if(!this.orderList.couponDiscount){
-            this.orderList.couponDiscount=0;
-        }
-        if(!this.orderList.prevAmount){
-            this.orderList.prevAmount=this.order.quantity*this.order.price;
-        }
-        if(!this.orderList.taktiDiscount){
-            this.orderList.taktiDiscount=0;
-        }
 
-        if(this.orderList.taktiDiscount && this.orderList.couponDiscount){
-            this.totalDiscount = this.orderList.taktitDiscount+this.orderList.couponDiscount;
+        if(this.orderList.taktiDiscount){
+            this.totalDiscount += this.orderList.taktiDiscount;
+            console.log("orderList takitdiscount is true"+this.totalDiscount);
+        } 
+
+        if(this.orderList.couponDiscount){
+            this.totalDiscount += this.orderList.couponDiscount;
+            console.log("orderList couponDiscount is true"+this.totalDiscount);
         }
 
 

@@ -7,13 +7,13 @@
 <ion-header>
     <ion-navbar hideBackButton="true" >
       <ion-buttons start>
-        <button  (click)="goHome()" ion-button color="mainColor" clear>
+        <button  (click)="goHome()"  class="hearder-icon"  ion-button color="mainColor" clear>
             <ion-icon name="icon-logo" color="mainColor"></ion-icon>
         </button>
       </ion-buttons>
     <ion-title *ngIf="this.isTestServer==true">검증</ion-title>
     <ion-buttons end>
-        <button ion-button clear>
+        <button (click)="search()" class="hearder-icon"  ion-button clear>
             <ion-icon name="search" color="mainColor" ></ion-icon>
         </button>
     </ion-buttons>
@@ -40,17 +40,20 @@
     </ion-row>
 
     <div *ngFor="let order of historyOrders; let i=index;" class="div-history">
-        <button (click)="enterOrderComplete(order)" clear ion-button>
-            <ion-row> >
+        <button (click)="enterOrderComplete(order)" no-padding no-margin clear ion-button>
+            <ion-row>
                 <ion-col >
                     <p>{{order.orderName}}</p>
                     <p>{{order.takitId}}</p>
                 </ion-col>
                 <ion-col>
-                    <ion-icon color="mainColor" name="icon-review" ></ion-icon>
-                </ion-col>
+                    <!-- <ion-icon color="mainColor" name="icon-review" ></ion-icon> -->
+                </ion-col> 
             </ion-row>
         </button>
+    </div>
+    <div *ngIf="!historyOrders || historyOrders.length ===0 " class="div-history">
+        <p text-center>최근 주문 내역이 없습니다.</p>
     </div>
 
 </ion-content>

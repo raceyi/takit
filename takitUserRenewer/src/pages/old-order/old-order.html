@@ -20,13 +20,12 @@
 <ion-content padding>
     <div *ngFor="let order of oldOrders">
         <ion-list class="list-oldOrder border-sub1">
-            <button (click)="enterMenuDetail(order)"  clear ion-button>
+            <button (click)="enterMenuDetail(order)" no-padding no-margin clear ion-button>
                 <p>{{order.menuName}}</p>
                 <p class="p-count">{{order.orderCount}}회 주문</p>
                 <!-- <span class="amount-highlight">{{parseInt(order.amount).toLocaleString('en')}}</span><span>원</span> -->
             </button>
         </ion-list>
-        
     </div>
     <div *ngIf="!oldOrders || oldOrders.length===0">
         <p>지난 주문 내역이 없습니다.</p>

@@ -21,7 +21,7 @@
     <p [hidden]="refundAccount.length>0 && refundBank.length>0">등록이 필요합니다.</p>
     <p [hidden]="!(refundAccount.length>0 && refundBank.length>0)"> {{refundBankName}}</p>
     <p [hidden]="!(refundAccount.length>0 && refundBank.length>0)">{{refundAccountMask}}</p>
-    <button ion-button outline color="skyblue" style="width:50vw;" (click)="manageRefundAccount()">환불 계좌 관리</button>
+    <button class="btn-manage" ion-button color="subColor" (click)="manageRefundAccount()">환불 계좌 관리</button>
     <div [hidden]="!showAccount">
       <ion-row>
       <ion-item ion-col class="cashOut-text">
@@ -78,10 +78,10 @@
   </p>
 
            <ion-row>
-            <ion-item ion-col class="cashId">
+            <ion-item ion-col class="cashId" no-lines>
                 <ion-input class="cashIdValue" [(ngModel)]="refundAmount" [disabled]="verifiedAccount.length==0 || refundEditable" type="number" placeholder="환불금액"></ion-input>
             </ion-item>
-                <button ion-button  color="skyblue" [disabled]="verifiedAccount.length==0 || refundEditable || storageProvider.tourMode" (click)="refundCash()" class="cashOut">
+                <button ion-button  color="subColor" [disabled]="verifiedAccount.length==0 || refundEditable || storageProvider.tourMode" (click)="refundCash()" class="cashOut">
                     <span>환불신청</span>
                 </button>
             </ion-row>

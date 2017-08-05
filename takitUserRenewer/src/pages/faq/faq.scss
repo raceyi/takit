@@ -8,7 +8,6 @@ page-faq {
 
     .input-wrapper {        
         margin-bottom: 10px;
-        margin-left:5px;
     }
 
     .item-ios.item-block .item-inner {
@@ -25,27 +24,34 @@ page-faq {
 
     .answer{
         background-color:white;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding:10px;
     }
 
     .question{
-        background-color:#cde5e6;
+        background-color:$sub-color;
         border-radius: 10px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 10px;
-        padding-right: 10px;
+        
+        margin-left: 0px;
+        margin-right: 10px;
+
+
+        button{
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            text-align: left;
+            white-space: normal;
+            font-weight: 600;
+
+            .button-inner{
+                display: block;
+            }
+        }
     }
     
 
     .label-ios {
-        margin-left: 0;
-        margin-right: 0px;
-        margin-top: 0px;
-        margin-bottom: 0px;
+        margin:0;
     }
 
     .anchor{

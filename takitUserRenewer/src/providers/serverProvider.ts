@@ -208,12 +208,12 @@ export class ServerProvider{
             headers.append('Content-Type', 'application/json');
             console.log("takitId:"+takitId);
             //console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
-            this.get(encodeURI(this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId)).then((res)=>{
-                    //console.log("res:"+JSON.stringify(res));
-                    resolve(res);
-                },(err)=>{
+            this.post(this.storageProvider.serverAddress+"/cafe/shopHome",JSON.stringify({takitId:takitId})).then((res)=>{
+                //console.log("res:"+JSON.stringify(res));
+                resolve(res);
+            },(err)=>{
                 reject("http error");  
-                });
+            });
         });   
     }
 

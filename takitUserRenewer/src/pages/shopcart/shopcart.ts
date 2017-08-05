@@ -197,6 +197,7 @@ export class ShopCartPage{
 
 
     enterOrder(){        
+        this.cart.total = this.amount;
         this.navController.push(OrderPage,{cart:this.cart,
                                     shopName:this.storageProvider.shopInfo.shopName,
                                     trigger:"cart"});

@@ -51,7 +51,7 @@
         </ion-row>
     </div>
     <div *ngIf="!historyOrders || historyOrders.length ===0 " class="div-history">
-        <p>최근 주문 내역이 없습니다.</p>
+        <p text-center>최근 주문 내역이 없습니다.</p>
     </div>
 
     <button (click)="showAllHistory()" class="btn-all" ion-button no-padding full icon-start clear color="mainColor"> 
@@ -171,14 +171,16 @@
 
         <div class="div-favShop">
             <ion-list *ngFor="let shop of favoriteShops" class="list-favShop">
-                <button (click)="enterShopHome(shop)" clear ion-button>
+                <button (click)="enterShopHome(shop)" no-padding no-margin clear ion-button>
                     <img [src]="storageProvider.awsS3+shop.imagePath">
                     <p>{{shop.shopName}}</p>
+                    <p class="p-keyword">{{shop.keyword}}</p>
                 </button>
             </ion-list>
-            <ion-list *ngIf="!favoriteShops || favoriteShops.length===0" class="list-favShop">
-                <p>단골 매장이 없습니다.</p>
-            </ion-list>
+            
+        </div>
+        <div *ngIf="!favoriteShops || favoriteShops.length===0" class="div-favShop">
+            <p style="text-align:center;">단골 매장이 없습니다.</p>
         </div>
     </div>
     <!--<ion-card *ngFor="let item of items" class="card-shop">

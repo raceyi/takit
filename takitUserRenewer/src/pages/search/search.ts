@@ -4,6 +4,7 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import {MenuDetailPage} from '../menu-detail/menu-detail';
+import { ShopHomePage } from '../shophome/shophome';
 
 /**
  * Generated class for the SearchPage page.
@@ -131,6 +132,32 @@ export class SearchPage {
           }
       });
   }
+
+    getSelected(takitId){
+         console.log("!!!!!!!!!getSelected:"+takitId);
+   
+        if(!this.storageProvider.shopSelected){
+            console.log("this.shopSelected true");
+            this.storageProvider.shopSelected=true;
+             setTimeout(() => {
+                console.log("reset shopSelected:"+this.storageProvider.shopSelected);
+                this.storageProvider.shopSelected=false;
+            }, 1000); //  seconds     
+
+            this.serverProvider.getShopInfo(takitId).then((res:any)=>{
+                this.storageProvider.shopResponse=res;
+                console.log("push ShopHomePage at home.ts");
+                console.log("this.storageProvider.shopResponse: "+JSON.stringify(this.storageProvider.shopResponse));
+                this.app.getRootNav().push(ShopHomePage,{takitId:takitId, bestMenus:JSON.parse(res.shopInfo.bestMenus)});
+            },(err)=>{
+                console.log("error:"+JSON.stringify(err));
+                 this.storageProvider.shopSelected=false;
+            });
+        }else{
+            console.log("this.shopSelected works!");
+        }
+        //this.app.getRootNav().push(FaqPage);
+    }   
 
   showMoreMenus(shop){
     if(shop.showMore===undefined || shop.showMore===false){

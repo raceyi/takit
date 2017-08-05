@@ -27,8 +27,6 @@ import { OrderPage } from '../pages/order/order';
 import { ShopCartPage } from '../pages/shopcart/shopcart';
 import { ShopExitPage } from '../pages/shopexit/shopexit';
 import { ShopHomePage } from '../pages/shophome/shophome';
-import { ShopMyPage } from '../pages/shopmypage/shopmypage';
-import { ShopTabsPage } from '../pages/shoptabs/shoptabs';
 import { PasswordPage } from '../pages/password/password';
 import {CashConfirmPage} from '../pages/cashconfirm/cashconfirm';
 import {CashIdPage} from '../pages/cashid/cashid';
@@ -105,8 +103,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     ShopCartPage,
     ShopExitPage,
     ShopHomePage,
-    ShopMyPage,
-    ShopTabsPage,
     PasswordPage,
     CashConfirmPage,
     CashIdPage,
@@ -175,8 +171,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     ShopCartPage,
     ShopExitPage,
     ShopHomePage,
-    ShopMyPage,
-    ShopTabsPage,
     PasswordPage,
     CashConfirmPage,
     CashIdPage,

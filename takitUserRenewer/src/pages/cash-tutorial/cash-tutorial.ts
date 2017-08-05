@@ -16,15 +16,20 @@ export class CashTutorialPage {
     @ViewChild(Slides) slides: Slides;
 
     tutorials = [{img:'assets/cash_screen_01.png', title:"온라인 계좌이체", 
-                    contents:"온라인 계좌이체시 고객님의 캐쉬아이디를 입력해주세요. 대소문자를 구분하지 않습니다. 1회 10만원 이하의 금액만 충전가능합니다.",selected:true},
+                    contents:"온라인 계좌이체시 고객님의 캐쉬아이디를 입력해주세요. 대소문자를 구분하지 않습니다. 1회 10만원 이하의 금액만 충전가능합니다."},
     {img:'assets/cash_screen_02.png', title:"입금확인 > 충전완료",
-      contents:"확인창의 법적 고지에 동의버튼을 클릭하시면 입금하신 금액만큼 캐쉬가 충전 됩니다.",selected:false},
+      contents:"확인창의 법적 고지에 동의버튼을 클릭하시면 입금하신 금액만큼 캐쉬가 충전 됩니다."},
     {img:'assets/cash_screen_03.png',title:"입금 수동 확인",
-      contents:"캐쉬아이디 입력을 잊으셨나요? \n 캐쉬 충전의 하단 메세지를 클릭 후 이체 정보를 채워주세요. 받는 통장 표시내용은 본인의 실명입니다.",selected:false}];
+      contents:"캐쉬아이디 입력을 잊으셨나요? \n 캐쉬 충전의 하단 메세지를 클릭 후 이체 정보를 채워주세요. 받는 통장 표시내용은 본인의 실명입니다."}];
     tutorialIdx = 0;
+
+    trigger;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
                 public app:App) {
+                if(navParams.get('trigger')){
+                    this.trigger = navParams.get('trigger');
+                }
   }
 
   ionViewDidLoad() {
@@ -34,32 +39,25 @@ export class CashTutorialPage {
   slideTap(){
       this.slides.slideNext();
       this.tutorialIdx=this.slides.getActiveIndex();
-      if(this.tutorialIdx <= this.tutorials.length-1){
-        for(let j=0; j<this.tutorials.length; j++){
-            this.tutorials[j].selected = false;
-        }
-        this.tutorials[this.tutorialIdx].selected =true;
-      }else{
-          return;
-      }
         console.log(this.tutorialIdx);
   }
 
   slideChanged(){
       this.tutorialIdx=this.slides.getActiveIndex();
       console.log("eventChanged:"+this.tutorialIdx);
-      if(this.tutorialIdx <= this.tutorials.length-1){
-        for(let j=0; j<this.tutorials.length; j++){
-            this.tutorials[j].selected = false;
-        }
-        this.tutorials[this.tutorialIdx].selected =true;
+      if(this.tutorialIdx===this.tutorials.length-1){
+          this.slides.lockSwipeToNext(true);
       }else{
-          return;
+          this.slides.lockSwipeToNext(false);
       }
   }
 
   enterLoginPage(){
-      this.app.getRootNav().setRoot(LoginPage);
+      if(!this.trigger){
+        this.app.getRootNav().setRoot(LoginPage);
+      }else if(this.trigger){
+        this.navCtrl.pop({animate:true,animation: 'slide-up', direction:'back' });
+      }
   }
 
 }

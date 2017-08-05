@@ -4,6 +4,7 @@ import {StorageProvider} from '../../providers/storageProvider';
 import { ServerProvider } from '../../providers/serverProvider';
 import {TabsPage} from '../tabs/tabs';
 import { OrderCompletePage } from '../order-complete/order-complete';
+import {SearchPage} from '../search/search';
 
 /*
   Generated class for the OrderHistory page.
@@ -94,6 +95,11 @@ export class OrderHistoryPage {
 
   closeHistory(){
       this.navCtrl.pop({animate:false});
+  }
+
+  search(){
+    console.log("search click");
+    this.appCtrl.getRootNav().push(SearchPage);
   }
 
 }

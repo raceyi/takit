@@ -14,7 +14,7 @@
     </ion-buttons>
     <ion-title>주문확인</ion-title>
     <ion-buttons end>
-      <button *ngIf="order.orderStatus==='paid'" (click)="cancelOrder()" class="nav-btn" small ion-button no-margin clear>
+      <button *ngIf="order.orderStatus==='paid'" (click)="cancelOrder()" class="nav-btn" color="black" small ion-button no-margin clear>
           <p style="font-size:14px;">주문 취소</p>
       </button>
     </ion-buttons>
@@ -91,24 +91,24 @@
                     <ion-row *ngFor="let option of order.options" class="row-option">
                         <ion-col>+{{option.name}}</ion-col>
                         <ion-col *ngIf="option.select">({{option.select}})</ion-col>
-                        <ion-col>{{(option.price*1).toLocaleString('en')}}</ion-col>
+                        <ion-col>{{(option.price*1).toLocaleString('en')}}원</ion-col>
                     </ion-row>
                 </div>
                 
-                <ion-row class="bottom-solid">
+                <ion-row *ngIf="orderList.prevAmount" class="bottom-solid">
                     <ion-col>주문 금액</ion-col>
                     <ion-col>{{orderList.prevAmount.toLocaleString('en')}}원</ion-col>
                 </ion-row>
-                 <ion-row class="row-discount">
+                 <ion-row *ngIf="orderList.takitDiscount" class="row-discount">
                     <ion-col>타킷 할인 금액</ion-col>
                     <ion-col>-{{orderList.takitDiscount.toLocaleString('en')}}원</ion-col>
                 </ion-row>
-                <ion-row>
+                <ion-row *ngIf="orderList.couponDiscount">
                     <ion-col>쿠폰 할인 금액</ion-col>
                     <ion-col>-{{orderList.couponDiscount.toLocaleString('en')}}원</ion-col>
                 </ion-row>
                 
-                <ion-row class="bottom-solid">
+                <ion-row *ngIf="orderList.couponDiscount || orderList.takitDiscount" class="bottom-solid">
                     <ion-col>총 할인 금액</ion-col>
                     <ion-col>-{{totalDiscount.toLocaleString('en')}}원</ion-col>
                 </ion-row>

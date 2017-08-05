@@ -6,6 +6,7 @@ import {ServerProvider} from '../../providers/serverProvider';
 //import {AlertPage} from '../alert/alert';
 import { Clipboard } from '@ionic-native/clipboard';
 import { ToastController } from 'ionic-angular';
+import {CashTutorialPage} from '../cash-tutorial/cash-tutorial';
 
 declare var moment:any;
 
@@ -260,6 +261,10 @@ export class CashDepositPage {
             alert.present();
         }
     );
+  }
+
+  enterCashTutorial(){
+      this.navCtrl.push(CashTutorialPage,{trigger:"deposit"},{animate:true,animation: 'slide-up',direction: 'forward' });
   }
     
 }

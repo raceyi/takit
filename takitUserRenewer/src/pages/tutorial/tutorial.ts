@@ -28,7 +28,7 @@ export class TutorialPage {
   @ViewChild(Slides) slides: Slides;
 
     tutorialImg = ['assets/01_main.png','assets/02_main.png',
-                    'assets/03_my_takit.png','assets/04_cash.png'];
+                    'assets/03_my_takit.png','assets/04_cash.png','assets/05_cash_bg.png'];
     //tutorialLastImg = 'assets/05_cash_bg.png';                
     tutorialIdx=0;
 
@@ -87,15 +87,20 @@ notifier(){
     slideChanged(){
         this.tutorialIdx=this.slides.getActiveIndex();
         console.log("eventChanged:"+this.tutorialIdx);
-
-        if(this.tutorialIdx==(this.tutorialImg.length-1)){
-            console.log("move into tutorial last page");
-            this.navCtrl.push(TutorialLastPage, {}, {animate: false});
-        }
+        
     }
-/*
-  enterCashTutorial(){
-    this.app.getRootNav().setRoot(CashTutorialPage);   
-  }
-  */
+    
+    
+    enterCashTutorial(){
+        this.app.getRootNav().setRoot(CashTutorialPage);   
+    }
+
+    startTakit(){
+        console.log("startTakit");
+        this.storageProvider.tutorialShownFlag=true;
+    //  if(this.navCtrl.canGoBack())
+    //      this.navCtrl.pop();
+    //  else
+            this.app.getRootNav().setRoot(LoginPage);    
+    }
 }

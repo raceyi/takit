@@ -222,14 +222,18 @@ export class HomePage{
   calcVisitedDiff(shopList){
     
     for(let i=0; i<shopList.length; i++ ){
-        if(shopList[i].visitedTime!==undefined){
-            console.log("calcVisitedDiff");
-            console.log(new Date().getTime()-new Date(shopList[i].visitedTime).getTime());
-            shopList[i].visitedDiff = (new Date().getTime() - new Date(shopList[i].visitedTime).getTime())/86400000; 
-            shopList[i].visitedDiff = parseInt(shopList[i].visitedDiff);
-        //(today's milliseconds - visitedTime milliseconds)% 1 day's milliseconds
-        
-        }  
+        if(this.storageProvider.tourMode){
+            shopList[i].visitedDiff=0;
+        }else{
+            if(shopList[i].visitedTime!==undefined){
+                console.log("calcVisitedDiff");
+                console.log(new Date().getTime()-new Date(shopList[i].visitedTime).getTime());
+                shopList[i].visitedDiff = (new Date().getTime() - new Date(shopList[i].visitedTime).getTime())/86400000; 
+                shopList[i].visitedDiff = parseInt(shopList[i].visitedDiff);
+            //(today's milliseconds - visitedTime milliseconds)% 1 day's milliseconds
+            
+            }  
+        }
     }
     console.log("shopList calcVisitedDiff:"+JSON.stringify(shopList));    
     

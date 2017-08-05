@@ -28,7 +28,8 @@
                 <ion-row >
                     <ion-col no-padding>
                         <p *ngIf="shop.visitedDiff===0" class="scroll-p-visit">오늘</p>
-                        <p *ngIf="shop.visitedDiff!==0" class="scroll-p-visit">{{shop.visitedDiff+"일전"}}</p>
+                        <p *ngIf="shop.visitedDiff!==0 && shop.visitedDiff" class="scroll-p-visit">{{shop.visitedDiff+"일전"}}</p>
+                        <p *ngIf="shop.visitedDiff!==0 && !shop.visitedDiff" class="scroll-p-visit">방문</p>
                     </ion-col>
                 </ion-row>
                 <ion-row  class="scroll-row-shoplist">
@@ -50,7 +51,7 @@
                 </ion-row>
             </ion-col>
             <ion-col *ngIf="storageProvider.shoplist.length===0 || !storageProvider.shoplist"  class="scroll-col-latest"  no-padding>
-                <p>매장 보기에서 매장을 찾아보세요.</p>
+                <p style="text-align:center;">매장 보기에서 매장을 찾아보세요.</p>
             </ion-col>
         </ion-row>
     </ion-scroll>
@@ -113,9 +114,8 @@
             <button (click)="getSelected(shop.takitId)"  class="btn-content-nearShop" no-padding no-margin ion-button clear>
                 <p>{{shop.shopName}}</p>
                 <p>#{{shop.takitId}}#</p>
-                <p>{{shop.discountRate+" "+shop.businessType+" "}}
-                    <!-- {{shop.reviewList.length}} -->
-                </p> 
+                <span>{{shop.discountRate+" "}}</span><span *ngIf="shop.businessType">{{shop.businessType+" "}}</span>
+                    <!-- <span>{{shop.reviewList.length}}</span> -->
             </button>
             </ion-col>
             <ion-col col-2>
@@ -127,7 +127,7 @@
         <ion-scroll class="scroll-more" scrollX="true" *ngIf="shop.showMore" >
             <ion-row class="scroll-row-more">
                 <ion-col *ngFor="let menu of shop.bestMenus" class="more-menus">
-                    <button (click)="enterMenuDetail(menu,shop)" ion-button clear>
+                    <button (click)="enterMenuDetail(menu,shop)" no-padding no-margin ion-button clear>
                         <img class="img-shop" [src]="storageProvider.awsS3+menu.imagePath">
                         <p>{{menu.menuName}}</p>       
                     </button>

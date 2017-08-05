@@ -2,15 +2,16 @@ page-policy {
     .explain{
         margin-left: 10px !important;
         margin-right: 10px !important;
-        background-color: #cde5e6;
+        padding:10px;
+        background-color: $sub-color;
     }
 
     .buttonRow{
-        border-color:red;
+        border-color:$main-color;
         border-bottom-width:1px;
         border-bottom-style:solid;
         margin-left:20px;
-        margin-right:10px;
+        margin-right:20px;
         .button-inner{
             justify-content: flex-start;
         }

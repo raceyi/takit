@@ -23,11 +23,10 @@ page-cash-deposit {
         margin-bottom: 5vw;
         margin: 5vw;
         border-width: 2px;
-        border-color: skyblue;
         padding-top: 5vw;
         padding-bottom: 5vw;
-        border-style: solid;
         border-radius: 10px;
+        box-shadow: 0px 0px 6px 1px #4c4c4c; 
     }
 
     .explain{
@@ -48,5 +47,19 @@ page-cash-deposit {
         border-style: solid;
         border-color: lightgray;
         border-radius:10px;
+    }
+
+    .btn-copy{
+        width:50vw; 
+        color:grey;
+        border-radius: 2px solid;
+        border-color:$sub-color;
+        font-weight: 600;
+    }
+
+    .p-sender{
+        font-weight: 600;
+        color:$sub3-color;
+        font-size: 15px;
     }
 }

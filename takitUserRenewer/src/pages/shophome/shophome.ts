@@ -80,11 +80,7 @@ export class ShopHomePage {
             this.bestMenus=navParams.get('bestMenus');
             if(!this.bestMenus){ //this.bestMenu !== null or undefined
                 this.bestMenus = [];
-            }
-
-            console.log("bestMenus:"+JSON.stringify(this.bestMenus));
-            
-            
+            }            
   }
 
   ionViewWillEnter(){ 
@@ -96,8 +92,14 @@ export class ShopHomePage {
           this.shophomeContentRef.resize();
         }
         this.storageProvider.orderPageEntered=false;
+
+        
         this.businessType=this.shop.shopInfo.businessType;
-        this.takeout=parseInt(this.storageProvider.shopInfo.takeout);
+
+        if(this.storageProvider.shopInfo.takeout){
+            this.takeout=parseInt(this.storageProvider.shopInfo.takeout);
+
+        }
   }
 
 //   ionViewWillUnload(){
@@ -333,12 +335,12 @@ export class ShopHomePage {
             for(let j=0; j<this.categories[i].menus.length; j++){
                 if(this.categories[i].menus[j].menuNO===menu.menuNO && this.categories[i].menus[j].menuName===menu.menuName){
                     findMenu=this.categories[i].menus[j];
-                //console.log(this.categories[category_no-1].menus[i].options);
+                    console.log("findMenu:");
+                    this.navController.push(MenuDetailPage,{menu:findMenu, shopName:this.shopName});
+                    break;
                 }
-                break;
+            }
         }
-        this.navController.push(MenuDetailPage,{menu:findMenu, shopName:this.shopName});
-    }
         
     }
 }
