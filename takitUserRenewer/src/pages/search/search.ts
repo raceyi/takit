@@ -23,6 +23,11 @@ export class SearchPage {
   brand:string="";
   nearShops=[];
 
+  lastIndex=0;
+  countPerSearch=1; // Please read this value from storageProvider later.
+
+  infiniteScroll;
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
           private serverProvider:ServerProvider,public storageProvider:StorageProvider,
           private translateService:TranslateService,private alertController:AlertController,
@@ -38,8 +43,20 @@ export class SearchPage {
       this.navCtrl.pop();  
   }
 
-  goToShop(){    
-      console.log("search");
+ doInfinite(infiniteScroll){
+    if(this.infiniteScroll==undefined)
+        this.infiniteScroll=infiniteScroll;
+    this.searchShopInfo(infiniteScroll);
+  }
+
+  searchUpdate(){
+    this.nearShops=[];
+    this.lastIndex=0;
+    this.searchShopInfo(null);
+  }
+
+  searchShopInfo(infiniteScroll){    
+      console.log("searchShopInfo");
 
       let body;
       
@@ -56,20 +73,20 @@ export class SearchPage {
            body =JSON.stringify({
                         serviceName: this.identifier,
                         shopName:this.brand,
-                        offset: 0,
-                        count: 5
+                        offset: this.lastIndex,
+                        count: this.countPerSearch
                     });
       }else if(this.brand.trim().length>0){
            body =JSON.stringify({
                         shopName:this.brand,
-                        offset: 0,
-                        count: 5
+                        offset: this.lastIndex,
+                        count: this.countPerSearch
                     });
       }else if(this.identifier.trim().length>0){
            body =JSON.stringify({
                         serviceName: this.identifier,
-                        offset: 0,
-                        count: 5
+                        offset: this.lastIndex,
+                        count: this.countPerSearch
                     });
       }else 
         return;
@@ -79,12 +96,22 @@ export class SearchPage {
             if(res.result=="success"){
                         console.log("shopInfo.length:"+res.shopInfo.length);
                         console.log("shopInfo:"+JSON.stringify(res));
-                        if(res.shopInfo.length==0){
+                        if(res.shopInfo.length==0 && infiniteScroll==null){
                             console.log("shopInfos 0");
+                            this.nearShops=[];
+                            this.lastIndex=0;
+                            if(this.infiniteScroll!=undefined){
+                                this.infiniteScroll.enable(true);
+                            }
+                        }else if(res.shopInfo.length==0 && infiniteScroll!=null){
+                            infiniteScroll.complete();
+                            infiniteScroll.enable(false);                            
                         }else{
+                            if(this.lastIndex==0)
+                                this.nearShops=[];
                             this.ngZone.run(()=>{
-                                this.nearShops=res.shopInfo;
-                                this.nearShops.forEach(shop => {
+                                for(let i=0;i<res.shopInfo.length;i++){
+                                    let shop=res.shopInfo[i];
                                     if(shop.bestMenus ===null){
                                         shop.bestMenus=[];
                                     }else{
@@ -95,10 +122,22 @@ export class SearchPage {
                                     }else{
                                         shop.reviewList = JSON.parse(shop.reviewList);
                                     }
-                                });
-
+                                    this.nearShops.push(shop); 
+                                }
+                                this.lastIndex=this.nearShops.length;
                                 console.log("ngZone-nearShop:"+JSON.stringify(this.nearShops));
                             });
+                            if(infiniteScroll!=null){
+                                infiniteScroll.complete();
+                                if(res.shopInfo.length<this.countPerSearch){
+                                    infiniteScroll.enable(false);
+                                }else
+                                    infiniteScroll.enable(true);
+                            }
+                            if(this.infiniteScroll!=undefined){
+                                if(res.shopInfo.length==this.countPerSearch)
+                                    this.infiniteScroll.enable(true);
+                            }
                         }
             }else{
                         let alert = this.alertController.create({
@@ -107,6 +146,9 @@ export class SearchPage {
                             buttons: ['OK']
                         });
                         alert.present();
+                        if(infiniteScroll!=null){
+                            infiniteScroll.complete();
+                        }
             }
       },(error)=>{
           if(error=="NetworkFailure"){
@@ -130,6 +172,9 @@ export class SearchPage {
                         });
                         alert.present();
           }
+        if(infiniteScroll!=null){
+            infiniteScroll.complete();
+        }
       });
   }
 

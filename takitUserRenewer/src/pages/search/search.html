@@ -29,7 +29,7 @@
  </ion-row>  
   <ion-row align-items-center>
     <ion-col style="text-align: center;">
-      <button ion-button color="subColor" style="width:90%;" (click)="goToShop()"> 찾기 </button>
+      <button ion-button color="subColor" style="width:90%;" (click)="searchUpdate()"> 찾기 </button>
     </ion-col>
   </ion-row>
 
@@ -68,4 +68,8 @@
         </ion-scroll>
     </div>
 
+<ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+   <ion-infinite-scroll-content></ion-infinite-scroll-content>
+ </ion-infinite-scroll>
+    
 </ion-content>
