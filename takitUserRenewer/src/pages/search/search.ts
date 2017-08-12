@@ -24,7 +24,7 @@ export class SearchPage {
   nearShops=[];
 
   lastIndex=0;
-  countPerSearch=1; // Please read this value from storageProvider later.
+  countPerSearch=6; // Please read this value from storageProvider later.
 
   infiniteScroll;
 

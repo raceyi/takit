@@ -229,16 +229,16 @@ export class TransactionHistoryPage {
                 if(tr.transactionType=='refund'){
                     tr.accountMask=this.maskAccount(tr.account);
                 }
-                if(tr.confirm==1){
+                //if(tr.confirm==1){
                     // convert GMT time into local time
                     var trTime:Date=moment.utc(tr.transactionTime).toDate();
                     var mm = trTime.getMonth() < 9 ? "0" + (trTime.getMonth() + 1) : (trTime.getMonth() + 1); // getMonth() is zero-based
                     var dd  = trTime.getDate() < 10 ? "0" + trTime.getDate() : trTime.getDate();
                     var dString=trTime.getFullYear()+'-'+(mm)+'-'+dd;
                     tr.date=dString;
-                }else{
-                    tr.date=tr.transactionTime.substr(0,10);
-                }
+                //}else{
+                //    tr.date=tr.transactionTime.substr(0,10);
+                //}
                 tr.hide=true; //default value
                 //console.log("tr:"+JSON.stringify(tr));
                 this.transactions.push(tr);
