@@ -241,14 +241,11 @@ export class LoginPage {
                     }
                 },login_err =>{
                     this.loginInProgress=false;
-                    //loading.dismiss();
                     console.log(JSON.stringify(login_err));
-                    //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
-                    //this.navController.setRoot(ErrorPage); 
-                    console.log("login_err"+JSON.stringify(login_err));
+                    console.log("login_err..."+JSON.stringify(login_err));
                         let alert = this.alertController.create({
-                            title: '로그인 에러가 발생했습니다',
-                            subTitle: '네트웍 상태를 확인하신후 다시 시도해 주시기 바랍니다.',
+                            title: '카카오 로그인 에러가 발생했습니다',
+                            subTitle: '다시 시도해 주시기 바랍니다.',
                             buttons: ['OK']
                         });
                         alert.present();
