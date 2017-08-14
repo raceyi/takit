@@ -135,7 +135,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
-    IonicModule.forRoot(MyApp,{mode:'ios'}),
+    IonicModule.forRoot(MyApp,{mode:'ios',swipeBackEnabled:false}),
     /*
      IonicModule.forRoot(MyApp,{ animate: false,swipeBackEnabled:false }),
      */

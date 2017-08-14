@@ -7,7 +7,9 @@ import {CashConfirmPage} from '../cashconfirm/cashconfirm';
 import {ErrorPage} from '../error/error';
 import {LoginPage} from '../login/login';
 //import {TutorialPage} from '../tutorial/tutorial';
-import { OrderDonePage } from '../order-done/order-done';
+//import { OrderDonePage } from '../order-done/order-done';
+import { OrderCompletePage } from '../order-complete/order-complete';
+
 import { MyTakitPage } from '../my-takit/my-takit';
 import {MyWalletPage} from '../my-wallet/my-wallet';
 import { MorePage } from '../more/more';
@@ -533,10 +535,10 @@ export class TabsPage {
                         ||(this.storageProvider.isAndroid && !this.storageProvider.orderExistInProgress(additionalData.custom))){ // android resume event comes late.
                         let orderDoneModal;
                         if(typeof additionalData.custom === 'string'){ 
-                            orderDoneModal= this.modalCtrl.create(OrderDonePage, { title:data.title,message:data.message,custom: JSON.parse(additionalData.custom) });
+                            orderDoneModal= this.modalCtrl.create(OrderCompletePage, { order:additionalData.custom, trigger:"gcm" });
                         }else{ // object 
                             console.log("obj comes");
-                            orderDoneModal= this.modalCtrl.create(OrderDonePage, {  title:data.title,message:data.message,custom: additionalData.custom });
+                            orderDoneModal= this.modalCtrl.create(OrderCompletePage, {  order:additionalData.custom, trigger:"gcm"});
                         }
                         orderDoneModal.present();
                     }

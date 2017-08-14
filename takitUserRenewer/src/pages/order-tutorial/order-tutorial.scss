@@ -1,37 +1,22 @@
 page-order-tutorial {
- .toolbar-background {
-    background: #fff;
-    border-color: transparent;
-  }
+ .slide-tt{
+        text-align: center;
+        img{
+            width: 55%;
+        }
+        .p-desc-title{
+            color: $main-color;
+            font-weight: 600;
+        }
+        .p-desc-contents{
+            margin-left:30px;
+            margin-right:30px;
+            font-size:15px;
+        }
 
-  .slide-zoom {
-    height: 100%;
-  }
-
-  .slide-title {
-    margin-top: 2.8rem;
-  }
-
-  .slide-image {
-    max-height: 50%;
-    max-width: 60%;
-    margin: 18px 0;
-  }
-
-  b {
-    font-weight: 500;
-  }
-
-  p {
-    padding: 0 40px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #60646B;
-
-    b {
-      color: #000000;
     }
-  }
 
-  ion-slides { height: initial; }  
+    .swiper-pagination-bullet-active{
+        background: $main-color;
+    }
 }

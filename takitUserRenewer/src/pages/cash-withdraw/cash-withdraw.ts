@@ -271,6 +271,7 @@ export class CashWithdrawPage {
           if(res.result=="success"){
               //console.log("cashAmount:"+res.cashAmount);
               this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
+              this.storageProvider.cashInfoUpdateEmitter.emit("cashAmountUpdate");
                let alert = this.alertController.create({
                     title: '환불요청에 성공했습니다.',
                     buttons: ['OK']

@@ -93,6 +93,7 @@ export class CashConfirmPage{
                     console.log("addCash:"+JSON.stringify(res));
                     if(res.result=="success"){
                       this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
+                      this.storageProvider.cashInfoUpdateEmitter.emit("cashAmountUpdate");
                       this.removeDuplicate();
                       this.viewCtrl.dismiss();
                     }else{ 

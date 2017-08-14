@@ -13,6 +13,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import {LoginPage} from '../login/login';
 import {TutorialLastPage} from '../tutorial-last/tutorial-last';
 
+
 /*
   Generated class for the Tutorial page.
 
@@ -27,18 +28,24 @@ export class TutorialPage {
   @ViewChild('tutorialContent') tutorialContentRef: Content;
   @ViewChild(Slides) slides: Slides;
 
-    tutorialImg = ['assets/01_main.png','assets/02_main.png',
-                    'assets/03_my_takit.png','assets/04_cash.png','assets/05_cash_bg.png'];
+    tutorialImg;
     //tutorialLastImg = 'assets/05_cash_bg.png';                
     tutorialIdx=0;
 
   stage="configureCash";
+    trigger:string;
   
   constructor(public navCtrl: NavController, private nativeStorage: NativeStorage,
+    public navParams:NavParams,
       public storageProvider:StorageProvider,private app: App,private splashScreen: SplashScreen) {
     console.log("tutorialPage constructor tutorialShownFlag:"+this.storageProvider.tutorialShownFlag);
     //read each stage from storage.
     this.nativeStorage.setItem('tutorialShownFlag',"true");
+    this.trigger=this.navParams.get('trigger');
+
+    
+        this.tutorialImg = ['assets/01_main.png','assets/02_main.png',
+                    'assets/03_my_takit.png','assets/04_cash.png','assets/05_cash_bg.png'];
   }
  
   ionViewDidLoad(){
@@ -67,12 +74,6 @@ export class TutorialPage {
       this.stage="order";
   }
 
- order(){
-    //save each stage into storage
-      this.navCtrl.push(OrderTutorialPage);
-      this.stage="notifier";
-  }
-
 notifier(){
     //save each stage into storage
       this.navCtrl.push(NotifierTutorialPage);
@@ -92,7 +93,11 @@ notifier(){
     
     
     enterCashTutorial(){
-        this.app.getRootNav().setRoot(CashTutorialPage);   
+        this.app.getRootNav().push(CashTutorialPage,{trigger:this.trigger});   
+    }
+
+    enterOrderTutorial(){
+        this.app.getRootNav().push(OrderTutorialPage);   
     }
 
     startTakit(){
@@ -102,5 +107,9 @@ notifier(){
     //      this.navCtrl.pop();
     //  else
             this.app.getRootNav().setRoot(LoginPage);    
+    }
+
+    back(){
+        this.navCtrl.pop({animate:true,animation: 'slide-up', direction:'back' });
     }
 }

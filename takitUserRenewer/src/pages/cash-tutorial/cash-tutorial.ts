@@ -47,15 +47,22 @@ export class CashTutorialPage {
       console.log("eventChanged:"+this.tutorialIdx);
       if(this.tutorialIdx===this.tutorials.length-1){
           this.slides.lockSwipeToNext(true);
+          this.slides.lockSwipeToPrev(false);
+      }else if(this.tutorialIdx === 0){
+          this.slides.lockSwipeToPrev(true);
+          this.slides.lockSwipeToNext(false);
       }else{
           this.slides.lockSwipeToNext(false);
+          this.slides.lockSwipeToPrev(false);
       }
+      
   }
 
   enterLoginPage(){
       if(!this.trigger){
         this.app.getRootNav().setRoot(LoginPage);
       }else if(this.trigger){
+          console.log(this.trigger);
         this.navCtrl.pop({animate:true,animation: 'slide-up', direction:'back' });
       }
   }
