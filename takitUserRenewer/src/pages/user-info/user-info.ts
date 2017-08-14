@@ -419,6 +419,10 @@ export class UserInfoPage {
     else
         receiptIssueVal=0;
 
+
+    if(this.phone!=this.userPhone) //bug fix 2017.08.10 kalen.lee
+           this.userPhone=this.phone;
+
     if(this.storageProvider.emailLogin){
         if(this.passwordChange){
           body= JSON.stringify({email:this.storageProvider.email,

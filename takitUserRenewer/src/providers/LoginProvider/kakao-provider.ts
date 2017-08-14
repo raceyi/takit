@@ -80,18 +80,23 @@ export class KakaoProvider {
               ); 
           },
           ()=>{  // Error callback
+              let successComes:boolean=false;
               console.log(scheme + ' is not available');
               this.browserRef=this.iab.create("https://kauth.kakao.com/oauth/authorize?client_id="+this.storageProvider.kakaoTakitUser+"&redirect_uri="+this.storageProvider.kakaoOauthUrl+"&response_type=code","_blank");
-              this.browserRef.on("exit").subscribe((event)=>{
-                  console.log("InAppBrowserEvent(exit):"+JSON.stringify(event)); 
-                  this.browserRef.close();
-                  let reason={stage:"login_err",msg:"no input"}; 
-                  reject(reason);
+              this.browserRef.on("exit").subscribe((event:InAppBrowserEvent)=>{
+                  console.log("exit comes: "+JSON.stringify(event));
+                  setTimeout(() => {
+                      if(!successComes){
+                            let reason={stage:"login_err",msg:"no input"}; 
+                            reject(reason);
+                      }
+                }, 1000); //  1 second. Is it enough?
               });
               this.browserRef.on("loadstart").subscribe((event:InAppBrowserEvent)=>{
                   console.log("InAppBrowserEvent(loadstart):"+String(event.url)); 
                   var url=String(event.url);
                   if(url.startsWith(this.storageProvider.kakaoOauthUrl+"?code=")){
+                      successComes=true;
                       console.log("success to get code");
                       this.browserRef.close();
                       let authorize_code=event.url.substr(event.url.indexOf("code=")+5);
@@ -114,6 +119,7 @@ export class KakaoProvider {
                                                     let reason={stage:"serverlogin_err",msg:serverlogin_err};
                                                     reject(reason);
                                         });
+                                        
                               },(err)=>{
                                  console.log("getKakaoMe err"+JSON.stringify(err)); 
                                  let reason={stage:"getKakaoMe_err",msg:err}; 
