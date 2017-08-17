@@ -116,6 +116,8 @@ export class OrderPage {
         this.takitDiscount= this.menu.quantity*this.calcDiscountAmount(this.menu.price);
         let optionAmount:number=0;
         let optionDiscount:number=0;
+
+        if(this.menu.options){
             this.menu.options.forEach(option => {
                 if(option.flag===true){
                     console.log("OrderPage constructor option.flag true");
@@ -131,21 +133,23 @@ export class OrderPage {
                     optionAmount+=parseInt(option.price);
                 }
             });
+        }
+        
 
-            console.log("optionAmount:"+optionAmount);
-            console.log("optionDiscount:"+optionDiscount);
-            
-            this.amount=(parseInt(this.menu.price)+optionAmount)*this.menu.quantity;
-            console.log("amount:"+this.amount);
-            
-            this.totalDiscount=this.takitDiscount+this.couponDiscount;
-            this.totalAmount=this.amount-this.totalDiscount; //? 할인된 금액이 만원이 넘어야 하는 것인가?
+        console.log("optionAmount:"+optionAmount);
+        console.log("optionDiscount:"+optionDiscount);
+        
+        this.amount=(parseInt(this.menu.price)+optionAmount)*this.menu.quantity;
+        console.log("amount:"+this.amount);
+        
+        this.totalDiscount=this.takitDiscount+this.couponDiscount;
+        this.totalAmount=this.amount-this.totalDiscount; //? 할인된 금액이 만원이 넘어야 하는 것인가?
 
-            console.log(" ["+this.menu.hasOwnProperty("takeout")+"][ "+(this.menu.takeout!=null) +"] ["+ (this.menu.takeout!=false)+"]");
-            if(this.menu.hasOwnProperty("takeout") && (this.menu.takeout!=null) && (this.menu.takeout!=false)){ // humm... please add takeout field into all menus...
-                this.takeoutAvailable=true;
-                this.takeout=false;
-            }
+        console.log(" ["+this.menu.hasOwnProperty("takeout")+"][ "+(this.menu.takeout!=null) +"] ["+ (this.menu.takeout!=false)+"]");
+        if(this.menu.hasOwnProperty("takeout") && (this.menu.takeout!=null) && (this.menu.takeout!=false)){ // humm... please add takeout field into all menus...
+            this.takeoutAvailable=true;
+            this.takeout=false;
+        }
 
       }else if(this.trigger==="cart"){
           console.log("cart page->order page");
@@ -162,15 +166,19 @@ export class OrderPage {
             this.amount+=menu.price*menu.quantity;
             this.takitDiscount+=menu.quantity*this.calcDiscountAmount(menu.price);
             this.totalDiscount=this.takitDiscount+this.couponDiscount;
-            menu.options.forEach(option => {
-                this.amount+=parseInt(option.price);
-                this.takitDiscount+=menu.quantity*this.calcDiscountAmount(option.price);
-            });
 
-            if(menu.hasOwnProperty("takeout") && (menu.takeout!=null)){ // humm... please add takeout field into all menus...
-                this.takeoutAvailable=menu.takeout; //menu.takeout 값을 넣어서 모두 true이면 true, 하나라도 false이면 false
-                this.takeout=false;
+            if(menu.options){
+                menu.options.forEach(option => {
+                    this.amount+=parseInt(option.price);
+                    this.takitDiscount+=menu.quantity*this.calcDiscountAmount(option.price);
+                });
+
+                if(menu.hasOwnProperty("takeout") && (menu.takeout!=null)){ // humm... please add takeout field into all menus...
+                    this.takeoutAvailable=menu.takeout; //menu.takeout 값을 넣어서 모두 true이면 true, 하나라도 false이면 false
+                    this.takeout=false;
+                }
             }
+            
         });
 
         console.log("주문금액:"+this.amount);

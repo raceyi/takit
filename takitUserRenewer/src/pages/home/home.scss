@@ -4,7 +4,7 @@ page-home {
     //}
 
 
-    $scroll-H:150px; 
+    $scroll-H:115px; 
     $latest-W : 135px;
     $latest-H : 80px;
     $shop-name-H : 50px;
@@ -76,7 +76,7 @@ page-home {
 
             .scroll-btn-shoplist{
                 height: 70px;
-                width: 115px;
+                width: 90px;
                 padding:0;
                 margin:0;
                 .button-inner{
@@ -87,17 +87,13 @@ page-home {
                 .scroll-p-shoplist{
                     margin: 0;
                     line-height: 25px;
-                    font-size : 16px;
+                    font-size : 15px;
                     font-weight: 900;
                     word-break: break-all;
 
                 }
             }
-        }
-    }
 
-    .scroll-row-oldOrder{
-        ion-col{
             .scroll-btn-oldOrder{
                 padding:0;
                 margin:0;

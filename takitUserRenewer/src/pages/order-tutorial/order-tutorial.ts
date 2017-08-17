@@ -15,10 +15,14 @@ export class OrderTutorialPage {
 
     @ViewChild(Slides) slides: Slides;
 
-    tutorials = [{img:'assets/order_screen_01.png', title:"주문기록 확인하기", 
-                    contents:"나의 타킷 페이지 > 최근주문 에서 내 주문 기록을 확인 하고, 각 주문내역에서 주문 진행상황을 볼 수 있습니다."},
-    {img:'assets/order_screen_02.png', title:"주문 진행 확인",
-      contents:"주문 접수 진행 상황을 확인하고, 준비 완료 후 알람으로 알려줍니다."}]
+    tutorials = [{img:'assets/order_screen_01.png', title:"주문 접수 알림", 
+                  contents:"상점에서 주문을 접수하면 주문 접수 알림이 옵니다. (앱 알림 오류 시에는 문자로 발송됩니다.)"},
+                  {img:'assets/order_screen_02.png', title:"상품 준비완료 알림",
+                  contents:"상점에서 준비가 완료되면 준비 완료 알림이 옵니다. (앱 알림 오류 시에는 문자로 발송됩니다.)"},
+                  {img:'assets/order_screen_04.png', title:"알림 상세 내역",
+                  contents:"알림을 클릭하여 주문 상세내역을 확인하세요. 준비완료된 상품은 상점에서 주문 번호 확인 후 가져가시면 됩니다."},
+                 {img:'assets/order_screen_03.png', title:"최근 주문 내역", 
+                  contents:"나의 타킷 > 최근주문 에서도 주문 상세 내역을 확인하실 수 있습니다."}]
       
       tutorialIdx = 0;
 
@@ -33,7 +37,7 @@ export class OrderTutorialPage {
   slideTap(){
       this.slides.slideNext();
       this.tutorialIdx=this.slides.getActiveIndex();
-        console.log(this.tutorialIdx);
+      console.log(this.tutorialIdx);
   }
 
   slideChanged(){
