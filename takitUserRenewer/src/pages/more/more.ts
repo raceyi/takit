@@ -12,6 +12,7 @@ import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import {SearchPage} from '../search/search';
+import {TutorialPage} from '../tutorial/tutorial';
 
 /**
  * Generated class for the MorePage page.
@@ -68,7 +69,7 @@ export class MorePage {
 
   tutorial(){
     console.log("tutorial");
-
+    this.app.getRootNav().push(TutorialPage,{trigger:"more"},{animate:true,animation: 'slide-up', direction: 'forward' });
   }
 
   policyInfo(){

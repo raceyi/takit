@@ -23,11 +23,10 @@ export class ShopAboutPage {
                 public storageProvider:StorageProvider) {
 
                     this.businessTime=JSON.parse(storageProvider.shopInfo.businessTime);
-                    storageProvider.shopInfo.blogAddress="www.takit.biz";
                     this.notice = storageProvider.shopInfo.notice;
                     console.log("shopInfo!:"+JSON.stringify(storageProvider.shopInfo));
 
-                    console.log("reviewList length:"+storageProvider.shopInfo.reviewList.length);
+                    //console.log("reviewList length:"+storageProvider.shopInfo.reviewList.length);
                 }
 
   ionViewDidLoad() {

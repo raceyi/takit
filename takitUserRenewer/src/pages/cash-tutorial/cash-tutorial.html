@@ -6,7 +6,7 @@
 -->
 <ion-header>
     
-  <ion-navbar>
+  <ion-navbar hideBackButton="true" >
       <ion-buttons start>
         <button (click)="enterLoginPage()" class="cancel-icon" color="black" small ion-button no-margin clear>
             <ion-icon name="icon-cancel"></ion-icon>
@@ -17,14 +17,14 @@
 
 </ion-header>
 <ion-content padding>
-    <ion-slides #Slides (ionSlideTap)="slideTap()" (ionSlideWillChange)="slideChanged()" effect="fade" pager=true paginationType="bullet">
+    <ion-slides #Slides (ionSlideTap)="slideTap()" pager=true paginationType="bullet">
         <ion-slide *ngFor="let tt of tutorials; let i=index" class="slide-tt">
             <div class="div-tuto-container">
-                <img  [hidden]="tutorialIdx!==i" [src]="tt.img">
+                <img  [src]="tt.img">
             </div>
             <div class="div-description">
-                <p  [hidden]="tutorialIdx!==i" class="p-desc-title">{{tt.title}}</p>
-                <p  [hidden]="tutorialIdx!==i" class="p-desc-contents">{{tt.contents}}</p>
+                <p  class="p-desc-title">{{tt.title}}</p>
+                <p  class="p-desc-contents">{{tt.contents}}</p>
             </div>
         </ion-slide>
     </ion-slides>
