@@ -44,22 +44,22 @@
   <ion-col col-6>
     캐쉬비밀번호<span class="required"> **</span>
   </ion-col>
-  <ion-col col-3>
-    {{passwordString}}
+  <ion-col col-6 [hidden]="passwordMask">
+   <button ion-button full small class="cashPassword" style="background-color:white;" (click)="passwordInput()"></button>
   </ion-col>
-  <ion-col col-3>
-  <button ion-button outline color="skyblue" (click)="passwordInput()">입력</button>    
+  <ion-col col-6 [hidden]="!passwordMask">
+   <button ion-button full small class="cashPassword" style="background-color:white;color:darkgray;" (click)="passwordInput()">******</button>
   </ion-col>
 </ion-row>
 <ion-row align-items-center>
   <ion-col col-6>
     캐쉬비밀번호 확인<span class="required"> **</span>
   </ion-col>
-  <ion-col col-3>
-    {{passwordConfirmString}}
+  <ion-col col-6 [hidden]="passwordConfirmMask">
+   <button ion-button full small class="cashPassword" style="background-color:white;" (click)="passwordConfirmInput()"></button>
   </ion-col>
-  <ion-col col-3>
-  <button ion-button outline outline color="skyblue" (click)="passwordConfirmInput()">입력</button>    
+  <ion-col col-6 [hidden]="!passwordConfirmMask">
+   <button ion-button full small class="cashPassword" style="background-color:white;color:darkgray;" (click)="passwordConfirmInput()">******</button>
   </ion-col>
 </ion-row>
 <ion-row>
