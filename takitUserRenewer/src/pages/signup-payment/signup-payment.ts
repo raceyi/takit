@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams,AlertController } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
@@ -39,11 +39,13 @@ export class SignupPaymentPage {
 
   passwordConfirmString:string="";
   passwordString:string="";
+  passwordMask:boolean=false;
+  passwordConfirmMask:boolean=false;
 
   startInProgress:boolean=false;
   
   constructor(public storageProvider:StorageProvider,private serverProvider:ServerProvider,
-      private splashScreen: SplashScreen,
+      private splashScreen: SplashScreen,private ngZone:NgZone,
       public navCtrl: NavController, private alertCtrl: AlertController,public navParams: NavParams) {
     console.log("SignupPaymentPage-constructor");    
     this.cashIdGuide="대소문자 구분없음";
@@ -307,7 +309,11 @@ export class SignupPaymentPage {
       return new Promise((resolve, reject) => {
           console.log("password params:"+_params);
           this.cashIdPassword=_params;
-          this.passwordString="******";
+          this.ngZone.run(()=>{
+                this.passwordString="******";
+                this.passwordMask=true;
+                console.log("this.passwordString:"+this.passwordString);
+          });
           resolve();
       });
   }
@@ -316,7 +322,11 @@ export class SignupPaymentPage {
       return new Promise((resolve, reject) => {
           console.log("password confirm params:"+_params);
           this.cashIdPasswordConfirm=_params;
-          this.passwordConfirmString="******";
+          this.ngZone.run(()=>{
+                this.passwordConfirmString="******";
+                this.passwordConfirmMask=true;
+                console.log("this.passwordConfirmString:"+this.passwordConfirmString);
+          });
           resolve();
       });
   }
