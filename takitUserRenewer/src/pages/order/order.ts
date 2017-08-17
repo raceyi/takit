@@ -8,7 +8,7 @@ import {ServerProvider} from '../../providers/serverProvider';
 //import { Keyboard } from '@ionic-native/keyboard';
 import {CashPassword} from '../cash-password/cash-password';
 import {SearchCouponPage} from '../search-coupon/search-coupon';
-
+import {CashTutorialPage} from '../cash-tutorial/cash-tutorial';
 //declare var cordova:any;
 
 @Component({
@@ -626,10 +626,31 @@ cashPasswordBlur(){
             if(this.storageProvider.cashAmount >= this.amount){
                 this.sendOrder();
             }else{
-                let alert = this.alertController.create({
-                    subTitle: '캐쉬잔액이 부족합니다.',
-                    buttons: ['OK']
-                });
+                let alert;
+                if(this.storageProvider.cashAmount==0){ //Temporary solution. 
+                    alert = this.alertController.create({
+                    title: '캐쉬를 충전해 주세요.',
+                    subTitle:'타킷 캐쉬 충전 방법을 알고 계신가요?', 
+                    buttons: [{
+                            text: '네',
+                            handler: () => {
+                                console.log('Disagree clicked');
+                                return;
+                            }
+                        },
+                        {
+                            text: '아니오',
+                            handler:()=>{
+                                this.navController.push(CashTutorialPage,{trigger:true});
+                                return;
+                            }
+                        }]});
+                }else{
+                        let alert = this.alertController.create({
+                            subTitle: '캐쉬잔액이 부족합니다.',
+                            buttons: ['OK']
+                        });
+                }
                 this.orderInProgress=false;
                 alert.present();
                 return;
