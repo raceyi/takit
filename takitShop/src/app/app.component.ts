@@ -68,7 +68,6 @@ export class MyApp {
                     return;
                 }   
             });
-            this.mediaProvider.init();
             //Please login if login info exists or move into login page
             this.nativeStorage.getItem("id").then((value:string)=>{
                 console.log("value:"+value);
