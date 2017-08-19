@@ -73,7 +73,8 @@ import { Clipboard } from '@ionic-native/clipboard';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Device } from '@ionic-native/device';
 //import { Transfer } from '@ionic-native/transfer';
-import { FocuserDirective } from '../directives/focuser/focuser';
+//import { FocuserDirective } from '../directives/focuser/focuser';
+import {DirectivesModule} from '../directives/directives.module'
 
 import {EmailLoginPageModule} from '../pages/email-login/email-login.module';
 import {SignupPaymentPageModule} from '../pages/signup-payment/signup-payment.module';
@@ -129,7 +130,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     SearchCouponPage,
     CashDepositPage,
     CashTutorialPage,
-    FocuserDirective
+    //FocuserDirective
+   
   ],
   imports: [
     BrowserModule,
@@ -151,6 +153,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     SearchPageModule,
     NoopAnimationsModule,
     TutorialLastPageModule,
+     DirectivesModule,
     //IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       provide: TranslateLoader,
