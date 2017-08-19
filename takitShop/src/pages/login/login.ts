@@ -25,8 +25,6 @@ export class LoginPage {
     emailHide:boolean=true;
     @ViewChild('loginPage') loginPageRef: Content;
     scrollTop;
-    focusEmail = new EventEmitter();;
-    focusPassword =new EventEmitter();
 
   constructor(private navController: NavController, private navParams: NavParams,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
@@ -64,7 +62,7 @@ export class LoginPage {
             }
         }
   }
-
+     
   dummyHandler(id,fbProvider,accessToken){
       console.log("dummyHandler called");
       return new Promise((resolve, reject)=>{
@@ -202,27 +200,20 @@ export class LoginPage {
 
   emailLogin(event){
       if(this.email.length==0){
-          if(this.platform.is('android'))
-            this.focusEmail.emit(true);
-          else if(this.platform.is('ios')){ // show alert message
+          
               let alert = this.alertController.create({
                         title: '이메일을 입력해주시기 바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present();
-          }
           return;
       }
       if(this.password.length==0){
-            if(this.platform.is('android'))
-                this.focusPassword.emit(true);
-            else if(this.platform.is('ios')){
                 let alert = this.alertController.create({
                         title: '비밀번호를 입력해주시기 바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present();
-            }
             return;
       }
 

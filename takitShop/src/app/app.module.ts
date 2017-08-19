@@ -41,6 +41,8 @@ import { File } from '@ionic-native/file';
 import { Media, MediaObject } from '@ionic-native/media';
 import { HttpModule } from '@angular/http';
 
+import { MyErrorHandler } from '../classes/my-error-handler';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -79,7 +81,8 @@ import { HttpModule } from '@angular/http';
     EditMenuPage,
     MenuModalPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
+  //providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
+  providers: [{provide: ErrorHandler, useClass: MyErrorHandler},
     Network, 
     Facebook,
     InAppBrowser,

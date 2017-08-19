@@ -19,7 +19,7 @@
 
 //
 //  AppDelegate.m
-//  V2 Test
+//  타킷운영자
 //
 //  Created by ___FULLUSERNAME___ on ___DATE___.
 //  Copyright ___ORGANIZATIONNAME___ ___YEAR___. All rights reserved.
@@ -27,7 +27,6 @@
 
 #import "AppDelegate.h"
 #import "MainViewController.h"
-#import <KakaoOpenSDK/KakaoOpenSDK.h> //kalen.lee@takit.biz
 
 @implementation AppDelegate
 
@@ -36,17 +35,5 @@
     self.viewController = [[MainViewController alloc] init];
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
-
-//kalen.lee@takit.biz -begin
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
-    if ([KOSession isKakaoAccountLoginCallback:url]){return [KOSession handleOpenURL:url];}
-    return false;
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application{[KOSession handleDidBecomeActive];}
-
-//kalen.lee@takit.biz -end
 
 @end

@@ -1,5 +1,5 @@
 import {Component,EventEmitter,NgZone} from '@angular/core';
-import {NavController,App,AlertController,Platform,MenuController,IonicApp,ViewController} from 'ionic-angular';
+import {NavController,App,AlertController,Platform,MenuController,IonicApp,ViewController,Events} from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
 import {StorageProvider} from '../../providers/storageProvider';
@@ -45,7 +45,7 @@ export class ShopTablePage {
       private http:Http,private alertController:AlertController,private ngZone:NgZone,private ionicApp: IonicApp,
       private printerProvider:PrinterProvider,private platform:Platform,private menuCtrl: MenuController,
       public viewCtrl: ViewController,private serverProvider:ServerProvider,private push: Push,
-      private mediaProvider:MediaProvider) {
+      private mediaProvider:MediaProvider,private events:Events) {
     console.log("ShopTablePage constructor");
     this.isAndroid=this.platform.is("android");
   
@@ -80,7 +80,16 @@ export class ShopTablePage {
   }
 
     ionViewDidLoad(){
-          console.log("shoptable page did enter");
+          this.events.subscribe('invalidVersion',()=>{
+            console.log("shoptable page did enter");
+            let alert = this.alertController.create({
+                      title: '앱버전을 업데이트해주시기 바랍니다.',
+                      subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                      buttons: ['OK']                                
+                    });
+                    alert.present();
+          });
+     
           Splashscreen.hide();
           cordova.plugins.backgroundMode.setDefaults({
               title:  '타킷운영자가 실행중입니다',
@@ -607,6 +616,21 @@ export class ShopTablePage {
             return false;
       }
 
+      paidOrdersExist(){
+        console.log("paidOrdersExist");
+        if(this.orders.length>0){
+             for(var i=0;i<this.orders.length;i++){
+                  console.log("order:"+JSON.stringify(this.orders[i]));
+                  if(this.orders[i].orderStatus=='paid'){
+                    console.log('paidOrdersExist return true;');
+                    return true;
+                  }
+             }
+             console.log('paidOrdersExist return false;');
+             return false;
+        }
+      }
+
       registerPushService(){ // Please move this code into tabs.ts
             this.pushNotification=this.push.init({
                 android: {
@@ -688,6 +712,10 @@ export class ShopTablePage {
                            this.orders[i]=this.convertOrderInfo(incommingOrder);   
                            if(this.orders[i].orderStatus=="cancelled"){
                                   this.printCancel(this.orders[i]);
+                                  if(!this.paidOrdersExist()){
+                                      this.mediaProvider.stop();
+                                      playback=false;
+                                  }
                            }
                         }
                         console.log("orders update:"+JSON.stringify(this.orders));
