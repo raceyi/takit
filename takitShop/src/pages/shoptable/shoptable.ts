@@ -195,6 +195,7 @@ export class ShopTablePage {
          }, 100/* high priority rather than login page */);
    }
 
+/*
         if(this.platform.is("android")){
             if(this.smsInboxPlugin==undefined)
                 this.smsInboxPlugin = cordova.require('cordova/plugin/smsinboxplugin');
@@ -214,9 +215,7 @@ export class ShopTablePage {
               console.log("isSupported:"+JSON.stringify(err));
             });
         }
-
-
-
+*/
         this.printerEmitterSubscription= this.printerProvider.messageEmitter.subscribe((status)=> {
                 console.log("printer status:"+status);
                 this.ngZone.run(()=>{
@@ -581,8 +580,6 @@ export class ShopTablePage {
           message+="판매금액  -"+amount +"원";
           message+="부가가치세  -"+tax +"원";
           message+="합계     -"+totalAmount+"원";          
-
-
       }
 
       this.printerProvider.print(title,message).then(()=>{
@@ -966,14 +963,65 @@ export class ShopTablePage {
        }
      }
 
+  getGMTtimeInMilliseconds(time:string){
+      let year=parseInt(time.substr(0,4));
+      let month=parseInt(time.substr(5,2))-1;
+      let day=parseInt(time.substr(8,2));
+      let hours=parseInt(time.substr(11,2));
+      let minutes=parseInt(time.substr(15,2));
+      let seconds=parseInt(time.substr(17,2));
+      
+      var d=Date.UTC(year, month, day, hours, minutes, seconds);
+      return d;
+  }
+
+  AfterOnedayComplete(order){
+    if(order.completedTime!=undefined){
+      console.log("completedTime:"+order.completedTime);
+      let completedTime:string=order.completedTime;
+      let d=this.getGMTtimeInMilliseconds(completedTime);
+
+      let now=new Date();
+      //console.log("now: "+now.getTime());
+      //console.log("completedTimeLimit: "+(d+ 24*60*60*1000));
+      if(now.getTime()>(d+ 24*60*60*1000)){
+            console.log("orderNo:"+order.orderNO +" hide is true ");
+            return true;
+      }
+    }     
+    return false;
+  }
+  AfterOnedayCompleteCancel(order){
+    if(order.orderStatus=="paid" ||  order.orderStatus=="checked"){
+        return false;
+    }else if(order.cancelledTime!=undefined && order.cancelledTime!=null){
+        //console.log("[AfterOnedayCompleteCancel]cancelledTime:"+order.cancelledTime);
+        let cancelledTime:string=order.cancelledTime;
+        let d=this.getGMTtimeInMilliseconds(cancelledTime);
+        let now=new Date();
+        if(now.getTime()<(d+24*60*60*1000)){
+            return false;
+        }
+    }else if(order.completedTime!=undefined && order.completedTime!=null){
+        let completedTime:string=order.completedTime;
+        let d=this.getGMTtimeInMilliseconds(completedTime);
+        let now=new Date();
+        if(now.getTime()<(d+24*60*60*1000)){
+            return false;
+        }
+    } 
+    return true;  
+  }
+
+/*
   AfterOnedayComplete(order){
     if(order.completedTime!=undefined){
         let completedTime=new Date(order.completedTime+" GMT");
         let now=new Date();
-        //console.log("now:"+now.getTime());
-        //console.log(" completedTime:"+(completedTime.getTime()+ 24*60*60*1000));
+        console.log("now:"+now.getTime());
+        console.log(" completedTime:"+(completedTime.getTime()+ 24*60*60*1000));
         if(now.getTime()>(completedTime.getTime()+24*60*60*1000)){
-            //console.log("orderNo:"+order.orderNO +" hide is true ");
+            console.log("orderNo:"+order.orderNO +" hide is true ");
             return true;
         }
     }
@@ -1000,7 +1048,7 @@ export class ShopTablePage {
     } 
     return true;  
   }
-
+*/
   update(){
     this.orders=[];
     if(this.infiniteScroll!=undefined)
