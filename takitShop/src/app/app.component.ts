@@ -216,6 +216,14 @@ export class MyApp {
         this.app.getRootNav().push(EditMenuPage)
     }
    openLogout(){
+      if(this.storageProvider.tourMode){
+            let alert = this.alertCtrl.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+        return;
+      }
       let confirm = this.alertCtrl.create({
       title: '로그아웃하시겠습니까?',
       buttons: [

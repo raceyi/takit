@@ -26,6 +26,9 @@ export class StorageProvider{
     public storeOpen=false;
 
     public tourMode=false;
+    public tourEmail=this.configProvider.getTourEmail();
+    public tourPassword=this.configProvider.getTourPassword();
+
     public email;
     public name;
     public phone;

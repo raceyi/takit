@@ -777,6 +777,15 @@ export class ShopTablePage {
     }
 
     updateOrder(order){
+        if(this.storageProvider.tourMode){
+              let alert = this.alertController.create({
+                          title: '주문을 처리합니다.',
+                          subTitle:'둘러보기 모드에서는 동작하지 않습니다.',
+                          buttons: ['OK']
+                      });
+              alert.present();
+          return;
+        }
         this.mediaProvider.stop();
         if(order.orderStatus=="paid"){
                this.updateStatus(order,"checkOrder").then(()=>{
@@ -861,6 +870,15 @@ export class ShopTablePage {
     }
 
     cancel(order){
+      if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '주문을 취소합니다.',
+                        subTitle:'둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+        return;
+      }
       console.log("order cancel comes");
             let prompt = this.alertController.create({
                 title: '주문취소',
@@ -1026,6 +1044,16 @@ export class ShopTablePage {
 
   configureGotNoti(){
     console.log("click configureGotNoti");
+    if(this.storageProvider.tourMode){
+          let alert = this.alertController.create({
+                      title: '주문을 처리하는 담당자가 됩니다.',
+                      subTitle:'둘러보기 모드에서는 동작하지 않습니다.',
+                      buttons: ['OK']
+                  });
+          alert.present();
+      return;
+    }
+
       let body = JSON.stringify({takitId:this.storageProvider.myshop.takitId});      
        console.log("body: "+body);
       this.serverProvider.post("/shop/refreshInfo",body).then((res:any)=>{
@@ -1131,6 +1159,15 @@ export class ShopTablePage {
 
   configureStore(){
     console.log("click-configureStore(storeOpen):"+this.storageProvider.storeOpen);
+    if(this.storageProvider.tourMode){
+          let alert = this.alertController.create({
+                      title: '상점문을 열고,닫습니다. ',
+                      subTitle:'둘러보기 모드에서는 동작하지 않습니다.',
+                      buttons: ['OK']
+                  });
+          alert.present();
+      return;
+    }
     if(this.storageProvider.storeOpen===false){
       let alert = this.alertController.create({
                         title: '상점문을 여시겠습니까?',
