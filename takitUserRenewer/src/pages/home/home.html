@@ -26,22 +26,22 @@
         <ion-scroll scrollX="true" class="scroll-latest">
             <ion-row class="scroll-row-latest">
                 <ion-col *ngFor="let shop of storageProvider.shoplist" class="scroll-col-latest"  no-padding>
+                    <ion-row  class="scroll-row-shoplist">
+                        <ion-col>
+                            <button (click)="getSelected(shop.takitId)" class="scroll-btn-shoplist" color="black" no-padding no-margin clear ion-button>
+                                <p class="scroll-p-shoplist" *ngIf="shop.takitId.length<=14">{{shop.takitId}}</p>
+                                <p class="scroll-p-shoplist" *ngIf="shop.takitId.length>14">{{shop.takitId.substring(0,13)}} ...</p>
+                            </button>
+                            <button (click)="enterOldOrder(shop.takitId)"  class="scroll-btn-oldOrder" color="mainColor" ion-button clear>
+                                <ion-icon name="icon-menu" color="mainColor"></ion-icon>
+                            </button> 
+                        </ion-col>
+                    </ion-row>
                     <ion-row >
                         <ion-col no-padding>
                             <p *ngIf="shop.visitedDiff===0" class="scroll-p-visit">오늘</p>
                             <p *ngIf="shop.visitedDiff!==0 && shop.visitedDiff" class="scroll-p-visit">{{shop.visitedDiff+"일전"}}</p>
                             <p *ngIf="shop.visitedDiff!==0 && !shop.visitedDiff" class="scroll-p-visit">방문</p>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row  class="scroll-row-shoplist">
-                        <ion-col>
-                            <button (click)="getSelected(shop.takitId)" class="scroll-btn-shoplist" color="black" no-padding no-margin clear ion-button>
-                                <p class="scroll-p-shoplist" *ngIf="shop.takitId.length<=12">{{shop.takitId}}</p>
-                                <p class="scroll-p-shoplist" *ngIf="shop.takitId.length>12">{{shop.takitId.substring(0,11)}} ...</p>
-                            </button>
-                            <button (click)="enterOldOrder(shop.takitId)"  class="scroll-btn-oldOrder" color="mainColor" ion-button clear>
-                                <ion-icon name="icon-menu" color="mainColor"></ion-icon>
-                            </button> 
                         </ion-col>
                     </ion-row>
                 </ion-col>

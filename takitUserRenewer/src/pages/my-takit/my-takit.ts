@@ -5,6 +5,7 @@ import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import {OrderHistoryPage} from '../order-history/order-history';
 import { ShopHomePage } from '../shophome/shophome';
+import {OrderCompletePage} from '../order-complete/order-complete';
 import {SearchPage} from '../search/search';
 /*
   Generated class for the MyTakit page.
@@ -144,6 +145,11 @@ export class MyTakitPage {
         console.log("search click");
         this.app.getRootNav().push(SearchPage);
     }
+
+    enterOrderComplete(order){
+      
+    this.navCtrl.push(OrderCompletePage,{order:order,trigger:"history"},{animate:true,animation: 'slide-up',direction: 'forward' });
+  }
 
 
 }

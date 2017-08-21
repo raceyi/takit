@@ -5,7 +5,7 @@ page-home {
 
 
     $scroll-H:115px; 
-    $latest-W : 150px;
+    $latest-W : 170px;
     $latest-H : 80px;
     $shop-name-H : 50px;
     $shop-list-H : 71px;
@@ -46,11 +46,11 @@ page-home {
         }
 
         .scroll-p-visit{
-            margin-top:0;
-            margin-bottom:10px;
+            margin-top:10px;
+            margin-bottom:0px;
             margin-right:10px;
             margin-left: 13px;
-            text-align: left;
+            text-align: center;
             font-size: 12px;
             
         }
@@ -76,7 +76,7 @@ page-home {
 
             .scroll-btn-shoplist{
                 height: 70px-6px;
-                width: 95px-3px;
+                width:115px-3px;
                 padding:0;
                 margin:0;
                 .button-inner{

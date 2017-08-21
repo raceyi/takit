@@ -17,6 +17,13 @@ page-my-takit {
     }
 
     .div-history{
+        button{
+            width: 100%;
+            height: 100%;
+        }
+        .button-inner{
+            display: block;
+        }
         ion-row{
             height: 50px;
             // @in/clude calc(height, "100% - 80px"); //안됨

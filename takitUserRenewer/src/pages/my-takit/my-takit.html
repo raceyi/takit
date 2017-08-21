@@ -40,6 +40,7 @@
     </ion-row>
 
     <div *ngFor="let order of historyOrders; let i=index;" class="div-history">
+        <button (click)="enterOrderComplete(order)" no-padding no-margin clear ion-button>
         <ion-row  *ngIf="i<=2">
             <ion-col>
                 <p>{{order.orderName}}</p>
@@ -49,6 +50,7 @@
                 <!-- <ion-icon color="mainColor" name="icon-cart" ></ion-icon> -->
             </ion-col>
         </ion-row>
+         </button>
     </div>
     <div *ngIf="!historyOrders || historyOrders.length ===0 " class="div-history">
         <p text-center>최근 주문 내역이 없습니다.</p>
