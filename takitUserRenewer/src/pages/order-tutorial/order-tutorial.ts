@@ -19,9 +19,9 @@ export class OrderTutorialPage {
                   contents:"상점에서 주문을 접수하면 주문 접수 알림이 옵니다. (앱 알림 오류 시에는 문자로 발송됩니다.)"},
                   {img:'assets/order_screen_02.png', title:"상품 준비완료 알림",
                   contents:"상점에서 준비가 완료되면 준비 완료 알림이 옵니다. (앱 알림 오류 시에는 문자로 발송됩니다.)"},
-                  {img:'assets/order_screen_04.png', title:"알림 상세 내역",
+                  {img:'assets/order_screen_03.png', title:"알림 상세 내역",
                   contents:"알림을 클릭하여 주문 상세내역을 확인하세요. 준비완료된 상품은 상점에서 주문 번호 확인 후 가져가시면 됩니다."},
-                 {img:'assets/order_screen_03.png', title:"최근 주문 내역", 
+                 {img:'assets/order_screen_04.png', title:"최근 주문 내역", 
                   contents:"나의 타킷 > 최근주문 에서도 주문 상세 내역을 확인하실 수 있습니다."}]
       
       tutorialIdx = 0;

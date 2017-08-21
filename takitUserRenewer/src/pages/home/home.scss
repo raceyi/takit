@@ -5,7 +5,7 @@ page-home {
 
 
     $scroll-H:115px; 
-    $latest-W : 135px;
+    $latest-W : 150px;
     $latest-H : 80px;
     $shop-name-H : 50px;
     $shop-list-H : 71px;
@@ -67,20 +67,21 @@ page-home {
         border : solid 3px;
         border-radius: 10px;
         border-color : $sub-color;
-        padding : 0px 10px 0px 10px;
+        padding : 0px 0px 0px 8px;
         background-color: white;
         ion-col{
             padding: 0;
-            height: 49px;
+            height: 70px-6px;
             display: flex;
 
             .scroll-btn-shoplist{
-                height: 70px;
-                width: 90px;
+                height: 70px-6px;
+                width: 95px-3px;
                 padding:0;
                 margin:0;
                 .button-inner{
-                    justify-content: flex-start;
+                    justify-content: center;
+                    align-items: center;
                     white-space: normal;
                 }
             
@@ -95,14 +96,17 @@ page-home {
             }
 
             .scroll-btn-oldOrder{
+                height: 70px-6px;
+                width: 55px-8px;
                 padding:0;
                 margin:0;
-                margin-left:10px;
+
                 font-size: 13px;
                 font-weight: 600;
-                //justify-content: flex-start;
-                ion-icon{
-                    color:$main-color;
+                text-align: center;
+
+                .scroll-icon-latest{
+                    vertical-align: center;
                 }
             }
         }

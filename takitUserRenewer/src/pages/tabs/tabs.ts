@@ -456,6 +456,8 @@ export class TabsPage {
                 },
                 windows: {}
             });
+
+            console.log("senderId:"+this.storageProvider.userSenderID);
                         
             this.pushNotification.on('registration').subscribe((response:any)=>{
 
@@ -532,10 +534,12 @@ export class TabsPage {
                     alert.present();
                     */
                     if((!this.storageProvider.isAndroid && !this.storageProvider.backgroundMode) //ios resume event comes before notification.
-                        ||(this.storageProvider.isAndroid && !this.storageProvider.orderExistInProgress(additionalData.custom))){ // android resume event comes late.
+                        ||(this.storageProvider.isAndroid && !this.storageProvider.orderExistInProgress(additionalData.custom.orderId))){ // android resume event comes late.
+                        console.log("!!! modal page??? ");
                         let orderDoneModal;
                         if(typeof additionalData.custom === 'string'){ 
-                            orderDoneModal= this.modalCtrl.create(OrderCompletePage, { order:additionalData.custom, trigger:"gcm" });
+                            let order = JSON.parse(additionalData.custom);
+                            orderDoneModal= this.modalCtrl.create(OrderCompletePage, { order:order, trigger:"gcm" });
                         }else{ // object 
                             console.log("obj comes");
                             orderDoneModal= this.modalCtrl.create(OrderCompletePage, {  order:additionalData.custom, trigger:"gcm"});

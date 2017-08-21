@@ -5,13 +5,14 @@
             <ion-icon name="icon-cancel"></ion-icon>
         </button>
       </ion-buttons>
-    <ion-title>주문 알람</ion-title>
+    <ion-title>주문 알림</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content padding>
-    <ion-slides #Slides (ionSlideTap)="slideTap()" (ionSlideWillChange)="slideChanged()" pager=true paginationType="bullet">
+    <!-- <ion-slides #Slides (ionSlideTap)="slideTap()" (ionSlideWillChange)="slideChanged()" pager=true paginationType="bullet"> -->
+    <ion-slides #Slides (ionSlideWillChange)="slideChanged()" pager=true paginationType="bullet">
         <ion-slide *ngFor="let tt of tutorials; let i=index" class="slide-tt">
             <div class="div-tuto-container">
                 <img  [src]="tt.img">

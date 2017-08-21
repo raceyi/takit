@@ -143,47 +143,47 @@ export class CashPassword {
                             //this.storageProvider.cashInfoUpdateEmitter.emit("all");
                             this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
                             this.storageProvider.cashInfoUpdateEmitter.emit("cashAmountUpdate");
-                            if(this.storageProvider.run_in_background==false){
-                                //refresh cashAmount
-                                let confirm = this.alertController.create({
-                                    title: '주문완료['+res.order.orderNO+']'+' 앱을 계속 실행하여 주문알림을 받으시겠습니까?',
-                                    message: '앱이 중지되면 주문알림을 못받을수 있습니다.',
-                                    buttons: [
-                                    {
-                                        text: '아니오',
-                                        handler: () => {
-                                            console.log('Disagree clicked');
-                                            // report it to tabs page
-                                            this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti"); 
-                                            this.navCtrl.push(OrderCompletePage,{order:res.order,trigger:"order"});
-                                            //this.app.getRootNav().pop();
-                                            // if(this.trigger=="order"){
-                                            //     this.app.getRootNav().pop();
-                                            // }
-                                            //this.storageProvider.shopTabRef.select(3);
-                                            this.confirmInProgress=false;    
-                                            return;
-                                        }
-                                    },
-                                    {
-                                        text: '네',
-                                        handler: () => {
-                                            this.storageProvider.tabMessageEmitter.emit("wakeupNoti");
-                                            //this.navCtrl.pop();
-                                            //this.app.getRootNav().pop();
-                                            // if(this.trigger=="order"){
-                                            //     this.app.getRootNav().pop();
-                                            // }
-                                             this.navCtrl.push(OrderCompletePage,{order:res.order,trigger:"order"});
-                                            //this.storageProvider.shopTabRef.select(3);
-                                            this.confirmInProgress=false;
-                                            return;
-                                        }
-                                    }
-                                    ]
-                                });
-                                confirm.present();
-                            }else{
+                            // if(this.storageProvider.run_in_background==false){
+                            //     //refresh cashAmount
+                            //     let confirm = this.alertController.create({
+                            //         title: '주문완료['+res.order.orderNO+']'+' 앱을 계속 실행하여 주문알림을 받으시겠습니까?',
+                            //         message: '앱이 중지되면 주문알림을 못받을수 있습니다.',
+                            //         buttons: [
+                            //         {
+                            //             text: '아니오',
+                            //             handler: () => {
+                            //                 console.log('Disagree clicked');
+                            //                 // report it to tabs page
+                            //                 this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti"); 
+                            //                 this.navCtrl.push(OrderCompletePage,{order:res.order,trigger:"order"});
+                            //                 //this.app.getRootNav().pop();
+                            //                 // if(this.trigger=="order"){
+                            //                 //     this.app.getRootNav().pop();
+                            //                 // }
+                            //                 //this.storageProvider.shopTabRef.select(3);
+                            //                 this.confirmInProgress=false;    
+                            //                 return;
+                            //             }
+                            //         },
+                            //         {
+                            //             text: '네',
+                            //             handler: () => {
+                            //                 this.storageProvider.tabMessageEmitter.emit("wakeupNoti");
+                            //                 //this.navCtrl.pop();
+                            //                 //this.app.getRootNav().pop();
+                            //                 // if(this.trigger=="order"){
+                            //                 //     this.app.getRootNav().pop();
+                            //                 // }
+                            //                  this.navCtrl.push(OrderCompletePage,{order:res.order,trigger:"order"});
+                            //                 //this.storageProvider.shopTabRef.select(3);
+                            //                 this.confirmInProgress=false;
+                            //                 return;
+                            //             }
+                            //         }
+                            //         ]
+                            //     });
+                            //     confirm.present();
+                            // }else{
                                 console.log("give alert on order success");
                                 let alert = this.alertController.create({
                                         title: '주문에 성공하였습니다.'+'주문번호['+res.order.orderNO+']',
@@ -200,7 +200,7 @@ export class CashPassword {
                                     //this.storageProvider.shopTabRef.select(3);
                                     this.confirmInProgress=false;
                                 });  
-                            }
+                            //}
                             
                         }else{
                             let alert = this.alertController.create({
@@ -226,6 +226,18 @@ export class CashPassword {
                         }else if(error=="shop's off"){
                             let alert = this.alertController.create({
                                     title: '상점이 문을 열지 않았습니다.',
+                                    buttons: ['OK']
+                                });
+                                alert.present();
+                        }else if(error=="break time"){
+                            let alert = this.alertController.create({
+                                    title: '지금은 브레이크타임 입니다.',
+                                    buttons: ['OK']
+                                });
+                                alert.present();
+                        }else if(error=="last order end"){
+                            let alert = this.alertController.create({
+                                    title: '주문이 마감 되었습니다.',
                                     buttons: ['OK']
                                 });
                                 alert.present();

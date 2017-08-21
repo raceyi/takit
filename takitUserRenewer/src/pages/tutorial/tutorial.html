@@ -11,13 +11,14 @@
 </ion-header>
 
 <ion-content #tutorialContent>
-  <ion-slides #Slides (ionSlideTap)="slideTap()" (ionSlideWillChange)="slideChanged()"  >
+  <!-- <ion-slides #Slides (ionSlideTap)="slideTap()" (ionSlideWillChange)="slideChanged()"  > -->
+    <ion-slides #Slides (ionSlideWillChange)="slideChanged()"  >
         <ion-slide *ngFor="let img of tutorialImg; let i=index" [ngStyle]="{'background':'url('+img+') no-repeat','background-size':'100% 100%'}" class="slide-event">
             <div class="div-tuto-container">
                 <!-- <img [src]="img"> -->
-                <button *ngIf="i===4" class="btn-start" (click)="enterCashTutorial()" color="white" ion-button full >캐쉬 충전 알아보기  ></button>
-                <button *ngIf="i===4 && !trigger" class="btn-cashTutorial" (click)="startTakit()" color="white" ion-button full >타킷으로 주문 시작  ></button>            
-                <button *ngIf="i===4 && trigger==='more'" class="btn-cashTutorial" (click)="enterOrderTutorial()" color="white" ion-button full >주문 방법 알아보기  ></button>      
+                <button *ngIf="i===4 && !trigger" class="btn-start" (click)="startTakit()" color="white" ion-button full >타킷으로 주문 시작  ></button>    
+                <button *ngIf="i===4 && trigger==='more'" class="btn-start" (click)="enterCashTutorial()" color="white" ion-button full >캐쉬 충전 알아보기  ></button>         
+                <button *ngIf="i===4 && trigger==='more'" class="btn-cashTutorial" (click)="enterOrderTutorial()" color="white" ion-button full >주문 알아보기  ></button>      
             </div>
         </ion-slide>
         <!--

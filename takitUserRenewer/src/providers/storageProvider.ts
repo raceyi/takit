@@ -455,8 +455,8 @@ export class StorageProvider{
 
     orderExistInProgress(orderId){
         console.log("orderInProgress.length:"+this.orderInProgress.length);    
-        for(var i=0;i<this.orderInProgress.length;i++){
-            console.log("orderInProgress["+i+"]:"+JSON.stringify(this.orderInProgress[i]));
+        for(let i=0;i<this.orderInProgress.length ;i++){
+            console.log("orderInProgress["+i+"]:"+this.orderInProgress[i]);
             if(this.orderInProgress[i]!=undefined && this.orderInProgress[i].order.orderId==orderId){
                 return true;
             }
@@ -497,13 +497,13 @@ export class StorageProvider{
             cashStr=JSON.stringify(cash);
         }else
             cashStr=cash;
-        console.log("cashAddInProgress.length:"+this.cashAddInProgress.length);    
-        for(var i=0;i<this.cashAddInProgress.length;i++){
-            console.log("cashAddInProgress["+i+"]:"+JSON.stringify(this.cashAddInProgress[i]));
-            if(this.cashAddInProgress[i]!=undefined && this.cashAddInProgress[i].cashStr==cashStr){
-                return true;
-            }
-        }    
+            console.log("cashAddInProgress.length:"+this.cashAddInProgress.length);    
+            for(var i=0;i<this.cashAddInProgress.length;i++){
+                console.log("cashAddInProgress["+i+"]:"+JSON.stringify(this.cashAddInProgress[i]));
+                if(this.cashAddInProgress[i]!=undefined && this.cashAddInProgress[i].cashStr==cashStr){
+                    return true;
+                }
+            }    
         return false;
     }
 

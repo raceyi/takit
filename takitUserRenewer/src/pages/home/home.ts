@@ -27,7 +27,7 @@ import {ShopHomePage} from '../shophome/shophome';
 export class HomePage{
      @ViewChild("homeContent") contentRef: Content;
      @ViewChild(Slides) slides: Slides;
-     shopSelected=false;
+     //shopSelected=false;
      filename: string = '';
      distanceSelected=1;
 
@@ -112,7 +112,6 @@ export class HomePage{
     }
 
      ionViewWillEnter(){
-         this.shopSelected=false;
          console.log("homePage-ionViewWillEnter");
          console.log("home-shoplist:"+JSON.stringify(this.storageProvider.shoplist));
          /*
@@ -159,12 +158,12 @@ export class HomePage{
          console.log("!!!!!!!!!getSelected:"+takitId);
    
         if(!this.storageProvider.shopSelected){
-            console.log("this.shopSelected true");
             this.storageProvider.shopSelected=true;
-             setTimeout(() => {
+            console.log("this.shopSelected true");
+            setTimeout(() => {
                 console.log("reset shopSelected:"+this.storageProvider.shopSelected);
                 this.storageProvider.shopSelected=false;
-            }, 1000); //  seconds     
+            }, 3000); //  seconds     
 
             this.serverProvider.getShopInfo(takitId).then((res:any)=>{
                 this.storageProvider.shopResponse=res;

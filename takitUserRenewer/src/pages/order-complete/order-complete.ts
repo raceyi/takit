@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams , AlertController, App} from 'ionic-angular';
+import { IonicPage, NavController, NavParams , AlertController, App, ViewController} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -34,15 +34,22 @@ export class OrderCompletePage {
      totalDiscount:number=0;
      trigger:string="order";
 
+
+     inProgress=false;
+
      constructor(private http:Http, private navController: NavController, 
           public storageProvider:StorageProvider,public navParams:NavParams,
           private alertController:AlertController, private ngZone:NgZone,
-          private serverProvider:ServerProvider, public appCtrl:App){
+          private serverProvider:ServerProvider, public appCtrl:App,
+          private viewCtrl:ViewController){
 	      console.log("OrderCompletePage constructor");
         
         //this.shopname=this.storageProvider.currentShopname(); //mytakit에서 바로 들어올 경우, 없음.
         console.log("order:"+navParams.get('order'));
         this.order=navParams.get('order');
+        if(typeof this.order.orderList==='string'){
+            
+        }
         this.orderList=JSON.parse(this.order.orderList);
         this.trigger = navParams.get('trigger');
         console.log("orderList:"+JSON.stringify(this.orderList));
@@ -67,7 +74,7 @@ export class OrderCompletePage {
             console.log("orderList couponDiscount is true"+this.totalDiscount);
         }
 
-
+        this.storageProvider.orderAddInProgress(this.order,this.viewCtrl);
         // if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
         //     this.shopPhoneHref="tel:"+this.storageProvider.shopResponse.shopInfo.shopPhone;
         
@@ -80,63 +87,36 @@ export class OrderCompletePage {
         // });
 
         //this.totalDiscount=this.order.taktiDiscount+this.order.couponDiscount;
-        
 
-        
-        // this.messageEmitterSubscription= this.storageProvider.messageEmitter.subscribe((order)=> {
-        //         console.log("[ShopMyPage]message comes "+JSON.stringify(order)); 
-        //         console.log("order.orderId:"+order.orderId);
-
-        //         this.order=order;
-        //         this.ngZone.run(()=>{
-        //             var i;
-        //             for(i=0;i<this.storageProvider.OrdersInPage && i<this.orders.length;i++){  // if new order comes, add it at the front. otherwise, cange status.
-        //               console.log(" "+ this.orders[i].orderId+" "+order.orderId);
-        //               if(parseInt(this.orders[i].orderId)==parseInt(order.orderId)){
-        //                 if(this.orders[i].orderStatus!=order.orderStatus){
-        //                       //update order statusString
-        //                       this.orders[i].orderStatus=order.orderStatus;
-        //                       this.orders[i].statusString=this.getStatusString(order.orderStatus);
-        //                       console.log("orderId are same");
-        //                       if(order.orderStatus=="cancelled"){
-        //                           this.storageProvider.cashInfoUpdateEmitter.emit("all");
-        //                       }
-        //                 }
-        //                 break;
-        //               }
-        //             }
-        //             if(i==this.storageProvider.OrdersInPage || i==this.orders.length){// new one
-        //                 console.log("add new one at the front");
-        //                 this.orders.unshift(this.convertOrderInfo(order)); 
-        //             }
-        //         });
-        // });
         
      }
 
     ionViewDidEnter(){
-        // if(this.orders.length==0){
-        //     this.getOrders(-1,false);
-        // }else{
-        //     //check the orders and reset it if necessary.
-        //     this.getOrders(-1,true).then((res:any)=>{
-        //         if( typeof res ==='object'){
-        //             this.orders=[];
-        //                 res.orders.forEach(order=>{
-        //                 console.log("order.ordrId:"+order.orderId);
-        //                 this.orders.push(this.convertOrderInfo(order));
-        //                 //console.log("orders:"+JSON.stringify(this.orders));
-        //             });
-        //             if(this.infiniteScroll!=undefined){
-        //                 this.infiniteScroll.enable(true);
-        //                 this.infiniteScroll.complete();      
-        //             }
-        //         }
-        //     },err=>{
-
-        //     });
-        // }
+        
     }
+
+
+ dismiss() {
+    this.removeDuplicate();
+    this.viewCtrl.dismiss();
+  }
+
+  removeDuplicate(){
+       this.storageProvider.orderRemoveInProgress(this.order.orderId,this.viewCtrl);
+       //hum... just remove one? yes. Workaround code 
+       for(var i=0;i<this.storageProvider.orderInProgress.length;i++){
+            console.log("removeDuplicate "+i);
+            if(this.storageProvider.orderInProgress[i].order.orderId == this.order.orderId){
+                //console.log("0.removeView-hum..."+this.app.getRootNav().getViews().length);
+                //console.log("1.removeView-hum..."+this.navController.getViews().length);
+                //console.log("removeView "+this.customStr);
+                this.navController.removeView(this.storageProvider.orderInProgress[i].viewController);
+                this.storageProvider.orderInProgress.splice(i,1);
+                 console.log("call splice with "+i);
+                break;                                            
+           }
+       }
+  }
 
       getStatusString(orderStatus){
         console.log("orderStatus:"+orderStatus);
@@ -153,211 +133,6 @@ export class OrderCompletePage {
           return "미정";
         }
       }
-
-      convertOrderInfo(orderInfo){
-            var order:any={};
-            order=orderInfo;
-            console.log("!!!order:"+JSON.stringify(order));
-            /*
-            var date=new Date(orderInfo.localOrderedTime);
-            var day=date.getMonth()+1;
-            console.log("day:"+day);
-            */
-            // localOrderedTime format: '2016-10-12 05:28:02'
-            order.orderedDateString=order.localOrderedTime.substring(0,10);
-            order.orderedTimeString=order.localOrderedTime.substring(11);
-            console.log("!!!orderedTimeString:"+order.orderedTimeString);
-            order.statusString=this.getStatusString(order.orderStatus);
-            if(order.orderStatus=="paid"){
-              order.cancel=true;
-              order.hidden=false;
-            }else{
-              order.cancel=false;
-              order.hidden=true;
-            }
-            order.orderListObj=JSON.parse(order.orderList);
-            console.log("order.orderListObj:"+JSON.stringify(order.orderListObj));
-            return order;
-      }
-
-    //  getOrders(lastOrderId,compare){
-    //   return new Promise((resolve,reject)=>{
-    //     let headers = new Headers();
-    //     headers.append('Content-Type', 'application/json');
-    //     console.log("server:"+ this.storageProvider.serverAddress);
-    //     let body  = JSON.stringify({    takitId:this.storageProvider.takitId,
-    //                                     lastOrderId:lastOrderId, 
-    //                                     limit:this.storageProvider.OrdersInPage});
-    //     console.log("getOrders:"+body);
-    //     this.serverProvider.post(this.storageProvider.serverAddress+"/getOrders",body).then((res:any)=>{
-    //         //console.log("getOrders-res:"+JSON.stringify(res));
-    //         var result:string=res.result;
-    //         if(result=="success" && Array.isArray(res.orders)){
-    //             if(compare==true){
-    //                 for(var i=0;i<this.orders.length && i< this.storageProvider.OrdersInPage;i++){
-    //                     if(this.orders[i].orderId!=res.orders[i].orderId){
-    //                         //reset order list and return;
-    //                         resolve(res); // please reset order list 
-    //                     }else{ //update order 
-    //                         this.orders[i]=this.convertOrderInfo(res.orders[i]);
-    //                         resolve(false); // just update order list
-    //                     }
-    //                 }
-    //                 return;
-    //             }
-    //             res.orders.forEach(order=>{
-    //                 console.log("order.ordrId:"+order.orderId);
-    //                 this.orders.push(this.convertOrderInfo(order));
-    //                 //console.log("orders:"+JSON.stringify(this.orders));
-    //             });
-    //             resolve(true);
-    //         }else if(res.orders=="0"){ //Please check if it works or not
-    //             console.log("no more orders");
-    //             resolve(false);
-    //         }else{
-    //             console.log("What happen? !!!sw bug!!!");
-    //         }
-    //      },(err)=>{
-    //         let alert = this.alertController.create({
-    //             title: '서버와 통신에 문제가 있습니다',
-    //             subTitle: '네트웍상태를 확인해 주시기바랍니다',
-    //             buttons: ['OK']
-    //         });
-    //         alert.present();
-    //         reject();
-    //      });
-    //   });
-    //  }
-
-    //  doInfinite(infiniteScroll) {
-    //     console.log('Begin async operation');
-    //     var lastOrderId=this.orders[this.orders.length-1].orderId;
-    //     this.getOrders(lastOrderId,false).then((more)=>{
-    //       if(more){
-    //           console.log("more is true");
-    //           infiniteScroll.complete();
-    //       }else{
-    //           console.log("more is false");
-    //           infiniteScroll.enable(false); //stop infinite scroll
-    //           this.infiniteScroll=infiniteScroll;
-    //       }
-    //     });
-    //  }
-
-    //   historySelect(){
-    //     this.myPageMenu="orderHistory";
-    //   }
-
-    //   couponSelect(){
-    //     this.myPageMenu="couponHistory";
-    //   }
-
-    //   cancelOrder(order){
-    //     console.log("cancel order:"+JSON.stringify(order));
-    //     // alert dialog
-    //     let confirm = this.alertController.create({
-    //             title: '주문을 취소하시겠습니까?',
-    //             buttons: [{
-    //                         text: '아니오',
-    //                         handler: () => {
-    //                           console.log('Disagree clicked');
-    //                         }
-    //                       },
-    //                       {
-    //                         text: '네',
-    //                         handler: () => {
-    //                                 let headers = new Headers();
-    //                                 headers.append('Content-Type', 'application/json');
-    //                                 console.log("server:"+ this.storageProvider.serverAddress);
-    //                                 let body  = JSON.stringify({ orderId:order.orderId,
-    //                                                             cancelReason:"고객접수취소",
-    //                                                             cashId:this.storageProvider.cashId});
-                                    
-    //                                 this.serverProvider.post(this.storageProvider.serverAddress+"/cancelOrder",body).then((res:any)=>{
-    //                                     console.log("cancelOrder-res:"+JSON.stringify(res));
-    //                                     var result:string=res.result;
-    //                                     if(result==="success"){
-    //                                         this.storageProvider.cashInfoUpdateEmitter.emit("all");
-    //                                         let alert = this.alertController.create({
-    //                                             title: '주문 취소가 정상 처리 되었습니다.',
-    //                                             buttons: ['OK']
-    //                                         });
-    //                                         alert.present();
-    //                                     //update order status
-    //                                     this.ngZone.run(()=>{
-    //                                         var i;
-    //                                         for(i=0;i<this.orders.length;i++){
-    //                                             if(this.orders[i].orderId==order.orderId){
-    //                                                 this.orders[i].orderStatus="cancelled";  
-    //                                                 this.orders[i].statusString=this.getStatusString("cancelled");
-    //                                                 break;
-    //                                             }
-    //                                         }
-    //                                     });
-    //                                         this.serverProvider.orderNoti().then((orders:any)=>{
-    //                                                 if(orders==undefined || orders==null || orders.length==0){
-    //                                                 // off run_in_background 
-    //                                                 console.log("no more order in progress within 24 hours");
-    //                                                 this.storageProvider.order_in_progress_24hours=false;   
-    //                                                 this.storageProvider.tabMessageEmitter.emit("stopEnsureNoti");                         
-    //                                                 }
-    //                                         },(err)=>{
-    //                                             if(err=="NetworkFailure"){
-    //                                                 let alert = this.alertController.create({
-    //                                                             title: "서버와 통신에 문제가 있습니다.",
-    //                                                             buttons: ['OK']
-    //                                                         });
-    //                                                         alert.present();
-    //                                             }else{
-    //                                                 console.log("orderNotiMode error");
-    //                                             } 
-    //                                         });
-
-    //                                     }else{
-    //                                     //Please give user a notification
-    //                                     let alert = this.alertController.create({
-    //                                             title: '주문취소에 실패했습니다.',
-    //                                             subTitle: '주문 상태를 확인해 주시기바랍니다',
-    //                                             buttons: ['OK']
-    //                                         });
-    //                                         alert.present();
-    //                                     }
-    //                                 },(err)=>{
-    //                                 let alert = this.alertController.create({
-    //                                         title: '서버와 통신에 문제가 있습니다',
-    //                                         subTitle: '네트웍상태를 확인해 주시기바랍니다',
-    //                                         buttons: ['OK']
-    //                                     });
-    //                                     alert.present();
-    //                                 });
-    //                         }
-    //                   }]});
-    //     confirm.present();        
-    //   }
-
-      toggleOrder(order){
-        order.hidden=(!order.hidden);
-      }
-
-    //   ionViewWillUnload(){
-    //       console.log("ionViewWillUnload-ShopMyPage");
-    //        if(this.messageEmitterSubscription) {
-    //           this.messageEmitterSubscription.unsubscribe();
-    //        }
-    //  }
-
-     refresh(){
-            // refresh status of orders at front 
-            console.log("refresh orders");
-     }
-/*
-    update(){
-        console.log("update");
-        this.orders=[];
-        if(this.infiniteScroll!=undefined)
-            this.infiniteScroll.enable(true);
-        this.getOrders(-1);
-    }*/
 
     cancelOrder(){
         console.log("cancel order:"+JSON.stringify(this.order));
@@ -388,7 +163,7 @@ export class OrderCompletePage {
                                             this.storageProvider.cashInfoUpdateEmitter.emit("cashupdate");
                                             let alert = this.alertController.create({
                                                 title: '주문 취소가 정상 처리 되었습니다.',
-                                                buttons: ['OK']
+                                                buttons: ['확인']
                                             });
                                             alert.present();
                                         //update order status
@@ -447,9 +222,14 @@ export class OrderCompletePage {
 
     back(){
         if(this.trigger==="order"){
+            this.removeDuplicate();
             this.navController.popToRoot();
-        }else{
+
+        }else if(this.trigger==="history"){
+            this.removeDuplicate();
             this.navController.pop({animate:true,animation: 'slide-up', direction:'back' });
+        }else{ //(this.trigger==="gcm")
+            this.dismiss()
         }
         
         //this.appCtrl.goToRoot();

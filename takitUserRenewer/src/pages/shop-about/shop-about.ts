@@ -18,6 +18,10 @@ export class ShopAboutPage {
 
     businessTime;
     notice:string;
+    breakTime=[];
+    lastOrderTime=[];
+    orderAvailTime=[];
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
                 public storageProvider:StorageProvider) {
@@ -27,6 +31,14 @@ export class ShopAboutPage {
                     console.log("shopInfo!:"+JSON.stringify(storageProvider.shopInfo));
 
                     //console.log("reviewList length:"+storageProvider.shopInfo.reviewList.length);
+                    
+                    if(storageProvider.shopInfo.breakTime){
+                      this.breakTime = JSON.parse(this.storageProvider.shopInfo.breakTime);
+                    }
+
+                    if(storageProvider.shopInfo.orderAvailTime){
+                      this.orderAvailTime = JSON.parse(this.storageProvider.shopInfo.orderAvailTime);
+                    }
                 }
 
   ionViewDidLoad() {
