@@ -64,7 +64,7 @@ License: GPL
 
  $npm install --save @ionic-native/network
  
- $ionic cordova plugin add phonegap-plugin-push --variable SENDER_ID={takitUser.fcm.senderId}
+ $ionic cordova plugin add phonegap-plugin-push@1.10.5 --variable SENDER_ID={takitUser.fcm.senderId}
 
  $npm install --save @ionic-native/push
 
@@ -113,8 +113,6 @@ License: GPL
  $npm install @types/crypto-js --save
 
  $npm install ng2-translate --save
-
- $ionic g directive focuser
 
  $git checkout takitUser/platforms/ios/타킷/Classes/AppDelegate.m
 
@@ -237,7 +235,7 @@ License: GPL
 
 # takitShop
 
-$ionic start takitShop --type=ionic-angular
+$ionic start takitShop 
 
 $cd takitShop => config.xml의 id,name 수정
   splash관련 사항 추가 
@@ -245,7 +243,6 @@ $cd takitShop => config.xml의 id,name 수정
      <widget id="biz.takitApp.shop" ...>
      <name>타킷운영자</name>
      ...
-     <preference name="AutoHideSplashScreen" value="false" /> 
 
 $ionic cordova platform add android
 
@@ -257,7 +254,7 @@ $ionic cordova plugin add https://github.com/taejaehan/cordova-kakaotalk.git --v
 
 =>platforms/android/cordova-plugin-htj-kakaotalk/shop-kakao.gradle 파일에 sdk version수정 
 
-  현재SDK버전: com.kakao.sdk:kakaotalk:1.1.21 (KakaoTalk.java파일 수정=>git checkout takitShop이수행함)
+  현재SDK버전: com.kakao.sdk:kakaotalk:1.4.1 (KakaoTalk.java파일 수정=>git checkout takitShop이수행함)
 
 $ionic cordova plugin add cordova-plugin-facebook4 --save --variable APP_ID="{takitShop.facebook.appId}" --variable APP_NAME="takitShop"
 
@@ -283,7 +280,7 @@ $ionic cordova plugin add cordova-plugin-filepath
 
 $npm install --save @ionic-native/file-path
 
-$ionic cordova plugin add phonegap-plugin-push --variable SENDER_ID={takitShop.fcm.senderId}
+$ionic cordova plugin add phonegap-plugin-push@1.10.5 --variable SENDER_ID={takitShop.fcm.senderId}
 
 $npm install --save @ionic-native/push
 
@@ -295,9 +292,7 @@ $ionic cordova plugin add cordova-plugin-appavailability
 
 $npm install --save @ionic-native/app-availability
 
-$ionic cordova plugin add https://github.com/srehanuddin/Cordova-Plugin-Bluetooth-Printer.git
-
-$ionic cordova plugin add https://github.com/sidchilling/Phonegap-SMS-reception-plugin.git
+$ionic cordova plugin add https://github.com/atmosuwiryo/Cordova-Plugin-Bluetooth-Printer
 
 $ionic cordova plugin add https://github.com/katzer/cordova-plugin-background-mode.git#0.6.5
 
@@ -309,19 +304,19 @@ $ionic cordova plugin add cordova-plugin-nativestorage
 
 $npm install --save @ionic-native/native-storage 
 
-$ionic cordova g directive focuser
-
 $npm install crypto-js
 
 $npm install @types/crypto-js --save
 
-$npm install ionic-native
+$npm install ionic-native --save
 
 $git checkout platforms/ios/타킷운영자/Classes/AppDelegate.m 
 
 $ionic cordova build ios
 
 $git checkout platforms/android/src/com/htj/plugin/kakao/KakaoTalk.java
+
+$npm install @ionic/app-scripts@1.3.12 
 
 $ionic cordova build android
 
@@ -334,11 +329,15 @@ $ionic cordova build android
 
  xcode에서 옵션 수정및 코드 수정(참조 kakao plugin git) 
 
-    open platforms/ios/타킷운영자.xcodeproj
+    open platforms/ios/타킷운영자.xcodeproj
 
-    Build Settings > Linking > Other Linker Flags > add '-all_load' 
+    Frameworks->KakaoOpenSDK.framework삭제후 최근 KakaoOpenSDK framework추가하기(Drag and Drop사용)
+
+    Build Settings > Linking > Other Linker Flags > add '-all_load -framework "KakaoOpenSDK"' (kakao plugin git)
 
     Capabilities->Push Notifications -> ON
+
+    General-> Deployment Info->Devices를 iPhone으로 설정(?)
 
 $git checkout takitShop
 

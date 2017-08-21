@@ -27,7 +27,10 @@ export class CashPage {
                 private alertController:AlertController,private ngZone:NgZone,private nativeStorage: NativeStorage,
                 private serverProvider:ServerProvider,public storageProvider:StorageProvider,public alertCtrl:AlertController){
            console.log("CashPage construtor");
-
+            if(this.storageProvider.tourMode){
+                this.transactions=[{"withdNO":"14","takitId":"세종대@더큰도시락","amount":"18527","fee":"0","nowBalance":"0","withdrawalTime":"2017-08-03 05:14:07","localTime":"2017-08-03"},{"withdNO":"13","takitId":"세종대@더큰도시락","amount":"28712","fee":"0","nowBalance":"0","withdrawalTime":"2017-07-13 09:12:39","localTime":"2017-07-13"},{"withdNO":"12","takitId":"세종대@더큰도시락","amount":"84293","fee":"0","nowBalance":"0","withdrawalTime":"2017-06-21 22:13:21","localTime":"2017-06-22"},{"withdNO":"11","takitId":"세종대@더큰도시락","amount":"56939","fee":"0","nowBalance":"0","withdrawalTime":"2017-05-31 07:07:50","localTime":"2017-05-31"},{"withdNO":"10","takitId":"세종대@더큰도시락","amount":"53234","fee":"0","nowBalance":"0","withdrawalTime":"2017-05-07 22:19:50","localTime":"2017-05-08"},{"withdNO":"9","takitId":"세종대@더큰도시락","amount":"63576","fee":"0","nowBalance":"0","withdrawalTime":"2017-04-19 12:29:59","localTime":"2017-04-19"},{"withdNO":"7","takitId":"세종대@더큰도시락","amount":"93424","fee":"0","nowBalance":"0","withdrawalTime":"2017-04-03 07:22:55","localTime":"2017-04-03"},{"withdNO":"4","takitId":"세종대@더큰도시락","amount":"7462","fee":"0","nowBalance":"0","withdrawalTime":"2017-03-07 06:09:07","localTime":"2017-03-07"}]
+                return;
+            }
            this.serverProvider.updateCashAvailable().then((res)=>{
 
            },(err)=>{
@@ -149,6 +152,10 @@ export class CashPage {
   }
 
   doInfinite(infiniteScroll){
+      if(this.storageProvider.tourMode){
+                infiniteScroll.complete();
+                return;
+      }      
       let lastWithdNO=this.transactions[this.transactions.length-1].withdNO;
 
       this.getWithdrawalList(lastWithdNO).then((withdrawalList:any)=>{
@@ -286,14 +293,23 @@ export class CashPage {
 
   withdrawCash(){
      console.log("withdrawCash");
-           if(this.storageProvider.cashAvailable==undefined || this.storageProvider.cashAvailable<=0){
+     if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '캐쉬를 업주분의 계좌로 이체합니다.',
+                        subTitle:'둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+        return;
+     }
+     if(this.storageProvider.cashAvailable==undefined || this.storageProvider.cashAvailable<=0){
             let alert = this.alertController.create({
                 title: '인출 금액은 0보다 커야 합니다.',
                 buttons: ['OK']
             });
             alert.present();
           return;
-      }
+     }
      console.log("!!!withdrawCash");
      this.checkWithrawFee().then((res)=>{
           if(res==0){

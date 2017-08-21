@@ -67,7 +67,14 @@ export class EditMenuPage {
   }
 
   categoryChange(categoryNO,sequence){
-
+     if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+        return;
+      }
     console.log("[categoryChange] "+JSON.stringify(this.categories));
 
     console.log("[categoryChange] categorySelected:"+sequence+" previous:"+this.categorySelected);
@@ -225,7 +232,14 @@ export class EditMenuPage {
 
   }
     addCategory(){
-        
+        if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+            return;
+        }        
         this.flags.addCategory=false;
         this.inputAddCategory.sequence = this.categories.length+1;
     }
@@ -239,7 +253,17 @@ export class EditMenuPage {
         
 
         console.log("addCategoryComplete start");
-         console.log("inputAddCategory:"+JSON.stringify(this.inputAddCategory));
+        console.log("inputAddCategory:"+JSON.stringify(this.inputAddCategory));
+
+        if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+            return;
+        }
+
         if(this.inputAddCategory.sequence !== null && this.inputAddCategory.categoryName !== null){
             
             this.inputAddCategory.categoryNO = this.categories[0].categoryNO;
@@ -289,10 +313,26 @@ export class EditMenuPage {
     }
 
     cancelCategoryComplete(){
+        if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+            return;
+        }        
         this.flags.addCategory=true;
     }
 
     modifyCategory(){
+        if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+            return;
+        }        
         this.flags.categoryName=false;
         console.log("[categoryChange] "+JSON.stringify(this.categories));
         console.log("modifyCategory flag:"+this.flags.categoryName);
@@ -303,7 +343,14 @@ export class EditMenuPage {
         console.log("modifyCategoryComplete flag:"+this.flags.categoryName);
         console.log("modifyCategoryComplete select value:"+this.categorySelected);
 
- 
+        if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+            return;
+        }
         this.inputModifyCategory.oldSequence = this.categories[this.categorySelected-1].sequence;
         this.inputModifyCategory.categoryNO = this.categories[this.categorySelected-1].categoryNO;
 
@@ -337,7 +384,14 @@ export class EditMenuPage {
 
     removeCategory(){
         console.log("removeCategory start");
-
+        if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+            return;
+        }
         //excute after when all menu is deleted
 
         if(this.categories[this.categorySelected-1].menus.length === 0){
@@ -381,6 +435,16 @@ export class EditMenuPage {
     }
 
     removeMenu(menu){
+        if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+            return;
+        }
+
+
         this.flags.removeMenu = false;
 
         let alert = this.alertController.create({
@@ -418,6 +482,16 @@ export class EditMenuPage {
 
     menuModal(menuName) {
         console.log("menuModal function");
+
+        if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+            return;
+        }
+
         let menu;
             for(let i=0;i<this.categories[this.categorySelected-1].menus.length;i++){
                 console.log(this.categories[this.categorySelected-1].menus[i]);
@@ -451,6 +525,15 @@ export class EditMenuPage {
     }
 
     addMenu(){
+        if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+            return;
+        }
+
         let menuNO = this.storageProvider.myshop.takitId+";"+this.categories[this.categorySelected-1].categoryNO;
         console.log("addMenu menuNO : "+menuNO);
         let menuModal = this.modalCtrl.create(MenuModalPage,{menu:{"menuNO":menuNO}});

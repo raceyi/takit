@@ -32,18 +32,18 @@ export class UserInfoPage {
   phoneModification:boolean=false;
   modification:boolean=false; //Please check phone auth for this flag
   phoneModAuth:boolean=false;
-  phoneModAuthNum:string;
+  phoneModAuthNum:string="";
 
-  userPhone:string;
-  userReceiptId:string;
-  userReceiptType:string;
+  userPhone:string="";
+  userReceiptId:string="";
+  userReceiptType:string="";
   userReceiptIssue:boolean=false;
   userTaxIssueCompanyName:string="";
   userTaxIssueEmail:string="";
 
   saveInProgress:boolean=false;
 
-  oldPassword:string;
+  oldPassword:string="";
   existingPassword:string="";
 
   passwordChange:boolean=false;
@@ -62,6 +62,8 @@ export class UserInfoPage {
     this.getPassword().then((password:string)=>{
           this.existingPassword=password;
           console.log("existing password:"+this.existingPassword);
+    },(err)=>{
+        
     });
 
     this.userPhone=this.storageProvider.phone;
@@ -103,11 +105,15 @@ export class UserInfoPage {
   }
 
   expenseProofOff(){
+      console.log("expenseProofOff");
       this.receiptType="IncomeDeduction";
+      this.enableModification();
   }
 
   expenseProofOn(){
+      console.log("expenseProofOn");
       this.receiptType="ExpenseProof";
+      this.enableModification();
   }
 
   modifyPhone(){
@@ -238,14 +244,13 @@ export class UserInfoPage {
       console.log("this.taxIssueEmail: "+this.taxIssueEmail);
 
     if( this.userPhone==this.phone.trim() &&
-        this.userReceiptId==this.receiptId.trim() &&
+        ( this.userReceiptId==this.receiptId  || (this.receiptId && this.userReceiptId==this.receiptId.trim())) &&
         this.userReceiptType==this.receiptType &&
         this.userReceiptIssue==this.receiptIssue &&
-        this.userTaxIssueCompanyName==this.taxIssueCompanyName.trim() &&
-        this.userTaxIssueEmail==this.taxIssueEmail.trim() &&
+        ( this.userTaxIssueCompanyName==this.taxIssueCompanyName || ( this.taxIssueCompanyName && this.userTaxIssueCompanyName==this.taxIssueCompanyName.trim())) &&
+        ( this.userTaxIssueEmail==this.taxIssueEmail|| ( this.taxIssueEmail && this.userTaxIssueEmail==this.taxIssueEmail.trim())) &&
         (!this.storageProvider.emailLogin || (this.storageProvider.emailLogin 
               && this.existingPassword===this.password))){
-
         this.modification=false;
     }else{
         this.modification=true;
@@ -348,6 +353,7 @@ export class UserInfoPage {
                 var password=this.storageProvider.decryptValue("password",decodeURI(value));
                 resolve(password);
             },(err)=>{
+                console.log("getPassword reject");
                 reject();
             });
       });
@@ -414,7 +420,7 @@ export class UserInfoPage {
 
     let body;
     let receiptIssueVal:number;
-    if(this.receiptId.trim().length>0)
+    if(this.receiptId && this.receiptId.trim().length>0)
         receiptIssueVal=1;
     else
         receiptIssueVal=0;

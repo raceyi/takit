@@ -34,13 +34,14 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
 import { StatusBar } from '@ionic-native/status-bar';
 import { AppAvailability } from '@ionic-native/app-availability';
-import {Focuser} from '../components/focuser/focuser';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
 import { File } from '@ionic-native/file';
 
-import { MediaPlugin, MediaObject } from '@ionic-native/media';
+import { Media, MediaObject } from '@ionic-native/media';
 import { HttpModule } from '@angular/http';
+
+import { MyErrorHandler } from '../classes/my-error-handler';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,6 @@ import { HttpModule } from '@angular/http';
     SalesPage,
     EditMenuPage,
     MenuModalPage,
-    Focuser,
   ],
   imports: [
     BrowserModule,
@@ -81,7 +81,8 @@ import { HttpModule } from '@angular/http';
     EditMenuPage,
     MenuModalPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
+  //providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
+  providers: [{provide: ErrorHandler, useClass: MyErrorHandler},
     Network, 
     Facebook,
     InAppBrowser,
@@ -89,7 +90,7 @@ import { HttpModule } from '@angular/http';
     SplashScreen,
     StatusBar, 
     AppAvailability,
-    MediaPlugin,
+    Media,
     FbProvider,
     Camera,
     Transfer,

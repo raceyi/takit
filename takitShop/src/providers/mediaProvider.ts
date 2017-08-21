@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { MediaPlugin } from 'ionic-native';
+import { Media, MediaObject } from '@ionic-native/media';
+import { Platform } from 'ionic-angular';
+
 
 /*
   Generated class for the MediaProvider provider.
@@ -12,35 +14,42 @@ import { MediaPlugin } from 'ionic-native';
 @Injectable()
 export class MediaProvider {
    playing:boolean=false;
+   /*
    onStatusUpdate = (status) => { 
                       console.log( "onStatusUpdate"+status);
                       if(status==4 && this.playing){
                         this.file.play();
                       }
                   };                              
+   */               
    file;
 
-  constructor(public http: Http) {
+  constructor(public http: Http,private platform:Platform,private media: Media) {
     console.log('Hello MediaProvider Provider');
+    platform.ready().then(() => {
+      this.file = this.media.create('file:///android_asset/www/assets/ordersound.mp3');
+      this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+      this.file.onSuccess.subscribe(() => {
+        console.log('Action is successful');
+        if(this.playing)
+          this.file.play();
+        
+      });
+      this.file.onError.subscribe(error => console.log('Error!', error));
+    });
+
   }
 
-  init(){
-    this.file = new MediaPlugin('file:///android_asset/www/assets/ordersound.mp3', this.onStatusUpdate);
-  }
 
   play(){
       this.playing=true;
-      this.file.init.then(() => {
-        console.log('Playback Finished');
-      }, (err) => {
-        console.log('somthing went wrong! error code: ' + err.code + ' message: ' + err.message);
-      });
       // play the file
       this.file.play();
       //file.release(); hum... where should I call this function?
   }
 
   stop(){
+    console.log("mediaProvider - stop");
     if(this.playing){
       this.playing=false;
       this.file.stop();

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Platform,App,AlertController } from 'ionic-angular';
+import { Platform,App,AlertController,Events } from 'ionic-angular';
 
 import {PrinterProvider} from '../providers/printerProvider';
 import {StorageProvider} from '../providers/storageProvider';
@@ -43,7 +43,7 @@ export class MyApp {
                 private nativeStorage: NativeStorage,public printerProvider:PrinterProvider,
                 public alertCtrl:AlertController,private network: Network, 
                 private statusBar: StatusBar,private splashScreen:SplashScreen,
-                private mediaProvider:MediaProvider) {
+                private mediaProvider:MediaProvider,private events:Events) {
     
     this.platform=platform;
     ////////////Test-begin//////////
@@ -54,21 +54,19 @@ export class MyApp {
     ////////////Test-end///////////
     
     platform.ready().then(() => {
-            console.log("platform ready comes");
+            console.log("KALEN-platform ready comes");
             //this.storageProvider.open(); So far, DB is not necessary.
 
             this.disconnectSubscription = this.network.onDisconnect().subscribe(() => { // Why it doesn't work?
                 console.log('network was disconnected :-(');
                 //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
                 //Please check current page and then move into ErrorPage!
-                console.log("rootPage:"+JSON.stringify(this.rootPage));
                 if(this.rootPage==undefined){
                     console.log("move into ErrorPage");
                     this.rootPage=ErrorPage;
                     return;
                 }   
             });
-            this.mediaProvider.init();
             //Please login if login info exists or move into login page
             this.nativeStorage.getItem("id").then((value:string)=>{
                 console.log("value:"+value);
@@ -94,8 +92,14 @@ export class MyApp {
                                     //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다');
                                     this.rootPage=ErrorPage;   
                                 }
+                                if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
+                                        console.log("invalid version");
+                                        setTimeout(() => {
+                                               this.events.publish('invalidVersion');
+                                        }, 300); // 300 maybe... Is it enough? please check it.
+                                }                                   
                             },login_err =>{
-                                console.log(JSON.stringify(login_err));
+                                //console.log(JSON.stringify(login_err));
                                 //this.storageProvider.errorReasonSet('로그인 에러가 발생했습니다'); 
                                 this.rootPage=ErrorPage;
                     });
@@ -212,6 +216,14 @@ export class MyApp {
         this.app.getRootNav().push(EditMenuPage)
     }
    openLogout(){
+      if(this.storageProvider.tourMode){
+            let alert = this.alertCtrl.create({
+                        title: '둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+        return;
+      }
       let confirm = this.alertCtrl.create({
       title: '로그아웃하시겠습니까?',
       buttons: [

@@ -1,5 +1,5 @@
 import {Component,EventEmitter,NgZone} from '@angular/core';
-import {NavController,App,AlertController,Platform,MenuController,IonicApp,ViewController} from 'ionic-angular';
+import {NavController,App,AlertController,Platform,MenuController,IonicApp,ViewController,Events} from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
 import {StorageProvider} from '../../providers/storageProvider';
@@ -45,7 +45,7 @@ export class ShopTablePage {
       private http:Http,private alertController:AlertController,private ngZone:NgZone,private ionicApp: IonicApp,
       private printerProvider:PrinterProvider,private platform:Platform,private menuCtrl: MenuController,
       public viewCtrl: ViewController,private serverProvider:ServerProvider,private push: Push,
-      private mediaProvider:MediaProvider) {
+      private mediaProvider:MediaProvider,private events:Events) {
     console.log("ShopTablePage constructor");
     this.isAndroid=this.platform.is("android");
   
@@ -80,7 +80,16 @@ export class ShopTablePage {
   }
 
     ionViewDidLoad(){
-          console.log("shoptable page did enter");
+          this.events.subscribe('invalidVersion',()=>{
+            console.log("shoptable page did enter");
+            let alert = this.alertController.create({
+                      title: '앱버전을 업데이트해주시기 바랍니다.',
+                      subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                      buttons: ['OK']                                
+                    });
+                    alert.present();
+          });
+     
           Splashscreen.hide();
           cordova.plugins.backgroundMode.setDefaults({
               title:  '타킷운영자가 실행중입니다',
@@ -186,6 +195,7 @@ export class ShopTablePage {
          }, 100/* high priority rather than login page */);
    }
 
+/*
         if(this.platform.is("android")){
             if(this.smsInboxPlugin==undefined)
                 this.smsInboxPlugin = cordova.require('cordova/plugin/smsinboxplugin');
@@ -205,9 +215,7 @@ export class ShopTablePage {
               console.log("isSupported:"+JSON.stringify(err));
             });
         }
-
-
-
+*/
         this.printerEmitterSubscription= this.printerProvider.messageEmitter.subscribe((status)=> {
                 console.log("printer status:"+status);
                 this.ngZone.run(()=>{
@@ -572,8 +580,6 @@ export class ShopTablePage {
           message+="판매금액  -"+amount +"원";
           message+="부가가치세  -"+tax +"원";
           message+="합계     -"+totalAmount+"원";          
-
-
       }
 
       this.printerProvider.print(title,message).then(()=>{
@@ -605,6 +611,21 @@ export class ShopTablePage {
             return true;
         }else
             return false;
+      }
+
+      paidOrdersExist(){
+        console.log("paidOrdersExist");
+        if(this.orders.length>0){
+             for(var i=0;i<this.orders.length;i++){
+                  console.log("order:"+JSON.stringify(this.orders[i]));
+                  if(this.orders[i].orderStatus=='paid'){
+                    console.log('paidOrdersExist return true;');
+                    return true;
+                  }
+             }
+             console.log('paidOrdersExist return false;');
+             return false;
+        }
       }
 
       registerPushService(){ // Please move this code into tabs.ts
@@ -688,6 +709,10 @@ export class ShopTablePage {
                            this.orders[i]=this.convertOrderInfo(incommingOrder);   
                            if(this.orders[i].orderStatus=="cancelled"){
                                   this.printCancel(this.orders[i]);
+                                  if(!this.paidOrdersExist()){
+                                      this.mediaProvider.stop();
+                                      playback=false;
+                                  }
                            }
                         }
                         console.log("orders update:"+JSON.stringify(this.orders));
@@ -749,6 +774,15 @@ export class ShopTablePage {
     }
 
     updateOrder(order){
+        if(this.storageProvider.tourMode){
+              let alert = this.alertController.create({
+                          title: '주문을 처리합니다.',
+                          subTitle:'둘러보기 모드에서는 동작하지 않습니다.',
+                          buttons: ['OK']
+                      });
+              alert.present();
+          return;
+        }
         this.mediaProvider.stop();
         if(order.orderStatus=="paid"){
                this.updateStatus(order,"checkOrder").then(()=>{
@@ -833,6 +867,15 @@ export class ShopTablePage {
     }
 
     cancel(order){
+      if(this.storageProvider.tourMode){
+            let alert = this.alertController.create({
+                        title: '주문을 취소합니다.',
+                        subTitle:'둘러보기 모드에서는 동작하지 않습니다.',
+                        buttons: ['OK']
+                    });
+            alert.present();
+        return;
+      }
       console.log("order cancel comes");
             let prompt = this.alertController.create({
                 title: '주문취소',
@@ -920,14 +963,65 @@ export class ShopTablePage {
        }
      }
 
+  getGMTtimeInMilliseconds(time:string){
+      let year=parseInt(time.substr(0,4));
+      let month=parseInt(time.substr(5,2))-1;
+      let day=parseInt(time.substr(8,2));
+      let hours=parseInt(time.substr(11,2));
+      let minutes=parseInt(time.substr(15,2));
+      let seconds=parseInt(time.substr(17,2));
+      
+      var d=Date.UTC(year, month, day, hours, minutes, seconds);
+      return d;
+  }
+
+  AfterOnedayComplete(order){
+    if(order.completedTime!=undefined){
+      console.log("completedTime:"+order.completedTime);
+      let completedTime:string=order.completedTime;
+      let d=this.getGMTtimeInMilliseconds(completedTime);
+
+      let now=new Date();
+      //console.log("now: "+now.getTime());
+      //console.log("completedTimeLimit: "+(d+ 24*60*60*1000));
+      if(now.getTime()>(d+ 24*60*60*1000)){
+            console.log("orderNo:"+order.orderNO +" hide is true ");
+            return true;
+      }
+    }     
+    return false;
+  }
+  AfterOnedayCompleteCancel(order){
+    if(order.orderStatus=="paid" ||  order.orderStatus=="checked"){
+        return false;
+    }else if(order.cancelledTime!=undefined && order.cancelledTime!=null){
+        //console.log("[AfterOnedayCompleteCancel]cancelledTime:"+order.cancelledTime);
+        let cancelledTime:string=order.cancelledTime;
+        let d=this.getGMTtimeInMilliseconds(cancelledTime);
+        let now=new Date();
+        if(now.getTime()<(d+24*60*60*1000)){
+            return false;
+        }
+    }else if(order.completedTime!=undefined && order.completedTime!=null){
+        let completedTime:string=order.completedTime;
+        let d=this.getGMTtimeInMilliseconds(completedTime);
+        let now=new Date();
+        if(now.getTime()<(d+24*60*60*1000)){
+            return false;
+        }
+    } 
+    return true;  
+  }
+
+/*
   AfterOnedayComplete(order){
     if(order.completedTime!=undefined){
         let completedTime=new Date(order.completedTime+" GMT");
         let now=new Date();
-        //console.log("now:"+now.getTime());
-        //console.log(" completedTime:"+(completedTime.getTime()+ 24*60*60*1000));
+        console.log("now:"+now.getTime());
+        console.log(" completedTime:"+(completedTime.getTime()+ 24*60*60*1000));
         if(now.getTime()>(completedTime.getTime()+24*60*60*1000)){
-            //console.log("orderNo:"+order.orderNO +" hide is true ");
+            console.log("orderNo:"+order.orderNO +" hide is true ");
             return true;
         }
     }
@@ -954,7 +1048,7 @@ export class ShopTablePage {
     } 
     return true;  
   }
-
+*/
   update(){
     this.orders=[];
     if(this.infiniteScroll!=undefined)
@@ -998,6 +1092,16 @@ export class ShopTablePage {
 
   configureGotNoti(){
     console.log("click configureGotNoti");
+    if(this.storageProvider.tourMode){
+          let alert = this.alertController.create({
+                      title: '주문을 처리하는 담당자가 됩니다.',
+                      subTitle:'둘러보기 모드에서는 동작하지 않습니다.',
+                      buttons: ['OK']
+                  });
+          alert.present();
+      return;
+    }
+
       let body = JSON.stringify({takitId:this.storageProvider.myshop.takitId});      
        console.log("body: "+body);
       this.serverProvider.post("/shop/refreshInfo",body).then((res:any)=>{
@@ -1103,6 +1207,15 @@ export class ShopTablePage {
 
   configureStore(){
     console.log("click-configureStore(storeOpen):"+this.storageProvider.storeOpen);
+    if(this.storageProvider.tourMode){
+          let alert = this.alertController.create({
+                      title: '상점문을 열고,닫습니다. ',
+                      subTitle:'둘러보기 모드에서는 동작하지 않습니다.',
+                      buttons: ['OK']
+                  });
+          alert.present();
+      return;
+    }
     if(this.storageProvider.storeOpen===false){
       let alert = this.alertController.create({
                         title: '상점문을 여시겠습니까?',

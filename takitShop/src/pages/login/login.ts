@@ -25,8 +25,7 @@ export class LoginPage {
     emailHide:boolean=true;
     @ViewChild('loginPage') loginPageRef: Content;
     scrollTop;
-    focusEmail = new EventEmitter();;
-    focusPassword =new EventEmitter();
+    tourModeSignInProgress:boolean=false;
 
   constructor(private navController: NavController, private navParams: NavParams,
                 private fbProvider:FbProvider,private emailProvider:EmailProvider,
@@ -64,7 +63,7 @@ export class LoginPage {
             }
         }
   }
-
+     
   dummyHandler(id,fbProvider,accessToken){
       console.log("dummyHandler called");
       return new Promise((resolve, reject)=>{
@@ -202,27 +201,20 @@ export class LoginPage {
 
   emailLogin(event){
       if(this.email.length==0){
-          if(this.platform.is('android'))
-            this.focusEmail.emit(true);
-          else if(this.platform.is('ios')){ // show alert message
+          
               let alert = this.alertController.create({
                         title: '이메일을 입력해주시기 바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present();
-          }
           return;
       }
       if(this.password.length==0){
-            if(this.platform.is('android'))
-                this.focusPassword.emit(true);
-            else if(this.platform.is('ios')){
                 let alert = this.alertController.create({
                         title: '비밀번호를 입력해주시기 바랍니다.',
                         buttons: ['OK']
                     });
                     alert.present();
-            }
             return;
       }
 
@@ -285,6 +277,50 @@ export class LoginPage {
 */
   emailLoginSelect(event){
       this.emailHide=!this.emailHide;      
+  }
+
+  tourMode(){
+    console.log("tourMode");
+          if(!this.tourModeSignInProgress){
+            this.tourModeSignInProgress=true;
+      
+            this.emailProvider.EmailServerLogin(this.storageProvider.tourEmail,this.storageProvider.tourPassword).then((res:any)=>{
+                console.log("emailLogin-login page:"+JSON.stringify(res));
+                if(parseFloat(res.version)>parseFloat(this.storageProvider.version)){
+                        let alert = this.alertController.create({
+                                        title: '앱버전을 업데이트해주시기 바랍니다.',
+                                        subTitle: '현재버전에서는 일부 기능이 정상동작하지 않을수 있습니다.',
+                                        buttons: ['OK']
+                                    });
+                            alert.present();
+                }
+                if(res.result=="success"){
+                    this.storageProvider.tourMode=true;
+                    // show user cashId
+                    this.storageProvider.myshoplist=JSON.parse(res.shopUserInfo.myShopList);
+                    this.storageProvider.myshop=this.storageProvider.myshoplist[0];
+                    this.storageProvider.name="타킷주식회사";
+                    this.storageProvider.email="help@takit.biz";
+                    this.storageProvider.phone="05051703636";
+                    this.storageProvider.cashAvailable=" ";
+                    this.storageProvider.bankName="농협";
+                    this.storageProvider.maskAccount="301****363621";
+                    this.storageProvider.depositor="타킷주식회사";
+                    this.tourModeSignInProgress=false;
+                    this.navController.push(ShopTablePage);
+                }else{
+                    this.tourModeSignInProgress=false;
+                    console.log("hum... tour id doesn't work.");
+                }
+            },(err)=>{
+                this.tourModeSignInProgress=false;
+                let alert = this.alertController.create({
+                    title: '네트웍 상태를 확인하신후 다시 시도해 주시기 바랍니다.',
+                    buttons: ['OK']
+                });
+                alert.present();
+            });
+          }
   }
 
 }

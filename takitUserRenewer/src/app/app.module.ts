@@ -90,6 +90,7 @@ import {CashConfigurePageModule} from '../pages/cash-configure/cash-configure.mo
 import {SearchPageModule} from '../pages/search/search.module';
 import {TutorialLastPageModule} from '../pages/tutorial-last/tutorial-last.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MyErrorHandler } from '../classes/my-error-handler';
 
 @NgModule({
   declarations: [
@@ -202,7 +203,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     CashTutorialPage
   ],
   
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
+  providers: [{provide: ErrorHandler, useClass: MyErrorHandler},
               Network, 
               Facebook,
               InAppBrowser,
