@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams , AlertController, App, ViewController} from 'ionic-angular';
+import { IonicPage, NavController, NavParams , AlertController, App, ViewController,Events} from 'ionic-angular';
 import {StorageProvider} from '../../providers/storageProvider';
 import {Http,Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -41,7 +41,7 @@ export class OrderCompletePage {
           public storageProvider:StorageProvider,public navParams:NavParams,
           private alertController:AlertController, private ngZone:NgZone,
           private serverProvider:ServerProvider, public appCtrl:App,
-          private viewCtrl:ViewController){
+          private viewCtrl:ViewController,public events: Events){
 	      console.log("OrderCompletePage constructor");
         
         //this.shopname=this.storageProvider.currentShopname(); //mytakit에서 바로 들어올 경우, 없음.
@@ -50,6 +50,9 @@ export class OrderCompletePage {
         if(typeof this.order.orderList==='string'){
             
         }
+
+        this.storageProvider.orderAddInProgress(this.order,this.viewCtrl); // call this function at the begin of constructor
+        
         this.orderList=JSON.parse(this.order.orderList);
         this.trigger = navParams.get('trigger');
         console.log("orderList:"+JSON.stringify(this.orderList));
@@ -74,7 +77,6 @@ export class OrderCompletePage {
             console.log("orderList couponDiscount is true"+this.totalDiscount);
         }
 
-        this.storageProvider.orderAddInProgress(this.order,this.viewCtrl);
         // if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
         //     this.shopPhoneHref="tel:"+this.storageProvider.shopResponse.shopInfo.shopPhone;
         
@@ -87,7 +89,15 @@ export class OrderCompletePage {
         // });
 
         //this.totalDiscount=this.order.taktiDiscount+this.order.couponDiscount;
-
+        events.subscribe('push:order', (custom) => {
+            // user and time are the same arguments passed in `events.publish(user, time)`
+            console.log("order:"+JSON.stringify(custom));
+            if(custom.orderId==this.order.orderId){
+                this.ngZone.run(()=>{
+                    this.order.orderStatus=custom.orderStatus;
+                });
+            }
+        });
         
      }
 

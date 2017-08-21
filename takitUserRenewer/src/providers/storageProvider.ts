@@ -457,7 +457,9 @@ export class StorageProvider{
     orderExistInProgress(orderId){
         console.log("orderInProgress.length:"+this.orderInProgress.length);    
         for(let i=0;i<this.orderInProgress.length ;i++){
-            console.log("orderInProgress["+i+"]:"+this.orderInProgress[i]);
+            console.log("orderInProgress["+i+"]:"+this.orderInProgress[i].order.orderId);
+            console.log("orderId:"+orderId);
+
             if(this.orderInProgress[i]!=undefined && this.orderInProgress[i].order.orderId==orderId){
                 return true;
             }

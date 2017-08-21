@@ -447,8 +447,8 @@ export class TabsPage {
                 },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    "gcmSandbox": "false", //code for production mode
-                    //"gcmSandbox": "true",  //code for development mode
+                    //"gcmSandbox": "false", //code for production mode
+                    "gcmSandbox": "true",  //code for development mode
                     "alert": "true",
                     "sound": "true",
                     "badge": "true",
@@ -518,11 +518,12 @@ export class TabsPage {
                 console.log("addiontalData.GCMType:"+additionalData.GCMType);
                 //Please check if type of custom is object or string. I have no idea why this happens.
                 if(additionalData.GCMType==="order"){
+                    /*
                     if(typeof additionalData.custom === 'string'){ 
                         this.storageProvider.messageEmitter.emit(JSON.parse(additionalData.custom));//  만약 shoptab에 있다면 주문목록을 업데이트 한다. 만약 tab이라면 메시지를 보여준다. 
                     }else{ //object
                         this.storageProvider.messageEmitter.emit(additionalData.custom);
-                    }
+                    }*/
                     ////////////////////////////////////////////////////////////////
                     /*
                     console.log("show alert");
@@ -533,20 +534,35 @@ export class TabsPage {
                     });
                     alert.present();
                     */
-                    if((!this.storageProvider.isAndroid && !this.storageProvider.backgroundMode) //ios resume event comes before notification.
-                        ||(this.storageProvider.isAndroid && !this.storageProvider.orderExistInProgress(additionalData.custom.orderId))){ // android resume event comes late.
-                        console.log("!!! modal page??? ");
-                        let orderDoneModal;
-                        if(typeof additionalData.custom === 'string'){ 
-                            let order = JSON.parse(additionalData.custom);
-                            orderDoneModal= this.modalCtrl.create(OrderCompletePage, { order:order, trigger:"gcm" });
-                        }else{ // object 
-                            console.log("obj comes");
-                            orderDoneModal= this.modalCtrl.create(OrderCompletePage, {  order:additionalData.custom, trigger:"gcm"});
-                        }
-                        orderDoneModal.present();
+                    let orderId;
+                    if(typeof additionalData.custom === 'string'){
+                            orderId=JSON.parse(additionalData.custom).orderId;
+                    }else{
+                            orderId=additionalData.custom.orderId;
                     }
-                    
+                    console.log("orderId:"+orderId);
+
+                    if(this.storageProvider.orderExistInProgress(orderId)){
+                        if(typeof additionalData.custom === 'string'){ 
+                            this.events.publish('push:order',JSON.parse(additionalData.custom) ); 
+                        }else{ //object
+                            this.events.publish('push:order',additionalData.custom);
+                        }
+                    }else{
+                        if((!this.storageProvider.isAndroid && !this.storageProvider.backgroundMode) //ios resume event comes before notification.
+                            ||(this.storageProvider.isAndroid && !this.storageProvider.orderExistInProgress(orderId))){ // android resume event comes late.
+                            console.log("!!! modal page??? ");
+                            let orderDoneModal;
+                            if(typeof additionalData.custom === 'string'){ 
+                                let order = JSON.parse(additionalData.custom);
+                                orderDoneModal= this.modalCtrl.create(OrderCompletePage, { order:order, trigger:"gcm" });
+                            }else{ // object 
+                                console.log("obj comes");
+                                orderDoneModal= this.modalCtrl.create(OrderCompletePage, {  order:additionalData.custom, trigger:"gcm"});
+                            }
+                            orderDoneModal.present();
+                        }
+                    }
                     //////////////////////////////////////////////////////////////
                     // check if order in progress exists or not
                     this.serverProvider.orderNoti().then((orders:any)=>{
