@@ -444,11 +444,12 @@ export class StorageProvider{
         console.log("[userInfoSetFromServer]cashId:"+this.cashId);
         this.tourMode=false;
 
-        if(!userInfo.hasOwnProperty("taxIssueEmail") || userInfo.taxIssueEmail==null || userInfo.taxIssueEmail==undefined){
+        if(userInfo.hasOwnProperty("taxIssueEmail")){
             this.taxIssueEmail=userInfo.taxIssueEmail;
         }
 
-        if(!userInfo.hasOwnProperty("taxIssueCompanyName") || userInfo.taxIssueCompanyName==null || userInfo.taxIssueCompanyName==undefined){
+        //console.log("[userInfoSetFromServer]userInfo:"+JSON.stringify(userInfo));
+        if(userInfo.hasOwnProperty("taxIssueCompanyName")){
             this.taxIssueCompanyName=userInfo.taxIssueCompanyName;
         }
     }
