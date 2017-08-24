@@ -38,6 +38,7 @@ page-home {
 
 
         .scroll-col-latest {
+            position: absolute;
             //overflow: inherit;
             width : $latest-W;
             height: $latest-H;
@@ -46,10 +47,11 @@ page-home {
         }
 
         .scroll-p-visit{
+            //position: relative;
             margin-top:10px;
             margin-bottom:0px;
             margin-right:10px;
-            margin-left: 13px;
+            margin-left: 10px;
             text-align: center;
             font-size: 12px;
             
@@ -67,7 +69,7 @@ page-home {
         border : solid 3px;
         border-radius: 10px;
         border-color : $sub-color;
-        padding : 0px 0px 0px 8px;
+        padding : 0px;
         background-color: white;
         ion-col{
             padding: 0;
@@ -76,9 +78,10 @@ page-home {
 
             .scroll-btn-shoplist{
                 height: 70px-6px;
-                width:115px-3px;
-                padding:0;
+                width:125px;
+                padding:0px 0px 0px 7px;
                 margin:0;
+  
                 .button-inner{
                     justify-content: center;
                     align-items: center;
@@ -97,7 +100,7 @@ page-home {
 
             .scroll-btn-oldOrder{
                 height: 70px-6px;
-                width: 55px-8px;
+                width: 45px;
                 padding:0;
                 margin:0;
 
@@ -159,6 +162,9 @@ page-home {
     }
 
     .div-keyword{
+        display: flex;
+        flex-direction: row;
+
         .segment-ios .segment-button{
             border: none;
             font-size:15px;
@@ -170,7 +176,7 @@ page-home {
             border:none;
         }
 
-        .segment-button:hover:not(.segment-activated){
+        .segment-ios-grey .segment-button:hover:not(.segment-activated){
             background-color: white;
         }
 
@@ -210,7 +216,7 @@ page-home {
         }
 
         ion-col:nth-child(1){
-            flex: 0 0 28%;
+            flex: 0 0 $shop-list-H+30px;
 
 
             .btn-img-nearShop{

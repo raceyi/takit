@@ -44,8 +44,14 @@ export class MenuDetailPage {
 
      if(this.menu.options){
           console.log("hum...-1.1");
-          //this.hasOptions=true;                   
-          this.options=JSON.parse(this.menu.options);
+          //this.hasOptions=true; 
+          
+          if(typeof this.menu.options ==="string"){
+            this.options=JSON.parse(this.menu.options);
+          }else{
+            this.options=this.menu.options;
+          }
+          
           this.options.forEach((option)=>{
               option.flag=false;
               if(option.hasOwnProperty("choice") && Array.isArray(option.choice)){

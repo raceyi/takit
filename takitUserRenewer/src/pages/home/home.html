@@ -25,7 +25,7 @@
         
         <ion-scroll scrollX="true" class="scroll-latest">
             <ion-row class="scroll-row-latest">
-                <ion-col *ngFor="let shop of storageProvider.shoplist" class="scroll-col-latest"  no-padding>
+                <ion-col *ngFor="let shop of storageProvider.shoplist; let i=index" [ngStyle]="{left:10+i*180+'px'}" class="scroll-col-latest"  no-padding>
                     <ion-row  class="scroll-row-shoplist">
                         <ion-col>
                             <button (click)="getSelected(shop.takitId)" class="scroll-btn-shoplist" color="black" no-padding no-margin clear ion-button>
@@ -89,8 +89,8 @@
     </ion-row>
     <!--거리별 shoplist가 되어야 함-->
     <div class="div-keyword">
-        <ion-segment [(ngModel)]="nowKeyword">
-            <ion-segment-button *ngFor="let keyword of keywordShops" (click)="showKeywordShops(keyword)" clear>
+        <ion-segment [(ngModel)]="nowKeyword" *ngFor="let keyword of keywordShops" color="grey">
+            <ion-segment-button  [value]="keyword" (click)="showKeywordShops(keyword)" clear>
                 #{{keyword}}
             </ion-segment-button>
         </ion-segment>

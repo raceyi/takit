@@ -100,6 +100,8 @@ export class ShopHomePage {
             this.takeout=parseInt(this.storageProvider.shopInfo.takeout);
 
         }
+
+        
   }
 
 //   ionViewWillUnload(){
@@ -180,58 +182,70 @@ export class ShopHomePage {
 
         this.shop=this.storageProvider.shopResponse;
         this.shopName=this.shop.shopInfo.shopName;
-        
-        if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
-            this.shopPhoneHref="tel:"+this.shop.shopInfo.shopPhone;
 
-        this.storageProvider.shopInfoSet(this.shop.shopInfo);
-        this.configureShopInfo();
-
-        // update shoplist at Serve (takitId,s3key)
-        var thisShop:any={takitId:this.takitId , 
-                            shopName:this.shop.shopInfo.shopName,
-                            s3key: this.shop.shopInfo.imagePath, 
-                            discountRate:this.shop.shopInfo.discountRate,
-                            visitedTime:new Date()};
-        if(this.shop.shopInfo.imagePath.startsWith("takitId/")){
-
-        }else{
-            thisShop.filename=this.storageProvider.awsS3+this.shop.shopInfo.imagePath;
-        }
-        //read shop cart 
-        this.storageProvider.loadCart(this.takitId);
-        this.storageProvider.shoplistCandidate=this.storageProvider.shoplist;
-        this.storageProvider.shoplistCandidateUpdate(thisShop);
-        console.log("loadShopInfo-ShopHomePage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
-        this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
-        this.storageProvider.shoplist[0].visitedDiff=0;
-
-        let body = JSON.stringify({shopList:JSON.stringify(this.storageProvider.shoplistCandidate)});
-        console.log("!!shopEnter-body:",body);
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        if(this.storageProvider.tourMode==false){    
-            this.serverProvider.post(this.storageProvider.serverAddress+"/shopEnter",body).then((res:any)=>{
-                console.log("res.result:"+res.result);
-                var result:string=res.result;
-                if(result=="success"){
-
-                }else{
-                    
-                }
-            },(err)=>{
-                console.log("shopEnter-http post err "+err);
-                //Please give user an alert!
-                if(err=="NetworkFailure"){
-                let alert = this.alertController.create({
-                        title: '서버와 통신에 문제가 있습니다',
-                        subTitle: '네트웍상태를 확인해 주시기바랍니다',
+        if(this.shop.categories.length===0 || this.shop.menus.length===0){
+            let alert = this.alertController.create({
+                        title:this.takitId+"는 현재 준비 중 입니다." ,
                         buttons: ['OK']
                     });
-                    alert.present();
-                }
+            alert.present().then(()=>{
+                this.back();
             });
+        }else{
+            if(this.storageProvider.shopResponse.shopInfo.hasOwnProperty("shopPhone"))
+            this.shopPhoneHref="tel:"+this.shop.shopInfo.shopPhone;
+
+            this.storageProvider.shopInfoSet(this.shop.shopInfo);
+            this.configureShopInfo();
+
+            // update shoplist at Serve (takitId,s3key)
+            var thisShop:any={takitId:this.takitId , 
+                                shopName:this.shop.shopInfo.shopName,
+                                s3key: this.shop.shopInfo.imagePath, 
+                                discountRate:this.shop.shopInfo.discountRate,
+                                visitedTime:new Date()};
+            if(this.shop.shopInfo.imagePath.startsWith("takitId/")){
+
+            }else{
+                thisShop.filename=this.storageProvider.awsS3+this.shop.shopInfo.imagePath;
+            }
+            //read shop cart 
+            this.storageProvider.loadCart(this.takitId);
+            this.storageProvider.shoplistCandidate=this.storageProvider.shoplist;
+            this.storageProvider.shoplistCandidateUpdate(thisShop);
+            console.log("loadShopInfo-ShopHomePage.. "+JSON.stringify(this.storageProvider.shoplistCandidate));
+            this.storageProvider.shoplistSet(this.storageProvider.shoplistCandidate);
+            this.storageProvider.shoplist[0].visitedDiff=0;
+
+            let body = JSON.stringify({shopList:JSON.stringify(this.storageProvider.shoplistCandidate)});
+            console.log("!!shopEnter-body:",body);
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            if(this.storageProvider.tourMode==false){    
+                this.serverProvider.post(this.storageProvider.serverAddress+"/shopEnter",body).then((res:any)=>{
+                    console.log("res.result:"+res.result);
+                    var result:string=res.result;
+                    if(result=="success"){
+
+                    }else{
+                        
+                    }
+                },(err)=>{
+                    console.log("shopEnter-http post err "+err);
+                    //Please give user an alert!
+                    if(err=="NetworkFailure"){
+                    let alert = this.alertController.create({
+                            title: '서버와 통신에 문제가 있습니다',
+                            subTitle: '네트웍상태를 확인해 주시기바랍니다',
+                            buttons: ['OK']
+                        });
+                        alert.present();
+                    }
+                });
+            }
         }
+        
+        
         /////////////////////////////////
       //this.isAndroid = this.platform.is('android');                        
   }

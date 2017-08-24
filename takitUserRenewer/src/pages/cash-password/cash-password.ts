@@ -184,13 +184,13 @@ export class CashPassword {
                             //     });
                             //     confirm.present();
                             // }else{
-                                console.log("give alert on order success");
-                                let alert = this.alertController.create({
-                                        title: '주문에 성공하였습니다.'+'주문번호['+res.order.orderNO+']',
-                                        subTitle: '[주의]앱을 종료하시면 주문알림을 못받을수 있습니다.' ,
-                                        buttons: ['OK']
-                                });
-                                alert.present().then(()=>{
+                                // console.log("give alert on order success");
+                                // let alert = this.alertController.create({
+                                //         title: '주문에 성공하였습니다.'+'주문번호['+res.order.orderNO+']',
+                                //         subTitle: '[주의]앱을 종료하시면 주문알림을 못받을수 있습니다.' ,
+                                //         buttons: ['OK']
+                                // });
+                                // alert.present().then(()=>{
                                     this.navCtrl.push(OrderCompletePage,{order:res.order,trigger:"order"});
                                     //this.app.getRootNav().pop();
                                     // if(this.trigger=="order"){
@@ -199,7 +199,7 @@ export class CashPassword {
                                     // }
                                     //this.storageProvider.shopTabRef.select(3);
                                     this.confirmInProgress=false;
-                                });  
+                                //});  
                             //}
                             
                         }else{
@@ -225,7 +225,7 @@ export class CashPassword {
                                 alert.present();
                         }else if(error=="shop's off"){
                             let alert = this.alertController.create({
-                                    title: '상점이 문을 열지 않았습니다.',
+                                    title: '지금은 주문을 할 수 없습니다.',
                                     buttons: ['OK']
                                 });
                                 alert.present();
@@ -237,7 +237,7 @@ export class CashPassword {
                                 alert.present();
                         }else if(error=="last order end"){
                             let alert = this.alertController.create({
-                                    title: '주문이 마감 되었습니다.',
+                                    title: '주문 가능 시간이 아닙니다.',
                                     buttons: ['OK']
                                 });
                                 alert.present();

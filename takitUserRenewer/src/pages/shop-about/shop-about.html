@@ -36,8 +36,8 @@
     <ion-row class="row-business bg-white">
         <ion-col>
             <p>영업시간 | 평일 {{businessTime[1]}} / 주말 {{businessTime[6]}}</p>
-            <p>주문 가능 시간 | <span *ngFor="let aoTime of orderAvailTime; let i=index">{{aoTime}}
-                                <span *ngIf="i!==orderAvailTime.length-1"> / </span></span></p>
+            <p>주문 가능 시간 | <span *ngFor="let aoTime of availOrderTime; let i=index">{{aoTime}}
+                                <span *ngIf="i!==availOrderTime.length-1"> / </span></span></p>
             <p>(브레이크 타임 | <span *ngFor="let bTime of breakTime; let i=index">{{bTime}}
                                 <span *ngIf="i!==breakTime.length-1"> / </span></span>)</p> 
             <p>주소 | {{storageProvider.shopInfo.address}}</p>

@@ -30,7 +30,7 @@
         <p color="subColor3">{{order.takitId}}</p>
     </div>
 
-    <ion-row class="div-statusbar" *ngIf="order.orderStatus!=='cancelled'">
+     <ion-row class="div-statusbar" *ngIf="order.orderStatus!=='cancelled'">
         <ion-col>
             <img src="./assets/history_bar_1_on.svg">
             <img src="./assets/history_bar_2_on.svg">
@@ -57,7 +57,7 @@
         <ion-col *ngIf="order.takeout==2 &&  order.orderStatus==='completed'">
             <img src="./assets/history_bar_1_on.svg">
         </ion-col>
-    </ion-row>
+    </ion-row> 
     <ion-row class="div-statusbar-p" *ngIf="order.orderStatus!=='cancelled'">
         <ion-col>
             <p>결제완료</p>

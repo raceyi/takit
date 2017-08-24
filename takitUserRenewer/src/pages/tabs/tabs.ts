@@ -447,8 +447,8 @@ export class TabsPage {
                 },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    //"gcmSandbox": "false", //code for production mode
-                    "gcmSandbox": "true",  //code for development mode
+                    "gcmSandbox": "false", //code for production mode
+                    //"gcmSandbox": "true",  //code for development mode
                     "alert": "true",
                     "sound": "true",
                     "badge": "true",

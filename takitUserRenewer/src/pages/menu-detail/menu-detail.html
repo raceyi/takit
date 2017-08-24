@@ -29,7 +29,7 @@
             <span class="sub3-color">{{(menu.price*1).toLocaleString('en')}}</span><span>원</span>
         </div>
         <div class="div-options">
-            <p>추가옵션</p>
+            <p *ngIf="options">추가옵션</p>
             <div *ngFor="let option of options">
                  <ion-item class="bg-sub1" no-lines>
                     <ion-label>{{option.name}}</ion-label>

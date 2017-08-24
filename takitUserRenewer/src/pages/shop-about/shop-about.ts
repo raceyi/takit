@@ -20,7 +20,7 @@ export class ShopAboutPage {
     notice:string;
     breakTime=[];
     lastOrderTime=[];
-    orderAvailTime=[];
+    availOrderTime=[];
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
@@ -36,8 +36,8 @@ export class ShopAboutPage {
                       this.breakTime = JSON.parse(this.storageProvider.shopInfo.breakTime);
                     }
 
-                    if(storageProvider.shopInfo.orderAvailTime){
-                      this.orderAvailTime = JSON.parse(this.storageProvider.shopInfo.orderAvailTime);
+                    if(storageProvider.shopInfo.availOrderTime){
+                      this.availOrderTime = JSON.parse(this.storageProvider.shopInfo.availOrderTime);
                     }
                 }
 
