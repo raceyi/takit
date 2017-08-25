@@ -76,13 +76,13 @@
 <ion-row radio-group [(ngModel)]="receiptType">
     <ion-col>
       <ion-item>
-        <ion-label>소득공제용</ion-label>
+        <ion-label>소득공제용(개인)</ion-label>
         <ion-radio color="black" value="IncomeDeduction" (ionSelect)="expenseProofOff()"></ion-radio>
       </ion-item>
     </ion-col>
     <ion-col>
       <ion-item>
-       <ion-label>지출증빙용</ion-label>
+       <ion-label>지출증빙용(사업자)</ion-label>
         <ion-radio color="black" value="ExpenseProof" (ionSelect)="expenseProofOn()"></ion-radio>
       </ion-item>
     </ion-col>

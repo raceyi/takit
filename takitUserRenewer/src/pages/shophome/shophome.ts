@@ -80,7 +80,9 @@ export class ShopHomePage {
             this.bestMenus=navParams.get('bestMenus');
             if(!this.bestMenus){ //this.bestMenu !== null or undefined
                 this.bestMenus = [];
-            }            
+                this.menuSlideUp =true; //kalen.lee@takit.biz 2017.08.25
+            }           
+
   }
 
   ionViewWillEnter(){ 

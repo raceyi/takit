@@ -50,7 +50,7 @@
             <p *ngIf="businessType" no-margin>{{businessType}}</p>   
         </ion-col>
     </ion-row>
-    <div class="icon-shopInfo" [hidden]="menuSlideUp">
+    <div class="icon-shopInfo" [hidden]="menuSlideUp && bestMenus.length!=0">
         <ion-icon name="icon-atRestaurant_2" color="mainColor" *ngIf="(takeout < 3)"></ion-icon> 
         <ion-icon name="icon-atRestaurant_2" color="grey" *ngIf="!(takeout < 3)"></ion-icon> 
         <ion-icon name="icon-takeOut_2" color="mainColor" *ngIf="takeout>=1"></ion-icon>
@@ -58,32 +58,6 @@
         <ion-icon name="icon-delivery_2" color="mainColor" *ngIf="takeout===2 || takeout===4"></ion-icon>
         <ion-icon name="icon-delivery_2" color="grey" *ngIf="takeout<=1 || takeout===3"></ion-icon> 
     </div>
-
-<!--
-    <ion-row class="row-takeout" [hidden]="menuSlideUp">
-        <ion-col>
-            <ion-icon name="heart">
-            </ion-icon>
-            <p>내매장</p>
-        </ion-col>
-        <ion-col>
-            <ion-icon name="md-radio-button-off">
-            </ion-icon>
-            <p>takeout</p>
-        </ion-col>
-        <ion-col>
-            <ion-icon name="md-radio-button-off">
-            </ion-icon>
-            <p>table-24</p>
-        </ion-col>
-        <ion-col>
-            <ion-icon name="md-radio-button-off">
-            </ion-icon>
-            <p>takeout</p>
-        </ion-col>
-    </ion-row>-->
-
-
 
     <div [@slideUp]="slideUpState" class="div-menus1" [hidden]="menuSlideUp">
         <button (click)="clickMenuArea()" class="btn-menus1" no-padding no-margin clear ion-button>
@@ -119,7 +93,7 @@
     </div>
 
     <div class="div-menus2" [hidden]="!menuSlideUp">
-        <button (click)="slidePressed()" class="btn-menubar"  no-padding no-margin clear ion-button>
+        <button (click)="slidePressed()"  *ngIf="bestMenus.length!=0" class="btn-menubar"  no-padding no-margin clear ion-button>
             <ion-row  class="row-menubar ">
                 <ion-col class="col-menubar bg-sub1">
                         <ion-icon name="md-menu" color="white">
@@ -127,6 +101,15 @@
                 </ion-col>
             </ion-row>
         </button>
+        <button  class="btn-menubar" *ngIf="bestMenus.length===0" no-padding no-margin clear ion-button>
+            <ion-row  class="row-menubar ">
+                <ion-col class="col-menubar bg-sub1">
+                        <ion-icon name="md-menu" color="white">
+                        </ion-icon>
+                </ion-col>
+            </ion-row>
+        </button>
+
         <ion-row class="row-categories-menus bg-sub1">
             <ion-col class="col-categories">
                 <ion-scroll scrollY="true" class="scroll-categories">
