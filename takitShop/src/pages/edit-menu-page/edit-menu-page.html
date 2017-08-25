@@ -30,15 +30,15 @@
 
         <!--카테고리 추가/삭제버튼 (삭제기능 모든 메뉴 삭제해야 가능하도록 함)-->
     <ion-row>
-        <ion-item  [hidden]="flags.addCategory">
+        <ion-item  *ngIf="!flags.addCategory">
             <ion-label stacked>카테고리순서</ion-label>
             <ion-input [(ngModel)]="inputAddCategory.sequence" required></ion-input>
         </ion-item>
-        <ion-item  [hidden]="flags.addCategory">
+        <ion-item  *ngIf="!flags.addCategory">
             <ion-label stacked>카테고리명</ion-label>
             <ion-input [(ngModel)]="inputAddCategory.categoryName" required></ion-input>
         </ion-item>
-        <ion-item  [hidden]="flags.addCategory">
+        <ion-item  *ngIf="!flags.addCategory">
             <ion-label stacked>카테고리명(영문)</ion-label>
             <ion-input [(ngModel)]="inputAddCategory.categoryNameEn" required></ion-input>
         </ion-item>
@@ -61,11 +61,11 @@
     <div class="categoryInfo">
         <ion-row>
             <ion-col>
-                <ion-item [hidden]="!flags.categoryName">
+                <ion-item *ngIf="flags.categoryName">
                     <ion-label stacked>카테고리순서</ion-label>
-                    <ion-input [value]="nowCategory.sequence" readonly ></ion-input>
+                    <ion-input [(ngModel)]="nowCategory.sequence" readonly ></ion-input>
                 </ion-item>
-                <ion-item [hidden]="flags.categoryName">
+                <ion-item *ngIf="!flags.categoryName">
                     <ion-label stacked>카테고리순서</ion-label>
                     <ion-input [(ngModel)]="inputModifyCategory.newSequence" [value]="nowCategory.sequence" ></ion-input>
                 </ion-item>
@@ -73,7 +73,7 @@
             <ion-col width-10>
                 <!--<ion-item no-lines class="categoryBtn">-->
                 <!--2-2편집버튼-->
-                    <button (click)="modifyCategory()" [hidden]="!flags.categoryName" ion-button icon-left small style="float:right"><ion-icon name="md-create"></ion-icon>편집</button>
+                    <button (click)="modifyCategory()" [hidden]="!flags.categoryName" [disabled]="this.categories.length===0" ion-button icon-left small style="float:right"><ion-icon name="md-create"></ion-icon>편집</button>
                     <button (click)="modifyCategoryComplete()" [hidden]="flags.categoryName" ion-button small style="float:right">완료</button>
                 <!--</ion-item>-->
             </ion-col>
@@ -81,11 +81,11 @@
         <ion-row>
             <ion-col>
                 
-                <ion-item [hidden]="!flags.categoryName">
+                <ion-item *ngIf="flags.categoryName">
                     <ion-label stacked>카테고리명</ion-label>
-                    <ion-input [value]="nowCategory.categoryName" readonly ></ion-input>
+                    <ion-input [(ngModel)]="nowCategory.categoryName" readonly ></ion-input>
                 </ion-item>
-                <ion-item [hidden]="flags.categoryName">
+                <ion-item *ngIf="!flags.categoryName">
                     <ion-label stacked>카테고리명</ion-label>
                     <ion-input [(ngModel)]="inputModifyCategory.categoryName"  [value]="nowCategory.categoryName" ></ion-input>
                 </ion-item>
@@ -93,11 +93,11 @@
             </ion-col>
             <ion-col>
                 <!--2-3. 카테고리 영문명-->
-                <ion-item [hidden]="!flags.categoryName">
+                <ion-item *ngIf="flags.categoryName">
                     <ion-label stacked>카테고리 영문명</ion-label>
-                    <ion-input [value]="nowCategory.categoryNameEn" readonly></ion-input>
+                    <ion-input [(ngModel)]="nowCategory.categoryNameEn" readonly></ion-input>
                 </ion-item>
-                <ion-item [hidden]="flags.categoryName">
+                <ion-item *ngIf="!flags.categoryName">
                     <ion-label stacked>카테고리 영문명</ion-label>
                     <ion-input [(ngModel)]="inputModifyCategory.categoryNameEn" [value]="nowCategory.categoryNameEn" ></ion-input>
                 </ion-item>

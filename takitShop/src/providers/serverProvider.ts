@@ -235,26 +235,43 @@ export class ServerProvider{
         });   
     }
 */
-    getShopInfo(takitId){
+    // getShopInfo(takitId){
+    //     return new Promise((resolve,reject)=>{
+    //         let headers = new Headers();
+    //         headers.append('Content-Type', 'application/json');
+    //         console.log("takitId:"+takitId);
+    //         console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
+    //         // this.post('/cafe/shopHome',{takitId:takitId})
+    //         // .then(res=>{
+    //         //     resolve(res);
+    //         // },(err)=>{
+    //         //     reject("http error"); 
+    //         // })
+    //         this.get(encodeURI(this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId)).then((res)=>{
+    //                 console.log("res:"+JSON.stringify(res));
+    //                 resolve(res);
+    //             },(err)=>{
+    //             reject("http error");  
+    //         });
+    //     });   
+    // }
+
+
+    getShopInfoAll(takitId){
         return new Promise((resolve,reject)=>{
             let headers = new Headers();
             headers.append('Content-Type', 'application/json');
             console.log("takitId:"+takitId);
-            console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
-            // this.post('/cafe/shopHome',{takitId:takitId})
-            // .then(res=>{
-            //     resolve(res);
-            // },(err)=>{
-            //     reject("http error"); 
-            // })
-            this.get(encodeURI(this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId)).then((res)=>{
-                    console.log("res:"+JSON.stringify(res));
-                    resolve(res);
-                },(err)=>{
+            //console.log("!!!server:"+ this.storageProvider.serverAddress+"/cafe/shopHome?takitId="+takitId);
+            this.post("/cafe/shopHome",JSON.stringify({takitId:takitId})).then((res)=>{
+                //console.log("res:"+JSON.stringify(res));
+                resolve(res);
+            },(err)=>{
                 reject("http error");  
             });
         });   
     }
+
 
     addMenuInfo(menu){
         return new Promise((resolve,reject)=>{
