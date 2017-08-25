@@ -99,7 +99,7 @@ export class ShopTablePage {
           
           cordova.plugins.backgroundMode.enable(); //takitShop always runs in background Mode
           //get shopInfo from server
-          this.serverProvider.getShopInfo(this.storageProvider.myshop.takitId).then((res:any)=>{
+          this.serverProvider.getShopInfoAll(this.storageProvider.myshop.takitId).then((res:any)=>{
               console.log("shopInfo:"+JSON.stringify(res));
               this.storageProvider.shopInfoSet(res.shopInfo);
               this.storageProvider.shop = res;
@@ -635,8 +635,8 @@ export class ShopTablePage {
                     senderID: this.storageProvider.userSenderID                },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    //"gcmSandbox": "true", development mode
-                    "gcmSandbox": "false",//production mode
+                    "gcmSandbox": "true", //development mode
+                    //"gcmSandbox": "false",//production mode
                     "alert": "true",
                     "badge": "true",
                     "sound": "true"
