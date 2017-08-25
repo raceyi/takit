@@ -38,7 +38,7 @@
                     <ion-col>
                     <ion-item >
                     <ion-label>입금일</ion-label>
-                    <ion-datetime style="width:40vw;border-bottom: black;border-bottom-style: solid 1px;" displayFormat="YYYY MM DD" min="2016" [(ngModel)]="transferDate"></ion-datetime>
+                    <ion-datetime style="width:40vw;border-bottom: black;border-bottom-style: solid;" displayFormat="YYYY MM DD" min="2016" [(ngModel)]="transferDate"></ion-datetime>
                     </ion-item>
                     </ion-col>
                 </ion-row>
@@ -46,7 +46,7 @@
                     <ion-col>
                     <ion-item>
                     <ion-label>입금시간</ion-label>
-                    <ion-datetime style="width:40vw;border-bottom: black;border-bottom-style: solid 1px;" displayFormat="HH" [(ngModel)]="transferDate"></ion-datetime>
+                    <ion-datetime style="width:40vw;border-bottom: black;border-bottom-style: solid;" displayFormat="HH" [(ngModel)]="transferDate"></ion-datetime>
                     </ion-item>
                     </ion-col>
                 </ion-row>
@@ -65,7 +65,7 @@
                     </ion-col>
                     <ion-col>
                     <ion-item>
-                    <ion-input #depositCashAmount style="width:40vw;border-bottom: black;border-bottom-style: solid 1px;" class="cashIn-check-inputBox" [(ngModel)]="depositAmount" type="number" ></ion-input>
+                    <ion-input #depositCashAmount style="width:40vw;border-bottom: black;border-bottom-style: solid;" class="cashIn-check-inputBox" [(ngModel)]="depositAmount" type="number" ></ion-input>
                     </ion-item>
                     </ion-col>
                 </ion-row>
@@ -127,7 +127,7 @@
             </ion-col>
             <ion-col>
             <ion-item>
-            <ion-input class="cashIn-check-inputBox" style="width:40vw;border-bottom: black;border-bottom-style: solid 1px;" [placeholder]="storageProvider.name" [(ngModel)]="depositMemo" type="text" > </ion-input>
+            <ion-input class="cashIn-check-inputBox" style="width:40vw;border-bottom: black;border-bottom-style: solid;" [placeholder]="storageProvider.name" [(ngModel)]="depositMemo" type="text" > </ion-input>
             </ion-item>
             </ion-col>
             </ion-row>

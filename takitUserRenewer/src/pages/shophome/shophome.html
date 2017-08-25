@@ -45,7 +45,6 @@
     </ion-slides>
     <ion-row class="row-shopInfo" [hidden]="menuSlideUp">
         <ion-col>
-            
             <p no-margin>{{shopName}}</p>
             <p *ngIf="businessType" no-margin>{{businessType}}</p>   
         </ion-col>
@@ -92,7 +91,7 @@
         </button>
     </div>
 
-    <div class="div-menus2" [hidden]="!menuSlideUp">
+    <div class="div-menus2" [ngStyle]="div_menus2" [hidden]="!menuSlideUp">
         <button (click)="slidePressed()"  *ngIf="bestMenus.length!=0" class="btn-menubar"  no-padding no-margin clear ion-button>
             <ion-row  class="row-menubar ">
                 <ion-col class="col-menubar bg-sub1">

@@ -39,7 +39,6 @@ import { ConfigureCashTutorialPage } from '../pages/configure-cash-tutorial/conf
 import { DepositCashTutorialPage } from '../pages/deposit-cash-tutorial/deposit-cash-tutorial';
 import { OrderTutorialPage } from '../pages/order-tutorial/order-tutorial';
 import { NotifierTutorialPage } from '../pages/notifier-tutorial/notifier-tutorial';
-import { OrderDonePage } from '../pages/order-done/order-done';
 import {CashPassword} from '../pages/cash-password/cash-password';
 import {OldOrderPage } from '../pages/old-order/old-order';
 import { MyTakitPage } from '../pages/my-takit/my-takit';
@@ -117,7 +116,6 @@ import { MyErrorHandler } from '../classes/my-error-handler';
     DepositCashTutorialPage,
     OrderTutorialPage,
     NotifierTutorialPage,
-    OrderDonePage,
     CashPassword,
     OldOrderPage,
     MyTakitPage,
@@ -187,7 +185,6 @@ import { MyErrorHandler } from '../classes/my-error-handler';
     DepositCashTutorialPage,
     OrderTutorialPage,
     NotifierTutorialPage,
-    OrderDonePage,
     CashPassword ,
     OldOrderPage,
     MyTakitPage,

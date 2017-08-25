@@ -25,7 +25,7 @@ export class OrderCompletePage {
      messageEmitterSubscription;
      infiniteScroll:any;
 
-     shopPhoneHref:string;
+     //shopPhoneHref:string;
 
      order;
      orderList;

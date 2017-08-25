@@ -70,6 +70,8 @@ export class ShopHomePage {
 
   takeout;
 
+  div_menus2;
+
   constructor(private app:App, private navController: NavController
       ,private storageProvider:StorageProvider,private navParams:NavParams
       ,private alertController:AlertController,private serverProvider:ServerProvider) {
@@ -78,11 +80,14 @@ export class ShopHomePage {
           //Any other way to pass takitId into ShopHome page?
             this.storageProvider.takitId=navParams.get("takitId");
             this.bestMenus=navParams.get('bestMenus');
-            if(!this.bestMenus){ //this.bestMenu !== null or undefined
+            if(!this.bestMenus){ //this.bestMenu === null or undefined
                 this.bestMenus = [];
                 this.menuSlideUp =true; //kalen.lee@takit.biz 2017.08.25
+                this.div_menus2={};
+            }else{
+                console.log("best menu exists");
+                this.div_menus2={'height':'100%'};
             }           
-
   }
 
   ionViewWillEnter(){ 

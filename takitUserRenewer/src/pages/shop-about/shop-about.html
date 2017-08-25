@@ -22,7 +22,7 @@
     <div>
         <ion-row class="row-about">
             <ion-col style="text-align: -webkit-center;">
-                <p>더큰도시락</p>
+                <p>{{storageProvider.shopName}}</p>
                 <ion-item color="item-about" *ngIf="storageProvider.shopInfo.ownerImagePath" no-lines >
                     <ion-avatar style="text-align: -webkit-center;">
                         <img style="text-align:center; width:120px; height:120px;" [src]="storageProvider.awsS3+storageProvider.shopInfo.ownerImagePath">
@@ -41,8 +41,7 @@
             <p>(브레이크 타임 | <span *ngFor="let bTime of breakTime; let i=index">{{bTime}}
                                 <span *ngIf="i!==breakTime.length-1"> / </span></span>)</p> 
             <p>주소 | {{storageProvider.shopInfo.address}}</p>
-            <p>전화번호 | {{storageProvider.shopInfo.shopPhone}}</p>
-            <!--전화번호는 바로 전화 걸 수 있도록-->
+            <p *ngIf="storageProvider.shopInfo.shopPhone" >전화번호 | <a [href]="shopPhoneHref">{{storageProvider.shopInfo.shopPhone}}<ion-icon name="call"></ion-icon></a></p>
         </ion-col>
     </ion-row>
     <ion-row *ngIf="notice">

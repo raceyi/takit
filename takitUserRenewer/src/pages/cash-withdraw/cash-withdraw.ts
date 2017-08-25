@@ -274,6 +274,7 @@ export class CashWithdrawPage {
               this.storageProvider.cashInfoUpdateEmitter.emit("cashAmountUpdate");
                let alert = this.alertController.create({
                     title: '환불요청에 성공했습니다.',
+                    subTitle: '환불계좌를 확인하시기 바랍니다',
                     buttons: ['OK']
                 });
                 alert.present();

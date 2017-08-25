@@ -21,7 +21,7 @@ export class ShopAboutPage {
     breakTime=[];
     lastOrderTime=[];
     availOrderTime=[];
-
+    shopPhoneHref:string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
                 public storageProvider:StorageProvider) {
@@ -39,6 +39,9 @@ export class ShopAboutPage {
                     if(storageProvider.shopInfo.availOrderTime){
                       this.availOrderTime = JSON.parse(this.storageProvider.shopInfo.availOrderTime);
                     }
+
+                    this.shopPhoneHref="tel:"+storageProvider.shopInfo.shopPhone;
+
                 }
 
   ionViewDidLoad() {
