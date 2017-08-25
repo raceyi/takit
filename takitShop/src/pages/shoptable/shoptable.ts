@@ -10,6 +10,7 @@ import {Splashscreen} from 'ionic-native';
 import {PrinterProvider} from '../../providers/printerProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import {CancelConfirmPage} from '../cancel-confirm/cancel-confirm';
 
 declare var cordova:any;
 
@@ -292,6 +293,11 @@ export class ShopTablePage {
             order.cancelReasonString=order.cancelReason;
           else
             order.cancelReasonString=undefined;
+
+          //////////////////////////////////////
+          // Just testing
+          //order.userMSG="밥많이 주세요.";
+          ///////////////////////////////////////  
           return order;
     }
 
@@ -523,8 +529,11 @@ export class ShopTablePage {
                 }
                 message+="\n";
               });
-              
           });
+          if(order.userMSG){
+              message+=order.userMSG;
+              message+="\n";
+          }
       }else if(order.orderStatus=="completed"){ //print receipt
           title="        영수증\n";
           message+="상   호:"+this.storageProvider.currentShopname()+"\n";
@@ -635,8 +644,8 @@ export class ShopTablePage {
                     senderID: this.storageProvider.userSenderID                },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    //"gcmSandbox": "true", development mode
-                    "gcmSandbox": "false",//production mode
+                    "gcmSandbox": "true", //development mode
+                    //"gcmSandbox": "false",//production mode
                     "alert": "true",
                     "badge": "true",
                     "sound": "true"
@@ -866,6 +875,19 @@ export class ShopTablePage {
       });
     }
 
+  myCallbackFunction = (order, reason) => {
+        return new Promise((resolve, reject) => {
+            console.log("cancelReason:"+reason);
+            this.cancelOrder(order,reason).then((result)=>{
+                 console.log("cancel-order result:"+result);
+                 resolve();
+            },(err)=>{
+                 console.log("cancel-order err:"+err);
+                 reject();
+            });
+        });
+    }
+
     cancel(order){
       if(this.storageProvider.tourMode){
             let alert = this.alertController.create({
@@ -877,6 +899,8 @@ export class ShopTablePage {
         return;
       }
       console.log("order cancel comes");
+      this.navController.push(CancelConfirmPage,{order:order, callback:this.myCallbackFunction});
+      /*
             let prompt = this.alertController.create({
                 title: '주문취소',
                 message: "주문을 취소하시겠습니까?",
@@ -907,6 +931,7 @@ export class ShopTablePage {
                 ]
               });
                prompt.present();
+      */
     }
 
     updateStatus(order,request){
@@ -1353,5 +1378,9 @@ export class ShopTablePage {
             reject(err);
          });
       });
+    }
+
+    notifyOrder(order){
+        console.log("notifyOrder comes");
     }
 }
