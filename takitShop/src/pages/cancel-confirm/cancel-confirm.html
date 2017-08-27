@@ -1,0 +1,67 @@
+<!--
+  Generated template for the CancelConfirmPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>주문 취소</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list radio-group [(ngModel)]="reasonType" >
+    <ion-list-header style="text-align:center;font-size:large;">
+      취소사유
+    </ion-list-header>
+    <ion-item *ngIf="order.orderStatus!='completed'">
+      <ion-label>재료소진</ion-label>
+      <ion-radio value="재료소진" (ionSelect)="changeReasonType('재료소진')"></ion-radio>
+    </ion-item>
+
+    <ion-item *ngIf="order.orderStatus!='completed'">
+      <ion-label>영업마감</ion-label>
+      <ion-radio value="영업마감" (ionSelect)="changeReasonType('영업마감')"></ion-radio>
+    </ion-item>
+
+    <ion-item *ngIf="order.orderStatus=='completed'">
+      <ion-label>고객불만</ion-label>
+      <ion-radio value="고객불만" (ionSelect)="changeReasonType('고객불만')"></ion-radio>
+    </ion-item>
+
+    <ion-item *ngIf="order.orderStatus=='completed'">
+      <ion-label>전달오류</ion-label>
+      <ion-radio value="전달오류" (ionSelect)="changeReasonType('전달오류')"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>기타-상세미입력</ion-label>
+      <ion-radio value="기타-상세미입력" (ionSelect)="changeReasonType('기타-상세미입력')"></ion-radio>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>기타-상세입력</ion-label>
+      <ion-radio value="기타-상세입력" (ionSelect)="changeReasonType('기타-상세입력')"></ion-radio>
+    </ion-item>
+    <ion-item [hidden]="reasonType!='기타-상세입력'">
+    <ion-textarea class="reason" type="text" [(ngModel)]="reason"></ion-textarea>
+    </ion-item>
+  </ion-list>
+
+<div class="extender" style="height:23vh;font-size:larger;">
+       <div class="padder-center">
+          주문을 취소하시겠습니까?
+       </div>
+</div>
+<ion-row>
+<ion-col text-center>
+ <button ion-button style="width:25vw;" round (click)="back()">아니오</button> 
+</ion-col>
+<ion-col text-center>
+ <button ion-button style="width:25vw;" round (click)="cancelOrder()">네</button> 
+</ion-col>
+</ion-row>
+
+</ion-content>

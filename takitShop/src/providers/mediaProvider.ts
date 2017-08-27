@@ -14,20 +14,17 @@ import { Platform } from 'ionic-angular';
 @Injectable()
 export class MediaProvider {
    playing:boolean=false;
-   /*
-   onStatusUpdate = (status) => { 
-                      console.log( "onStatusUpdate"+status);
-                      if(status==4 && this.playing){
-                        this.file.play();
-                      }
-                  };                              
-   */               
+             
    file;
 
   constructor(public http: Http,private platform:Platform,private media: Media) {
     console.log('Hello MediaProvider Provider');
     platform.ready().then(() => {
-      this.file = this.media.create('file:///android_asset/www/assets/ordersound.mp3');
+      if(this.platform.is('android'))
+        this.file = this.media.create('file:///android_asset/www/assets/ordersound.mp3');
+      else{
+        this.file = this.media.create('assets/ordersound.mp3');
+      }
       this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
       this.file.onSuccess.subscribe(() => {
         console.log('Action is successful');
@@ -35,7 +32,7 @@ export class MediaProvider {
           this.file.play();
         
       });
-      this.file.onError.subscribe(error => console.log('Error!', error));
+      this.file.onError.subscribe(error => console.log('Error! '+JSON.stringify(error)));
     });
 
   }

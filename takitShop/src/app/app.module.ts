@@ -42,6 +42,7 @@ import { Media, MediaObject } from '@ionic-native/media';
 import { HttpModule } from '@angular/http';
 
 import { MyErrorHandler } from '../classes/my-error-handler';
+import {CancelConfirmPageModule} from '../pages/cancel-confirm/cancel-confirm.module';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { MyErrorHandler } from '../classes/my-error-handler';
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp,{mode:'ios'}),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    CancelConfirmPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
