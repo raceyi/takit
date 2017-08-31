@@ -307,7 +307,8 @@ export class LoginPage {
                     this.storageProvider.maskAccount="301****363621";
                     this.storageProvider.depositor="타킷주식회사";
                     this.tourModeSignInProgress=false;
-                    this.navController.push(ShopTablePage);
+                    //this.navController.push(ShopTablePage);
+                    this.navController.setRoot(ShopTablePage);
                 }else{
                     this.tourModeSignInProgress=false;
                     console.log("hum... tour id doesn't work.");

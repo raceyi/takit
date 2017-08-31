@@ -1,5 +1,5 @@
 import {Injectable,EventEmitter} from '@angular/core';
-import {Platform} from 'ionic-angular';
+import {Platform,Events} from 'ionic-angular';
 import {StorageProvider} from './storageProvider';
 
 declare var BTPrinter:any;
@@ -7,12 +7,10 @@ declare var BTPrinter:any;
 @Injectable()
 export class PrinterProvider{
     printer:string;
-    printerStatus;  
+    printerStatus;  // connected,disconnected
     printerlist=[];
     
-    public messageEmitter= new EventEmitter();
-
-    constructor(public storageProvider:StorageProvider){
+    constructor(public storageProvider:StorageProvider,public events: Events){
         console.log("printerProvider constructor"); 
         this.printer=this.storageProvider.printer;
     }
@@ -58,7 +56,7 @@ export class PrinterProvider{
                     BTPrinter.connect((data)=>{
                         console.log("[connectPrinter] Connect Status:"+data);
                         this.printerStatus=data;
-                        this.messageEmitter.emit(this.printerStatus);
+                        this.events.publish('printer:status', this.printerStatus);
                         resolve(this.printerStatus);
                     },(err)=>{
                         console.log("fail to connect");
@@ -74,7 +72,7 @@ export class PrinterProvider{
                             BTPrinter.connect((data)=>{
                                 console.log("Connect Status:"+data);
                                 this.printerStatus=data;
-                                this.messageEmitter.emit(this.printerStatus);
+                                this.events.publish('printer:status', this.printerStatus);
                                 resolve(this.printerStatus);
                             },(err)=>{
                                 console.log("fail to connect");
@@ -93,7 +91,7 @@ export class PrinterProvider{
                         console.log("disconnect Success:"+data);
                         console.log(data);
                         this.printerStatus="disconnected";
-                        this.messageEmitter.emit(this.printerStatus);
+                        this.events.publish('printer:status', this.printerStatus);
                         resolve(this.printerStatus);
                     },(err)=>{
                         console.log("Error:"+err);
@@ -131,7 +129,7 @@ export class PrinterProvider{
                                 console.log(data);
                                 resolve();
                             },(err)=>{
-                                console.log("Error!");
+                                console.log("print-Error!");
                                 //console.log(err);
                                 reject(err);
                             }, title+','+message+"\n\n\n\n ************"); // format: title, message

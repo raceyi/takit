@@ -282,5 +282,10 @@ export class MyApp {
             this.rootPage=LoginPage;
         }
   }
+
+  exitTourMode(){
+      console.log("exitTourMode");
+      this.app.getRootNav().setRoot(LoginPage);
+  }
 }
 

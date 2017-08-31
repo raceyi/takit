@@ -7,6 +7,7 @@ import {FbProvider} from '../../providers/LoginProvider/fb-provider';
 import {EmailProvider} from '../../providers/LoginProvider/email-provider';
 import {KakaoProvider} from '../../providers/LoginProvider/kakao-provider';
 import {PrinterProvider} from '../../providers/printerProvider';
+import {IosPrinterProvider} from '../../providers/ios-printer';
 
 //import { Storage } from '@ionic/storage';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -29,7 +30,7 @@ export class ErrorPage{
         private platform:Platform,private storageProvider:StorageProvider,
         public fbProvider:FbProvider, public kakaoProvider:KakaoProvider,
         public emailProvider:EmailProvider,private nativeStorage: NativeStorage,private app:App,
-        public printerProvider:PrinterProvider,private ngZone:NgZone){
+        public printerProvider:PrinterProvider,private iosPrinterProvider:IosPrinterProvider, private ngZone:NgZone){
 
          console.log("ErrorPage constructor");
          this.android_platform=this.platform.is('android');
@@ -149,7 +150,10 @@ export class ErrorPage{
         }
         this.nativeStorage.getItem("printer").then((value:string)=>{
             this.storageProvider.printerName=value;
-            this.printerProvider.setPrinter(value);
+            if( this.android_platform)
+                this.printerProvider.setPrinter(value);
+            else
+                this.iosPrinterProvider.setPrinter(value);
             this.nativeStorage.getItem("printOn").then((value:string)=>{
                 console.log("printOn:"+value);
                 this.storageProvider.printOn= JSON.parse(value);

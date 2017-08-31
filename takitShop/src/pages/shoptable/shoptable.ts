@@ -11,6 +11,7 @@ import {PrinterProvider} from '../../providers/printerProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import {CancelConfirmPage} from '../cancel-confirm/cancel-confirm';
+import {IosPrinterProvider} from '../../providers/ios-printer';
 
 declare var cordova:any;
 
@@ -28,7 +29,7 @@ export class ShopTablePage {
   pushNotification:PushObject;
   infiniteScroll:any=undefined;
   smsInboxPlugin;
-  isAndroid;
+  //isAndroid;
   storeColor="gray";
   notiColor="gray";
   printColor="gray";
@@ -46,9 +47,9 @@ export class ShopTablePage {
       private http:Http,private alertController:AlertController,private ngZone:NgZone,private ionicApp: IonicApp,
       private printerProvider:PrinterProvider,private platform:Platform,private menuCtrl: MenuController,
       public viewCtrl: ViewController,private serverProvider:ServerProvider,private push: Push,
-      private mediaProvider:MediaProvider,private events:Events) {
+      private mediaProvider:MediaProvider,private events:Events,private iosPrinterProvider:IosPrinterProvider) {
     console.log("ShopTablePage constructor");
-    this.isAndroid=this.platform.is("android");
+    //this.isAndroid=this.platform.is("android");
   
     this.registerPushService();
     
@@ -217,16 +218,23 @@ export class ShopTablePage {
             });
         }
 */
-        this.printerEmitterSubscription= this.printerProvider.messageEmitter.subscribe((status)=> {
-                console.log("printer status:"+status);
-                this.ngZone.run(()=>{
-                  if(this.printerProvider.printerStatus=="connected")
-                      this.printColor="primary";
-                  else  
-                      this.printColor="gray";
-                    console.log("ngZone=> Printer status into "+this.printColor);
+        this.events.subscribe('printer:status', (status) => {
+                    console.log("printer status:"+status);
+                    this.ngZone.run(()=>{
+                      if(this.platform.is('android')){
+                        if(this.printerProvider.printerStatus=="connected")
+                            this.printColor="primary";
+                        else  
+                            this.printColor="gray";
+                      }else if(this.platform.is('ios')){
+                        if(this.iosPrinterProvider.printerStatus=="connected")
+                            this.printColor="primary";
+                        else  
+                            this.printColor="gray";
+                      }
+                        console.log("ngZone=> Printer status into "+this.printColor);
                 });
-        });
+        });        
 
         let body = JSON.stringify({takitId:this.storageProvider.myshop.takitId});
         this.serverProvider.post("/shop/getShopInfo",body).then((res:any)=>{
@@ -294,10 +302,6 @@ export class ShopTablePage {
           else
             order.cancelReasonString=undefined;
 
-          //////////////////////////////////////
-          // Just testing
-          //order.userMSG="밥많이 주세요.";
-          ///////////////////////////////////////  
           return order;
     }
 
@@ -464,12 +468,13 @@ export class ShopTablePage {
     printCancel(order){
       if(this.storageProvider.printOn==false)
         return;
-      if(!this.platform.is("android")){ //Not yet supported
-        return;
-      }      
       var title,message="";
       if(order.orderStatus=="cancelled"){
-        title="**주문취소["+order.orderNO+"]";
+        if(this.platform.is('android')){
+            title="**주문취소["+order.orderNO+"]";
+        }else{
+            title="**CANCEL["+order.orderNO+"]";
+        }
         order.orderListObj.menus.forEach((menu)=>{
             message+="-------------\n";
             message+=" "+menu.menuName+"("+menu.quantity+")\n"; 
@@ -482,42 +487,70 @@ export class ShopTablePage {
             });
         });
       }
-      this.printerProvider.print(title,message).then(()=>{
-             console.log("print successfully");
-      },(err)=>{
-            if(err=="printerUndefined"){
-              let alert = this.alertController.create({
-                  title: '앱에서 프린터 설정을 수행해 주시기 바랍니다.',
-                  buttons: ['OK']
-              });
-              alert.present();
-            }else{
-              let alert = this.alertController.create({
-                  title: '주문출력에 실패했습니다.',
-                  subTitle: '프린터상태를 확인해주시기바랍니다.',
-                  buttons: ['OK']
-              });
-              alert.present();
-            }
-      });
-        
+      if(this.platform.is('android')){
+            this.printerProvider.print(title,message).then(()=>{
+                  console.log("print successfully");
+            },(err)=>{
+                  if(err=="printerUndefined"){
+                    let alert = this.alertController.create({
+                        title: '앱에서 프린터 설정을 수행해 주시기 바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                  }else{
+                    let alert = this.alertController.create({
+                        title: '주문출력에 실패했습니다.',
+                        subTitle: '프린터상태를 확인해주시기바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                  }
+            });
+      }else if(this.platform.is('ios')){
+            this.iosPrinterProvider.print(title,message).then(()=>{
+                  console.log("print successfully");
+            },(err)=>{
+                  if(err=="printerUndefined"){
+                    let alert = this.alertController.create({
+                        title: '앱에서 프린터 설정을 수행해 주시기 바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                  }else{
+                    let alert = this.alertController.create({
+                        title: '주문출력에 실패했습니다.',
+                        subTitle: '프린터상태를 확인해주시기바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                  }
+            });
+      }
     }
 
     printOrder(order){
       if(this.storageProvider.printOn==false)
         return;
-      if(!this.platform.is("android")){ //Not yet supported
-        return;
-      }
+      
       var title,message="";
       console.log("order:"+JSON.stringify(order));
       if(order.orderStatus=="paid" ||order.orderStatus=="checked"){
-          title="타킷주문["+order.orderNO+"]";
-          if(order.takeout=='1')          
-            title+="포장";
-          else if(order.takeout=='2'){
-            title+="배달"; 
-            message=order.deliveryAddress+"\n";
+          if(this.platform.is('android')){
+              title="타킷주문["+order.orderNO+"]";
+              if(order.takeout=='1')          
+                title+="포장";
+              else if(order.takeout=='2'){
+                title+="배달"; 
+                message=order.deliveryAddress+"\n";
+              }
+          }else if(this.platform.is('ios')){
+              title="ORDER["+order.orderNO+"]";
+              if(order.takeout=='1')          
+                title+="Takeout";
+              else if(order.takeout=='2'){
+                title+="Delivery"; 
+                message=order.deliveryAddress+"\n";
+              }
           }
           order.orderListObj.menus.forEach((menu)=>{
               message+="-------------\n";
@@ -531,11 +564,16 @@ export class ShopTablePage {
               });
           });
           if(order.userMSG){
+              message+="-------------\n";
               message+=order.userMSG;
               message+="\n";
           }
       }else if(order.orderStatus=="completed"){ //print receipt
-          title="        영수증\n";
+          if(this.platform.is("android")){
+              title="        영수증\n";
+          }else if(this.platform.is("ios")){
+              title="        Receipt\n";
+          }
           message+="상   호:"+this.storageProvider.currentShopname()+"\n";
           message+="사업자번호:"+this.storageProvider.shopInfo.businessNumber+"\n";
           message+="주   소:"+this.storageProvider.shopInfo.address+"\n";
@@ -563,7 +601,11 @@ export class ShopTablePage {
           message+="부가가치세  "+tax +"원";
           message+="합계     "+totalAmount+"원";
       }else if(order.orderStatus=="cancelled" && order.cancelReason!='고객접수취소'){ //print refund receipt
-          title="        영수증\n";
+          if(this.platform.is("android")){
+              title="        영수증\n";
+          }else if(this.platform.is("ios")){
+              title="        Receipt\n";
+          }        
           message+="상   호:"+this.storageProvider.currentShopname()+"\n";
           message+="사업자번호:"+this.storageProvider.shopInfo.businessNumber+"\n";
           message+="주   소:"+this.storageProvider.shopInfo.address;
@@ -590,25 +632,45 @@ export class ShopTablePage {
           message+="부가가치세  -"+tax +"원";
           message+="합계     -"+totalAmount+"원";          
       }
-
-      this.printerProvider.print(title,message).then(()=>{
-             console.log("print successfully");
-      },(err)=>{
-            if(err=="printerUndefined"){
-              let alert = this.alertController.create({
-                  title: '앱에서 프린터 설정을 수행해 주시기 바랍니다.',
-                  buttons: ['OK']
-              });
-              alert.present();
-            }else{
-              let alert = this.alertController.create({
-                  title: '주문출력에 실패했습니다.',
-                  subTitle: '프린터상태를 확인해주시기바랍니다.',
-                  buttons: ['OK']
-              });
-              alert.present();
-            }
-      });
+      if(this.platform.is('android')){
+            this.printerProvider.print(title,message).then(()=>{
+                  console.log("print successfully");
+            },(err)=>{
+                  if(err=="printerUndefined"){
+                    let alert = this.alertController.create({
+                        title: '앱에서 프린터 설정을 수행해 주시기 바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                  }else{
+                    let alert = this.alertController.create({
+                        title: '주문출력에 실패했습니다.',
+                        subTitle: '프린터상태를 확인해주시기바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                  }
+            });
+      }else if(this.platform.is('ios')){
+            this.iosPrinterProvider.print(title,message).then(()=>{
+                  console.log("print successfully");
+            },(err)=>{
+                  if(err=="printerUndefined"){
+                    let alert = this.alertController.create({
+                        title: '앱에서 프린터 설정을 수행해 주시기 바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                  }else{
+                    let alert = this.alertController.create({
+                        title: '주문출력에 실패했습니다.',
+                        subTitle: '프린터상태를 확인해주시기바랍니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+                  }
+            });
+      }
     }
 
       hasItToday(){
@@ -644,8 +706,8 @@ export class ShopTablePage {
                     senderID: this.storageProvider.userSenderID                },
                 ios: {
                     senderID: this.storageProvider.userSenderID,
-                    "gcmSandbox": "true", //development mode
-                    //"gcmSandbox": "false",//production mode
+                    //"gcmSandbox": "true", //development mode
+                    "gcmSandbox": "false",//production mode
                     "alert": "true",
                     "badge": "true",
                     "sound": "true"
@@ -900,38 +962,6 @@ export class ShopTablePage {
       }
       console.log("order cancel comes");
       this.navController.push(CancelConfirmPage,{order:order, callback:this.myCallbackFunction});
-      /*
-            let prompt = this.alertController.create({
-                title: '주문취소',
-                message: "주문을 취소하시겠습니까?",
-                inputs: [
-                  {
-                    name: 'reason',
-                    placeholder: '취소사유'
-                  },
-                ],
-                buttons: [
-                  {
-                    text: '아니오',
-                    handler: data => {
-                      console.log('Cancel clicked '+ JSON.stringify(data));
-                    }
-                  },
-                  {
-                    text: '네',
-                    handler: data => {
-                      console.log('Saved clicked '+ JSON.stringify(data));
-                      this.cancelOrder(order,data.reason).then((result)=>{
-                                console.log("cancel-order result:"+result);
-                              },(err)=>{
-                                console.log("cancel-order err:"+err);
-                              });
-                    }
-                  }
-                ]
-              });
-               prompt.present();
-      */
     }
 
     updateStatus(order,request){
@@ -1319,6 +1349,7 @@ export class ShopTablePage {
   }
 
   testPrint(){
+    console.log("testPrint comes");
     if(this.storageProvider.printOn==false){
           let alert = this.alertController.create({
                       title: '프린터 설정 메뉴에서 프린터를 설정해주세요.',
@@ -1326,15 +1357,28 @@ export class ShopTablePage {
                   });
           alert.present();
     }else{
-     this.printerProvider.print("주문","프린터가 동작합니다").then(()=>{
-          console.log("프린트 명령을 보냈습니다. ");
-      },()=>{
-        let alert = this.alertController.create({
-            title: '프린트 명령을 보내는것에 실패했습니다.',
-            buttons: ['OK']
-        });
-        alert.present();
-      });
+      if(this.platform.is("android")){
+        this.printerProvider.print("주문","프린터가 동작합니다").then(()=>{
+              console.log("프린트 명령을 보냈습니다. ");
+          },()=>{
+            let alert = this.alertController.create({
+                title: '프린트 명령을 보내는것에 실패했습니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+          });
+      }else if(this.platform.is("ios")){
+        console.log("ios testPrint");
+        this.iosPrinterProvider.print("Test","프린터가 동작합니다").then(()=>{
+              console.log("프린트 명령을 보냈습니다. ");
+          },()=>{
+            let alert = this.alertController.create({
+                title: '프린트 명령을 보내는것에 실패했습니다.',
+                buttons: ['OK']
+            });
+            alert.present();
+          });
+      }
     }
   }
 
@@ -1383,4 +1427,5 @@ export class ShopTablePage {
     notifyOrder(order){
         console.log("notifyOrder comes");
     }
+
 }

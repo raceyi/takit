@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton="true">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -60,11 +60,15 @@
                 <ion-row (click)="toggleOrder(order)">  
                     <ion-col col-2 class="verticalAlign">[{{order.orderNO}}]</ion-col>
                     <ion-col col-6 class="orderName"><span class="orderName">{{order.orderName}}</span></ion-col>
-                    <ion-col col-2 class="verticalAlign" >
-                      <button ion-button class="statusButton" *ngIf="order.statusString!='종료' && order.statusString!='취소'" (click)="updateOrder(order)" ><span class="statusButtonText">{{order.statusString}}</span></button>
+                    <ion-col col-2>
+                      <button ion-button *ngIf="order.statusString=='종료'" class="statusButton" [hidden]="AfterOnedayComplete(order)" (click)="notifyOrder(order)"><span class="statusButtonText">알림</span></button>
+                    </ion-col>
+                    <ion-col col-2 text-right >
                       <p  *ngIf="order.statusString=='종료' || order.statusString=='취소'"> {{order.statusString}}<p>
                     </ion-col>
-                    <ion-col col-2><button ion-button class="statusButton" [color]="getOrderColor(order)" (click)="cancel(order)" [hidden]="order.orderStatus=='cancelled' || AfterOnedayComplete(order)"><span class="statusButtonText">취소</span></button></ion-col>
+                    <!--
+                    <ion-col col-2><button ion-button *ngIf="order.statusString=='종료' || order.statusString=='취소'" class="statusButton" [color]="getOrderColor(order)" (click)="cancel(order)" [hidden]="order.orderStatus=='cancelled' || AfterOnedayComplete(order)"><span class="statusButtonText">취소</span></button></ion-col>
+                    -->
                 </ion-row>
                 <div [hidden]="order.hidden">
                 <ion-row [hidden]="order.takeout=='0'"> 
@@ -88,6 +92,10 @@
                             <p class="option" *ngFor="let option of menu.options">{{option.name}} &nbsp;<span *ngIf="option.select!=undefined">{{option.select}}</span> </p>
                           </ion-col>
                 </ion-row>
+                <ion-row [hidden]="order.userMSG==null || order.userMSG==undefined">
+                    <ion-col col-2></ion-col>
+                    <ion-col col-10 style="background-color:lightgray;">{{order.userMSG}}</ion-col>
+                </ion-row>
                 </div>
                 <ion-row [hidden]="order.orderStatus!='cancelled' || order.cancelReasonString==undefined || order.cancelReasonString.length==0">
                   <ion-col col-2></ion-col>
@@ -106,7 +114,26 @@
                     <ion-col col-10 class="detail">결제금액 &nbsp;{{order.amount}}원</ion-col>
                     <ion-col col-1 class="detail" [hidden]="order.orderStatus=='cancelled' && order.cancelReason=='고객접수취소'"><ion-icon name="print" (click)="printOrder(order)"></ion-icon></ion-col>                    
                 </ion-row>
-                
+                <ion-row *ngIf="order.statusString!='종료' && order.statusString!='취소'">
+                   <ion-col col-1></ion-col>
+                   <ion-col col-4>
+                      <button style="height:40px !important;" ion-button class="statusButton" round full  (click)="updateOrder(order)" ><span class="statusButtonText">{{order.statusString}}</span></button>
+                   </ion-col>
+                   <ion-col col-2>
+                   </ion-col>
+                   <ion-col  col-4>
+                      <button style="height:40px !important;" ion-button class="statusButton" round full [color]="getOrderColor(order)" (click)="cancel(order)" [hidden]="order.orderStatus=='cancelled' || AfterOnedayComplete(order)"><span class="statusButtonText">취소</span></button>
+                   </ion-col>
+                   <ion-col col-1></ion-col>
+                </ion-row>  
+                <ion-row *ngIf="order.statusString=='종료'" [hidden]="AfterOnedayComplete(order)">
+                  <ion-col col-7>
+                  </ion-col>
+                  <ion-col col-4>
+                    <button ion-button  class="statusButton" [color]="getOrderColor(order)" (click)="cancel(order)" ><span class="statusButtonText">취소</span></button>
+                  </ion-col>
+                  <ion-col col-1> </ion-col>  
+                </ion-row>
                 </div>
 </ion-item>
 </ion-list>

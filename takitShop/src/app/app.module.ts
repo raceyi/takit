@@ -12,6 +12,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import {ServerProvider} from '../providers/serverProvider';
 import {ConfigProvider} from '../providers/configProvider';
 import {MediaProvider} from '../providers/mediaProvider';
+import {IosPrinterProvider} from '../providers/ios-printer';
 
 import { Storage } from '@ionic/storage';
 import {LoginPage} from '../pages/login/login';
@@ -104,6 +105,7 @@ import {CancelConfirmPageModule} from '../pages/cancel-confirm/cancel-confirm.mo
     StorageProvider,
     PrinterProvider,
     MediaProvider,
-    ServerProvider]
+    ServerProvider,
+    IosPrinterProvider]
 })
 export class AppModule {}

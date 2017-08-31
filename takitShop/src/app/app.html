@@ -14,7 +14,7 @@
       <button class="menu" color="white" ion-button icon-left full menuClose [hidden]="storageProvider.myshop.manager==undefined || !storageProvider.myshop.manager" (click)="openSales()">
         <ion-icon name="cash"></ion-icon>&nbsp;&nbsp;매출보기  
       </button>
-      <button class="menu" color="white" ion-button icon-left full  menuClose [hidden]="storageProvider.myshop.takitId==undefined || storageProvider.id==undefined || storageProvider.tourMode==true" (click)="openEditMenu()">
+      <button class="menu" color="white" ion-button icon-left full  menuClose [hidden]="storageProvider.myshop.takitId==undefined ||( storageProvider.tourMode==false && storageProvider.id==undefined)" (click)="openEditMenu()">
         <ion-icon name="create"></ion-icon>&nbsp;&nbsp;상점메뉴
       </button>
       <button class="menu" color="white" ion-button icon-left full  menuClose [hidden]="storageProvider.id==undefined || storageProvider.tourMode==true" (click)="openUserInfo()">
@@ -24,7 +24,10 @@
       <button class="menu" color="white" ion-button icon-left full menuClose (click)="openServiceInfo()">
         <ion-icon name="information-circle"></ion-icon>&nbsp;&nbsp;서비스정보 
       </button>
-      <button class="menu" color="white" ion-button icon-left full menuClose (click)="openLogout()">
+      <button class="menu" color="white" *ngIf="storageProvider.tourMode==true" ion-button icon-left full menuClose (click)="exitTourMode()">
+        <ion-icon name="log-out"></ion-icon>둘러보기 나가기  
+      </button>
+      <button class="menu" color="white" *ngIf="storageProvider.tourMode==false" ion-button icon-left full menuClose (click)="openLogout()">
         <ion-icon name="log-out"></ion-icon>&nbsp;&nbsp;로그아웃 
       </button>
   </ion-content>

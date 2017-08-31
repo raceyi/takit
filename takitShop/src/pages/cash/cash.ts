@@ -2,7 +2,6 @@ import {Component,NgZone} from "@angular/core";
 import {NavController,NavParams,AlertController} from 'ionic-angular';
 import{ShopTablePage} from '../shoptable/shoptable';
 import {Splashscreen} from 'ionic-native';
-import {PrinterProvider} from '../../providers/printerProvider';
 import {StorageProvider} from '../../providers/storageProvider';
 import {ServerProvider} from '../../providers/serverProvider';
 //import { Storage } from '@ionic/storage';
